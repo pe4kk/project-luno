@@ -52,7 +52,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
   (réglure Seyès, encre bleue, écriture manuscrite Caveat), B2 Gazette (têtière
   de journal, Playfair Display, noir et rouge), B3 Ardoise & craie (tableau
   vert sombre, craie jaune), B4 Édition classique (EB Garamond, double filet
-  rouge, sommaire à points de conduite). Choix final en attente.
+  rouge, sommaire à points de conduite).
+  Il a ensuite envoyé quatre planches d'inspiration (gris, noir et blanc avec
+  textures et motif chevron ; rose poudré, cuivre, terracotta, gris doux) et
+  demandé des maquettes dans ces couleurs, proposées le même jour :
+  P1 Encre & pierre (monochrome, capitales espacées, chevrons), P2 Rose poudré
+  & cuivre (blush `#f8f1ee`, cuivre `#c98b6b`, gris chaud `#4b4648`, formes
+  arrondies), P3 Terracotta & collage (terracotta `#b5573d`, noir `#1f1a1a`,
+  papiers inclinés, manuscrit), P4 Anthracite & blush (anthracite `#2a2a2d`,
+  blush `#e6bfb5`, aplats carrés). Choix final en attente.
 
 ## Stack et architecture
 
