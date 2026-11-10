@@ -39,8 +39,14 @@ fiches de révision ; le slider règle la longueur de la fiche.
 
 - Utilisateurs : lui et des amis, chacun avec son compte (pas un produit public).
 - Niveau : lycée (seconde, première, terminale).
-- IA : construire l'interface d'abord ; brancher la vraie IA plus tard, quand
-  il aura créé une clé d'API Anthropic (facturée à l'usage).
+- IA : **pas de clé d'API** (il ne veut rien payer en plus de son abonnement
+  Claude). À la place, il envoie ses cours dans le chat Claude Code et Claude
+  rédige lui-même flashcards, fiches et exercices, puis les ajoute au site.
+  Conséquence : le site n'appelle aucune IA ; le tuteur en direct de l'onglet
+  Apprendre n'est pas possible sous cette forme.
+- Direction artistique : quatre maquettes proposées le 2026-11-10 (A Nuit
+  lunaire, B Papier & encre, C Pop coloré, D Minimal clair), en plus du design
+  actuel (crème et bleu nuit). Choix en attente.
 
 ## Stack et architecture
 
@@ -100,6 +106,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
 | 2026-11-10 | Données dans le navigateur (`localStorage`) pour l'instant | Interface d'abord ; comptes et base en ligne viendront ensuite |
 | 2026-11-10 | IA isolée dans `lib/ai.ts`, en mode démo | Pas encore de clé d'API ; branchement futur sans toucher aux pages |
 | 2026-11-10 | Exercices en démo = QCM tirés des flashcards | Fonctionne sans IA |
+| 2026-11-10 | Pas d'API payante : Claude rédige les contenus dans le chat | Choix de l'utilisateur, pour ne rien payer en plus |
 
 ## État d'avancement
 
@@ -118,12 +125,14 @@ fiches de révision ; le slider règle la longueur de la fiche.
 
 ## Prochaines étapes
 
-1. Recueillir les retours de l'utilisateur sur le design et les onglets.
-2. Brancher la vraie IA (routes serveur + clé d'API Anthropic demandée via le
-   formulaire sécurisé, jamais dans le chat ni dans le dépôt).
-3. Comptes et base en ligne pour l'utilisateur et ses amis (piste de Claude,
-   non validée : Supabase), puis mise en ligne (piste : Vercel).
-4. Import de PDF et de photos de cours.
+1. Appliquer la direction artistique choisie par l'utilisateur à tout le site.
+2. Passer au fonctionnement sans API : contenus rédigés par Claude et stockés
+   dans le dépôt (piste de Claude, non validée : un dossier `contenu/` avec un
+   fichier par chapitre, lu par le site), à la place du mode démo de
+   `lib/ai.ts`. Repenser l'onglet Apprendre (leçons rédigées à la demande).
+3. Mise en ligne du site pour l'utilisateur et ses amis (piste : Vercel).
+4. Calendrier et progression propres à chaque ami : à trancher (comptes ou
+   simple stockage dans le navigateur de chacun).
 
 ## Préférences de l'utilisateur
 
