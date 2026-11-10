@@ -40,10 +40,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
 - Utilisateurs : lui et des amis, chacun avec son compte (pas un produit public).
 - Niveau : lycée (seconde, première, terminale).
 - IA : **pas de clé d'API** (il ne veut rien payer en plus de son abonnement
-  Claude). À la place, il envoie ses cours dans le chat Claude Code et Claude
-  rédige lui-même flashcards, fiches et exercices, puis les ajoute au site.
-  Conséquence : le site n'appelle aucune IA ; le tuteur en direct de l'onglet
-  Apprendre n'est pas possible sous cette forme.
+  Claude). Le site n'appelle aucune IA : Claude rédige flashcards, fiches,
+  exercices et leçons dans une conversation, puis les publie dans `contenu/`.
 - Direction artistique (choisie le 2026-11-10 après plusieurs séries de
   maquettes) : thème clair **« Blush graphique » (M5)** et thème sombre
   **« Nuit cuivrée » (M4)**, avec un bouton pour basculer. Inspiration :
@@ -65,17 +63,31 @@ fiches de révision ; le slider règle la longueur de la fiche.
 - Fichiers clés :
   - `app/` : `page.tsx` (accueil), `calendrier/`, `travail/`, `apprendre/`,
     `exercices/` (onglet « S'exercer »).
-  - `components/AppShell.tsx` : barre du haut (logo, onglets, bouton de
-    thème), barre du bas sur téléphone, transition entre pages. `components/ui.tsx` : boutons, cartes, fenêtres.
+  - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
+    thème), barre du bas sur téléphone, transition entre pages.
+  - `components/Donnees.tsx` : fenêtre « Mes données » (sauvegarde,
+    restauration, effacement), message « Annuler », reprise des contenus
+    publiés au chargement.
+  - `components/ui.tsx` : boutons, cartes, fenêtre (portail, focus piégé),
+    `EnvoyerAClaude`, `pluriel()`.
   - `components/travail/` : vue d'un chapitre (cours, flashcards, fiche) et
     séance de révision.
-  - `lib/store.ts` : toutes les données (matières, chapitres, DST), stockées
-    dans le `localStorage` du navigateur sous la clé `luno-v1`.
-  - `lib/ai.ts` : **seul point d'entrée de l'IA**, aujourd'hui en mode démo
-    (règles simples : repère les lignes « Terme : définition »). Pour brancher
-    la vraie IA, remplacer le corps de ses fonctions par des appels à des
-    routes serveur, sans changer les signatures, et passer `MODE_IA` à `reel`.
-  - `lib/seed.ts` : données d'exemple (bouton « Charger l'exemple »).
+  - `lib/store.ts` : données de l'utilisateur (matières, chapitres, DST) dans
+    le `localStorage`, clé `luno-v1`, format version 2 (`normaliser()` reprend
+    les anciens formats et les sauvegardes importées). Toute suppression passe
+    par `annulation` (message « Annuler » pendant 8 s), jamais par `confirm()`.
+  - `lib/contenu.ts` : outils sans IA (repérage des lignes « Terme :
+    définition », QCM tirés des flashcards, texte des demandes à Claude).
+  - `lib/liens.ts` : l'onglet Travail garde matière, chapitre et sous-onglet
+    dans l'adresse (`/travail?m=…&c=…&o=…`, `r=tout` pour la révision du
+    jour), pour que le bouton retour du téléphone remonte d'un niveau.
+  - `contenu/` : ce que Claude rédige (voir « Ajouter du contenu »).
+- Modèle de données (`lib/types.ts`) : un DST liste ses chapitres à réviser
+  (`chapitreIds`) ; une flashcard a une échéance (`echeance`, `intervalle`) :
+  l'intervalle double à chaque « Je savais » et repart de zéro à chaque
+  erreur, y compris une erreur à un QCM tiré de cette carte ; un point de
+  fiche porte `n`, la plus petite taille (1 à 5) à laquelle il apparaît, ce
+  qui rend le curseur instantané.
 - Design : deux thèmes définis par des variables CSS dans `app/globals.css`
   (`:root` = clair M5, `:root[data-theme="dark"]` = sombre M4), exposées à
   Tailwind (`bg-bg`, `bg-surface`, `text-ink`, `text-muted`, `bg-accent`,
@@ -91,6 +103,27 @@ fiches de révision ; le slider règle la longueur de la fiche.
     par un script en ligne dans `app/layout.tsx` avant l'affichage.
   - Couleurs de matière : `pastel()` et `var(--mix-fg)` les adaptent au thème.
   Interface entièrement en français, noms de code en français.
+
+## Ajouter du contenu (cours envoyés par l'utilisateur)
+
+L'utilisateur transmet une demande qui commence par `[Luno] Nouveau cours`
+ou `[Luno] Nouvelle leçon` : collée dans le chat (bouton « Copier la
+demande » du site), ou déposée en ticket GitHub (lire avec
+`gh api "repos/pe4kk/project-luno/issues?state=open"`). Il peut aussi envoyer
+un PDF ou une photo directement dans le chat.
+
+- **Cours** : ajouter une entrée à `contenu/bibliotheque.ts` au format de
+  `contenu/exemple.ts` : `id` stable, `version: 1`, matière (reprendre
+  exactement le nom indiqué, la reprise compare les noms), titre du chapitre,
+  10 à 20 flashcards, fiche dont chaque point porte `n` de 1 (essentiel) à 5
+  (détail), 6 à 10 exercices QCM à quatre choix avec explication. Rester
+  fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
+  augmenter `version`.
+- **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
+  exemple, une question « Vérifie-toi » par étape).
+- Pousser sur `main` : le site se redéploie et chaque navigateur reprend le
+  nouveau contenu à la visite suivante. Tout le monde le reçoit.
+- Fermer le ticket GitHub correspondant si la demande en venait.
 
 ## Environnement
 
@@ -131,49 +164,41 @@ fiches de révision ; le slider règle la longueur de la fiche.
 | Date | Décision | Raison |
 |------|----------|--------|
 | 2026-11-10 | Mémoire du projet tenue dans `CLAUDE.md` à la racine | Chargé automatiquement à chaque session |
-| 2026-11-10 | Données dans le navigateur (`localStorage`) pour l'instant | Interface d'abord ; comptes et base en ligne viendront ensuite |
-| 2026-11-10 | IA isolée dans `lib/ai.ts`, en mode démo | Pas encore de clé d'API ; branchement futur sans toucher aux pages |
-| 2026-11-10 | Exercices en démo = QCM tirés des flashcards | Fonctionne sans IA |
-| 2026-11-10 | Pas d'API payante : Claude rédige les contenus dans le chat | Choix de l'utilisateur, pour ne rien payer en plus |
+| 2026-11-10 | Données personnelles dans le navigateur (`localStorage`), avec sauvegarde et restauration par fichier | Pas de comptes pour l'instant |
+| 2026-11-10 | Pas d'API payante : Claude rédige les contenus et les publie dans `contenu/` | Choix de l'utilisateur, pour ne rien payer en plus |
+| 2026-11-10 | Site statique sur GitHub Pages, déploiement automatique | Gratuit, pas de serveur à gérer |
+| 2026-11-10 | Suppression annulable plutôt que demande de confirmation | Critique de design, « corrige tout » demandé par l'utilisateur |
 
 ## État d'avancement
 
-- 2026-11-10 : interface complète aux couleurs choisies, vérifiée dans un
-  navigateur dans les deux thèmes (ordinateur et téléphone, aucune erreur) :
-  - Accueil : compte à rebours du prochain DST, chiffres, raccourcis.
-  - Calendrier : grille mensuelle, ajout, modification et suppression de DST.
-  - Travail : matières, chapitres, cours (saisie ou import .txt/.md),
-    flashcards (génération démo, ajout manuel, révision avec cartes qui se
-    retournent), fiche avec curseur de taille à 5 crans.
-  - Apprendre : choix du sujet et du niveau, parcours en 4 étapes, discussion
-    avec le tuteur (réponses d'exemple).
-  - S'exercer : QCM avec correction et score.
-- 2026-11-10 : interface mobile vérifiée en émulation iPhone 13 sur tous les
-  écrans (barre d'onglets en bas, rien de caché dessous, calendrier avec
-  pastilles de matière, saisie à 16 px contre le zoom d'iOS, marges de
-  sécurité des iPhone). Le site peut s'ajouter à l'écran d'accueil du
-  téléphone (`app/manifest.ts`, icônes dans `public/` et `app/`). Non testé
-  sur un vrai téléphone. Icône installée : croissant cuivré sur fond
-  anthracite (proposition B parmi quatre ; l'utilisateur peut en changer).
-- Pas encore fait : contenus rédigés par Claude (toujours le mode démo),
-  comptes, import de PDF ou de photos, tests automatisés.
+- 2026-11-10 : site complet en ligne, deux thèmes, vérifié dans un navigateur
+  sur ordinateur et en émulation iPhone 13 (aucune erreur) :
+  - Accueil : prochain DST avec bouton « Réviser » vers le chapitre lié,
+    cartes à revoir aujourd'hui, matières, bandeau pour effacer l'exemple.
+  - Calendrier : toucher un jour ouvre le détail du jour ; DST liés à des
+    chapitres ; suppression annulable.
+  - Travail : matières et chapitres modifiables ; cours ; flashcards
+    modifiables avec répétition espacée ; fiche à curseur instantané.
+  - Apprendre : leçons rédigées (une leçon de démonstration, la
+    photosynthèse) et formulaire de demande.
+  - S'exercer : exercices rédigés, sinon QCM tirés des flashcards.
+  - « Mes données » : sauvegarde, restauration, effacement.
+  - Installable sur l'écran d'accueil du téléphone ; icône croissant cuivré.
+- Suite à une critique de design (2026-11-10), tous les points relevés ont
+  été corrigés. Rien n'a été testé avec de vrais utilisateurs ni sur un vrai
+  téléphone.
+- `contenu/bibliotheque.ts` est vide : aucun vrai cours de l'utilisateur n'a
+  encore été traité. Le seul chapitre rédigé est celui de l'exemple.
+- Pas encore fait : comptes, synchronisation entre appareils, tests
+  automatisés dans le dépôt.
 
 ## Prochaines étapes
 
-1. Obtenir de l'utilisateur la confirmation que le site en ligne répond.
-   Il a demandé (2026-11-10) à saisir ses cours directement sur le site pour
-   que Claude les récupère. Le site ne peut pas joindre Claude. Pistes
-   proposées, choix en attente : (a) bouton « Envoyer à Claude » qui ouvre un
-   ticket GitHub prérempli, traité ensuite par une session (les tickets sont
-   lisibles avec `gh api repos/pe4kk/project-luno/issues`), éventuellement
-   par une tâche planifiée ; (b) bouton qui copie le cours pour le coller
-   dans le chat.
-2. Passer au fonctionnement sans API : contenus rédigés par Claude et stockés
-   dans le dépôt (piste de Claude, non validée : un dossier `contenu/` avec un
-   fichier par chapitre, lu par le site), à la place du mode démo de
-   `lib/ai.ts`. Repenser l'onglet Apprendre (leçons rédigées à la demande).
-3. Calendrier et progression propres à chaque ami : à trancher (comptes ou
-   simple stockage dans le navigateur de chacun).
+1. Traiter le premier vrai cours envoyé par l'utilisateur.
+2. Obtenir sa confirmation que le site en ligne s'affiche bien sur son
+   téléphone, et ses retours.
+3. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub
+   en attente ; comptes pour synchroniser entre appareils.
 
 ## Préférences de l'utilisateur
 

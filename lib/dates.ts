@@ -13,6 +13,13 @@ export function todayISO(): string {
   return toISO(new Date());
 }
 
+/** Date dans n jours (AAAA-MM-JJ). */
+export function dansJours(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return toISO(d);
+}
+
 /** Nombre de jours entre aujourd'hui et la date (négatif si passée). */
 export function joursAvant(iso: string): number {
   const ms = fromISO(iso).getTime() - fromISO(todayISO()).getTime();

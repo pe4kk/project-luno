@@ -1,225 +1,275 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUp, Check, GraduationCap, RotateCcw } from "lucide-react";
-import { genererParcours, repondreTuteur, MODE_IA, type EtapeParcours } from "@/lib/ai";
-import { BadgeDemo, Bouton, Carte, Chargement, EnTete, classeSaisie } from "@/components/ui";
+import { ArrowLeft, ArrowRight, Check, Clock, Eye, GraduationCap, Send } from "lucide-react";
+import { LECONS } from "@/contenu/lecons";
+import type { Lecon } from "@/lib/types";
+import { demandeLecon } from "@/lib/contenu";
+import { Bouton, Carte, Champ, EnTete, EnvoyerAClaude, EtatVide, classeSaisie, pluriel } from "@/components/ui";
 
-const SUGGESTIONS = [
-  "Les suites arithmétiques",
-  "La photosynthèse",
-  "Le subjonctif en espagnol",
-  "La Révolution française",
-  "Les forces et le mouvement",
-  "L'argumentation au bac de français",
-];
 const NIVEAUX = ["Seconde", "Première", "Terminale"];
 
-type Message = { de: "moi" | "tuteur"; texte: string };
+export default function Page() {
+  return (
+    <Suspense>
+      <Apprendre />
+    </Suspense>
+  );
+}
 
-export default function Apprendre() {
+function Apprendre() {
+  const params = useSearchParams();
+  const lecon = LECONS.find((l) => l.id === params.get("l"));
   const [sujet, setSujet] = useState("");
   const [niveau, setNiveau] = useState("Première");
-  const [parcours, setParcours] = useState<EtapeParcours[] | null>(null);
-  const [chargement, setChargement] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [saisie, setSaisie] = useState("");
-  const [ecrit, setEcrit] = useState(false);
-  const fin = useRef<HTMLDivElement>(null);
-  const tours = messages.filter((m) => m.de === "moi").length;
-  const etape = parcours ? Math.min(tours, parcours.length - 1) : 0;
+  const [precision, setPrecision] = useState("");
+  const [envoi, setEnvoi] = useState(false);
 
-  useEffect(() => {
-    fin.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [messages, ecrit]);
-
-  const demarrer = async (s: string) => {
-    if (!s.trim()) return;
-    setSujet(s.trim());
-    setChargement(true);
-    setParcours(await genererParcours(s.trim()));
-    setMessages([
-      {
-        de: "tuteur",
-        texte: `C'est parti pour « ${s.trim()} », niveau ${niveau}. Pour commencer : qu'est-ce que tu sais déjà sur ce sujet ?`,
-      },
-    ]);
-    setChargement(false);
-  };
-
-  const envoyer = async () => {
-    const texte = saisie.trim();
-    if (!texte || ecrit) return;
-    setSaisie("");
-    setMessages((m) => [...m, { de: "moi", texte }]);
-    setEcrit(true);
-    const reponse = await repondreTuteur(sujet, tours);
-    setMessages((m) => [...m, { de: "tuteur", texte: reponse }]);
-    setEcrit(false);
-  };
-
-  if (chargement) return <Chargement texte="Préparation de ton parcours…" />;
-
-  if (!parcours) {
-    return (
-      <div>
-        <EnTete titre="Apprendre" sousTitre="Choisis un sujet : un tuteur te l'explique pas à pas, à ton rythme." />
-        <Carte className="mx-auto max-w-[680px] !p-8">
-          <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
-            <GraduationCap size={28} />
-          </div>
-          <h2 className="text-[26px] font-bold">Qu&apos;est-ce que tu veux apprendre ?</h2>
-          <form
-            className="mt-5 flex gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              demarrer(sujet);
-            }}
-          >
-            <input
-              autoFocus
-              className={classeSaisie + " !py-3.5 !text-[16px]"}
-              placeholder="Ex. Les suites arithmétiques"
-              value={sujet}
-              onChange={(e) => setSujet(e.target.value)}
-            />
-            <Bouton type="submit" disabled={!sujet.trim()} className="shrink-0">
-              Commencer
-            </Bouton>
-          </form>
-          <div className="mt-4 flex items-center gap-2">
-            <span className="text-[13px] font-semibold text-muted">Niveau</span>
-            {NIVEAUX.map((n) => (
-              <button
-                key={n}
-                onClick={() => setNiveau(n)}
-                className={`rounded-full px-3 py-1 text-[13.5px] font-semibold transition-colors ${
-                  niveau === n ? "bg-ink text-bg" : "bg-ink/5 text-muted hover:bg-ink/10"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-          <p className="mb-2.5 mt-7 text-[13px] font-semibold text-muted">Idées</p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTIONS.map((s, i) => (
-              <motion.button
-                key={s}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 * i }}
-                whileHover={{ y: -2 }}
-                onClick={() => demarrer(s)}
-                className="rounded-full border border-line bg-bg/60 px-3.5 py-1.5 text-[14px] font-medium transition-colors hover:border-accent hover:text-accent"
-              >
-                {s}
-              </motion.button>
-            ))}
-          </div>
-        </Carte>
-      </div>
-    );
-  }
+  if (lecon) return <Lecteur key={lecon.id} lecon={lecon} />;
 
   return (
     <div>
-      <EnTete
-        titre={sujet}
-        sousTitre={`Niveau ${niveau}`}
-        action={
-          <Bouton
-            variante="contour"
-            onClick={() => {
-              setParcours(null);
-              setMessages([]);
-              setSujet("");
-            }}
-          >
-            <RotateCcw size={16} /> Autre sujet
-          </Bouton>
-        }
-      />
-      <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
-        <Carte className="h-fit !p-3 lg:!p-6">
-          <p className="mb-4 hidden text-[13px] font-bold uppercase tracking-wide text-muted lg:block">Ton parcours</p>
-          <ol className="flex justify-between gap-2 lg:flex-col lg:gap-4">
-            {parcours.map((e, i) => (
-              <li key={e.titre} className="flex flex-1 flex-col items-center gap-1 text-center lg:flex-none lg:flex-row lg:items-start lg:gap-3 lg:text-left">
-                <motion.span
-                  animate={{
-                    backgroundColor: i < etape ? "var(--ok)" : i === etape ? "var(--accent)" : "var(--line)",
-                    color: i <= etape ? "var(--on-accent)" : "var(--muted)",
-                  }}
-                  className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold"
+      <EnTete titre="Apprendre" sousTitre="Des leçons pas à pas, rédigées pour toi sur le sujet de ton choix." />
+      <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+        <div>
+          <h2 className="mb-3 text-[20px]">Tes leçons</h2>
+          {LECONS.length === 0 ? (
+            <EtatVide
+              icone={<GraduationCap size={26} />}
+              titre="Pas encore de leçon"
+              texte="Demande un sujet à Claude : la leçon apparaîtra ici une fois rédigée."
+            />
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {LECONS.map((l, i) => (
+                <motion.div
+                  key={l.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  whileHover={{ y: -3 }}
                 >
-                  {i < etape ? <Check size={14} /> : i + 1}
-                </motion.span>
-                <div>
-                  <p className={`text-[12px] font-semibold lg:text-[15px] lg:font-bold ${i > etape ? "text-muted" : ""}`}>{e.titre}</p>
-                  <p className="hidden text-[13px] leading-snug text-muted lg:block">{e.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </Carte>
-
-        <Carte className="flex h-[calc(100dvh-455px)] min-h-[240px] flex-col !p-0 lg:h-[min(620px,70dvh)]">
-          <div className="flex items-center justify-between border-b border-line px-5 py-3">
-            <p className="text-[15px] font-bold">Tuteur</p>
-            {MODE_IA === "demo" && <BadgeDemo />}
-          </div>
-          <div className="flex-1 overflow-y-auto px-5 py-4">
-            <div className="flex flex-col gap-3">
-              <AnimatePresence initial={false}>
-                {messages.map((m, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
-                      m.de === "moi" ? "self-end rounded-br-md bg-accent text-on-accent" : "self-start rounded-bl-md bg-bg"
-                    }`}
+                  <Link
+                    href={`/apprendre?l=${l.id}`}
+                    className="block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
                   >
-                    {m.texte}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-              {ecrit && (
-                <div className="flex gap-1 self-start rounded-2xl rounded-bl-md bg-bg px-4 py-3.5">
-                  {[0, 1, 2].map((i) => (
-                    <motion.span
-                      key={i}
-                      className="size-2 rounded-full bg-muted"
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.18 }}
-                    />
-                  ))}
-                </div>
-              )}
-              <div ref={fin} />
+                    <p className="surtitre text-accent">
+                      {l.matiere} · {l.niveau}
+                    </p>
+                    <p className="mt-2 font-display text-[22px] leading-tight">{l.titre}</p>
+                    <p className="mt-3 flex items-center gap-3 text-[13px] text-muted">
+                      <span className="flex items-center gap-1">
+                        <Clock size={13} /> {l.duree}
+                      </span>
+                      <span>{pluriel(l.etapes.length, "étape")}</span>
+                    </p>
+                  </Link>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          )}
+        </div>
+
+        <Carte className="h-fit">
+          <h2 className="text-[20px]">Demander une leçon</h2>
+          <p className="mt-1 text-[14px] text-muted">
+            Claude la rédige et l&apos;ajoute ici. Pour apprendre en discutant, pose-lui directement tes
+            questions dans votre conversation.
+          </p>
           <form
-            className="flex gap-2 border-t border-line p-3"
+            className="mt-4 flex flex-col gap-3"
             onSubmit={(e) => {
               e.preventDefault();
-              envoyer();
+              if (sujet.trim()) setEnvoi(true);
             }}
           >
-            <input
-              className={classeSaisie}
-              placeholder="Écris ta réponse…"
-              value={saisie}
-              onChange={(e) => setSaisie(e.target.value)}
-            />
-            <Bouton type="submit" className="!px-3.5" aria-label="Envoyer" disabled={!saisie.trim() || ecrit}>
-              <ArrowUp size={18} />
+            <Champ label="Sujet">
+              <input
+                required
+                className={classeSaisie}
+                placeholder="Ex. Les suites arithmétiques"
+                value={sujet}
+                onChange={(e) => setSujet(e.target.value)}
+              />
+            </Champ>
+            <div>
+              <span className="mb-1.5 block text-[13px] font-semibold text-muted">Niveau</span>
+              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Niveau">
+                {NIVEAUX.map((n) => (
+                  <button
+                    type="button"
+                    key={n}
+                    role="radio"
+                    aria-checked={niveau === n}
+                    onClick={() => setNiveau(n)}
+                    className={`min-h-11 rounded-full px-4 text-[14px] font-medium transition-colors ${
+                      niveau === n ? "bg-ink text-bg" : "bg-ink/5 text-ink hover:bg-ink/10"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <Champ label="Ce qui te bloque (facultatif)">
+              <textarea
+                rows={2}
+                className={classeSaisie}
+                placeholder="Ex. Je confonds raison et premier terme"
+                value={precision}
+                onChange={(e) => setPrecision(e.target.value)}
+              />
+            </Champ>
+            <Bouton type="submit" disabled={!sujet.trim()}>
+              <Send size={16} /> Envoyer à Claude
             </Bouton>
           </form>
         </Carte>
       </div>
+
+      <EnvoyerAClaude
+        ouverte={envoi}
+        fermer={() => setEnvoi(false)}
+        titre="Demander une leçon"
+        objet={`Leçon : ${sujet.trim()} (${niveau})`}
+        texte={demandeLecon(sujet, niveau, precision)}
+        resultat="la leçon"
+      />
+    </div>
+  );
+}
+
+function Lecteur({ lecon }: { lecon: Lecon }) {
+  const [etape, setEtape] = useState(0);
+  const [reponseVue, setReponseVue] = useState(false);
+  const total = lecon.etapes.length;
+  const fini = etape >= total;
+  const e = lecon.etapes[etape];
+  const aller = (i: number) => {
+    setEtape(i);
+    setReponseVue(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <div className="mx-auto max-w-[720px]">
+      <Link
+        href="/apprendre"
+        className="-ml-1 mb-2 inline-flex min-h-11 items-center gap-1.5 px-1 text-[14px] font-semibold text-muted transition-colors hover:text-ink"
+      >
+        <ArrowLeft size={16} /> Toutes les leçons
+      </Link>
+      <p className="surtitre text-accent">
+        {lecon.matiere} · {lecon.niveau}
+      </p>
+      <h1 className="mt-1 text-[34px] leading-tight sm:text-[44px]">{lecon.titre}</h1>
+
+      {/* Progression */}
+      <ol className="my-6 flex gap-2" aria-label="Étapes de la leçon">
+        {lecon.etapes.map((x, i) => (
+          <li key={x.titre} className="flex-1">
+            <button
+              onClick={() => aller(i)}
+              aria-current={i === etape ? "step" : undefined}
+              aria-label={`Étape ${i + 1} : ${x.titre}`}
+              className="flex min-h-11 w-full flex-col justify-center gap-1.5"
+            >
+              <span className={`h-1.5 rounded-full transition-colors ${i < etape || fini ? "bg-ok" : i === etape ? "bg-accent" : "bg-line"}`} />
+              <span className={`hidden truncate text-left text-[12.5px] sm:block ${i === etape ? "font-semibold" : "text-muted"}`}>
+                {x.titre}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      <AnimatePresence mode="wait">
+        {fini ? (
+          <motion.div
+            key="fin"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center rounded-[18px] border border-line bg-surface p-8 text-center shadow-card"
+          >
+            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-ok/15 text-ok">
+              <Check size={30} />
+            </div>
+            <h2 className="text-[28px]">Leçon terminée</h2>
+            <p className="mt-1 max-w-[380px] text-[15px] text-muted">
+              Si un point reste flou, reprends l&apos;étape concernée ou pose ta question à Claude.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <Bouton variante="contour" onClick={() => aller(0)}>
+                Relire
+              </Bouton>
+              <Link
+                href="/apprendre"
+                className="inline-flex min-h-11 items-center rounded-[10px] bg-ink px-4 text-[14.5px] font-medium text-bg"
+              >
+                Terminer
+              </Link>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key={etape}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.25 }}
+          >
+            {etape === 0 && <p className="mb-5 text-[16px] leading-relaxed text-muted">{lecon.intro}</p>}
+            <Carte>
+              <p className="surtitre text-muted">
+                Étape {etape + 1} sur {total}
+              </p>
+              <h2 className="mt-1 text-[26px]">{e.titre}</h2>
+              <div className="mt-3 flex flex-col gap-3 text-[16px] leading-relaxed">
+                {e.texte.map((t) => (
+                  <p key={t}>{t}</p>
+                ))}
+              </div>
+              {e.exemple && (
+                <div className="mt-4 rounded-xl bg-accent-soft p-4">
+                  <p className="surtitre mb-1 text-accent">Exemple</p>
+                  <p className="text-[15px] leading-relaxed">{e.exemple}</p>
+                </div>
+              )}
+              {e.question && (
+                <div className="mt-4 rounded-xl border border-line p-4">
+                  <p className="surtitre mb-1 text-muted">Vérifie-toi</p>
+                  <p className="text-[15.5px] font-semibold">{e.question.q}</p>
+                  {reponseVue ? (
+                    <motion.p
+                      role="status"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-2 text-[15px] leading-relaxed"
+                    >
+                      {e.question.r}
+                    </motion.p>
+                  ) : (
+                    <Bouton variante="contour" className="mt-3" onClick={() => setReponseVue(true)}>
+                      <Eye size={16} /> Voir la réponse
+                    </Bouton>
+                  )}
+                </div>
+              )}
+            </Carte>
+            <div className="mt-5 flex justify-between gap-2">
+              <Bouton variante="fantome" disabled={etape === 0} onClick={() => aller(etape - 1)}>
+                <ArrowLeft size={16} /> Précédent
+              </Bouton>
+              <Bouton onClick={() => aller(etape + 1)}>
+                {etape + 1 === total ? "Terminer" : "Suivant"} <ArrowRight size={16} />
+              </Bouton>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

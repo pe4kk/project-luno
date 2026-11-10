@@ -15,5 +15,8 @@ npm run dev
 
 Puis ouvrir http://localhost:3000.
 
-L'IA est pour l'instant en mode démo : voir `lib/ai.ts`. L'état du projet et
-les décisions sont tenus à jour dans `CLAUDE.md`.
+Site en ligne : https://pe4kk.github.io/project-luno/
+
+Le site n'appelle aucune IA : les flashcards, fiches, exercices et leçons sont
+rédigés puis publiés dans `contenu/`. L'état du projet, les décisions et la
+marche à suivre sont tenus à jour dans `CLAUDE.md`.

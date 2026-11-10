@@ -1,13 +1,39 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, FileText, Layers, Play, Plus, ScrollText, Sparkles, Trash2, Upload } from "lucide-react";
-import type { Chapitre, Matiere } from "@/lib/types";
-import { pastel, useLuno } from "@/lib/store";
-import { genererFiche, genererFlashcards, MODE_IA } from "@/lib/ai";
-import { BadgeDemo, Bouton, Carte, Champ, Chargement, Fenetre, classeSaisie } from "@/components/ui";
-import { Revision } from "./Revision";
+import {
+  ArrowLeft,
+  FileText,
+  Layers,
+  Pencil,
+  Play,
+  Plus,
+  ScrollText,
+  Search,
+  Send,
+  Trash2,
+  Upload,
+} from "lucide-react";
+import type { Chapitre, Flashcard, Matiere } from "@/lib/types";
+import { encre, estDue, pastel, useLuno } from "@/lib/store";
+import { demandeCours, repererDefinitions } from "@/lib/contenu";
+import { joursAvant } from "@/lib/dates";
+import { lienTravail } from "@/lib/liens";
+import {
+  Bouton,
+  BoutonIcone,
+  Carte,
+  Champ,
+  EnvoyerAClaude,
+  EtatVide,
+  Fenetre,
+  classeSaisie,
+  pluriel,
+} from "@/components/ui";
+import { Revision, type CarteARevoir } from "./Revision";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
@@ -21,49 +47,83 @@ const TAILLES = ["Express", "Courte", "Standard", "Détaillée", "Complète"];
 export function VueChapitre({
   matiere,
   chapitre,
-  retour,
+  onglet: ongletDemande,
 }: {
   matiere: Matiere;
   chapitre: Chapitre;
-  retour: () => void;
+  onglet: string | null;
 }) {
   const s = useLuno();
-  const [onglet, setOnglet] = useState<Onglet>("cours");
-  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, var(--mix-fg))`;
+  const router = useRouter();
+  const onglet: Onglet = ONGLETS.some((o) => o.id === ongletDemande) ? (ongletDemande as Onglet) : "cours";
+  const setOnglet = (o: Onglet) =>
+    router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o }), { scroll: false });
+  const [renommer, setRenommer] = useState(false);
+  const [titre, setTitre] = useState(chapitre.titre);
+  const [envoi, setEnvoi] = useState(false);
+  const foncee = encre(matiere.couleur);
+
+  // Flèches gauche et droite pour passer d'un onglet à l'autre.
+  const surTouche = (e: React.KeyboardEvent) => {
+    const i = ONGLETS.findIndex((o) => o.id === onglet);
+    const pas = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!pas) return;
+    e.preventDefault();
+    const suivant = ONGLETS[(i + pas + ONGLETS.length) % ONGLETS.length].id;
+    setOnglet(suivant);
+    document.getElementById(`onglet-${suivant}`)?.focus();
+  };
 
   return (
     <div>
-      <button
-        onClick={retour}
-        className="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-muted transition-colors hover:text-ink"
+      <Link
+        href={lienTravail({ m: matiere.id })}
+        className="-ml-1 mb-2 inline-flex min-h-11 items-center gap-1.5 px-1 text-[14px] font-semibold text-muted transition-colors hover:text-ink"
       >
         <ArrowLeft size={16} /> {matiere.emoji} {matiere.nom}
-      </button>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
-        <h1 className="text-[34px] font-bold leading-tight sm:text-[40px]">{chapitre.titre}</h1>
-        <Bouton
-          variante="fantome"
-          className="!text-bad"
-          onClick={() => {
-            if (confirm(`Supprimer le chapitre « ${chapitre.titre} » ?`)) {
+      </Link>
+      <div className="mb-5 flex items-start justify-between gap-2">
+        <h1 className="min-w-0 text-[32px] leading-tight sm:text-[40px]">{chapitre.titre}</h1>
+        <div className="flex shrink-0">
+          <BoutonIcone
+            label="Renommer le chapitre"
+            onClick={() => {
+              setTitre(chapitre.titre);
+              setRenommer(true);
+            }}
+          >
+            <Pencil size={17} />
+          </BoutonIcone>
+          <BoutonIcone
+            label="Supprimer le chapitre"
+            className="hover:!text-bad"
+            onClick={() => {
               s.supprimerChapitre(chapitre.id);
-              retour();
-            }
-          }}
-        >
-          <Trash2 size={16} /> Supprimer
-        </Bouton>
+              router.replace(lienTravail({ m: matiere.id }));
+            }}
+          >
+            <Trash2 size={17} />
+          </BoutonIcone>
+        </div>
       </div>
 
-      <div className="mb-6 inline-flex rounded-2xl border border-line bg-surface p-1 shadow-card" role="tablist">
+      <div
+        className="mb-6 inline-flex max-w-full rounded-2xl border border-line bg-surface p-1 shadow-card"
+        role="tablist"
+        aria-label="Contenu du chapitre"
+        onKeyDown={surTouche}
+      >
         {ONGLETS.map(({ id, label, icone: Icone }) => (
           <button
             key={id}
+            id={`onglet-${id}`}
             role="tab"
             aria-selected={onglet === id}
+            aria-controls="panneau-chapitre"
+            tabIndex={onglet === id ? 0 : -1}
             onClick={() => setOnglet(id)}
-            className="relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-[14.5px] font-semibold sm:px-5"
-            style={{ color: onglet === id ? foncee : "var(--color-muted)" }}
+            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3.5 py-2 text-[14.5px] font-semibold sm:px-5"
+            style={{ color: onglet === id ? foncee : "var(--muted)" }}
           >
             {onglet === id && (
               <motion.span
@@ -87,35 +147,85 @@ export function VueChapitre({
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={onglet}
+          id="panneau-chapitre"
+          role="tabpanel"
+          aria-labelledby={`onglet-${onglet}`}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.22 }}
         >
-          {onglet === "cours" && <OngletCours chapitre={chapitre} suite={() => setOnglet("flashcards")} />}
+          {onglet === "cours" && <OngletCours chapitre={chapitre} envoyer={() => setEnvoi(true)} />}
           {onglet === "flashcards" && (
-            <OngletFlashcards chapitre={chapitre} matiere={matiere} versCours={() => setOnglet("cours")} />
+            <OngletFlashcards chapitre={chapitre} envoyer={() => setEnvoi(true)} versCours={() => setOnglet("cours")} />
           )}
           {onglet === "fiche" && (
-            <OngletFiche chapitre={chapitre} matiere={matiere} versCours={() => setOnglet("cours")} />
+            <OngletFiche
+              chapitre={chapitre}
+              matiere={matiere}
+              envoyer={() => setEnvoi(true)}
+              versCours={() => setOnglet("cours")}
+            />
           )}
         </motion.div>
       </AnimatePresence>
+
+      <Fenetre ouverte={renommer} fermer={() => setRenommer(false)} titre="Renommer le chapitre">
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!titre.trim()) return;
+            s.renommerChapitre(chapitre.id, titre.trim());
+            setRenommer(false);
+          }}
+        >
+          <Champ label="Titre">
+            <input autoFocus required className={classeSaisie} value={titre} onChange={(e) => setTitre(e.target.value)} />
+          </Champ>
+          <Bouton type="submit" className="self-end">
+            Enregistrer
+          </Bouton>
+        </form>
+      </Fenetre>
+
+      <EnvoyerAClaude
+        ouverte={envoi}
+        fermer={() => setEnvoi(false)}
+        titre="Envoyer le cours à Claude"
+        objet={`Cours : ${matiere.nom} · ${chapitre.titre}`}
+        texte={demandeCours(matiere.nom, chapitre.titre, chapitre.cours)}
+        resultat="les flashcards, la fiche de révision et les exercices"
+      />
     </div>
   );
 }
 
-function OngletCours({ chapitre, suite }: { chapitre: Chapitre; suite: () => void }) {
+function OngletCours({ chapitre, envoyer }: { chapitre: Chapitre; envoyer: () => void }) {
   const majCours = useLuno((s) => s.majCours);
+  const ajouterFlashcards = useLuno((s) => s.ajouterFlashcards);
   const fichier = useRef<HTMLInputElement>(null);
+  const [message, setMessage] = useState("");
   const mots = chapitre.cours.trim() ? chapitre.cours.trim().split(/\s+/).length : 0;
+
+  const reperer = () => {
+    const trouvees = repererDefinitions(chapitre.cours);
+    const ajoutees = ajouterFlashcards(chapitre.id, trouvees);
+    setMessage(
+      ajoutees > 0
+        ? `${pluriel(ajoutees, "flashcard ajoutée", "flashcards ajoutées")} dans l'onglet Flashcards.`
+        : trouvees.length > 0
+          ? "Ces définitions sont déjà dans tes flashcards."
+          : "Aucune ligne « Terme : définition » trouvée dans ce cours.",
+    );
+  };
 
   return (
     <Carte>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[14.5px] text-muted">
-          Colle ton cours ici, ou importe un fichier texte. Il sert de base aux flashcards, à la fiche et
-          aux exercices.
+        <p className="min-w-0 flex-1 text-[14.5px] text-muted">
+          Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une photo, envoie-le directement à
+          Claude dans votre conversation.
         </p>
         <input
           ref={fichier}
@@ -133,165 +243,207 @@ function OngletCours({ chapitre, suite }: { chapitre: Chapitre; suite: () => voi
         </Bouton>
       </div>
       <textarea
-        className={classeSaisie + " min-h-[360px] resize-y font-[450] leading-relaxed"}
+        aria-label="Texte du cours"
+        className={classeSaisie + " min-h-[320px] resize-y leading-relaxed"}
         placeholder={"Exemple :\n\nI. Nombre dérivé\nNombre dérivé : limite du taux de variation quand h tend vers 0.\n…"}
         value={chapitre.cours}
         onChange={(e) => majCours(chapitre.id, e.target.value)}
       />
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <span className="text-[13px] text-muted">
-          {mots} mot{mots > 1 ? "s" : ""} · enregistré automatiquement
-        </span>
-        <Bouton variante="doux" disabled={!mots} onClick={suite}>
-          <Sparkles size={16} /> Créer des flashcards
-        </Bouton>
+      <p className="mt-2 text-[13px] text-muted">{pluriel(mots, "mot")} · enregistré automatiquement</p>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-xl bg-accent-soft p-4">
+          <p className="text-[15px] font-semibold">Flashcards, fiche et exercices</p>
+          <p className="mt-0.5 text-[13.5px] text-ink/75">
+            Claude les rédige à partir de ton cours et les ajoute au site.
+          </p>
+          <Bouton className="mt-3" disabled={!mots} onClick={envoyer}>
+            <Send size={16} /> Envoyer à Claude
+          </Bouton>
+        </div>
+        <div className="rounded-xl border border-line p-4">
+          <p className="text-[15px] font-semibold">Flashcards rapides</p>
+          <p className="mt-0.5 text-[13.5px] text-muted">
+            Transforme en flashcards les lignes écrites « Terme : définition ».
+          </p>
+          <Bouton variante="contour" className="mt-3" disabled={!mots} onClick={reperer}>
+            <Search size={16} /> Repérer les définitions
+          </Bouton>
+        </div>
       </div>
-      <p className="mt-3 text-[12.5px] text-muted">
-        L&apos;import de PDF et de photos de cours arrivera avec l&apos;IA.
-      </p>
+      {message && (
+        <p role="status" className="mt-3 text-[14px] text-ink">
+          {message}
+        </p>
+      )}
     </Carte>
   );
 }
 
+function prochaineRevue(c: Flashcard): string {
+  if (estDue(c)) return c.niveau === 0 ? "Nouvelle" : "À revoir";
+  const j = joursAvant(c.echeance);
+  return j === 1 ? "Revue demain" : `Revue dans ${j} j`;
+}
+
 function OngletFlashcards({
   chapitre,
-  matiere,
+  envoyer,
   versCours,
 }: {
   chapitre: Chapitre;
-  matiere: Matiere;
+  envoyer: () => void;
   versCours: () => void;
 }) {
   const s = useLuno();
-  const [enCours, setEnCours] = useState(false);
-  const [message, setMessage] = useState("");
-  const [revision, setRevision] = useState(false);
-  const [ajout, setAjout] = useState(false);
+  const [seance, setSeance] = useState<CarteARevoir[] | null>(null);
+  const [edition, setEdition] = useState<Flashcard | "nouvelle" | null>(null);
   const [recto, setRecto] = useState("");
   const [verso, setVerso] = useState("");
   const cartes = chapitre.flashcards;
-  const acquises = cartes.filter((c) => c.niveau === 2).length;
+  const dues = cartes.filter(estDue);
 
-  const generer = async () => {
-    setEnCours(true);
-    setMessage("");
-    const avant = cartes.length;
-    const nouvelles = await genererFlashcards(chapitre.cours);
-    s.ajouterFlashcards(chapitre.id, nouvelles);
-    const apres = useLuno.getState().chapitres.find((c) => c.id === chapitre.id)?.flashcards.length ?? avant;
-    setMessage(
-      apres > avant
-        ? `${apres - avant} flashcard(s) ajoutée(s).`
-        : MODE_IA === "demo"
-          ? "Aucune nouvelle définition trouvée. En mode démo, seules les lignes « Terme : définition » sont repérées."
-          : "Aucune nouvelle définition trouvée.",
-    );
-    setEnCours(false);
+  const ouvrir = (c: Flashcard | "nouvelle") => {
+    setRecto(c === "nouvelle" ? "" : c.recto);
+    setVerso(c === "nouvelle" ? "" : c.verso);
+    setEdition(c);
   };
+  const lancer = (liste: Flashcard[]) =>
+    setSeance(liste.map((c) => ({ chapitreId: chapitre.id, carteId: c.id })));
 
-  if (revision && cartes.length > 0) {
-    return <Revision chapitre={chapitre} couleur={matiere.couleur} terminer={() => setRevision(false)} />;
-  }
+  if (seance) return <Revision cartes={seance} terminer={() => setSeance(null)} />;
 
   return (
     <div>
-      <Carte className="mb-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="flex items-center gap-2 text-[17px] font-bold">
-              Flashcards sur les définitions {MODE_IA === "demo" && <BadgeDemo />}
-            </p>
-            <p className="mt-0.5 text-[14px] text-muted">
-              {cartes.length === 0
-                ? "Génère des cartes à partir de ton cours, ou ajoute-les à la main."
-                : `${acquises} acquise(s) sur ${cartes.length}`}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Bouton variante="contour" onClick={() => setAjout(true)}>
-              <Plus size={16} /> Ajouter
-            </Bouton>
-            {chapitre.cours.trim() ? (
-              <Bouton variante="doux" onClick={generer} disabled={enCours}>
-                <Sparkles size={16} /> Générer depuis le cours
+      {cartes.length === 0 ? (
+        <EtatVide
+          icone={<Layers size={26} />}
+          titre="Pas encore de flashcards"
+          texte="Envoie ton cours à Claude pour qu'il les rédige, ou ajoute-les toi-même."
+          action={
+            <>
+              {chapitre.cours.trim() ? (
+                <Bouton onClick={envoyer}>
+                  <Send size={16} /> Envoyer le cours à Claude
+                </Bouton>
+              ) : (
+                <Bouton onClick={versCours}>Ajouter le cours</Bouton>
+              )}
+              <Bouton variante="contour" onClick={() => ouvrir("nouvelle")}>
+                <Plus size={16} /> Ajouter une carte
               </Bouton>
-            ) : (
-              <Bouton variante="doux" onClick={versCours}>
-                Ajouter le cours d&apos;abord
-              </Bouton>
-            )}
-            <Bouton onClick={() => setRevision(true)} disabled={cartes.length === 0}>
-              <Play size={16} /> Réviser
-            </Bouton>
-          </div>
-        </div>
-        {cartes.length > 0 && (
-          <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
-            <motion.div
-              className="h-full rounded-full bg-ok"
-              animate={{ width: `${(acquises / cartes.length) * 100}%` }}
-              transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            />
-          </div>
-        )}
-        {message && <p className="mt-3 text-[13.5px] text-muted">{message}</p>}
-      </Carte>
-
-      {enCours ? (
-        <Chargement texte="Lecture du cours et repérage des définitions…" />
+            </>
+          }
+        />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <AnimatePresence initial={false}>
-            {cartes.map((c, i) => (
+        <>
+          <Carte className="mb-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[17px] font-semibold">
+                  {dues.length > 0
+                    ? `${pluriel(dues.length, "carte")} à revoir aujourd'hui`
+                    : "Tout est à jour"}
+                </p>
+                <p className="mt-0.5 text-[14px] text-muted">
+                  {pluriel(cartes.length, "flashcard")} dans ce chapitre. Touche une carte pour la modifier.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Bouton variante="contour" onClick={() => ouvrir("nouvelle")}>
+                  <Plus size={16} /> Ajouter
+                </Bouton>
+                {dues.length > 0 ? (
+                  <Bouton onClick={() => lancer(dues)}>
+                    <Play size={16} /> Réviser ({dues.length})
+                  </Bouton>
+                ) : (
+                  <Bouton variante="doux" onClick={() => lancer(cartes)}>
+                    <Play size={16} /> Tout revoir
+                  </Bouton>
+                )}
+              </div>
+            </div>
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
               <motion.div
-                layout
-                key={c.id}
-                initial={{ opacity: 0, y: 12, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: Math.min(i * 0.03, 0.3) }}
-                className="group relative rounded-2xl border border-line bg-surface p-4 shadow-card"
-              >
-                <span
-                  className="absolute left-0 top-4 h-6 w-1 rounded-r-full"
-                  style={{ background: c.niveau === 2 ? "var(--color-ok)" : c.niveau === 1 ? "var(--color-bad)" : "var(--color-line)" }}
-                />
-                <p className="pr-8 text-[15.5px] font-bold">{c.recto}</p>
-                <p className="mt-1 text-[14px] leading-snug text-muted">{c.verso}</p>
-                <button
-                  aria-label="Supprimer la carte"
-                  onClick={() => s.supprimerFlashcard(chapitre.id, c.id)}
-                  className="absolute right-3 top-3 rounded-lg p-1.5 text-muted opacity-0 transition-all hover:bg-bad/10 hover:text-bad focus:opacity-100 group-hover:opacity-100"
+                className="h-full rounded-full bg-ok"
+                animate={{ width: `${((cartes.length - dues.length) / cartes.length) * 100}%` }}
+                transition={{ type: "spring", stiffness: 120, damping: 20 }}
+              />
+            </div>
+          </Carte>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <AnimatePresence initial={false}>
+              {cartes.map((c, i) => (
+                <motion.button
+                  layout
+                  key={c.id}
+                  initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ delay: Math.min(i * 0.03, 0.3) }}
+                  onClick={() => ouvrir(c)}
+                  className="rounded-2xl border border-line bg-surface p-4 text-left shadow-card transition-colors hover:border-ink/30"
                 >
-                  <Trash2 size={15} />
-                </button>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                  <span className="flex items-start justify-between gap-3">
+                    <span className="text-[15.5px] font-semibold">{c.recto}</span>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[11.5px] font-semibold ${
+                        estDue(c) ? "bg-accent-soft text-accent" : "bg-ink/5 text-muted"
+                      }`}
+                    >
+                      {prochaineRevue(c)}
+                    </span>
+                  </span>
+                  <span className="mt-1 block text-[14px] leading-snug text-muted">{c.verso}</span>
+                </motion.button>
+              ))}
+            </AnimatePresence>
+          </div>
+        </>
       )}
 
-      <Fenetre ouverte={ajout} fermer={() => setAjout(false)} titre="Nouvelle flashcard">
+      <Fenetre
+        ouverte={edition !== null}
+        fermer={() => setEdition(null)}
+        titre={edition === "nouvelle" ? "Nouvelle flashcard" : "Modifier la flashcard"}
+      >
         <form
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            if (!recto.trim() || !verso.trim()) return;
-            s.ajouterFlashcards(chapitre.id, [{ recto: recto.trim(), verso: verso.trim() }]);
-            setRecto("");
-            setVerso("");
-            setAjout(false);
+            if (!recto.trim() || !verso.trim() || !edition) return;
+            const k = { recto: recto.trim(), verso: verso.trim() };
+            if (edition === "nouvelle") s.ajouterFlashcards(chapitre.id, [k]);
+            else s.modifierFlashcard(chapitre.id, edition.id, k);
+            setEdition(null);
           }}
         >
           <Champ label="Recto (terme ou question)">
             <input autoFocus required className={classeSaisie} value={recto} onChange={(e) => setRecto(e.target.value)} />
           </Champ>
           <Champ label="Verso (définition ou réponse)">
-            <textarea required rows={3} className={classeSaisie} value={verso} onChange={(e) => setVerso(e.target.value)} />
+            <textarea required rows={4} className={classeSaisie} value={verso} onChange={(e) => setVerso(e.target.value)} />
           </Champ>
-          <Bouton type="submit" className="self-end">
-            Ajouter
-          </Bouton>
+          <div className="flex items-center justify-between">
+            {edition !== "nouvelle" && edition ? (
+              <Bouton
+                type="button"
+                variante="fantome"
+                className="!text-bad"
+                onClick={() => {
+                  s.supprimerFlashcard(chapitre.id, edition.id);
+                  setEdition(null);
+                }}
+              >
+                <Trash2 size={16} /> Supprimer
+              </Bouton>
+            ) : (
+              <span />
+            )}
+            <Bouton type="submit">{edition === "nouvelle" ? "Ajouter" : "Enregistrer"}</Bouton>
+          </div>
         </form>
       </Fenetre>
     </div>
@@ -301,40 +453,57 @@ function OngletFlashcards({
 function OngletFiche({
   chapitre,
   matiere,
+  envoyer,
   versCours,
 }: {
   chapitre: Chapitre;
   matiere: Matiere;
+  envoyer: () => void;
   versCours: () => void;
 }) {
-  const majFiche = useLuno((s) => s.majFiche);
-  const [taille, setTaille] = useState(chapitre.fiche?.taille ?? 3);
-  const [enCours, setEnCours] = useState(false);
+  const majTaille = useLuno((s) => s.majTailleFiche);
   const fiche = chapitre.fiche;
-  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, var(--mix-fg))`;
+  const taille = chapitre.tailleFiche;
+  const foncee = encre(matiere.couleur);
 
-  const generer = async () => {
-    setEnCours(true);
-    majFiche(chapitre.id, await genererFiche(chapitre.cours, taille));
-    setEnCours(false);
-  };
+  if (!fiche) {
+    return (
+      <EtatVide
+        icone={<ScrollText size={26} />}
+        titre="Pas encore de fiche"
+        texte="Claude rédige la fiche à partir de ton cours. Tu pourras ensuite régler sa longueur avec un curseur, de l'essentiel au cours complet."
+        action={
+          chapitre.cours.trim() ? (
+            <Bouton onClick={envoyer}>
+              <Send size={16} /> Envoyer le cours à Claude
+            </Bouton>
+          ) : (
+            <Bouton onClick={versCours}>Ajouter le cours</Bouton>
+          )
+        }
+      />
+    );
+  }
+
+  const sections = fiche.sections
+    .map((sec) => ({ ...sec, points: sec.points.filter((p) => p.n <= taille) }))
+    .filter((sec) => sec.points.length > 0);
+  const nbPoints = sections.reduce((n, sec) => n + sec.points.length, 0);
 
   return (
     <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
-      <Carte className="h-fit">
-        <p className="flex items-center gap-2 text-[17px] font-bold">
-          Taille de la fiche {MODE_IA === "demo" && <BadgeDemo />}
-        </p>
-        <div className="mt-5 flex items-baseline justify-between">
+      <Carte className="h-fit lg:sticky lg:top-24">
+        <p className="text-[17px] font-semibold">Taille de la fiche</p>
+        <div className="mt-4 flex items-baseline justify-between">
           <motion.span
             key={taille}
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-[28px] font-bold text-accent"
+            className="font-display text-[28px] text-accent"
           >
             {TAILLES[taille - 1]}
           </motion.span>
-          <span className="text-[13px] text-muted">{taille} / 5</span>
+          <span className="text-[13px] text-muted">{pluriel(nbPoints, "point")}</span>
         </div>
         <input
           type="range"
@@ -343,7 +512,8 @@ function OngletFiche({
           step={1}
           value={taille}
           aria-label="Taille de la fiche"
-          onChange={(e) => setTaille(Number(e.target.value))}
+          aria-valuetext={TAILLES[taille - 1]}
+          onChange={(e) => majTaille(chapitre.id, Number(e.target.value))}
           className="luno-range mt-4"
           style={{ "--fill": `${((taille - 1) / 4) * 100}%` } as React.CSSProperties}
         />
@@ -351,88 +521,63 @@ function OngletFiche({
           <span>L&apos;essentiel</span>
           <span>Tout le cours</span>
         </div>
-        {chapitre.cours.trim() ? (
-          <Bouton className="mt-6 w-full" onClick={generer} disabled={enCours}>
-            <Sparkles size={16} /> {fiche ? "Régénérer la fiche" : "Générer la fiche"}
-          </Bouton>
-        ) : (
-          <Bouton className="mt-6 w-full" variante="doux" onClick={versCours}>
-            Ajouter le cours d&apos;abord
-          </Bouton>
-        )}
       </Carte>
 
-      <div>
-        {enCours ? (
-          <Chargement texte="Rédaction de la fiche…" />
-        ) : fiche ? (
-          <motion.article
-            key={fiche.taille + fiche.sections.length}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card"
-          >
-            <div className="px-6 py-5 sm:px-8" style={{ background: pastel(matiere.couleur, 16) }}>
-              <p className="text-[12.5px] font-bold uppercase tracking-widest" style={{ color: foncee }}>
-                Fiche de révision · {TAILLES[fiche.taille - 1]}
-              </p>
-              <h2 className="mt-1 text-[28px] font-bold" style={{ color: foncee }}>
-                {chapitre.titre}
-              </h2>
-            </div>
-            <div className="flex flex-col gap-6 px-6 py-6 sm:px-8">
-              {fiche.sections.map((sec, i) => (
-                <motion.section
-                  key={sec.titre + i}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.06 * i }}
+      <article className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
+        <div className="px-6 py-5 sm:px-8" style={{ background: pastel(matiere.couleur, 16) }}>
+          <p className="surtitre" style={{ color: foncee }}>
+            Fiche de révision · {TAILLES[taille - 1]}
+          </p>
+          <h2 className="mt-1 text-[28px]" style={{ color: foncee }}>
+            {chapitre.titre}
+          </h2>
+        </div>
+        <div className="flex flex-col gap-6 px-6 py-6 sm:px-8">
+          {sections.map((sec, i) => (
+            <section key={sec.titre}>
+              <h3 className="mb-2 flex items-center gap-2.5 text-[18px]">
+                <span
+                  className="flex size-6 items-center justify-center rounded-md font-sans text-[12.5px] font-semibold"
+                  style={{ background: pastel(matiere.couleur, 30), color: foncee }}
                 >
-                  <h3 className="mb-2 flex items-center gap-2.5 text-[18px] font-bold">
-                    <span
-                      className="flex size-6 items-center justify-center rounded-md text-[12.5px] text-white"
-                      style={{ background: matiere.couleur }}
+                  {i + 1}
+                </span>
+                {sec.titre}
+              </h3>
+              <ul className="flex flex-col gap-1.5 pl-1">
+                <AnimatePresence initial={false}>
+                  {sec.points.map((p) => (
+                    <motion.li
+                      layout
+                      key={p.t}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.22 }}
+                      className="flex gap-2.5 overflow-hidden text-[15px] leading-relaxed"
                     >
-                      {i + 1}
-                    </span>
-                    {sec.titre}
-                  </h3>
-                  <ul className="flex flex-col gap-1.5 pl-1">
-                    {sec.points.map((p, k) => (
-                      <li key={k} className="flex gap-2.5 text-[15px] leading-relaxed">
-                        <span className="mt-[10px] size-1.5 shrink-0 rounded-full" style={{ background: matiere.couleur }} />
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.section>
-              ))}
-              {fiche.aRetenir.length > 0 && (
-                <div className="rounded-2xl bg-accent-soft p-4">
-                  <p className="mb-2 text-[13px] font-bold uppercase tracking-wide text-accent">
-                    Mots-clés à retenir
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {fiche.aRetenir.map((m) => (
-                      <span key={m} className="rounded-full bg-surface px-3 py-1 text-[13.5px] font-semibold shadow-card">
-                        {m}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+                      <span className="mt-[10px] size-1.5 shrink-0 rounded-full" style={{ background: matiere.couleur }} />
+                      <span>{p.t}</span>
+                    </motion.li>
+                  ))}
+                </AnimatePresence>
+              </ul>
+            </section>
+          ))}
+          {fiche.aRetenir.length > 0 && (
+            <div className="rounded-2xl bg-accent-soft p-4">
+              <p className="surtitre mb-2 text-accent">Mots-clés à retenir</p>
+              <div className="flex flex-wrap gap-2">
+                {fiche.aRetenir.map((m) => (
+                  <span key={m} className="rounded-full bg-surface px-3 py-1 text-[13.5px] font-semibold">
+                    {m}
+                  </span>
+                ))}
+              </div>
             </div>
-          </motion.article>
-        ) : (
-          <div className="flex h-full min-h-[260px] flex-col items-center justify-center rounded-[18px] border border-dashed border-ink/15 p-8 text-center">
-            <ScrollText size={30} className="mb-3 text-muted" />
-            <p className="text-[17px] font-bold">Pas encore de fiche</p>
-            <p className="mt-1 max-w-[320px] text-[14.5px] text-muted">
-              Choisis une taille avec le curseur, puis génère la fiche à partir de ton cours.
-            </p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </article>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { BookOpen, CalendarDays, GraduationCap, Home, Moon, Sun, Target } from "lucide-react";
 import { useSyncExternalStore, type ReactNode } from "react";
+import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
@@ -54,7 +55,7 @@ function BoutonTheme() {
       onClick={basculer}
       aria-label={sombre ? "Passer au thème clair" : "Passer au thème sombre"}
       title={sombre ? "Thème clair" : "Thème sombre"}
-      className="flex size-10 items-center justify-center rounded-[10px] border border-line bg-surface text-ink transition-colors hover:border-ink/40"
+      className="flex size-11 items-center justify-center rounded-[10px] border border-line bg-surface text-ink transition-colors hover:border-ink/40"
     >
       {monte && (
         <motion.span
@@ -102,7 +103,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </nav>
-          <BoutonTheme />
+          <div className="flex items-center gap-2">
+            <BoutonDonnees />
+            <BoutonTheme />
+          </div>
         </div>
       </header>
 
@@ -120,6 +124,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
       </main>
 
+      <SynchroBibliotheque />
+      <Annulation />
+
       {/* Barre du bas (téléphone) */}
       <nav
         className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex justify-between rounded-2xl bg-night px-2 py-1.5 shadow-pop lg:hidden"
@@ -131,7 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             href={href}
             aria-current={actif(href) ? "page" : undefined}
             className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10.5px] font-medium ${
-              actif(href) ? "text-[#2a2a2d]" : "text-white/55"
+              actif(href) ? "text-[#2a2a2d]" : "text-white/70"
             }`}
           >
             {actif(href) && (

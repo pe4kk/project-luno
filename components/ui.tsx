@@ -1,8 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Sparkles, X } from "lucide-react";
-import { useEffect, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Check, Copy, ExternalLink, X } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { lienGithub } from "@/lib/contenu";
+
+/** « 1 chapitre », « 2 chapitres », « 0 chapitre ». */
+export function pluriel(n: number, mot: string, auPluriel = mot + "s"): string {
+  return `${n} ${n > 1 ? auPluriel : mot}`;
+}
 
 export function EnTete({
   titre,
@@ -42,26 +49,42 @@ export function Bouton({
   return (
     <button
       {...props}
-      className={`inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-[14.5px] font-medium transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 ${STYLES[variante]} ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-[14.5px] font-medium transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45 ${STYLES[variante]} ${className}`}
     >
       {children}
     </button>
   );
 }
 
-export function Carte({
-  children,
+/** Bouton carré pour une icône seule, avec une cible tactile de 44 px. */
+export function BoutonIcone({
+  label,
   className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+  children,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
+  return (
+    <button
+      {...props}
+      aria-label={label}
+      title={label}
+      className={`inline-flex size-11 shrink-0 items-center justify-center rounded-[10px] text-muted transition-colors hover:bg-ink/5 hover:text-ink ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function Carte({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <div className={`rounded-[18px] border border-line bg-surface p-5 shadow-card sm:p-6 ${className}`}>
       {children}
     </div>
   );
 }
+
+const sansAbonnement = () => () => {};
+const FOCALISABLES = 'a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])';
 
 export function Fenetre({
   ouverte,
@@ -74,14 +97,41 @@ export function Fenetre({
   titre: string;
   children: ReactNode;
 }) {
+  const panneau = useRef<HTMLDivElement>(null);
+  const monte = useSyncExternalStore(sansAbonnement, () => true, () => false);
+
+  // Échap ferme la fenêtre ; Tab reste à l'intérieur ; le focus revient ensuite d'où il venait.
   useEffect(() => {
     if (!ouverte) return;
-    const surTouche = (e: KeyboardEvent) => e.key === "Escape" && fermer();
+    const avant = document.activeElement as HTMLElement | null;
+    const surTouche = (e: KeyboardEvent) => {
+      if (e.key === "Escape") fermer();
+      if (e.key !== "Tab" || !panneau.current) return;
+      const els = Array.from(panneau.current.querySelectorAll<HTMLElement>(FOCALISABLES));
+      if (els.length === 0) return;
+      const premier = els[0];
+      const dernier = els[els.length - 1];
+      if (!panneau.current.contains(document.activeElement)) {
+        e.preventDefault();
+        premier.focus();
+      } else if (e.shiftKey && document.activeElement === premier) {
+        e.preventDefault();
+        dernier.focus();
+      } else if (!e.shiftKey && document.activeElement === dernier) {
+        e.preventDefault();
+        premier.focus();
+      }
+    };
     window.addEventListener("keydown", surTouche);
-    return () => window.removeEventListener("keydown", surTouche);
+    return () => {
+      window.removeEventListener("keydown", surTouche);
+      avant?.focus?.();
+    };
   }, [ouverte, fermer]);
 
-  return (
+  // Rendue à la racine du document : un parent flouté ou transformé décalerait une fenêtre fixe.
+  if (!monte) return null;
+  return createPortal(
     <AnimatePresence>
       {ouverte && (
         <motion.div
@@ -92,6 +142,7 @@ export function Fenetre({
           onMouseDown={(e) => e.target === e.currentTarget && fermer()}
         >
           <motion.div
+            ref={panneau}
             role="dialog"
             aria-modal="true"
             aria-label={titre}
@@ -101,21 +152,18 @@ export function Fenetre({
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
           >
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-[22px] font-bold">{titre}</h2>
-              <button
-                onClick={fermer}
-                aria-label="Fermer"
-                className="rounded-full p-2 text-muted transition-colors hover:bg-ink/5 hover:text-ink"
-              >
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <h2 className="text-[22px]">{titre}</h2>
+              <BoutonIcone label="Fermer" onClick={fermer} className="-mr-2">
                 <X size={18} />
-              </button>
+              </BoutonIcone>
             </div>
             {children}
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
 
@@ -129,7 +177,7 @@ export function Champ({ label, children }: { label: string; children: ReactNode 
 }
 
 export const classeSaisie =
-  "w-full rounded-xl border border-line bg-bg/60 px-3.5 py-2.5 text-[16px] outline-none sm:text-[15px] transition-colors placeholder:text-muted/60 focus:border-accent focus:bg-surface";
+  "w-full rounded-xl border border-line bg-bg/60 px-3.5 py-2.5 text-[16px] outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:bg-surface sm:text-[15px]";
 
 export function EtatVide({
   icone,
@@ -143,22 +191,88 @@ export function EtatVide({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-[18px] border border-dashed border-ink/15 px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-[18px] border border-dashed border-ink/20 px-6 py-12 text-center">
       <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
         {icone}
       </div>
-      <h3 className="text-[20px] font-bold">{titre}</h3>
-      <p className="mt-1.5 max-w-[380px] text-[14.5px] text-muted">{texte}</p>
+      <h3 className="text-[20px]">{titre}</h3>
+      <p className="mt-1.5 max-w-[400px] text-[14.5px] text-muted">{texte}</p>
       {action && <div className="mt-5 flex flex-wrap justify-center gap-2">{action}</div>}
     </div>
   );
 }
 
-export function BadgeDemo() {
+/**
+ * Fenêtre pour transmettre une demande à Claude : copier le texte pour le
+ * coller dans la conversation, ou ouvrir un ticket GitHub prérempli.
+ */
+export function EnvoyerAClaude({
+  ouverte,
+  fermer,
+  titre,
+  objet,
+  texte,
+  resultat,
+}: {
+  ouverte: boolean;
+  fermer: () => void;
+  titre: string;
+  /** Titre du ticket GitHub. */
+  objet: string;
+  texte: string;
+  /** Ce que l'utilisateur recevra, ex. « les flashcards, la fiche et les exercices ». */
+  resultat: string;
+}) {
+  const [copie, setCopie] = useState(false);
+  const github = lienGithub(objet, texte);
+
+  const copier = async () => {
+    try {
+      await navigator.clipboard.writeText(texte);
+      setCopie(true);
+      setTimeout(() => setCopie(false), 2500);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-semibold text-accent">
-      <Sparkles size={12} /> Mode démo
-    </span>
+    <Fenetre ouverte={ouverte} fermer={fermer} titre={titre}>
+      <p className="text-[14.5px] leading-relaxed text-muted">
+        Le site ne peut pas joindre Claude tout seul. Transmets-lui ta demande par l&apos;un de ces deux
+        moyens : il rédige {resultat}, et tout apparaît ici à ta prochaine visite.
+      </p>
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="rounded-xl border border-line p-4">
+          <p className="text-[15px] font-semibold">1. Dans ta conversation avec Claude</p>
+          <p className="mt-0.5 text-[13.5px] text-muted">Copie la demande, puis colle-la dans le chat.</p>
+          <Bouton className="mt-3 w-full" onClick={copier}>
+            {copie ? <Check size={16} /> : <Copy size={16} />}
+            {copie ? "Copié" : "Copier la demande"}
+          </Bouton>
+        </div>
+        <div className="rounded-xl border border-line p-4">
+          <p className="text-[15px] font-semibold">2. Par GitHub</p>
+          <p className="mt-0.5 text-[13.5px] text-muted">
+            Ouvre une demande préremplie et valide-la. Il faut un compte GitHub, et la demande est
+            publique.
+            {github.tronque && " Ton cours est long : il sera copié, colle-le dans la page qui s'ouvre."}
+          </p>
+          <a
+            href={github.url}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => {
+              if (github.tronque) void copier();
+            }}
+            className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[10px] border border-line bg-surface px-4 py-2.5 text-[14.5px] font-medium transition-colors hover:border-ink/30"
+          >
+            <ExternalLink size={16} /> Ouvrir sur GitHub
+          </a>
+        </div>
+      </div>
+    </Fenetre>
   );
 }
 
