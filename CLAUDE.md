@@ -153,13 +153,21 @@ fiches de révision ; le slider règle la longueur de la fiche.
   pastilles de matière, saisie à 16 px contre le zoom d'iOS, marges de
   sécurité des iPhone). Le site peut s'ajouter à l'écran d'accueil du
   téléphone (`app/manifest.ts`, icônes dans `public/` et `app/`). Non testé
-  sur un vrai téléphone.
+  sur un vrai téléphone. Icône installée : croissant cuivré sur fond
+  anthracite (proposition B parmi quatre ; l'utilisateur peut en changer).
 - Pas encore fait : contenus rédigés par Claude (toujours le mode démo),
   comptes, import de PDF ou de photos, tests automatisés.
 
 ## Prochaines étapes
 
 1. Obtenir de l'utilisateur la confirmation que le site en ligne répond.
+   Il a demandé (2026-11-10) à saisir ses cours directement sur le site pour
+   que Claude les récupère. Le site ne peut pas joindre Claude. Pistes
+   proposées, choix en attente : (a) bouton « Envoyer à Claude » qui ouvre un
+   ticket GitHub prérempli, traité ensuite par une session (les tickets sont
+   lisibles avec `gh api repos/pe4kk/project-luno/issues`), éventuellement
+   par une tâche planifiée ; (b) bouton qui copie le cours pour le coller
+   dans le chat.
 2. Passer au fonctionnement sans API : contenus rédigés par Claude et stockés
    dans le dépôt (piste de Claude, non validée : un dossier `contenu/` avec un
    fichier par chapitre, lu par le site), à la place du mode démo de
