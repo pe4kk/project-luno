@@ -60,7 +60,17 @@ fiches de révision ; le slider règle la longueur de la fiche.
   & cuivre (blush `#f8f1ee`, cuivre `#c98b6b`, gris chaud `#4b4648`, formes
   arrondies), P3 Terracotta & collage (terracotta `#b5573d`, noir `#1f1a1a`,
   papiers inclinés, manuscrit), P4 Anthracite & blush (anthracite `#2a2a2d`,
-  blush `#e6bfb5`, aplats carrés). Choix final en attente.
+  blush `#e6bfb5`, aplats carrés).
+  Il a ensuite demandé de mélanger P2, P3 et P4 ; six mélanges proposés le
+  même jour : M1 Poudré & anthracite (base P2, barre latérale et flashcard
+  anthracite), M2 Collage doux (collage P3 dans la palette claire de P2),
+  M3 Blocs terracotta (aplats P4 aux couleurs P3), M4 Nuit cuivrée (fond
+  anthracite, chiffres cuivrés, version sombre), M5 Blush graphique (carte
+  partagée de P4, arrondis moyens, pastille cuivre, mot manuscrit),
+  M6 Éditorial rosé (sans cartes, grand serif italique cuivré, matières en
+  pastilles). Palette commune : blush `#f8f1ee`/`#e6bfb5`, cuivre `#c98b6b`,
+  terracotta `#b5573d`, anthracite `#2a2a2d` ; polices Fraunces, Outfit,
+  Caveat. Choix final en attente.
 
 ## Stack et architecture
 
