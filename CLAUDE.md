@@ -75,7 +75,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
 
 - Sessions cloud Claude Code, dépôt `pe4kk/project-luno`, branche `main`
   (on pousse directement sur `main`, l'utilisateur travaille seul).
-- Dépendances : `npm ci` à la racine.
+- Environnement cloud dédié : **`project-luno`** (créé le 2026-11-10), à
+  sélectionner au lancement de chaque nouvelle session. Réseau limité aux
+  registres de paquets ; son script de démarrage lance `npm ci` dans le dépôt.
+  Le script n'a pas encore été éprouvé sur une session neuve : si
+  `node_modules` est absent au démarrage, lancer `npm ci` à la main et le
+  signaler.
 
 ## Commandes utiles
 
