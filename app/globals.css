@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #f6f3ec;
+  --color-surface: #ffffff;
+  --color-ink: #1a1a2e;
+  --color-muted: #6e6e85;
+  --color-line: #e9e4d8;
+  --color-accent: #5b4bdb;
+  --color-accent-soft: #ece9ff;
+  --color-moon: #f5b841;
+  --color-night: #15152a;
+  --color-ok: #2a9d8f;
+  --color-bad: #e4572e;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, sans-serif;
+  --shadow-card: 0 1px 2px rgb(26 26 46 / 0.04), 0 8px 24px -12px rgb(26 26 46 / 0.12);
+  --shadow-pop: 0 2px 4px rgb(26 26 46 / 0.06), 0 24px 48px -16px rgb(26 26 46 / 0.28);
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Slider */
+input[type="range"].luno-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) var(--fill, 50%),
+    var(--color-line) var(--fill, 50%)
+  );
+  cursor: pointer;
+}
+input[type="range"].luno-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: white;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 2px 8px rgb(91 75 219 / 0.35);
+  transition: transform 0.15s ease;
+}
+input[type="range"].luno-range::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+input[type="range"].luno-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: white;
+  border: 2px solid var(--color-accent);
+  box-shadow: 0 2px 8px rgb(91 75 219 / 0.35);
+}
+
+.flip-scene {
+  perspective: 1400px;
+}
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
