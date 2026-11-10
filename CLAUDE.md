@@ -46,7 +46,13 @@ fiches de révision ; le slider règle la longueur de la fiche.
   Apprendre n'est pas possible sous cette forme.
 - Direction artistique : quatre maquettes proposées le 2026-11-10 (A Nuit
   lunaire, B Papier & encre, C Pop coloré, D Minimal clair), en plus du design
-  actuel (crème et bleu nuit). Choix en attente.
+  actuel (crème et bleu nuit). L'utilisateur a retenu la famille « Papier &
+  encre » (B : crème, serif Fraunces, rouge vermillon, traits fins) et a
+  demandé des variantes, proposées le même jour : B1 Cahier d'écolier
+  (réglure Seyès, encre bleue, écriture manuscrite Caveat), B2 Gazette (têtière
+  de journal, Playfair Display, noir et rouge), B3 Ardoise & craie (tableau
+  vert sombre, craie jaune), B4 Édition classique (EB Garamond, double filet
+  rouge, sommaire à points de conduite). Choix final en attente.
 
 ## Stack et architecture
 
