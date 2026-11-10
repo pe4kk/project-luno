@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Chapitre, ChapitrePublie, Donnees, Dst, Flashcard, Matiere } from "./types";
+import type { Chapitre, ChapitrePublie, Donnees, Dst, Flashcard, Matiere, Tache } from "./types";
 import { dansJours, todayISO } from "./dates";
 import { EXEMPLE_DERIVATION } from "@/contenu/exemple";
 import { CALENDRIER_EVENEMENTS, CALENDRIER_MATIERES } from "@/contenu/calendrier";
@@ -59,6 +59,11 @@ type Etat = Donnees & {
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
   noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
 
+  ajouterTaches: (textes: string[]) => number;
+  modifierTache: (id: string, t: Partial<Omit<Tache, "id">>) => void;
+  supprimerTache: (id: string) => void;
+  effacerTachesFaites: () => void;
+
   enregistrerDst: (d: Omit<Dst, "id"> & { id?: string }) => void;
   supprimerDst: (id: string) => void;
 
@@ -76,6 +81,7 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   matieres: s.matieres,
   chapitres: s.chapitres,
   dsts: s.dsts,
+  taches: s.taches,
   calendrier: s.calendrier,
 });
 
@@ -85,6 +91,27 @@ export const useLuno = create<Etat>()(
       matieres: [],
       chapitres: [],
       dsts: [],
+      taches: [],
+      ajouterTaches: (textes) => {
+        const neuves: Tache[] = textes
+          .map((t) => t.trim())
+          .filter(Boolean)
+          .map((texte) => ({ id: uid(), texte, fait: false, echeance: "" }));
+        set((s) => ({ taches: [...s.taches, ...neuves] }));
+        return neuves.length;
+      },
+      modifierTache: (id, t) =>
+        set((s) => ({ taches: s.taches.map((x) => (x.id === id ? { ...x, ...t } : x)) })),
+      supprimerTache: (id) =>
+        set((s) => ({
+          annulation: { message: "Tâche supprimée", avant: photo(s) },
+          taches: s.taches.filter((x) => x.id !== id),
+        })),
+      effacerTachesFaites: () =>
+        set((s) => ({
+          annulation: { message: "Tâches terminées effacées", avant: photo(s) },
+          taches: s.taches.filter((x) => !x.fait),
+        })),
       publies: {},
       calendrier: null,
       // Reprend le calendrier du lycée pour les matières choisies. Les DST repris portent
@@ -328,6 +355,7 @@ export const useLuno = create<Etat>()(
           matieres: [],
           chapitres: [],
           dsts: [],
+          taches: [],
           publies: {},
           calendrier: null,
         })),
@@ -344,6 +372,7 @@ export const useLuno = create<Etat>()(
         matieres: s.matieres,
         chapitres: s.chapitres,
         dsts: s.dsts,
+        taches: s.taches,
         publies: s.publies,
         calendrier: s.calendrier,
       }),
@@ -372,6 +401,7 @@ export function normaliser(
       })),
     })),
     dsts: (d.dsts ?? []).map((x) => ({ ...x, chapitreIds: x.chapitreIds ?? [] })),
+    taches: (d.taches ?? []).map((x) => ({ ...x, echeance: x.echeance ?? "" })),
     publies: d.publies ?? {},
     calendrier: d.calendrier ?? null,
   };

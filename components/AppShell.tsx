@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { BookOpen, CalendarDays, GraduationCap, Home, Moon, Sun, Target } from "lucide-react";
+import { BookOpen, CalendarDays, GraduationCap, Home, ListTodo, Moon, Sun, Target } from "lucide-react";
 import { useSyncExternalStore, type ReactNode } from "react";
 import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
   { href: "/calendrier", label: "Calendrier", icone: CalendarDays },
+  { href: "/taches", label: "À faire", icone: ListTodo },
   { href: "/travail", label: "Travail", icone: BookOpen },
   { href: "/apprendre", label: "Apprendre", icone: GraduationCap },
   { href: "/exercices", label: "S'exercer", icone: Target },
@@ -88,7 +89,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={href}
                 href={href}
                 aria-current={actif(href) ? "page" : undefined}
-                className={`relative rounded-[10px] px-4 py-2 text-[14px] tracking-[0.06em] transition-colors ${
+                className={`relative rounded-[10px] px-3.5 py-2 text-[14px] tracking-[0.04em] transition-colors ${
                   actif(href) ? "text-bg" : "text-muted hover:text-ink"
                 }`}
               >
@@ -129,7 +130,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Barre du bas (téléphone) */}
       <nav
-        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex justify-between rounded-2xl bg-night px-2 py-1.5 shadow-pop lg:hidden"
+        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex justify-between rounded-2xl bg-night px-1.5 py-1.5 shadow-pop lg:hidden"
         aria-label="Navigation principale"
       >
         {ONGLETS.map(({ href, label, icone: Icone }) => (
@@ -137,7 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             key={href}
             href={href}
             aria-current={actif(href) ? "page" : undefined}
-            className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10.5px] font-medium ${
+            className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium ${
               actif(href) ? "text-[#2a2a2d]" : "text-white/70"
             }`}
           >

@@ -1,5 +1,6 @@
 import type { ChapitrePublie } from "@/lib/types";
 import { HGGSP_THEME_4 } from "./hggsp-theme4";
+import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -10,4 +11,4 @@ import { HGGSP_THEME_4 } from "./hggsp-theme4";
  * exercices. Pour corriger un chapitre déjà publié, modifier son contenu et
  * augmenter `version`. Format : voir `exemple.ts`.
  */
-export const BIBLIOTHEQUE: ChapitrePublie[] = [...HGGSP_THEME_4];
+export const BIBLIOTHEQUE: ChapitrePublie[] = [...HGGSP_THEME_4, FRANCAIS_RIMBAUD];

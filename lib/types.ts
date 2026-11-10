@@ -96,4 +96,13 @@ export type Lecon = {
   }[];
 };
 
-export type Donnees = { matieres: Matiere[]; chapitres: Chapitre[]; dsts: Dst[] };
+/** Une chose à faire (onglet « À faire »). */
+export type Tache = {
+  id: string;
+  texte: string;
+  fait: boolean;
+  /** AAAA-MM-JJ, ou vide. */
+  echeance: string;
+};
+
+export type Donnees = { matieres: Matiere[]; chapitres: Chapitre[]; dsts: Dst[]; taches: Tache[] };

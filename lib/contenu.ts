@@ -109,3 +109,16 @@ export function lienGithub(titre: string, corps: string): { url: string; tronque
   const debut = corps.split("--- COURS ---")[0] + "--- COURS ---\n(Colle ton cours ici : il est déjà copié.)";
   return { url: base + encodeURIComponent(debut), tronque: true };
 }
+
+/** Onglet « À faire » : une tâche par ligne ; puces, numéros et cases en début de ligne sont retirés. */
+export function lireListe(texte: string): string[] {
+  return texte
+    .split(/\n+/)
+    .map((l) =>
+      l
+        .replace(/^\s*(?:[-*•–—·▪◦]|\d+[.)])\s*/, "")
+        .replace(/^\s*\[[ xX]?\]\s*/, "")
+        .trim(),
+    )
+    .filter(Boolean);
+}

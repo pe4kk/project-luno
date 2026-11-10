@@ -62,8 +62,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
 - Toutes les pages sont des composants client. `AppShell` n'affiche le contenu
   qu'après l'hydratation, car les données viennent du `localStorage`.
 - Fichiers clés :
-  - `app/` : `page.tsx` (accueil), `calendrier/`, `travail/`, `apprendre/`,
-    `exercices/` (onglet « S'exercer »).
+  - `app/` : `page.tsx` (accueil), `calendrier/`, `taches/` (onglet « À
+    faire »), `travail/`, `apprendre/`, `exercices/` (onglet « S'exercer »).
+    Six onglets : c'est le maximum qui tient dans la barre du bas sur
+    téléphone.
   - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
     thème), barre du bas sur téléphone, transition entre pages.
   - `components/Donnees.tsx` : fenêtre « Mes données » (sauvegarde,
@@ -125,13 +127,19 @@ un PDF ou une photo directement dans le chat.
 - Ses anciennes fiches faites dans d'autres conversations sont des documents
   Claude Docs visibles avec l'outil Artifact (`action: list`), à lire avec le
   connecteur Claude Docs. Déjà repris : « HGGSP Thème 4 » (fiches courtes et
-  complètes) dans `contenu/hggsp-theme4.ts`. Pas encore repris, à proposer :
-  « La cellule » (SVT), « Éléments chimiques & cristaux », « Rimbaud, Cahiers
-  de Douai », « Dilution et absorbance », carnet de vocabulaire EN·ES.
+  complètes) dans `contenu/hggsp-theme4.ts` ; « Rimbaud, Cahiers de Douai »
+  dans `contenu/francais-rimbaud.ts`. Pas encore repris, à proposer : « La
+  cellule » (SVT), « Éléments chimiques & cristaux », « Dilution et
+  absorbance », carnet de vocabulaire EN·ES.
+- **Tâches (« À faire »)** : elles vivent dans le navigateur de l'utilisateur,
+  Claude ne peut pas y écrire. Quand il dicte ses tâches dans le chat, lui
+  répondre par une liste propre (une tâche par ligne, dans un bloc de code)
+  qu'il colle dans l'onglet avec « Coller une liste ».
 - **Calendrier du lycée** : `contenu/calendrier.ts` contient les DST de
   Première 2026-2027 relevés sur une photo du document du lycée (sans les
-  heures ; durées lues sur la photo, à corriger si l'utilisateur signale une
-  erreur). Chaque utilisateur choisit ses matières dans la page Calendrier ;
+  heures). Relevé revérifié le 2026-11-10 sur la photo agrandie, ligne par
+  ligne : dates et durées conformes. Les DST de Première tombent le jeudi ;
+  les autres jours sont des rattrapages, oraux blancs ou semaine de bac blanc. Chaque utilisateur choisit ses matières dans la page Calendrier ;
   les DST repris ont un identifiant `cal-<rang>` : ne pas réordonner la liste,
   ajouter à la fin, sinon les ajouts des utilisateurs (heure, chapitres liés)
   se décalent. Les EAF de juin n'y sont pas, faute de date.
@@ -204,7 +212,11 @@ un PDF ou une photo directement dans le chat.
 - Contenus publiés : HGGSP Première, thème 4 (introduction, axe 1, axe 2 :
   64 flashcards, 27 exercices, fiches à cinq tailles). Le prochain DST de
   HGGSP est le 19/11/2026 ; rien ne dit qu'il porte sur ce thème.
+- Français Première : Rimbaud, Cahiers de Douai (30 flashcards, 12
+  exercices, fiche à cinq tailles).
 - Calendrier des DST de Première 2026-2027 disponible à l'import (47 dates).
+- Onglet « À faire » (`app/taches/`, 2026-11-10) : ajout direct, collage
+  d'une liste, cocher et décocher, échéance facultative, aperçu à l'accueil.
 - Pas encore fait : comptes, synchronisation entre appareils, tests
   automatisés dans le dépôt.
 

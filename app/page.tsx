@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, CalendarDays, Eraser, GraduationCap, Target } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, Check, Eraser, GraduationCap, ListTodo, Target } from "lucide-react";
 import { aExemple, encre, estDue, pastel, useLuno } from "@/lib/store";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
@@ -10,6 +10,7 @@ import { Bouton, Carte, pluriel } from "@/components/ui";
 
 const RACCOURCIS = [
   { href: "/calendrier", titre: "Calendrier", texte: "Note tes DST", icone: CalendarDays, couleur: "#b5573d" },
+  { href: "/taches", titre: "À faire", texte: "Tes devoirs à ne pas oublier", icone: ListTodo, couleur: "#7d9a84" },
   { href: "/travail", titre: "Travail", texte: "Cours, flashcards et fiches", icone: BookOpen, couleur: "#55555c" },
   { href: "/apprendre", titre: "Apprendre", texte: "Des leçons pas à pas", icone: GraduationCap, couleur: "#c98b6b" },
   { href: "/exercices", titre: "S'exercer", texte: "Des exercices corrigés", icone: Target, couleur: "#8a5a78" },
@@ -26,6 +27,9 @@ const classeLien =
 export default function Accueil() {
   const s = useLuno();
   const { matieres, chapitres, dsts } = s;
+  const aFaire = s.taches
+    .filter((t) => !t.fait)
+    .sort((a, b) => (a.echeance || "9999").localeCompare(b.echeance || "9999"));
   const aVenir = dsts
     .filter((d) => joursAvant(d.date) >= 0)
     .sort((a, b) => (a.date + a.heure).localeCompare(b.date + b.heure));
@@ -33,7 +37,7 @@ export default function Accueil() {
   const matiere = (id: string) => matieres.find((m) => m.id === id);
   const cartes = chapitres.flatMap((c) => c.flashcards);
   const dues = cartes.filter(estDue).length;
-  const vide = matieres.length === 0 && dsts.length === 0;
+  const vide = matieres.length === 0 && dsts.length === 0 && s.taches.length === 0;
   // Premier chapitre lié au prochain DST : c'est lui qu'on propose de réviser.
   const aReviser = prochain && chapitres.find((c) => prochain.chapitreIds.includes(c.id));
 
@@ -150,6 +154,42 @@ export default function Accueil() {
         </div>
       </div>
 
+      {aFaire.length > 0 && (
+        <div className="mt-4 rounded-[18px] border border-line bg-surface p-5 shadow-card">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <p className="flex items-center gap-2 text-[13px] font-semibold text-muted">
+              <ListTodo size={15} /> À faire · {aFaire.length}
+            </p>
+            <Link href="/taches" className="inline-flex min-h-11 items-center gap-1 text-[13.5px] font-semibold text-accent">
+              Tout voir <ArrowRight size={14} />
+            </Link>
+          </div>
+          <ul className="flex flex-col">
+            {aFaire.slice(0, 3).map((t) => (
+              <li key={t.id} className="flex items-center gap-1">
+                <button
+                  role="checkbox"
+                  aria-checked={false}
+                  aria-label={`Marquer comme fait : ${t.texte}`}
+                  onClick={() => s.modifierTache(t.id, { fait: true })}
+                  className="group flex size-11 shrink-0 items-center justify-center"
+                >
+                  <span className="flex size-6 items-center justify-center rounded-full border-2 border-ink/35 text-transparent transition-colors group-hover:border-ok group-hover:text-ok">
+                    <Check size={14} strokeWidth={3} />
+                  </span>
+                </button>
+                <span className="min-w-0 flex-1 truncate text-[15px]">{t.texte}</span>
+                {t.echeance && (
+                  <span className={`shrink-0 text-[12.5px] font-semibold ${joursAvant(t.echeance) < 0 ? "text-bad" : "text-muted"}`}>
+                    {joursAvant(t.echeance) < 0 ? "En retard" : compteARebours(t.echeance)}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {vide ? (
         <>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-soft px-4 py-3">
@@ -160,7 +200,7 @@ export default function Accueil() {
             <Bouton onClick={s.chargerExemple}>Charger l&apos;exemple</Bouton>
           </div>
           <h2 className="mb-4 mt-10 text-[22px]">Par où commencer</h2>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
             {RACCOURCIS.map(({ href, titre, texte, icone: Icone, couleur }, i) => (
               <motion.div
                 key={href}

@@ -66,7 +66,7 @@ export function BoutonDonnees() {
   const [erreur, setErreur] = useState("");
   const fichier = useRef<HTMLInputElement>(null);
   const nbCartes = s.chapitres.reduce((n, c) => n + c.flashcards.length, 0);
-  const vide = s.matieres.length === 0 && s.dsts.length === 0;
+  const vide = s.matieres.length === 0 && s.dsts.length === 0 && s.taches.length === 0;
 
   const exporter = () => {
     const contenu = JSON.stringify(
@@ -76,6 +76,7 @@ export function BoutonDonnees() {
         matieres: s.matieres,
         chapitres: s.chapitres,
         dsts: s.dsts,
+        taches: s.taches,
         publies: s.publies,
         calendrier: s.calendrier,
       },
@@ -114,7 +115,7 @@ export function BoutonDonnees() {
       </button>
       <Fenetre ouverte={ouverte} fermer={() => setOuverte(false)} titre="Mes données">
         <p className="text-[14.5px] leading-relaxed text-muted">
-          Tes matières, tes DST et ta progression sont enregistrés dans ce navigateur uniquement (
+          Tes matières, tes DST, tes tâches et ta progression sont enregistrés dans ce navigateur uniquement (
           {pluriel(s.matieres.length, "matière")}, {pluriel(s.dsts.length, "DST", "DST")},{" "}
           {pluriel(nbCartes, "flashcard")}). Fais une sauvegarde de temps en temps, et pour passer sur un
           autre appareil.
