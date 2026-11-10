@@ -17,7 +17,23 @@ ouverte sur ce dépôt. Il sert de mémoire entre les conversations.
 
 ## Objectif du projet
 
-_À remplir : le projet n'a pas encore été décrit._
+Site web d'aide au travail scolaire, pour la France, fonctionnant en grande
+partie par IA. Exigence forte : un site très beau et très fluide, avec de
+jolies pages et des transitions soignées.
+
+Onglets prévus (description de l'utilisateur du 2026-11-10) :
+
+- **Calendrier** : tous les DST (devoirs sur table) de l'utilisateur.
+- **Travail** : liste de matières ; dans chaque matière, des chapitres ; dans
+  chaque chapitre, le cours envoyé par l'utilisateur, des flashcards générées
+  par IA sur les définitions, et des fiches de révision dont on choisit la
+  taille avec un slider.
+- **Apprendre** : apprendre un sujet au choix avec un tuteur IA, dans l'esprit
+  du skill « Learn » de Claude.
+- **S'exercer** : exercices générés et corrigés par IA.
+
+Interprétations de Claude à confirmer : « fifs » dans le message dicté =
+fiches de révision ; le slider règle la longueur de la fiche.
 
 ## Stack et architecture
 
@@ -42,12 +58,13 @@ _À remplir (installation, lancement, tests)._
 
 ## État d'avancement
 
-- 2026-11-10 : dépôt créé, fichier de mémoire initialisé. Aucun code.
+- 2026-11-10 : dépôt créé, mémoire initialisée, projet décrit. Aucun code.
 
 ## Prochaines étapes
 
-1. Décrire le projet (objectif, technos, services externes).
-2. Remplir les sections ci-dessus et mettre en place la structure du dépôt.
+1. Trancher : utilisateurs (solo ou comptes), niveau scolaire, clé d'API pour l'IA.
+2. Choisir la stack et mettre en place la structure du dépôt.
+3. Construire la coque du site (navigation, design) puis les onglets un par un.
 
 ## Préférences de l'utilisateur
 
