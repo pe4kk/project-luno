@@ -50,6 +50,8 @@ export default function Accueil() {
             tu vas gérer
           </span>
 
+          <div className="copper-bg absolute right-5 top-5 size-11 rounded-full shadow-[0_0_30px_rgb(201_139_107_/_0.4)] sm:hidden" />
+
           <p className="surtitre relative text-accent">Prochain DST</p>
           {prochain ? (
             <div className="relative sm:max-w-[62%]">
@@ -128,7 +130,7 @@ export default function Accueil() {
       )}
 
       <h2 className="mb-4 mt-10 text-[22px] font-bold">Par où commencer</h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {RACCOURCIS.map(({ href, titre, texte, icone: Icone, couleur }, i) => (
           <motion.div
             key={href}
@@ -139,10 +141,10 @@ export default function Accueil() {
           >
             <Link
               href={href}
-              className="group block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
+              className="group block h-full rounded-[18px] border border-line bg-surface p-4 shadow-card transition-shadow hover:shadow-pop sm:p-5"
             >
               <div
-                className="mb-10 flex size-11 items-center justify-center rounded-2xl"
+                className="mb-5 flex size-11 items-center justify-center rounded-2xl sm:mb-10"
                 style={{ background: pastel(couleur), color: couleur }}
               >
                 <Icone size={21} />

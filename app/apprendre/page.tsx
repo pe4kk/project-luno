@@ -142,11 +142,11 @@ export default function Apprendre() {
         }
       />
       <div className="grid gap-5 lg:grid-cols-[280px_1fr]">
-        <Carte className="h-fit">
-          <p className="mb-4 text-[13px] font-bold uppercase tracking-wide text-muted">Ton parcours</p>
-          <ol className="flex flex-col gap-4">
+        <Carte className="h-fit !p-3 lg:!p-6">
+          <p className="mb-4 hidden text-[13px] font-bold uppercase tracking-wide text-muted lg:block">Ton parcours</p>
+          <ol className="flex justify-between gap-2 lg:flex-col lg:gap-4">
             {parcours.map((e, i) => (
-              <li key={e.titre} className="flex gap-3">
+              <li key={e.titre} className="flex flex-1 flex-col items-center gap-1 text-center lg:flex-none lg:flex-row lg:items-start lg:gap-3 lg:text-left">
                 <motion.span
                   animate={{
                     backgroundColor: i < etape ? "var(--ok)" : i === etape ? "var(--accent)" : "var(--line)",
@@ -157,15 +157,15 @@ export default function Apprendre() {
                   {i < etape ? <Check size={14} /> : i + 1}
                 </motion.span>
                 <div>
-                  <p className={`text-[15px] font-bold ${i > etape ? "text-muted" : ""}`}>{e.titre}</p>
-                  <p className="text-[13px] leading-snug text-muted">{e.description}</p>
+                  <p className={`text-[12px] font-semibold lg:text-[15px] lg:font-bold ${i > etape ? "text-muted" : ""}`}>{e.titre}</p>
+                  <p className="hidden text-[13px] leading-snug text-muted lg:block">{e.description}</p>
                 </div>
               </li>
             ))}
           </ol>
         </Carte>
 
-        <Carte className="flex h-[min(620px,70dvh)] flex-col !p-0">
+        <Carte className="flex h-[calc(100dvh-455px)] min-h-[240px] flex-col !p-0 lg:h-[min(620px,70dvh)]">
           <div className="flex items-center justify-between border-b border-line px-5 py-3">
             <p className="text-[15px] font-bold">Tuteur</p>
             {MODE_IA === "demo" && <BadgeDemo />}

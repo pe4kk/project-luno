@@ -120,7 +120,7 @@ export function Revision({
             animate={{ rotateY: retournee ? 180 : 0 }}
             transition={{ type: "spring", stiffness: 180, damping: 22 }}
             style={{ transformStyle: "preserve-3d" }}
-            className="relative block h-[320px] w-full cursor-pointer text-center"
+            className="relative block h-[min(320px,calc(100dvh-460px))] min-h-[180px] w-full cursor-pointer text-center"
             aria-label={retournee ? "Voir le recto" : "Voir la réponse"}
           >
             <span
@@ -134,7 +134,7 @@ export function Revision({
               >
                 {carte.recto}
               </span>
-              <span className="absolute bottom-5 text-[13px] text-ink/45">Clique ou appuie sur Espace</span>
+              <span className="absolute bottom-4 text-[13px] text-ink/45">Touche la carte pour la retourner</span>
             </span>
             <span
               className="flip-face absolute inset-0 flex items-center justify-center rounded-[18px] border-[1.5px] border-ink bg-surface p-8 shadow-[6px_6px_0_var(--blush)]"
@@ -164,7 +164,7 @@ export function Revision({
         </Bouton>
       </div>
       <p className="mt-3 text-center text-[12.5px] text-muted">
-        Retourne la carte, puis indique si tu connaissais la réponse (flèches ← et →).
+        Retourne la carte, puis indique si tu connaissais la réponse.
       </p>
     </div>
   );

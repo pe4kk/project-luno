@@ -110,7 +110,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
   `cd out && python3 -m http.server 3210`.
 - `npm run lint` et `npx tsc --noEmit` : vérifications.
 - Vérification visuelle : script Playwright qui charge l'exemple et parcourt
-  tous les onglets (à réécrire au besoin, il n'est pas dans le dépôt).
+  tous les onglets (à réécrire au besoin, il n'est pas dans le dépôt). Toujours
+  vérifier aussi en téléphone (`devices['iPhone 13']`) : la barre du bas est
+  fixe, donc tout bouton d'action doit rester visible au-dessus d'elle.
 
 ## Mise en ligne
 
@@ -146,6 +148,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - Apprendre : choix du sujet et du niveau, parcours en 4 étapes, discussion
     avec le tuteur (réponses d'exemple).
   - S'exercer : QCM avec correction et score.
+- 2026-11-10 : interface mobile vérifiée en émulation iPhone 13 sur tous les
+  écrans (barre d'onglets en bas, rien de caché dessous, calendrier avec
+  pastilles de matière, saisie à 16 px contre le zoom d'iOS, marges de
+  sécurité des iPhone). Le site peut s'ajouter à l'écran d'accueil du
+  téléphone (`app/manifest.ts`, icônes dans `public/` et `app/`). Non testé
+  sur un vrai téléphone.
 - Pas encore fait : contenus rédigés par Claude (toujours le mode démo),
   comptes, import de PDF ou de photos, tests automatisés.
 

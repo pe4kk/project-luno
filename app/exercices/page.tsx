@@ -102,7 +102,11 @@ export default function Exercices() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-ink/5 p-4"
+                  onAnimationComplete={() =>
+                    document.getElementById("correction")?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+                  }
+                  id="correction"
+                  className="mt-5 flex scroll-mb-28 flex-wrap items-center justify-between gap-3 rounded-2xl bg-ink/5 p-4"
                 >
                   <p className="min-w-0 flex-1 text-[14.5px]">
                     <strong>{choisi === q.bonneReponse ? "Bonne réponse." : "Pas tout à fait."}</strong>{" "}

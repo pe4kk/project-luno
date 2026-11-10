@@ -82,7 +82,7 @@ export default function Calendrier() {
       <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
         <Carte className="!p-4 sm:!p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-[24px] font-bold">{titreMois(vue.annee, vue.mois)}</h2>
+            <h2 className="text-[20px] sm:text-[24px]">{titreMois(vue.annee, vue.mois)}</h2>
             <div className="flex items-center gap-1">
               <Bouton
                 variante="fantome"
@@ -128,7 +128,7 @@ export default function Calendrier() {
                     <button
                       key={iso}
                       onClick={() => (duJour.length === 1 ? setBrouillon(duJour[0]) : nouveau(iso))}
-                      className={`group flex min-h-[68px] flex-col rounded-xl border p-1.5 text-left transition-colors sm:min-h-[96px] sm:p-2 ${
+                      className={`group flex min-h-[62px] flex-col rounded-[10px] border p-1 text-left transition-colors sm:min-h-[96px] sm:p-2 ${
                         dansMois ? "border-line bg-bg/40 hover:border-accent/50 hover:bg-accent-soft/40" : "border-transparent opacity-35"
                       }`}
                     >
@@ -149,14 +149,15 @@ export default function Calendrier() {
                                 e.stopPropagation();
                                 setBrouillon(d);
                               }}
-                              className="truncate rounded-md px-1.5 py-0.5 text-[11px] font-semibold sm:text-[12px]"
+                              className="rounded-md text-center text-[13px] leading-[20px] sm:truncate sm:px-1.5 sm:py-0.5 sm:text-left sm:text-[12px] sm:font-semibold sm:leading-normal"
                               style={{
                                 background: pastel(m?.couleur ?? "#888", 20),
                                 color: `color-mix(in oklab, ${m?.couleur ?? "#888"} 70%, var(--mix-fg))`,
                               }}
+                              title={`${m?.nom} · ${d.titre}`}
                             >
-                              <span className="hidden sm:inline">{m?.emoji} </span>
-                              {m?.nom}
+                              {m?.emoji}
+                              <span className="hidden sm:inline"> {m?.nom}</span>
                             </span>
                           );
                         })}

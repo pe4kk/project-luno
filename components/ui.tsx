@@ -95,7 +95,7 @@ export function Fenetre({
             role="dialog"
             aria-modal="true"
             aria-label={titre}
-            className="max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-[18px] bg-surface p-6 shadow-pop"
+            className="max-h-[88dvh] w-full max-w-[480px] overflow-y-auto rounded-[18px] bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-pop sm:p-6"
             initial={{ opacity: 0, y: 28, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -129,7 +129,7 @@ export function Champ({ label, children }: { label: string; children: ReactNode 
 }
 
 export const classeSaisie =
-  "w-full rounded-xl border border-line bg-bg/60 px-3.5 py-2.5 text-[15px] outline-none transition-colors placeholder:text-muted/60 focus:border-accent focus:bg-surface";
+  "w-full rounded-xl border border-line bg-bg/60 px-3.5 py-2.5 text-[16px] outline-none sm:text-[15px] transition-colors placeholder:text-muted/60 focus:border-accent focus:bg-surface";
 
 export function EtatVide({
   icone,
@@ -156,7 +156,7 @@ export function EtatVide({
 
 export function BadgeDemo() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-semibold text-accent">
+    <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-semibold text-accent">
       <Sparkles size={12} /> Mode démo
     </span>
   );

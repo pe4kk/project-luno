@@ -107,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       {/* Contenu */}
-      <main className="mx-auto w-full max-w-[1180px] px-4 pb-28 pt-4 sm:px-8 lg:pb-14 lg:pt-6">
+      <main className="mx-auto w-full max-w-[1180px] px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pt-4 lg:pb-14 lg:pt-6">
         {monte && (
           <motion.div
             key={chemin}
@@ -122,7 +122,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Barre du bas (téléphone) */}
       <nav
-        className="fixed inset-x-3 bottom-3 z-30 flex justify-between rounded-2xl bg-night px-2 py-1.5 shadow-pop lg:hidden"
+        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex justify-between rounded-2xl bg-night px-2 py-1.5 shadow-pop lg:hidden"
         aria-label="Navigation principale"
       >
         {ONGLETS.map(({ href, label, icone: Icone }) => (

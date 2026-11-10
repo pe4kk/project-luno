@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/outfit";
 import "@fontsource-variable/fraunces";
 import "@fontsource-variable/fraunces/wght-italic.css";
@@ -6,7 +6,18 @@ import "@fontsource-variable/caveat";
 import "./globals.css";
 import { AppShell } from "@/components/AppShell";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f1ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#242426" },
+  ],
+};
+
 export const metadata: Metadata = {
+  appleWebApp: { capable: true, title: "Luno", statusBarStyle: "default" },
   title: "Luno",
   description: "Ton espace de travail : calendrier des DST, cours, flashcards, fiches et exercices.",
 };
