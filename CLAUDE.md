@@ -119,9 +119,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
 - `.github/workflows/deployer.yml` reconstruit le site et remplace la branche
   `gh-pages` à chaque push sur `main` (build avec `GITHUB_PAGES=true`, qui
   active le préfixe `/project-luno`). Rien à faire à la main.
-- Depuis une session cloud, on ne peut ni activer Pages ni ouvrir
-  `github.io` : c'est l'utilisateur qui active Pages (Settings, Pages, branche
-  `gh-pages`) et qui confirme que l'adresse répond. Non confirmé à ce jour.
+- GitHub Pages s'est activé tout seul au premier push de `gh-pages`
+  (2026-11-10) et les déploiements sont passés au vert (`gh run list`).
+  L'adresse `github.io` n'est pas joignable depuis une session cloud : seul
+  l'utilisateur peut confirmer que la page s'affiche. Non confirmé à ce jour.
 
 ## Décisions prises
 
