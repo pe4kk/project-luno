@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 import type { Chapitre, ChapitrePublie, Donnees, Dst, Flashcard, Matiere } from "./types";
 import { dansJours, todayISO } from "./dates";
 import { EXEMPLE_DERIVATION } from "@/contenu/exemple";
+import { CALENDRIER_EVENEMENTS, CALENDRIER_MATIERES } from "@/contenu/calendrier";
 
 export const COULEURS = [
   "#b5573d",
@@ -36,8 +37,11 @@ export const estDue = (c: Flashcard) => c.echeance <= todayISO();
 type Etat = Donnees & {
   /** Versions des chapitres publiés déjà repris dans ce navigateur. */
   publies: Record<string, number>;
+  /** Matières choisies pour le calendrier du lycée, ou `null` s'il n'a pas été repris. */
+  calendrier: string[] | null;
+  importerCalendrier: (noms: string[]) => void;
   /** Dernière suppression, tant qu'elle peut être annulée. */
-  annulation: { message: string; avant: Donnees } | null;
+  annulation: { message: string; avant: Donnees & { calendrier: string[] | null } } | null;
   annuler: () => void;
   oublierAnnulation: () => void;
 
@@ -68,7 +72,12 @@ type Etat = Donnees & {
 const majChapitre = (liste: Chapitre[], id: string, f: (c: Chapitre) => Chapitre) =>
   liste.map((c) => (c.id === id ? f(c) : c));
 
-const photo = (s: Donnees): Donnees => ({ matieres: s.matieres, chapitres: s.chapitres, dsts: s.dsts });
+const photo = (s: Donnees & { calendrier: string[] | null }) => ({
+  matieres: s.matieres,
+  chapitres: s.chapitres,
+  dsts: s.dsts,
+  calendrier: s.calendrier,
+});
 
 export const useLuno = create<Etat>()(
   persist(
@@ -77,6 +86,47 @@ export const useLuno = create<Etat>()(
       chapitres: [],
       dsts: [],
       publies: {},
+      calendrier: null,
+      // Reprend le calendrier du lycée pour les matières choisies. Les DST repris portent
+      // un identifiant « cal-… » : un nouvel import les remplace en gardant ce que
+      // l'utilisateur y a ajouté (heure, salle, notes, chapitres).
+      importerCalendrier: (noms) =>
+        set((s) => {
+          const matieres = [...s.matieres];
+          const idDe = (nom: string) => {
+            let m = matieres.find((x) => x.nom.toLowerCase() === nom.toLowerCase());
+            if (!m) {
+              const c = CALENDRIER_MATIERES.find((x) => x.nom === nom)!;
+              m = { id: uid(), nom: c.nom, couleur: c.couleur, emoji: c.emoji };
+              matieres.push(m);
+            }
+            return m.id;
+          };
+          const anciens = new Map(s.dsts.filter((d) => d.id.startsWith("cal-")).map((d) => [d.id, d]));
+          const repris: Dst[] = [];
+          CALENDRIER_EVENEMENTS.forEach((ev, i) => {
+            if (!noms.includes(ev.matiere)) return;
+            const id = `cal-${i}`;
+            const avant = anciens.get(id);
+            repris.push({
+              id,
+              matiereId: idDe(ev.matiere),
+              titre: ev.titre ?? "DST",
+              date: ev.date,
+              heure: avant?.heure ?? "",
+              dureeMin: ev.dureeMin,
+              salle: avant?.salle ?? "",
+              notes: avant?.notes ?? "",
+              chapitreIds: avant?.chapitreIds ?? [],
+            });
+          });
+          return {
+            annulation: { message: "Calendrier du lycée mis à jour", avant: photo(s) },
+            matieres,
+            dsts: [...s.dsts.filter((d) => !d.id.startsWith("cal-")), ...repris],
+            calendrier: noms,
+          };
+        }),
       annulation: null,
       annuler: () => set((s) => (s.annulation ? { ...s.annulation.avant, annulation: null } : {})),
       oublierAnnulation: () => set({ annulation: null }),
@@ -279,6 +329,7 @@ export const useLuno = create<Etat>()(
           chapitres: [],
           dsts: [],
           publies: {},
+          calendrier: null,
         })),
       remplacerTout: (d) =>
         set((s) => ({
@@ -289,14 +340,22 @@ export const useLuno = create<Etat>()(
     {
       name: "luno-v1",
       version: 2,
-      partialize: (s) => ({ matieres: s.matieres, chapitres: s.chapitres, dsts: s.dsts, publies: s.publies }),
+      partialize: (s) => ({
+        matieres: s.matieres,
+        chapitres: s.chapitres,
+        dsts: s.dsts,
+        publies: s.publies,
+        calendrier: s.calendrier,
+      }),
       migrate: (ancien) => normaliser(ancien as Partial<Donnees>),
     },
   ),
 );
 
 /** Complète des données anciennes ou importées pour qu'elles suivent le format actuel. */
-export function normaliser(d: Partial<Donnees> & { publies?: Record<string, number> }) {
+export function normaliser(
+  d: Partial<Donnees> & { publies?: Record<string, number>; calendrier?: string[] | null },
+) {
   const aujourdhui = todayISO();
   return {
     matieres: d.matieres ?? [],
@@ -314,6 +373,7 @@ export function normaliser(d: Partial<Donnees> & { publies?: Record<string, numb
     })),
     dsts: (d.dsts ?? []).map((x) => ({ ...x, chapitreIds: x.chapitreIds ?? [] })),
     publies: d.publies ?? {},
+    calendrier: d.calendrier ?? null,
   };
 }
 

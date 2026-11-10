@@ -1,4 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
+import { HGGSP_THEME_4 } from "./hggsp-theme4";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -9,4 +10,4 @@ import type { ChapitrePublie } from "@/lib/types";
  * exercices. Pour corriger un chapitre déjà publié, modifier son contenu et
  * augmenter `version`. Format : voir `exemple.ts`.
  */
-export const BIBLIOTHEQUE: ChapitrePublie[] = [];
+export const BIBLIOTHEQUE: ChapitrePublie[] = [...HGGSP_THEME_4];

@@ -17,6 +17,7 @@ import {
 } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { Bouton, Carte, Champ, EnTete, EtatVide, Fenetre, classeSaisie, pluriel } from "@/components/ui";
+import { CalendrierLycee } from "@/components/CalendrierLycee";
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 type Brouillon = Omit<Dst, "id"> & { id?: string };
@@ -31,6 +32,7 @@ export default function Calendrier() {
   const [sens, setSens] = useState(1);
   const [jour, setJour] = useState<string | null>(null);
   const [brouillon, setBrouillon] = useState<Brouillon | null>(null);
+  const [toutVoir, setToutVoir] = useState(false);
 
   const matiere = (id: string) => matieres.find((m) => m.id === id);
   const changerMois = (delta: number) => {
@@ -67,10 +69,11 @@ export default function Calendrier() {
     return (
       <div>
         <EnTete titre="Calendrier" sousTitre="Tous tes devoirs sur table, au même endroit." />
+        <CalendrierLycee />
         <EtatVide
           icone={<CalendarDays size={26} />}
           titre="Commence par créer une matière"
-          texte="Chaque DST est rattaché à une matière. Crée tes matières dans l'onglet Travail, ou charge l'exemple pour essayer."
+          texte="Chaque DST est rattaché à une matière. Reprends le calendrier du lycée ci-dessus, crée tes matières dans l'onglet Travail, ou charge l'exemple pour essayer."
           action={
             <>
               <Link
@@ -102,6 +105,8 @@ export default function Calendrier() {
           </Bouton>
         }
       />
+
+      <CalendrierLycee />
 
       <div className="grid gap-5 xl:grid-cols-[1fr_340px]">
         <Carte className="!p-3 sm:!p-6">
@@ -202,7 +207,7 @@ export default function Calendrier() {
           )}
           <div className="flex flex-col gap-3">
             <AnimatePresence initial={false}>
-              {aVenir.map((d) => (
+              {(toutVoir ? aVenir : aVenir.slice(0, 5)).map((d) => (
                 <motion.div
                   layout
                   key={d.id}
@@ -214,6 +219,11 @@ export default function Calendrier() {
                 </motion.div>
               ))}
             </AnimatePresence>
+            {aVenir.length > 5 && (
+              <Bouton variante="contour" onClick={() => setToutVoir((v) => !v)}>
+                {toutVoir ? "Voir moins" : `Voir les ${aVenir.length - 5} suivants`}
+              </Bouton>
+            )}
           </div>
         </div>
       </div>
@@ -320,9 +330,8 @@ export default function Calendrier() {
                   onChange={(e) => setBrouillon({ ...brouillon, date: e.target.value })}
                 />
               </Champ>
-              <Champ label="Heure">
+              <Champ label="Heure (facultatif)">
                 <input
-                  required
                   type="time"
                   className={classeSaisie}
                   value={brouillon.heure}
@@ -335,6 +344,7 @@ export default function Calendrier() {
                   value={brouillon.dureeMin}
                   onChange={(e) => setBrouillon({ ...brouillon, dureeMin: Number(e.target.value) })}
                 >
+                  <option value={0}>Non précisée</option>
                   {[30, 55, 60, 90, 120, 180, 240].map((d) => (
                     <option key={d} value={d}>
                       {dureeLisible(d)}
@@ -396,7 +406,7 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
     <div className="flex gap-3 rounded-2xl border border-line bg-surface p-4 shadow-card">
       <span className="w-1.5 shrink-0 rounded-full" style={{ background: m?.couleur }} />
       <div className="min-w-0 flex-1">
-        <button onClick={modifier} className="block w-full text-left" aria-label={`Modifier le DST ${m?.nom} ${d.titre}`}>
+        <button onClick={modifier} className="block w-full text-left" aria-label={`Modifier le DST : ${m?.nom}, ${dateLongue(d.date)}`}>
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-[15.5px] font-semibold">
               {m?.emoji} {m?.nom}
@@ -412,9 +422,11 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
           <span className="block truncate text-[14px] text-muted">{d.titre}</span>
           <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] text-muted">
             <span>{dateLongue(d.date)}</span>
-            <span className="flex items-center gap-1">
-              <Clock size={12} /> {d.heure} · {dureeLisible(d.dureeMin)}
-            </span>
+            {(d.heure || d.dureeMin > 0) && (
+              <span className="flex items-center gap-1">
+                <Clock size={12} /> {[d.heure, d.dureeMin > 0 ? dureeLisible(d.dureeMin) : ""].filter(Boolean).join(" · ")}
+              </span>
+            )}
             {d.salle && (
               <span className="flex items-center gap-1">
                 <MapPin size={12} /> {d.salle}

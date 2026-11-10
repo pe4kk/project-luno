@@ -58,8 +58,9 @@ export type Dst = {
   titre: string;
   /** AAAA-MM-JJ */
   date: string;
-  /** HH:MM */
+  /** HH:MM, ou vide si l'heure n'est pas connue. */
   heure: string;
+  /** 0 si la durée n'est pas connue. */
   dureeMin: number;
   salle: string;
   notes: string;

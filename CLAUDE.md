@@ -38,7 +38,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
 ## Réponses de l'utilisateur (2026-11-10)
 
 - Utilisateurs : lui et des amis, chacun avec son compte (pas un produit public).
-- Niveau : lycée (seconde, première, terminale).
+- Niveau : lycée. L'utilisateur est en **Première** (2026-2027) et suit la
+  spécialité HGGSP ; ses autres spécialités ne sont pas connues.
 - IA : **pas de clé d'API** (il ne veut rien payer en plus de son abonnement
   Claude). Le site n'appelle aucune IA : Claude rédige flashcards, fiches,
   exercices et leçons dans une conversation, puis les publie dans `contenu/`.
@@ -121,6 +122,19 @@ un PDF ou une photo directement dans le chat.
   augmenter `version`.
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
+- Ses anciennes fiches faites dans d'autres conversations sont des documents
+  Claude Docs visibles avec l'outil Artifact (`action: list`), à lire avec le
+  connecteur Claude Docs. Déjà repris : « HGGSP Thème 4 » (fiches courtes et
+  complètes) dans `contenu/hggsp-theme4.ts`. Pas encore repris, à proposer :
+  « La cellule » (SVT), « Éléments chimiques & cristaux », « Rimbaud, Cahiers
+  de Douai », « Dilution et absorbance », carnet de vocabulaire EN·ES.
+- **Calendrier du lycée** : `contenu/calendrier.ts` contient les DST de
+  Première 2026-2027 relevés sur une photo du document du lycée (sans les
+  heures ; durées lues sur la photo, à corriger si l'utilisateur signale une
+  erreur). Chaque utilisateur choisit ses matières dans la page Calendrier ;
+  les DST repris ont un identifiant `cal-<rang>` : ne pas réordonner la liste,
+  ajouter à la fin, sinon les ajouts des utilisateurs (heure, chapitres liés)
+  se décalent. Les EAF de juin n'y sont pas, faute de date.
 - Pousser sur `main` : le site se redéploie et chaque navigateur reprend le
   nouveau contenu à la visite suivante. Tout le monde le reçoit.
 - Fermer le ticket GitHub correspondant si la demande en venait.
@@ -187,14 +201,17 @@ un PDF ou une photo directement dans le chat.
 - Suite à une critique de design (2026-11-10), tous les points relevés ont
   été corrigés. Rien n'a été testé avec de vrais utilisateurs ni sur un vrai
   téléphone.
-- `contenu/bibliotheque.ts` est vide : aucun vrai cours de l'utilisateur n'a
-  encore été traité. Le seul chapitre rédigé est celui de l'exemple.
+- Contenus publiés : HGGSP Première, thème 4 (introduction, axe 1, axe 2 :
+  64 flashcards, 27 exercices, fiches à cinq tailles). Le prochain DST de
+  HGGSP est le 19/11/2026 ; rien ne dit qu'il porte sur ce thème.
+- Calendrier des DST de Première 2026-2027 disponible à l'import (47 dates).
 - Pas encore fait : comptes, synchronisation entre appareils, tests
   automatisés dans le dépôt.
 
 ## Prochaines étapes
 
-1. Traiter le premier vrai cours envoyé par l'utilisateur.
+1. Proposer de reprendre ses autres fiches existantes (voir « Ajouter du
+   contenu ») et traiter les nouveaux cours qu'il envoie.
 2. Obtenir sa confirmation que le site en ligne s'affiche bien sur son
    téléphone, et ses retours.
 3. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub

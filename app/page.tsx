@@ -81,8 +81,14 @@ export default function Accueil() {
                 · {prochain.titre}
               </p>
               <p className="mt-1 text-[14.5px] text-muted">
-                {dateLongue(prochain.date)} · {prochain.heure} · {dureeLisible(prochain.dureeMin)}
-                {prochain.salle && ` · salle ${prochain.salle}`}
+                {[
+                  dateLongue(prochain.date),
+                  prochain.heure,
+                  prochain.dureeMin > 0 ? dureeLisible(prochain.dureeMin) : "",
+                  prochain.salle && `salle ${prochain.salle}`,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
               {aReviser ? (
                 <Link href={lienTravail({ m: aReviser.matiereId, c: aReviser.id, o: "flashcards" })} className={classeLien}>
