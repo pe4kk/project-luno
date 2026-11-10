@@ -135,7 +135,7 @@ export default function Exercices() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mx-auto flex max-w-[460px] flex-col items-center rounded-3xl border border-line bg-surface p-10 text-center shadow-card"
+        className="mx-auto flex max-w-[460px] flex-col items-center rounded-[18px] border border-line bg-surface p-10 text-center shadow-card"
       >
         <div className="relative mb-5">
           <svg width="140" height="140" viewBox="0 0 140 140" className="-rotate-90">
@@ -178,7 +178,7 @@ export default function Exercices() {
     <div>
       <EnTete titre="S'exercer" sousTitre="Des exercices sur tes chapitres, corrigés tout de suite." />
       {MODE_IA === "demo" && (
-        <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-2xl bg-moon/15 px-4 py-3 text-[14px]">
+        <div className="mb-6 flex flex-wrap items-center gap-2.5 rounded-2xl bg-accent-soft px-4 py-3 text-[14px]">
           <BadgeDemo />
           <span>
             Pour l&apos;instant, les exercices sont des QCM construits à partir de tes flashcards. Les exercices

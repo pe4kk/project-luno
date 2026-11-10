@@ -29,7 +29,7 @@ export function VueChapitre({
 }) {
   const s = useLuno();
   const [onglet, setOnglet] = useState<Onglet>("cours");
-  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, black)`;
+  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, var(--mix-fg))`;
 
   return (
     <div>
@@ -311,7 +311,7 @@ function OngletFiche({
   const [taille, setTaille] = useState(chapitre.fiche?.taille ?? 3);
   const [enCours, setEnCours] = useState(false);
   const fiche = chapitre.fiche;
-  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, black)`;
+  const foncee = `color-mix(in oklab, ${matiere.couleur} 65%, var(--mix-fg))`;
 
   const generer = async () => {
     setEnCours(true);
@@ -370,7 +370,7 @@ function OngletFiche({
             key={fiche.taille + fiche.sections.length}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="overflow-hidden rounded-3xl border border-line bg-surface shadow-card"
+            className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card"
           >
             <div className="px-6 py-5 sm:px-8" style={{ background: pastel(matiere.couleur, 16) }}>
               <p className="text-[12.5px] font-bold uppercase tracking-widest" style={{ color: foncee }}>
@@ -408,8 +408,8 @@ function OngletFiche({
                 </motion.section>
               ))}
               {fiche.aRetenir.length > 0 && (
-                <div className="rounded-2xl bg-moon/15 p-4">
-                  <p className="mb-2 text-[13px] font-bold uppercase tracking-wide text-[#8a5f00]">
+                <div className="rounded-2xl bg-accent-soft p-4">
+                  <p className="mb-2 text-[13px] font-bold uppercase tracking-wide text-accent">
                     Mots-clés à retenir
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -424,7 +424,7 @@ function OngletFiche({
             </div>
           </motion.article>
         ) : (
-          <div className="flex h-full min-h-[260px] flex-col items-center justify-center rounded-3xl border border-dashed border-ink/15 p-8 text-center">
+          <div className="flex h-full min-h-[260px] flex-col items-center justify-center rounded-[18px] border border-dashed border-ink/15 p-8 text-center">
             <ScrollText size={30} className="mb-3 text-muted" />
             <p className="text-[17px] font-bold">Pas encore de fiche</p>
             <p className="mt-1 max-w-[320px] text-[14.5px] text-muted">

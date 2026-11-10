@@ -41,14 +41,14 @@ export default function Travail() {
             <ArrowLeft size={16} /> Toutes les matières
           </button>
           <div
-            className="mb-8 flex flex-wrap items-end justify-between gap-4 rounded-3xl p-6 sm:p-8"
+            className="mb-8 flex flex-wrap items-end justify-between gap-4 rounded-[18px] p-6 sm:p-8"
             style={{ background: pastel(matiere.couleur, 16) }}
           >
             <div>
               <div className="text-[44px] leading-none">{matiere.emoji}</div>
               <h1
                 className="mt-3 text-[36px] font-bold leading-tight sm:text-[44px]"
-                style={{ color: `color-mix(in oklab, ${matiere.couleur} 65%, black)` }}
+                style={{ color: `color-mix(in oklab, ${matiere.couleur} 65%, var(--mix-fg))` }}
               >
                 {matiere.nom}
               </h1>
@@ -172,7 +172,7 @@ export default function Travail() {
                     whileHover={{ y: -5 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => ouvrir(m.id)}
-                    className="relative overflow-hidden rounded-3xl p-6 text-left shadow-card transition-shadow hover:shadow-pop"
+                    className="relative overflow-hidden rounded-[18px] p-6 text-left shadow-card transition-shadow hover:shadow-pop"
                     style={{ background: pastel(m.couleur, 15) }}
                   >
                     <span
@@ -182,7 +182,7 @@ export default function Travail() {
                     <span className="relative block text-[38px] leading-none">{m.emoji}</span>
                     <span
                       className="relative mt-12 block font-display text-[24px] font-bold leading-tight"
-                      style={{ color: `color-mix(in oklab, ${m.couleur} 65%, black)` }}
+                      style={{ color: `color-mix(in oklab, ${m.couleur} 65%, var(--mix-fg))` }}
                     >
                       {m.nom}
                     </span>

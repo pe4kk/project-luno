@@ -16,7 +16,7 @@ export function EnTete({
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
-        <h1 className="text-[34px] font-bold leading-tight sm:text-[40px]">{titre}</h1>
+        <h1 className="text-[36px] leading-tight sm:text-[46px]">{titre}</h1>
         {sousTitre && <p className="mt-1 text-[15px] text-muted">{sousTitre}</p>}
       </div>
       {action}
@@ -27,8 +27,8 @@ export function EnTete({
 type Variante = "plein" | "doux" | "contour" | "fantome";
 
 const STYLES: Record<Variante, string> = {
-  plein: "bg-ink text-white hover:bg-accent shadow-card",
-  doux: "bg-accent-soft text-accent hover:bg-accent hover:text-white",
+  plein: "bg-ink text-bg hover:bg-accent hover:text-on-accent",
+  doux: "bg-accent-soft text-accent hover:bg-accent hover:text-on-accent",
   contour: "border border-line bg-surface text-ink hover:border-ink/30",
   fantome: "text-muted hover:bg-ink/5 hover:text-ink",
 };
@@ -42,7 +42,7 @@ export function Bouton({
   return (
     <button
       {...props}
-      className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[14.5px] font-semibold transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 ${STYLES[variante]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5 text-[14.5px] font-medium transition-all duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 ${STYLES[variante]} ${className}`}
     >
       {children}
     </button>
@@ -57,7 +57,7 @@ export function Carte({
   className?: string;
 }) {
   return (
-    <div className={`rounded-3xl border border-line bg-surface p-5 shadow-card sm:p-6 ${className}`}>
+    <div className={`rounded-[18px] border border-line bg-surface p-5 shadow-card sm:p-6 ${className}`}>
       {children}
     </div>
   );
@@ -85,7 +85,7 @@ export function Fenetre({
     <AnimatePresence>
       {ouverte && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-night/45 p-3 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 backdrop-blur-sm sm:items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export function Fenetre({
             role="dialog"
             aria-modal="true"
             aria-label={titre}
-            className="max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-3xl bg-surface p-6 shadow-pop"
+            className="max-h-[90dvh] w-full max-w-[480px] overflow-y-auto rounded-[18px] bg-surface p-6 shadow-pop"
             initial={{ opacity: 0, y: 28, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -143,7 +143,7 @@ export function EtatVide({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center rounded-3xl border border-dashed border-ink/15 px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-[18px] border border-dashed border-ink/15 px-6 py-14 text-center">
       <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-accent-soft text-accent">
         {icone}
       </div>
@@ -156,7 +156,7 @@ export function EtatVide({
 
 export function BadgeDemo() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-moon/20 px-2.5 py-1 text-[12px] font-semibold text-[#8a5f00]">
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-semibold text-accent">
       <Sparkles size={12} /> Mode démo
     </span>
   );

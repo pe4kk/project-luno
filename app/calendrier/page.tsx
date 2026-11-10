@@ -134,7 +134,7 @@ export default function Calendrier() {
                     >
                       <span
                         className={`mb-1 flex size-6 items-center justify-center rounded-full text-[13px] font-semibold ${
-                          estAujourdhui ? "bg-accent text-white" : ""
+                          estAujourdhui ? "bg-accent text-on-accent" : ""
                         }`}
                       >
                         {Number(iso.slice(8))}
@@ -152,7 +152,7 @@ export default function Calendrier() {
                               className="truncate rounded-md px-1.5 py-0.5 text-[11px] font-semibold sm:text-[12px]"
                               style={{
                                 background: pastel(m?.couleur ?? "#888", 20),
-                                color: `color-mix(in oklab, ${m?.couleur ?? "#888"} 70%, black)`,
+                                color: `color-mix(in oklab, ${m?.couleur ?? "#888"} 70%, var(--mix-fg))`,
                               }}
                             >
                               <span className="hidden sm:inline">{m?.emoji} </span>
@@ -252,7 +252,7 @@ export default function Calendrier() {
                     style={{
                       borderColor: brouillon.matiereId === m.id ? m.couleur : "transparent",
                       background: pastel(m.couleur, brouillon.matiereId === m.id ? 22 : 10),
-                      color: `color-mix(in oklab, ${m.couleur} 70%, black)`,
+                      color: `color-mix(in oklab, ${m.couleur} 70%, var(--mix-fg))`,
                     }}
                   >
                     {m.emoji} {m.nom}

@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { BookOpen, CalendarDays, GraduationCap, Home, Target } from "lucide-react";
+import { BookOpen, CalendarDays, GraduationCap, Home, Moon, Sun, Target } from "lucide-react";
 import { useSyncExternalStore, type ReactNode } from "react";
-import { MODE_IA } from "@/lib/ai";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
@@ -23,14 +22,51 @@ export function useMonte() {
 
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5 px-2">
-      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden>
-        <circle cx="16" cy="16" r="16" fill="#26264a" />
-        <path d="M21.5 20.6A8 8 0 0 1 13 8.2a8.2 8.2 0 1 0 8.5 12.4Z" fill="#f5b841" />
-        <circle cx="22.5" cy="10" r="1.2" fill="#fff" opacity=".85" />
-      </svg>
-      <span className="font-display text-[22px] font-bold text-white">Luno</span>
+    <Link href="/" className="flex items-center gap-2.5">
+      <span className="size-[30px] rounded-full bg-ink shadow-[inset_-9px_-3px_0_0_var(--blush)]" />
+      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">Luno</span>
     </Link>
+  );
+}
+
+const observerTheme = (cb: () => void) => {
+  const o = new MutationObserver(cb);
+  o.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  return () => o.disconnect();
+};
+
+function BoutonTheme() {
+  const monte = useMonte();
+  const sombre = useSyncExternalStore(
+    observerTheme,
+    () => document.documentElement.dataset.theme === "dark",
+    () => false,
+  );
+  const basculer = () => {
+    const suivant = sombre ? "light" : "dark";
+    document.documentElement.dataset.theme = suivant;
+    try {
+      localStorage.setItem("luno-theme", suivant);
+    } catch {}
+  };
+  return (
+    <button
+      onClick={basculer}
+      aria-label={sombre ? "Passer au thème clair" : "Passer au thème sombre"}
+      title={sombre ? "Thème clair" : "Thème sombre"}
+      className="flex size-10 items-center justify-center rounded-[10px] border border-line bg-surface text-ink transition-colors hover:border-ink/40"
+    >
+      {monte && (
+        <motion.span
+          key={String(sombre)}
+          initial={{ rotate: -60, opacity: 0, scale: 0.6 }}
+          animate={{ rotate: 0, opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 18 }}
+        >
+          {sombre ? <Sun size={18} /> : <Moon size={18} />}
+        </motion.span>
+      )}
+    </button>
   );
 }
 
@@ -40,45 +76,38 @@ export function AppShell({ children }: { children: ReactNode }) {
   const actif = (href: string) => (href === "/" ? chemin === "/" : chemin.startsWith(href));
 
   return (
-    <div className="min-h-dvh lg:pl-[248px]">
-      {/* Barre latérale (ordinateur) */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[248px] flex-col bg-night px-4 py-6 lg:flex">
-        <Logo />
-        <nav className="mt-10 flex flex-col gap-1" aria-label="Navigation principale">
-          {ONGLETS.map(({ href, label, icone: Icone }) => (
-            <Link
-              key={href}
-              href={href}
-              aria-current={actif(href) ? "page" : undefined}
-              className={`relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium transition-colors ${
-                actif(href) ? "text-white" : "text-white/55 hover:text-white/90"
-              }`}
-            >
-              {actif(href) && (
-                <motion.span
-                  layoutId="onglet-actif"
-                  className="absolute inset-0 rounded-xl bg-white/10"
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                />
-              )}
-              <Icone size={19} className="relative" strokeWidth={2} />
-              <span className="relative">{label}</span>
-            </Link>
-          ))}
-        </nav>
-        <div className="mt-auto rounded-xl border border-white/10 bg-white/5 p-3 text-[13px] leading-snug text-white/60">
-          <div className="mb-1 flex items-center gap-2 font-medium text-white/90">
-            <span className="size-2 rounded-full bg-moon" />
-            {MODE_IA === "demo" ? "IA en mode démo" : "IA connectée"}
-          </div>
-          {MODE_IA === "demo"
-            ? "Les contenus générés sont des exemples simplifiés."
-            : "Les contenus sont générés par IA."}
+    <div className="min-h-dvh">
+      {/* Barre du haut */}
+      <header className="sticky top-0 z-30 bg-bg/85 backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between gap-4 px-4 py-3.5 sm:px-8">
+          <Logo />
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
+            {ONGLETS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                aria-current={actif(href) ? "page" : undefined}
+                className={`relative rounded-[10px] px-4 py-2 text-[14px] tracking-[0.06em] transition-colors ${
+                  actif(href) ? "text-bg" : "text-muted hover:text-ink"
+                }`}
+              >
+                {actif(href) && (
+                  <motion.span
+                    layoutId="onglet-actif"
+                    className="absolute inset-0 rounded-[10px] bg-ink"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <span className="relative">{label}</span>
+              </Link>
+            ))}
+          </nav>
+          <BoutonTheme />
         </div>
-      </aside>
+      </header>
 
       {/* Contenu */}
-      <main className="mx-auto w-full max-w-[1120px] px-4 pb-28 pt-6 sm:px-8 lg:pb-12 lg:pt-10">
+      <main className="mx-auto w-full max-w-[1180px] px-4 pb-28 pt-4 sm:px-8 lg:pb-14 lg:pt-6">
         {monte && (
           <motion.div
             key={chemin}
@@ -102,13 +131,13 @@ export function AppShell({ children }: { children: ReactNode }) {
             href={href}
             aria-current={actif(href) ? "page" : undefined}
             className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10.5px] font-medium ${
-              actif(href) ? "text-white" : "text-white/50"
+              actif(href) ? "text-[#2a2a2d]" : "text-white/55"
             }`}
           >
             {actif(href) && (
               <motion.span
                 layoutId="onglet-actif-mobile"
-                className="absolute inset-0 rounded-xl bg-white/10"
+                className="absolute inset-0 rounded-xl bg-[#e6bfb5]"
                 transition={{ type: "spring", stiffness: 420, damping: 34 }}
               />
             )}

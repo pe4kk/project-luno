@@ -44,12 +44,12 @@ L'URSS disparaît en décembre 1991.`;
 
 export function donneesExemple(): { matieres: Matiere[]; chapitres: Chapitre[]; dsts: Dst[] } {
   const matieres: Matiere[] = [
-    { id: "m-maths", nom: "Mathématiques", couleur: "#5b4bdb", emoji: "📐" },
-    { id: "m-pc", nom: "Physique-Chimie", couleur: "#3b82c4", emoji: "⚗️" },
-    { id: "m-hg", nom: "Histoire-Géo", couleur: "#e4572e", emoji: "🌍" },
-    { id: "m-fr", nom: "Français", couleur: "#d6457f", emoji: "📚" },
-    { id: "m-svt", nom: "SVT", couleur: "#2a9d8f", emoji: "🧬" },
-    { id: "m-ang", nom: "Anglais", couleur: "#e9a100", emoji: "🗣️" },
+    { id: "m-maths", nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" },
+    { id: "m-pc", nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" },
+    { id: "m-hg", nom: "Histoire-Géo", couleur: "#c98b6b", emoji: "🌍" },
+    { id: "m-fr", nom: "Français", couleur: "#d98a8a", emoji: "📚" },
+    { id: "m-svt", nom: "SVT", couleur: "#7d9a84", emoji: "🧬" },
+    { id: "m-ang", nom: "Anglais", couleur: "#c9a24a", emoji: "🗣️" },
   ];
   const vide = { cours: "", flashcards: [], fiche: null };
   const chapitres: Chapitre[] = [

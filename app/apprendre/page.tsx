@@ -95,7 +95,7 @@ export default function Apprendre() {
                 key={n}
                 onClick={() => setNiveau(n)}
                 className={`rounded-full px-3 py-1 text-[13.5px] font-semibold transition-colors ${
-                  niveau === n ? "bg-ink text-white" : "bg-ink/5 text-muted hover:bg-ink/10"
+                  niveau === n ? "bg-ink text-bg" : "bg-ink/5 text-muted hover:bg-ink/10"
                 }`}
               >
                 {n}
@@ -149,8 +149,8 @@ export default function Apprendre() {
               <li key={e.titre} className="flex gap-3">
                 <motion.span
                   animate={{
-                    backgroundColor: i < etape ? "#2a9d8f" : i === etape ? "#5b4bdb" : "#e9e4d8",
-                    color: i <= etape ? "#ffffff" : "#6e6e85",
+                    backgroundColor: i < etape ? "var(--ok)" : i === etape ? "var(--accent)" : "var(--line)",
+                    color: i <= etape ? "var(--on-accent)" : "var(--muted)",
                   }}
                   className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold"
                 >
@@ -179,7 +179,7 @@ export default function Apprendre() {
                     initial={{ opacity: 0, y: 10, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed ${
-                      m.de === "moi" ? "self-end rounded-br-md bg-accent text-white" : "self-start rounded-bl-md bg-bg"
+                      m.de === "moi" ? "self-end rounded-br-md bg-accent text-on-accent" : "self-start rounded-bl-md bg-bg"
                     }`}
                   >
                     {m.texte}

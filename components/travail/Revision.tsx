@@ -58,7 +58,7 @@ export function Revision({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mx-auto flex max-w-[460px] flex-col items-center rounded-3xl border border-line bg-surface p-10 text-center shadow-card"
+        className="mx-auto flex max-w-[460px] flex-col items-center rounded-[18px] border border-line bg-surface p-10 text-center shadow-card"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -124,20 +124,20 @@ export function Revision({
             aria-label={retournee ? "Voir le recto" : "Voir la réponse"}
           >
             <span
-              className="flip-face absolute inset-0 flex flex-col items-center justify-center rounded-3xl p-8 shadow-pop"
-              style={{ background: pastel(couleur, 16) }}
+              className="flip-face absolute inset-0 flex flex-col items-center justify-center rounded-[18px] border-[1.5px] border-ink p-8 shadow-[6px_6px_0_var(--blush)]"
+              style={{ background: pastel(couleur, 14) }}
             >
-              <span className="text-[12.5px] font-bold uppercase tracking-widest opacity-50">Définition de</span>
+              <span className="surtitre text-accent">Définition de</span>
               <span
-                className="mt-3 font-display text-[32px] font-bold leading-tight"
-                style={{ color: `color-mix(in oklab, ${couleur} 65%, black)` }}
+                className="mt-3 font-display text-[34px] italic leading-tight"
+                style={{ color: `color-mix(in oklab, ${couleur} 65%, var(--mix-fg))` }}
               >
                 {carte.recto}
               </span>
               <span className="absolute bottom-5 text-[13px] text-ink/45">Clique ou appuie sur Espace</span>
             </span>
             <span
-              className="flip-face absolute inset-0 flex items-center justify-center rounded-3xl border border-line bg-surface p-8 shadow-pop"
+              className="flip-face absolute inset-0 flex items-center justify-center rounded-[18px] border-[1.5px] border-ink bg-surface p-8 shadow-[6px_6px_0_var(--blush)]"
               style={{ transform: "rotateY(180deg)" }}
             >
               <span className="text-[19px] leading-relaxed">{carte.verso}</span>
@@ -156,7 +156,7 @@ export function Revision({
           <X size={18} /> À revoir
         </Bouton>
         <Bouton
-          className="!bg-ok !py-3.5 hover:!bg-ok/85"
+          className="!bg-accent !py-3.5 !text-on-accent hover:!opacity-90"
           disabled={!retournee}
           onClick={() => repondre(true)}
         >

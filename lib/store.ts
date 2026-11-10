@@ -6,14 +6,14 @@ import type { Chapitre, Dst, Fiche, Flashcard, Matiere, NiveauCarte } from "./ty
 import { donneesExemple } from "./seed";
 
 export const COULEURS = [
-  "#5b4bdb",
-  "#e4572e",
-  "#2a9d8f",
-  "#e9a100",
-  "#d6457f",
-  "#3b82c4",
-  "#6a994e",
-  "#8d5a97",
+  "#b5573d",
+  "#c98b6b",
+  "#d98a8a",
+  "#55555c",
+  "#7d9a84",
+  "#6f8fae",
+  "#c9a24a",
+  "#8a5a78",
 ];
 
 export const EMOJIS = ["📐", "⚗️", "🧬", "🌍", "📚", "🗣️", "💶", "🏛️", "💻", "🎨", "🎵", "⚽"];
@@ -135,4 +135,4 @@ export const useLuno = create<Etat>()(
 
 /** Fond pastel dérivé de la couleur d'une matière. */
 export const pastel = (couleur: string, pct = 14) =>
-  `color-mix(in oklab, ${couleur} ${pct}%, white)`;
+  `color-mix(in oklab, ${couleur} ${pct}%, var(--surface))`;

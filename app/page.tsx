@@ -8,10 +8,10 @@ import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "
 import { Bouton, Carte } from "@/components/ui";
 
 const RACCOURCIS = [
-  { href: "/calendrier", titre: "Calendrier", texte: "Tous tes DST d'un coup d'œil", icone: CalendarDays, couleur: "#5b4bdb" },
-  { href: "/travail", titre: "Travail", texte: "Cours, flashcards et fiches", icone: BookOpen, couleur: "#e4572e" },
-  { href: "/apprendre", titre: "Apprendre", texte: "Un tuteur pour n'importe quel sujet", icone: GraduationCap, couleur: "#2a9d8f" },
-  { href: "/exercices", titre: "S'exercer", texte: "Des exercices corrigés", icone: Target, couleur: "#e9a100" },
+  { href: "/calendrier", titre: "Calendrier", texte: "Tous tes DST d'un coup d'œil", icone: CalendarDays, couleur: "#b5573d" },
+  { href: "/travail", titre: "Travail", texte: "Cours, flashcards et fiches", icone: BookOpen, couleur: "#55555c" },
+  { href: "/apprendre", titre: "Apprendre", texte: "Un tuteur pour n'importe quel sujet", icone: GraduationCap, couleur: "#c98b6b" },
+  { href: "/exercices", titre: "S'exercer", texte: "Des exercices corrigés", icone: Target, couleur: "#8a5a78" },
 ];
 
 function salutation() {
@@ -32,51 +32,52 @@ export default function Accueil() {
 
   return (
     <div>
-      <p className="text-[15px] text-muted">{dateLongue(todayISO())}</p>
-      <h1 className="mt-1 text-[40px] font-bold leading-[1.05] sm:text-[52px]">
-        {salutation()} <span className="text-accent">!</span>
+      <p className="surtitre text-accent">{dateLongue(todayISO())}</p>
+      <h1 className="mt-1 text-[42px] leading-[1.05] sm:text-[56px]">
+        {salutation()} <span className="italic text-accent">!</span>
       </h1>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
         {/* Prochain DST */}
         <motion.div
           whileHover={{ y: -2 }}
-          className="relative overflow-hidden rounded-3xl bg-night p-6 text-white shadow-pop sm:p-8"
+          className="relative overflow-hidden rounded-[18px] border border-line bg-surface p-6 shadow-pop sm:p-8"
         >
-          <div
-            className="absolute -right-16 -top-20 size-64 rounded-full opacity-40 blur-3xl"
-            style={{ background: prochain ? matiere(prochain.matiereId)?.couleur : "#5b4bdb" }}
-          />
-          <div className="absolute right-8 top-8 size-20 rounded-full bg-moon/90 opacity-90 shadow-[0_0_60px_rgba(245,184,65,.5)]" />
-          <div className="absolute right-[22px] top-[26px] size-20 rounded-full bg-night" />
-          <p className="relative text-[13px] font-semibold uppercase tracking-widest text-white/50">
-            Prochain DST
-          </p>
+          {/* Aplat et pastille cuivrée */}
+          <div className="absolute inset-y-0 right-0 hidden w-[30%] bg-blush sm:block" />
+          <div className="copper-bg absolute right-[30%] top-1/2 hidden size-[112px] -translate-y-1/2 translate-x-1/2 rounded-full shadow-[0_0_0_8px_var(--surface),0_0_60px_rgb(201_139_107_/_0.35)] sm:block" />
+          <span className="font-hand absolute right-5 top-5 hidden rotate-[5deg] bg-surface px-3.5 py-1.5 text-[21px] font-bold text-accent shadow-[3px_4px_0_var(--ink)] sm:block">
+            tu vas gérer
+          </span>
+
+          <p className="surtitre relative text-accent">Prochain DST</p>
           {prochain ? (
-            <div className="relative">
-              <p className="mt-6 font-display text-[64px] font-bold leading-none text-moon sm:text-[80px]">
+            <div className="relative sm:max-w-[62%]">
+              <p className="mt-4 font-display text-[72px] leading-none sm:text-[104px]">
                 {compteARebours(prochain.date)}
               </p>
-              <p className="mt-4 text-[22px] font-semibold">
-                {matiere(prochain.matiereId)?.emoji} {matiere(prochain.matiereId)?.nom}
-                <span className="text-white/50"> · {prochain.titre}</span>
+              <p className="mt-4 text-[20px] font-light">
+                <span className="font-semibold">
+                  {matiere(prochain.matiereId)?.emoji} {matiere(prochain.matiereId)?.nom}
+                </span>{" "}
+                · {prochain.titre}
               </p>
-              <p className="mt-1 text-[15px] text-white/60">
+              <p className="mt-1 text-[14.5px] text-muted">
                 {dateLongue(prochain.date)} · {prochain.heure} · {dureeLisible(prochain.dureeMin)}
                 {prochain.salle && ` · salle ${prochain.salle}`}
               </p>
             </div>
           ) : (
-            <div className="relative">
-              <p className="mt-6 font-display text-[40px] font-bold leading-tight">Rien de prévu</p>
-              <p className="mt-2 max-w-[340px] text-[15px] text-white/60">
+            <div className="relative sm:max-w-[62%]">
+              <p className="mt-5 font-display text-[40px] leading-tight">Rien de prévu</p>
+              <p className="mt-2 max-w-[340px] text-[15px] text-muted">
                 Ajoute tes DST dans le calendrier pour voir ici le compte à rebours.
               </p>
             </div>
           )}
           <Link
             href="/calendrier"
-            className="relative mt-7 inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-[14.5px] font-semibold transition-colors hover:bg-white/20"
+            className="relative mt-7 inline-flex items-center gap-2 rounded-[10px] bg-ink px-4 py-2.5 text-[14.5px] font-medium text-bg transition-colors hover:bg-accent hover:text-on-accent"
           >
             Ouvrir le calendrier <ArrowRight size={16} />
           </Link>
@@ -138,7 +139,7 @@ export default function Accueil() {
           >
             <Link
               href={href}
-              className="group block h-full rounded-3xl border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
+              className="group block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
             >
               <div
                 className="mb-10 flex size-11 items-center justify-center rounded-2xl"
@@ -169,7 +170,7 @@ export default function Accueil() {
                 href="/travail"
                 onClick={() => ouvrir(m.id)}
                 className="rounded-full px-4 py-2 text-[14.5px] font-semibold transition-transform hover:-translate-y-0.5"
-                style={{ background: pastel(m.couleur, 16), color: `color-mix(in oklab, ${m.couleur} 75%, black)` }}
+                style={{ background: pastel(m.couleur, 16), color: `color-mix(in oklab, ${m.couleur} 75%, var(--mix-fg))` }}
               >
                 {m.emoji} {m.nom}
               </Link>
