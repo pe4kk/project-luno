@@ -26,8 +26,10 @@ import { normaliser, useLuno } from "./store";
  * L'adresse et la clé publique (« anon ») du projet ne sont pas secrètes : c'est la
  * sécurité au niveau des lignes (RLS) de la table qui protège les données.
  */
-export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-export const SUPABASE_CLE_PUBLIQUE = process.env.NEXT_PUBLIC_SUPABASE_CLE || "";
+export const SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://jexdghinuyirmyebfxvp.supabase.co";
+export const SUPABASE_CLE_PUBLIQUE =
+  process.env.NEXT_PUBLIC_SUPABASE_CLE || "sb_publishable_covKE8ASO2F2pRFr5Kda6A_yfAviBhS";
 
 export const synchroDisponible = () => Boolean(SUPABASE_URL && SUPABASE_CLE_PUBLIQUE);
 

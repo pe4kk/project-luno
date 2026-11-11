@@ -99,11 +99,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     nom, chapitres par `publieId`, cartes par recto, en gardant la meilleure
     progression), `components/Synchro.tsx` (section dans « Mes données »,
     pastille sur le bouton). Table et règles RLS : `supabase/schema.sql`.
-    L'adresse du projet et la clé publique « anon » vont dans `lib/synchro.ts`
-    (pas secrètes ; ne jamais y mettre la clé `service_role`). Sans elles, la
-    synchro est masquée. Testée contre un faux serveur local (pas d'accès à
-    Supabase depuis les sessions cloud) ; le direct (Realtime) n'a pas pu
-    être testé.
+    Projet Supabase de l'utilisateur : `jexdghinuyirmyebfxvp` (offre
+    gratuite, pause après 7 jours sans visite). Son adresse et sa clé
+    publiable (`sb_publishable_…`) sont dans `lib/synchro.ts` : pas secrètes.
+    Ne jamais écrire la clé secrète (`sb_secret_…`) nulle part. L'environnement
+    `project-luno` autorise ce serveur, ce qui permet de tester pour de vrai
+    (testé le 2026-11-11 : fusion, envoi, hors connexion, direct).
   - `lib/contenu.ts` : outils sans IA (repérage des lignes « Terme :
     définition », QCM tirés des flashcards, texte des demandes à Claude).
   - `lib/liens.ts` : l'onglet Travail garde matière, chapitre et sous-onglet
@@ -326,10 +327,9 @@ un PDF ou une photo directement dans le chat.
   révision automatique avant un DST, export des DST vers le calendrier du
   téléphone, vacances scolaires, notes et moyennes, flashcards inversées,
   mode DST blanc, espace bac de français, impression PDF, hors connexion.
-- 2026-11-11 : synchronisation entre appareils écrite et publiée, **en
-  attente du projet Supabase de l'utilisateur** (adresse et clé publique à
-  mettre dans `lib/synchro.ts`, « Confirm email » désactivé, `schema.sql`
-  exécuté).
+- 2026-11-11 : synchronisation entre appareils en ligne (table créée,
+  confirmation par mail désactivée). Pas encore confirmée par l'utilisateur
+  sur ses appareils.
 - Pas encore fait : tests automatisés dans le dépôt.
 
 ## Prochaines étapes
@@ -338,8 +338,7 @@ un PDF ou une photo directement dans le chat.
    contenu ») et traiter les nouveaux cours qu'il envoie.
 2. Obtenir sa confirmation que le site en ligne s'affiche bien sur son
    téléphone, et ses retours.
-3. Brancher Supabase dès qu'il donne l'adresse et la clé publique, puis lui
-   faire vérifier la synchro entre son téléphone et son ordinateur.
+3. Lui faire vérifier la synchro entre son téléphone et son ordinateur.
 4. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub
    en attente.
 
