@@ -1,10 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Copy, ExternalLink, X } from "lucide-react";
+import { Check, Clock, Copy, ExternalLink, Send, X } from "lucide-react";
 import { useEffect, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lienGithub } from "@/lib/contenu";
+import { envoyerDemande, prochainPassage, type Demande, type TypeDemande } from "@/lib/demandes";
+import { synchroDisponible, useSynchro } from "@/lib/synchro";
 
 /** « 1 chapitre », « 2 chapitres », « 0 chapitre ». */
 export function pluriel(n: number, mot: string, auPluriel = mot + "s"): string {
@@ -213,6 +215,7 @@ export function EnvoyerAClaude({
   objet,
   texte,
   resultat,
+  demande,
 }: {
   ouverte: boolean;
   fermer: () => void;
@@ -222,9 +225,25 @@ export function EnvoyerAClaude({
   texte: string;
   /** Ce que l'utilisateur recevra, ex. « les flashcards, la fiche et les exercices ». */
   resultat: string;
+  /** Si présent, la demande peut partir directement depuis Luno (compte connecté). */
+  demande?: { type: TypeDemande; meta?: Demande["meta"] };
 }) {
   const [copie, setCopie] = useState(false);
+  const [etatEnvoi, setEtatEnvoi] = useState<"" | "envoi" | "ok" | "erreur">("");
+  const connecte = useSynchro((x) => x.session !== null);
   const github = lienGithub(objet, texte);
+  const direct = Boolean(demande && synchroDisponible());
+
+  const envoyer = async () => {
+    if (!demande) return;
+    setEtatEnvoi("envoi");
+    try {
+      await envoyerDemande(demande.type, objet, texte, demande.meta);
+      setEtatEnvoi("ok");
+    } catch {
+      setEtatEnvoi("erreur");
+    }
+  };
 
   const copier = async () => {
     try {
@@ -238,10 +257,51 @@ export function EnvoyerAClaude({
   };
 
   return (
-    <Fenetre ouverte={ouverte} fermer={fermer} titre={titre}>
+    <Fenetre
+      ouverte={ouverte}
+      fermer={() => {
+        setEtatEnvoi("");
+        fermer();
+      }}
+      titre={titre}
+    >
+      {direct && (
+        <div className="mb-4 rounded-xl bg-accent-soft p-4">
+          <p className="text-[15px] font-semibold">Envoyer depuis Luno</p>
+          {etatEnvoi === "ok" ? (
+            <p className="mt-1 flex items-start gap-1.5 text-[14px] text-ok" role="status">
+              <Check size={16} className="mt-0.5 shrink-0" />
+              Demande envoyée. Claude passe {prochainPassage()} et rédige {resultat} : tu les
+              retrouveras ici, sur tous tes appareils.
+            </p>
+          ) : connecte ? (
+            <>
+              <p className="mt-0.5 flex items-start gap-1.5 text-[13.5px] text-muted">
+                <Clock size={14} className="mt-0.5 shrink-0" />
+                Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
+                {prochainPassage()}.
+              </p>
+              <Bouton className="mt-3 w-full" disabled={etatEnvoi === "envoi"} onClick={() => void envoyer()}>
+                <Send size={16} /> {etatEnvoi === "envoi" ? "Envoi…" : "Envoyer la demande"}
+              </Bouton>
+              {etatEnvoi === "erreur" && (
+                <p className="mt-2 text-[13.5px] text-bad" role="alert">
+                  L&apos;envoi a échoué. Vérifie ta connexion et réessaie.
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="mt-0.5 text-[13.5px] text-muted">
+              Connecte-toi dans « Mes données » (la roue dentée) pour envoyer ta demande
+              directement : Claude la traite quatre fois par jour.
+            </p>
+          )}
+        </div>
+      )}
       <p className="text-[14.5px] leading-relaxed text-muted">
-        Le site ne peut pas joindre Claude tout seul. Transmets-lui ta demande par l&apos;un de ces deux
-        moyens : il rédige {resultat}, et tout apparaît ici à ta prochaine visite.
+        {direct
+          ? `Ou transmets-la toi-même, pour une réponse plus rapide : Claude rédige ${resultat}, et tout apparaît ici à ta prochaine visite.`
+          : `Le site ne peut pas joindre Claude tout seul. Transmets-lui ta demande par l'un de ces deux moyens : il rédige ${resultat}, et tout apparaît ici à ta prochaine visite.`}
       </p>
       <div className="mt-4 flex flex-col gap-3">
         <div className="rounded-xl border border-line p-4">

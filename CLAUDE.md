@@ -105,6 +105,19 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Ne jamais écrire la clé secrète (`sb_secret_…`) nulle part. L'environnement
     `project-luno` autorise ce serveur, ce qui permet de tester pour de vrai
     (testé le 2026-11-11 : fusion, envoi, hors connexion, direct).
+  - **Demandes traitées automatiquement** (demandé le 2026-11-11) : depuis la
+    fenêtre « Envoyer à Claude » (leçon dans Apprendre, cours d'un chapitre),
+    un compte connecté écrit une ligne dans la table `demandes`
+    (`lib/demandes.ts`). Une tâche planifiée (session neuve, environnement
+    `project-luno`, `CRON_TZ=Europe/Paris 7 8,13,18,20 * * *`) les traite avec
+    `node scripts/demandes.mjs liste | repondre <id> <fichier.json> | erreur`.
+    La réponse va dans la ligne (format `Lecon` ou `ChapitrePublie`, mêmes
+    règles de rédaction et de notation que `contenu/`) : rien n'est poussé
+    sur `main`, c'est personnel. Le site affiche les leçons prêtes dans
+    Apprendre (« rédigée pour toi ») et reprend les cours prêts dans le
+    chapitre (`importerPublie`, id `dem-<id>`). La clé secrète Supabase est
+    un secret réseau de l'environnement (en-tête `apikey`), jamais dans le
+    dépôt.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
@@ -352,8 +365,8 @@ un PDF ou une photo directement dans le chat.
 2. Obtenir sa confirmation que le site en ligne s'affiche bien sur son
    téléphone, et ses retours.
 3. Lui faire vérifier la synchro entre son téléphone et son ordinateur.
-4. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub
-   en attente.
+4. Tâche planifiée des demandes : vérifier qu'elle tourne (`list_triggers`)
+   et que les réponses arrivent bien chez lui.
 
 ## Préférences de l'utilisateur
 

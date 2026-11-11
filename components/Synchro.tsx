@@ -10,11 +10,15 @@ import {
   synchroniser,
   useSynchro,
 } from "@/lib/synchro";
+import { demarrerDemandes } from "@/lib/demandes";
 import { Bouton, Champ, classeSaisie } from "./ui";
 
 /** Lance la synchronisation au chargement du site. */
 export function MoteurSynchro() {
-  useEffect(() => demarrerSynchro(), []);
+  useEffect(() => {
+    demarrerSynchro();
+    demarrerDemandes();
+  }, []);
   return null;
 }
 

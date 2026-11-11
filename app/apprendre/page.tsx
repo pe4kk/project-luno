@@ -12,12 +12,20 @@ import {
   Eye,
   GraduationCap,
   Send,
+  Sparkles,
+  X,
 } from "lucide-react";
 import { LECONS } from "@/contenu/lecons";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import type { Lecon } from "@/lib/types";
 import { demandeLecon } from "@/lib/contenu";
+import {
+  leconsPerso,
+  prochainPassage,
+  supprimerDemande,
+  useDemandes,
+} from "@/lib/demandes";
 import {
   Bouton,
   Carte,
@@ -41,7 +49,11 @@ export default function Page() {
 
 function Apprendre() {
   const params = useSearchParams();
-  const lecon = LECONS.find((l) => l.id === params.get("l"));
+  const demandes = useDemandes((x) => x.liste);
+  const perso = leconsPerso(demandes);
+  const toutes = [...perso, ...LECONS];
+  const lecon = toutes.find((l) => l.id === params.get("l"));
+  const enCours = demandes.filter((d) => d.type === "lecon" && d.statut !== "prete");
   const [sujet, setSujet] = useState("");
   const [niveau, setNiveau] = useState("Première");
   const [precision, setPrecision] = useState("");
@@ -58,7 +70,34 @@ function Apprendre() {
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div>
           <h2 className="mb-3 text-[20px]">Tes leçons</h2>
-          {LECONS.length === 0 ? (
+          {enCours.length > 0 && (
+            <ul className="mb-4 flex flex-col gap-2" aria-label="Demandes en cours">
+              {enCours.map((d) => (
+                <li
+                  key={d.id}
+                  className="flex items-center gap-3 rounded-2xl border border-dashed border-line bg-surface/60 px-4 py-3"
+                >
+                  <Clock size={16} className="shrink-0 text-accent" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[15px] font-semibold">{d.titre}</span>
+                    <span className={`block text-[13px] ${d.statut === "erreur" ? "text-bad" : "text-muted"}`}>
+                      {d.statut === "erreur"
+                        ? `Claude n'a pas pu la traiter${d.erreur ? ` : ${d.erreur}` : ""}`
+                        : `En attente : Claude passe ${prochainPassage()}`}
+                    </span>
+                  </span>
+                  <button
+                    onClick={() => void supprimerDemande(d.id)}
+                    aria-label={`Annuler la demande : ${d.titre}`}
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-ink/5 hover:text-ink"
+                  >
+                    <X size={16} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {toutes.length === 0 ? (
             <EtatVide
               icone={<GraduationCap size={26} />}
               titre="Pas encore de leçon"
@@ -66,7 +105,7 @@ function Apprendre() {
             />
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
-              {LECONS.map((l, i) => (
+              {toutes.map((l, i) => (
                 <motion.div
                   key={l.id}
                   initial={{ opacity: 0, y: 12 }}
@@ -78,7 +117,8 @@ function Apprendre() {
                     href={`/apprendre?l=${l.id}`}
                     className="block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
                   >
-                    <p className="surtitre text-accent">
+                    <p className="surtitre flex items-center gap-1.5 text-accent">
+                      {l.id.startsWith("dem-") && <Sparkles size={12} aria-label="Rédigée pour toi" />}
                       {l.matiere} · {l.niveau}
                     </p>
                     <p className="mt-2 font-display text-[22px] leading-tight">
@@ -169,6 +209,7 @@ function Apprendre() {
         objet={`Leçon : ${sujet.trim()} (${niveau})`}
         texte={demandeLecon(sujet, niveau, precision)}
         resultat="la leçon"
+        demande={{ type: "lecon" }}
       />
     </div>
   );

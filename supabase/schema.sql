@@ -19,3 +19,30 @@ create policy "modifier ses données" on public.donnees
 
 -- Les autres appareils sont prévenus en direct d'un changement.
 alter publication supabase_realtime add table public.donnees;
+
+-- Demandes à Claude (leçons, cours) : écrites par le site, traitées par une tâche
+-- planifiée qui y dépose la réponse (`reponse`, au format Lecon ou ChapitrePublie).
+create table if not exists public.demandes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  type text not null check (type in ('lecon', 'cours')),
+  titre text not null,
+  texte text not null,
+  meta jsonb not null default '{}'::jsonb,
+  statut text not null default 'en_attente' check (statut in ('en_attente', 'prete', 'erreur')),
+  reponse jsonb,
+  erreur text,
+  cree timestamptz not null default now(),
+  traite timestamptz
+);
+
+alter table public.demandes enable row level security;
+
+create policy "lire ses demandes" on public.demandes
+  for select using (auth.uid() = user_id);
+create policy "créer ses demandes" on public.demandes
+  for insert with check (auth.uid() = user_id and statut = 'en_attente' and reponse is null);
+create policy "supprimer ses demandes" on public.demandes
+  for delete using (auth.uid() = user_id);
+
+alter publication supabase_realtime add table public.demandes;

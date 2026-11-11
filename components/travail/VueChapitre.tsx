@@ -222,6 +222,7 @@ export function VueChapitre({
         objet={`Cours : ${matiere.nom} · ${chapitre.titre}`}
         texte={demandeCours(matiere.nom, chapitre.titre, chapitre.cours)}
         resultat="les flashcards, la fiche de révision et les exercices"
+        demande={{ type: "cours", meta: { matiere: matiere.nom, chapitre: chapitre.titre } }}
       />
     </div>
   );
