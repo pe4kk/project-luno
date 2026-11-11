@@ -158,6 +158,28 @@ input[type="range"].luno-range::-moz-range-thumb {
   -webkit-backface-visibility: hidden;
 }
 
+/* Changement de thème : cercle qui s'ouvre (View Transitions), sinon couleurs qui glissent. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+html.theme-glisse,
+html.theme-glisse *,
+html.theme-glisse *::before,
+html.theme-glisse *::after {
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease,
+    fill 0.5s ease,
+    stroke 0.5s ease,
+    box-shadow 0.5s ease !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

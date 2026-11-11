@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { motion, useAnimate } from "motion/react";
 import {
   BookOpen,
   CalendarDays,
@@ -43,17 +43,6 @@ export function useMonte() {
   );
 }
 
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center gap-2.5">
-      <span className="size-[30px] rounded-full bg-ink shadow-[inset_-9px_-3px_0_0_var(--blush)]" />
-      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">
-        Luno
-      </span>
-    </Link>
-  );
-}
-
 const observerTheme = (cb: () => void) => {
   const o = new MutationObserver(cb);
   o.observe(document.documentElement, {
@@ -63,22 +52,136 @@ const observerTheme = (cb: () => void) => {
   return () => o.disconnect();
 };
 
-function BoutonTheme() {
-  const monte = useMonte();
-  const sombre = useSyncExternalStore(
+function useSombre() {
+  return useSyncExternalStore(
     observerTheme,
     () => document.documentElement.dataset.theme === "dark",
     () => false,
   );
-  const basculer = () => {
-    const suivant = sombre ? "light" : "dark";
-    document.documentElement.dataset.theme = suivant;
+}
+
+/**
+ * Le croissant de Luno : un disque blush, et par-dessus un disque anthracite décalé.
+ * Au changement de thème, la lune fait un tour en passant par la pleine lune.
+ */
+function Logo() {
+  const sombre = useSombre();
+  const [portee, animer] = useAnimate();
+  const avant = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    if (avant.current === null || avant.current === sombre) {
+      avant.current = sombre;
+      return;
+    }
+    avant.current = sombre;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const duree = 0.9;
+    const doux = [0.65, 0, 0.35, 1] as const;
+    // Le nouveau thème s'ouvre en cercle depuis le bouton, à droite : la lune attend
+    // que le cercle l'atteigne pour commencer son tour.
+    const delay = "startViewTransition" in document ? 0.4 : 0;
+    animer(
+      "[data-lune]",
+      { rotate: [0, 180, 360], scale: [1, 0.86, 1] },
+      { duration: duree, ease: doux, delay },
+    );
+    animer(
+      "[data-ombre]",
+      { x: [-9, 1, -9], y: [-3, 0, -3] },
+      { duration: duree, ease: doux, delay },
+    );
+    animer(
+      "[data-halo]",
+      { opacity: [0, 0.55, 0], scale: [0.7, 1.5, 1.8] },
+      { duration: duree * 1.1, ease: "easeOut", delay },
+    );
+  }, [sombre, animer]);
+
+  return (
+    <Link href="/" className="flex items-center gap-2.5" ref={portee}>
+      <span className="relative size-[30px]">
+        <span
+          data-halo
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-full opacity-0"
+          style={{ background: "radial-gradient(circle, var(--copper) 0%, transparent 70%)" }}
+        />
+        <span
+          data-lune
+          className="relative block size-full overflow-hidden rounded-full bg-blush"
+        >
+          <span
+            data-ombre
+            className="absolute inset-0 rounded-full bg-ink"
+            style={{ transform: "translate(-9px, -3px)" }}
+          />
+        </span>
+      </span>
+      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">
+        Luno
+      </span>
+    </Link>
+  );
+}
+
+/**
+ * Change de thème en douceur : le nouveau thème s'ouvre en cercle depuis le bouton
+ * (View Transitions). Sans cette API, toutes les couleurs glissent ensemble.
+ */
+function changerTheme(suivant: string, depuis?: HTMLElement | null) {
+  const racine = document.documentElement;
+  const appliquer = () => {
+    racine.dataset.theme = suivant;
     try {
       localStorage.setItem("luno-theme", suivant);
     } catch {}
   };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return appliquer();
+
+  const vt = (
+    document as Document & {
+      startViewTransition?: (f: () => void) => { ready: Promise<void> };
+    }
+  ).startViewTransition;
+  if (!vt) {
+    racine.classList.add("theme-glisse");
+    appliquer();
+    window.setTimeout(() => racine.classList.remove("theme-glisse"), 600);
+    return;
+  }
+  const r = depuis?.getBoundingClientRect();
+  const x = r ? r.left + r.width / 2 : innerWidth;
+  const y = r ? r.top + r.height / 2 : 0;
+  const rayon = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const transition = vt.call(document, appliquer);
+  transition.ready
+    .then(() => {
+      racine.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${rayon}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 700,
+          easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+    })
+    .catch(() => {});
+}
+
+function BoutonTheme() {
+  const monte = useMonte();
+  const sombre = useSombre();
+  const bouton = useRef<HTMLButtonElement>(null);
+  const basculer = () => changerTheme(sombre ? "light" : "dark", bouton.current);
   return (
     <button
+      ref={bouton}
       onClick={basculer}
       aria-label={sombre ? "Passer au thème clair" : "Passer au thème sombre"}
       title={sombre ? "Thème clair" : "Thème sombre"}
