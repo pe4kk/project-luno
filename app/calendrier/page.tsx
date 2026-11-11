@@ -3,7 +3,16 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { BookOpen, CalendarDays, ChevronLeft, ChevronRight, Clock, MapPin, Plus, Trash2 } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  MapPin,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
 import type { Dst } from "@/lib/types";
 import {
@@ -16,8 +25,18 @@ import {
   todayISO,
 } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
-import { Bouton, Carte, Champ, EnTete, EtatVide, Fenetre, classeSaisie, pluriel } from "@/components/ui";
+import {
+  Bouton,
+  Carte,
+  Champ,
+  EnTete,
+  EtatVide,
+  Fenetre,
+  classeSaisie,
+  pluriel,
+} from "@/components/ui";
 import { CalendrierLycee } from "@/components/CalendrierLycee";
+import { PanneauJour } from "@/components/PanneauJour";
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 type Brouillon = Omit<Dst, "id"> & { id?: string };
@@ -60,7 +79,8 @@ export default function Calendrier() {
     setBrouillon(d);
   };
 
-  const parDate = (a: Dst, b: Dst) => (a.date + a.heure).localeCompare(b.date + b.heure);
+  const parDate = (a: Dst, b: Dst) =>
+    (a.date + a.heure).localeCompare(b.date + b.heure);
   const aVenir = dsts.filter((d) => joursAvant(d.date) >= 0).sort(parDate);
   const cases = grilleMois(vue.annee, vue.mois);
   const duJour = jour ? dsts.filter((d) => d.date === jour).sort(parDate) : [];
@@ -68,7 +88,10 @@ export default function Calendrier() {
   if (matieres.length === 0) {
     return (
       <div>
-        <EnTete titre="Calendrier" sousTitre="Tous tes devoirs sur table, au même endroit." />
+        <EnTete
+          titre="Calendrier"
+          sousTitre="Tous tes devoirs sur table, au même endroit."
+        />
         <CalendrierLycee />
         <EtatVide
           icone={<CalendarDays size={26} />}
@@ -89,7 +112,9 @@ export default function Calendrier() {
     );
   }
 
-  const chapitresDuBrouillon = brouillon ? chapitres.filter((c) => c.matiereId === brouillon.matiereId) : [];
+  const chapitresDuBrouillon = brouillon
+    ? chapitres.filter((c) => c.matiereId === brouillon.matiereId)
+    : [];
 
   return (
     <div>
@@ -105,10 +130,12 @@ export default function Calendrier() {
 
       <CalendrierLycee />
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_340px_340px] 2xl:gap-x-12">
         <Carte className="min-w-0 !p-3 sm:!p-6">
           <div className="mb-4 flex items-center justify-between gap-2">
-            <h2 className="min-w-0 text-[20px] leading-tight sm:text-[24px]">{titreMois(vue.annee, vue.mois)}</h2>
+            <h2 className="min-w-0 text-[20px] leading-tight sm:text-[24px]">
+              {titreMois(vue.annee, vue.mois)}
+            </h2>
             <div className="flex shrink-0 items-center gap-1">
               <Bouton
                 variante="fantome"
@@ -121,10 +148,20 @@ export default function Calendrier() {
               >
                 Aujourd&apos;hui
               </Bouton>
-              <Bouton variante="contour" className="!size-11 !p-0" aria-label="Mois précédent" onClick={() => changerMois(-1)}>
+              <Bouton
+                variante="contour"
+                className="!size-11 !p-0"
+                aria-label="Mois précédent"
+                onClick={() => changerMois(-1)}
+              >
                 <ChevronLeft size={18} />
               </Bouton>
-              <Bouton variante="contour" className="!size-11 !p-0" aria-label="Mois suivant" onClick={() => changerMois(1)}>
+              <Bouton
+                variante="contour"
+                className="!size-11 !p-0"
+                aria-label="Mois suivant"
+                onClick={() => changerMois(1)}
+              >
                 <ChevronRight size={18} />
               </Bouton>
             </div>
@@ -155,7 +192,7 @@ export default function Calendrier() {
                       key={iso}
                       onClick={() => setJour(iso)}
                       aria-label={`${dateLongue(iso)}${ici.length ? `, ${pluriel(ici.length, "DST", "DST")}` : ""}`}
-                      className={`flex min-h-[62px] flex-col rounded-[10px] border p-1 text-left transition-colors sm:min-h-[96px] sm:p-2 ${
+                      className={`flex min-h-[62px] flex-col rounded-[10px] border p-1 text-left transition-colors sm:min-h-[96px] sm:p-2 2xl:min-h-[138px] ${
                         dansMois
                           ? "border-line bg-bg/40 hover:border-accent/50 hover:bg-accent-soft/40"
                           : "border-transparent opacity-40"
@@ -181,7 +218,10 @@ export default function Calendrier() {
                               }}
                             >
                               {m?.emoji}
-                              <span className="hidden sm:inline"> {m?.nom}</span>
+                              <span className="hidden sm:inline">
+                                {" "}
+                                {m?.nom}
+                              </span>
                             </span>
                           );
                         })}
@@ -192,14 +232,17 @@ export default function Calendrier() {
               </motion.div>
             </AnimatePresence>
           </div>
-          <p className="mt-3 text-[13px] text-muted">Touche un jour pour voir ses DST ou en ajouter un.</p>
+          <p className="mt-3 text-[13px] text-muted">
+            Touche un jour pour voir ses DST ou en ajouter un.
+          </p>
         </Carte>
 
         <div>
           <h2 className="mb-3 text-[18px]">À venir</h2>
           {aVenir.length === 0 && (
             <p className="rounded-2xl border border-dashed border-ink/20 p-5 text-[14.5px] text-muted">
-              Aucun DST à venir. Touche un jour du calendrier pour en ajouter un.
+              Aucun DST à venir. Touche un jour du calendrier pour en ajouter
+              un.
             </p>
           )}
           <div className="flex flex-col gap-3">
@@ -218,17 +261,28 @@ export default function Calendrier() {
             </AnimatePresence>
             {aVenir.length > 5 && (
               <Bouton variante="contour" onClick={() => setToutVoir((v) => !v)}>
-                {toutVoir ? "Voir moins" : `Voir les ${aVenir.length - 5} suivants`}
+                {toutVoir
+                  ? "Voir moins"
+                  : `Voir les ${aVenir.length - 5} suivants`}
               </Bouton>
             )}
           </div>
         </div>
+        <div className="hidden 2xl:block">
+          <PanneauJour />
+        </div>
       </div>
 
       {/* Détail d'un jour */}
-      <Fenetre ouverte={jour !== null} fermer={() => setJour(null)} titre={jour ? dateLongue(jour) : ""}>
+      <Fenetre
+        ouverte={jour !== null}
+        fermer={() => setJour(null)}
+        titre={jour ? dateLongue(jour) : ""}
+      >
         <div className="flex flex-col gap-3">
-          {duJour.length === 0 && <p className="text-[14.5px] text-muted">Aucun DST ce jour-là.</p>}
+          {duJour.length === 0 && (
+            <p className="text-[14.5px] text-muted">Aucun DST ce jour-là.</p>
+          )}
           {duJour.map((d) => (
             <CarteDst key={d.id} d={d} modifier={() => modifier(d)} />
           ))}
@@ -254,19 +308,37 @@ export default function Calendrier() {
             }}
           >
             <div>
-              <span className="mb-1.5 block text-[13px] font-semibold text-muted">Matière</span>
-              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Matière">
+              <span className="mb-1.5 block text-[13px] font-semibold text-muted">
+                Matière
+              </span>
+              <div
+                className="flex flex-wrap gap-2"
+                role="radiogroup"
+                aria-label="Matière"
+              >
                 {matieres.map((m) => (
                   <button
                     type="button"
                     key={m.id}
                     role="radio"
                     aria-checked={brouillon.matiereId === m.id}
-                    onClick={() => setBrouillon({ ...brouillon, matiereId: m.id, chapitreIds: [] })}
+                    onClick={() =>
+                      setBrouillon({
+                        ...brouillon,
+                        matiereId: m.id,
+                        chapitreIds: [],
+                      })
+                    }
                     className="min-h-11 rounded-full border-2 px-3 text-[13.5px] font-semibold transition-all"
                     style={{
-                      borderColor: brouillon.matiereId === m.id ? m.couleur : "transparent",
-                      background: pastel(m.couleur, brouillon.matiereId === m.id ? 24 : 10),
+                      borderColor:
+                        brouillon.matiereId === m.id
+                          ? m.couleur
+                          : "transparent",
+                      background: pastel(
+                        m.couleur,
+                        brouillon.matiereId === m.id ? 24 : 10,
+                      ),
                       color: encre(m.couleur),
                     }}
                   >
@@ -282,12 +354,16 @@ export default function Calendrier() {
                 className={classeSaisie}
                 placeholder="Ex. Dérivation et tangentes"
                 value={brouillon.titre}
-                onChange={(e) => setBrouillon({ ...brouillon, titre: e.target.value })}
+                onChange={(e) =>
+                  setBrouillon({ ...brouillon, titre: e.target.value })
+                }
               />
             </Champ>
             {chapitresDuBrouillon.length > 0 && (
               <div>
-                <span className="mb-1.5 block text-[13px] font-semibold text-muted">Chapitres à réviser</span>
+                <span className="mb-1.5 block text-[13px] font-semibold text-muted">
+                  Chapitres à réviser
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {chapitresDuBrouillon.map((c) => {
                     const coche = brouillon.chapitreIds.includes(c.id);
@@ -306,7 +382,9 @@ export default function Calendrier() {
                           })
                         }
                         className={`min-h-11 rounded-full border px-3 text-[13.5px] font-medium transition-colors ${
-                          coche ? "border-ink bg-ink text-bg" : "border-line bg-surface text-ink"
+                          coche
+                            ? "border-ink bg-ink text-bg"
+                            : "border-line bg-surface text-ink"
                         }`}
                       >
                         {coche ? "✓ " : ""}
@@ -324,7 +402,9 @@ export default function Calendrier() {
                   type="date"
                   className={classeSaisie}
                   value={brouillon.date}
-                  onChange={(e) => setBrouillon({ ...brouillon, date: e.target.value })}
+                  onChange={(e) =>
+                    setBrouillon({ ...brouillon, date: e.target.value })
+                  }
                 />
               </Champ>
               <Champ label="Heure (facultatif)">
@@ -332,14 +412,21 @@ export default function Calendrier() {
                   type="time"
                   className={classeSaisie}
                   value={brouillon.heure}
-                  onChange={(e) => setBrouillon({ ...brouillon, heure: e.target.value })}
+                  onChange={(e) =>
+                    setBrouillon({ ...brouillon, heure: e.target.value })
+                  }
                 />
               </Champ>
               <Champ label="Durée">
                 <select
                   className={classeSaisie}
                   value={brouillon.dureeMin}
-                  onChange={(e) => setBrouillon({ ...brouillon, dureeMin: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setBrouillon({
+                      ...brouillon,
+                      dureeMin: Number(e.target.value),
+                    })
+                  }
                 >
                   <option value={0}>Non précisée</option>
                   {[30, 55, 60, 90, 120, 180, 240].map((d) => (
@@ -353,7 +440,9 @@ export default function Calendrier() {
                 <input
                   className={classeSaisie}
                   value={brouillon.salle}
-                  onChange={(e) => setBrouillon({ ...brouillon, salle: e.target.value })}
+                  onChange={(e) =>
+                    setBrouillon({ ...brouillon, salle: e.target.value })
+                  }
                 />
               </Champ>
             </div>
@@ -363,7 +452,9 @@ export default function Calendrier() {
                 className={classeSaisie}
                 placeholder="Calculatrice, points à revoir…"
                 value={brouillon.notes}
-                onChange={(e) => setBrouillon({ ...brouillon, notes: e.target.value })}
+                onChange={(e) =>
+                  setBrouillon({ ...brouillon, notes: e.target.value })
+                }
               />
             </Champ>
             <div className="mt-1 flex items-center justify-between">
@@ -401,27 +492,41 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
 
   return (
     <div className="flex gap-3 rounded-2xl border border-line bg-surface p-4 shadow-card">
-      <span className="w-1.5 shrink-0 rounded-full" style={{ background: m?.couleur }} />
+      <span
+        className="w-1.5 shrink-0 rounded-full"
+        style={{ background: m?.couleur }}
+      />
       <div className="min-w-0 flex-1">
-        <button onClick={modifier} className="block w-full text-left" aria-label={`Modifier le DST : ${m?.nom}, ${dateLongue(d.date)}`}>
+        <button
+          onClick={modifier}
+          className="block w-full text-left"
+          aria-label={`Modifier le DST : ${m?.nom}, ${dateLongue(d.date)}`}
+        >
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-[15.5px] font-semibold">
               {m?.emoji} {m?.nom}
             </span>
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[12px] font-bold ${
-                j >= 0 && j <= 3 ? "bg-accent-soft text-accent" : "bg-ink/5 text-muted"
+                j >= 0 && j <= 3
+                  ? "bg-accent-soft text-accent"
+                  : "bg-ink/5 text-muted"
               }`}
             >
               {compteARebours(d.date)}
             </span>
           </span>
-          <span className="block truncate text-[14px] text-muted">{d.titre}</span>
+          <span className="block truncate text-[14px] text-muted">
+            {d.titre}
+          </span>
           <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] text-muted">
             <span>{dateLongue(d.date)}</span>
             {(d.heure || d.dureeMin > 0) && (
               <span className="flex items-center gap-1">
-                <Clock size={12} /> {[d.heure, d.dureeMin > 0 ? dureeLisible(d.dureeMin) : ""].filter(Boolean).join(" · ")}
+                <Clock size={12} />{" "}
+                {[d.heure, d.dureeMin > 0 ? dureeLisible(d.dureeMin) : ""]
+                  .filter(Boolean)
+                  .join(" · ")}
               </span>
             )}
             {d.salle && (
@@ -430,7 +535,11 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
               </span>
             )}
           </span>
-          {d.notes && <span className="mt-1 block text-[12.5px] text-muted">{d.notes}</span>}
+          {d.notes && (
+            <span className="mt-1 block text-[12.5px] text-muted">
+              {d.notes}
+            </span>
+          )}
         </button>
         {lies.length > 0 && (
           <div className="mt-2.5 flex flex-wrap gap-2">

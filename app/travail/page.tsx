@@ -112,6 +112,7 @@ function Travail() {
               <ArrowLeft size={16} /> Toutes les matières
             </Link>
             <div
+              data-aligne-panneau
               className="mb-6 flex items-start justify-between gap-3 rounded-[18px] p-6 sm:p-8"
               style={{ background: pastel(matiere.couleur, 16) }}
             >

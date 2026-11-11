@@ -21,7 +21,7 @@ export function EnTete({
   action?: ReactNode;
 }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <header data-entete className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
         <h1 className="text-[36px] leading-tight sm:text-[46px]">{titre}</h1>
         {sousTitre && <p className="mt-1 text-[15px] text-muted">{sousTitre}</p>}

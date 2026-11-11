@@ -70,7 +70,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
   `innerWidth` à `visualViewport.width`. `recherche/` n'est pas un onglet : on y accède par la loupe
     de la barre du haut.
   - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
-    thème), barre du bas sur téléphone, transition entre pages.
+    thème), barre du bas sur téléphone, transition entre pages. Sur grand
+    écran (2xl, ≥ 1536 px), contenu jusqu'à 1920 px et **panneau
+    « Aujourd'hui »** à droite (`components/PanneauJour.tsx` : prochain DST,
+    semaine, tâches, cartes à revoir), choisi le 2026-11-11 (« A+B aligné »).
+    Son titre s'aligne sur le premier bloc de la page (`data-aligne-panneau`,
+    sinon ce qui suit `data-entete`) ; une page étroite et le panneau sont
+    centrés ensemble ; sur le calendrier, le panneau est la 3e colonne, aligné
+    sur « À venir » ; pas de panneau sur l'accueil. Téléphone et portables
+    inchangés.
   - `components/Donnees.tsx` : fenêtre « Mes données » (sauvegarde,
     restauration, effacement), message « Annuler », reprise des contenus
     publiés au chargement.
@@ -216,6 +224,8 @@ un PDF ou une photo directement dans le chat.
 | 2026-11-10 | Pas d'API payante : Claude rédige les contenus et les publie dans `contenu/` | Choix de l'utilisateur, pour ne rien payer en plus |
 | 2026-11-10 | Site statique sur GitHub Pages, déploiement automatique | Gratuit, pas de serveur à gérer |
 | 2026-11-10 | Suppression annulable plutôt que demande de confirmation | Critique de design, « corrige tout » demandé par l'utilisateur |
+| 2026-11-11 | Grand écran : contenu élargi et panneau « Aujourd'hui » aligné | Choisi par l'utilisateur parmi 6 maquettes (A, B, C, A+B, A+C, A+B aligné) |
+| 2026-11-11 | Fond du thème sombre uni, sans halo | Le halo terracotta en haut à droite le gênait |
 
 ## État d'avancement
 

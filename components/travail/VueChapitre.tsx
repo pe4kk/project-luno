@@ -118,6 +118,7 @@ export function VueChapitre({
       <div
         className="mb-6 inline-flex max-w-full rounded-2xl border border-line bg-surface p-1 shadow-card"
         role="tablist"
+        data-aligne-panneau
         aria-label="Contenu du chapitre"
         onKeyDown={surTouche}
       >

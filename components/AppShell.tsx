@@ -3,9 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { BookOpen, CalendarDays, GraduationCap, Home, ListTodo, Moon, Search, Sun, Target } from "lucide-react";
-import { useSyncExternalStore, type ReactNode } from "react";
+import {
+  BookOpen,
+  CalendarDays,
+  GraduationCap,
+  Home,
+  ListTodo,
+  Moon,
+  Search,
+  Sun,
+  Target,
+} from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
+import { PanneauJour } from "./PanneauJour";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
@@ -19,21 +36,30 @@ const ONGLETS = [
 const rien = () => () => {};
 /** Vrai uniquement dans le navigateur, après l'hydratation. */
 export function useMonte() {
-  return useSyncExternalStore(rien, () => true, () => false);
+  return useSyncExternalStore(
+    rien,
+    () => true,
+    () => false,
+  );
 }
 
 function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
       <span className="size-[30px] rounded-full bg-ink shadow-[inset_-9px_-3px_0_0_var(--blush)]" />
-      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">Luno</span>
+      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">
+        Luno
+      </span>
     </Link>
   );
 }
 
 const observerTheme = (cb: () => void) => {
   const o = new MutationObserver(cb);
-  o.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  o.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
   return () => o.disconnect();
 };
 
@@ -72,18 +98,101 @@ function BoutonTheme() {
   );
 }
 
+/**
+ * Sur grand écran (2xl), la page et le panneau « Aujourd'hui » côte à côte. Le titre du
+ * panneau s'aligne sur le premier bloc de la page : celui marqué `data-aligne-panneau`, sinon
+ * ce qui suit l'en-tête de page (`data-entete`). Sur le calendrier, le panneau fait partie
+ * de la page (3e colonne) ; sur l'accueil, il n'apparaît pas (mêmes informations).
+ */
+function ColonnesAvecPanneau({
+  chemin,
+  children,
+}: {
+  chemin: string;
+  children: ReactNode;
+}) {
+  const colonne = useRef<HTMLDivElement>(null);
+  const [decalage, setDecalage] = useState(0);
+  // Largeur maximale de la page quand elle est étroite (liste de tâches, leçon…), sinon null.
+  const [etroite, setEtroite] = useState<number | null>(null);
+  const avecPanneau = chemin !== "/" && !chemin.startsWith("/calendrier");
+
+  useEffect(() => {
+    if (!avecPanneau || !colonne.current) return;
+    const el = colonne.current;
+    const mesurer = () => {
+      const racine = el.firstElementChild?.firstElementChild as
+        | HTMLElement
+        | null
+        | undefined;
+      const max = racine ? parseFloat(getComputedStyle(racine).maxWidth) : NaN;
+      setEtroite(Number.isFinite(max) && max < 1000 ? max : null);
+      const haut = el.getBoundingClientRect().top;
+      const repere = el.querySelector<HTMLElement>("[data-aligne-panneau]");
+      if (repere)
+        return setDecalage(
+          Math.max(0, repere.getBoundingClientRect().top - haut),
+        );
+      const entete = el.querySelector<HTMLElement>("[data-entete]");
+      if (!entete) return setDecalage(0);
+      const marge = parseFloat(getComputedStyle(entete).marginBottom) || 0;
+      setDecalage(
+        Math.max(0, entete.getBoundingClientRect().bottom + marge - haut),
+      );
+    };
+    // Après la transition d'entrée de la page, puis à chaque changement de taille.
+    const t = setTimeout(mesurer, 450);
+    mesurer();
+    const ro = new ResizeObserver(mesurer);
+    ro.observe(el);
+    const mo = new MutationObserver(mesurer);
+    mo.observe(el, { childList: true, subtree: true });
+    return () => {
+      clearTimeout(t);
+      ro.disconnect();
+      mo.disconnect();
+    };
+  }, [avecPanneau, chemin]);
+
+  if (!avecPanneau) return <>{children}</>;
+  return (
+    <div
+      className="2xl:mx-auto 2xl:grid 2xl:max-w-(--largeur-page,none) 2xl:grid-cols-[minmax(0,1fr)_340px] 2xl:gap-12"
+      // Une page étroite et le panneau forment un bloc centré, au lieu d'un grand vide au milieu.
+      style={
+        etroite
+          ? ({
+              "--largeur-page": `${etroite + 48 + 340}px`,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
+      <div ref={colonne} className="min-w-0">
+        {children}
+      </div>
+      <div className="hidden 2xl:block" style={{ paddingTop: decalage }}>
+        <PanneauJour />
+      </div>
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const chemin = usePathname();
   const monte = useMonte();
-  const actif = (href: string) => (href === "/" ? chemin === "/" : chemin.startsWith(href));
+  const actif = (href: string) =>
+    href === "/" ? chemin === "/" : chemin.startsWith(href);
 
   return (
     <div className="min-h-dvh">
       {/* Barre du haut */}
       <header className="sticky top-0 z-30 bg-bg/85 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between gap-4 px-4 py-3.5 sm:px-8">
+        <div className="mx-auto flex w-full max-w-[1180px] 2xl:max-w-[1920px] items-center justify-between gap-4 px-4 py-3.5 sm:px-8">
           <Logo />
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
+          <nav
+            className="hidden items-center gap-1 lg:flex"
+            aria-label="Navigation principale"
+          >
             {ONGLETS.map(({ href, label }) => (
               <Link
                 key={href}
@@ -109,7 +218,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               href="/recherche"
               aria-label="Rechercher"
               title="Rechercher"
-              aria-current={chemin.startsWith("/recherche") ? "page" : undefined}
+              aria-current={
+                chemin.startsWith("/recherche") ? "page" : undefined
+              }
               className={`flex size-11 items-center justify-center rounded-[10px] border transition-colors ${
                 chemin.startsWith("/recherche")
                   ? "border-ink bg-ink text-bg"
@@ -125,16 +236,18 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       {/* Contenu */}
-      <main className="mx-auto w-full max-w-[1180px] px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pt-4 lg:pb-14 lg:pt-6">
+      <main className="mx-auto w-full max-w-[1180px] 2xl:max-w-[1920px] px-4 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-2 sm:px-8 sm:pt-4 lg:pb-14 lg:pt-6">
         {monte && (
-          <motion.div
-            key={chemin}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {children}
-          </motion.div>
+          <ColonnesAvecPanneau chemin={chemin}>
+            <motion.div
+              key={chemin}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {children}
+            </motion.div>
+          </ColonnesAvecPanneau>
         )}
       </main>
 

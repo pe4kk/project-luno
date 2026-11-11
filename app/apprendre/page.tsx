@@ -201,9 +201,9 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
       </h1>
 
       {/* Progression */}
-      <ol className="my-6 flex gap-2" aria-label="Étapes de la leçon">
+      <ol data-aligne-panneau className="my-6 flex gap-2" aria-label="Étapes de la leçon">
         {lecon.etapes.map((x, i) => (
-          <li key={x.titre} className="flex-1">
+          <li key={x.titre} className="min-w-0 flex-1">
             <button
               onClick={() => aller(i)}
               aria-current={i === etape ? "step" : undefined}
