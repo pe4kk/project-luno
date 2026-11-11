@@ -130,10 +130,14 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - Le thème choisi est gardé dans `localStorage` (`luno-theme`) et appliqué
     par un script en ligne dans `app/layout.tsx` avant l'affichage.
   - Changement de thème (`changerTheme()` dans `AppShell.tsx`, 2026-11-11) :
-    le nouveau thème s'ouvre en cercle depuis le bouton (View Transitions),
+    sur ordinateur, le nouveau thème s'ouvre en cercle depuis le bouton (View
+    Transitions) ; sur téléphone, fondu enchaîné (le cercle en `clip-path`
+    était saccadé sur iPhone, il redessine toute la page à chaque image) ;
     sinon les couleurs glissent (classe `theme-glisse`). Le logo (disque
     blush + disque anthracite décalé) fait un tour en passant par la pleine
-    lune, avec un halo cuivré, décalé de 0,4 s pour attendre le cercle.
+    lune, avec un halo cuivré, en animations natives (`element.animate`,
+    transform et opacity seulement), décalé pour attendre le cercle. Sur
+    téléphone, n'animer que transform et opacity.
     Pour filmer une animation, ralentir la page (`Animation.setPlaybackRate`
     et `requestAnimationFrame`) : les captures sont trop lentes sinon.
   - Couleurs de matière : `pastel()` et `var(--mix-fg)` les adaptent au thème.

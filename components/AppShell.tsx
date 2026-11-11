@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useAnimate } from "motion/react";
+import { motion } from "motion/react";
 import {
   BookOpen,
   CalendarDays,
@@ -65,9 +65,13 @@ function useSombre() {
  * Le croissant de Luno : un disque blush, et par-dessus un disque anthracite décalé.
  * Au changement de thème, la lune fait un tour en passant par la pleine lune.
  */
+/** Téléphone ou tablette : on y préfère les animations que la carte graphique gère seule. */
+const ecranTactile = () =>
+  matchMedia("(pointer: coarse)").matches || innerWidth < 768;
+
 function Logo() {
   const sombre = useSombre();
-  const [portee, animer] = useAnimate();
+  const portee = useRef<HTMLAnchorElement>(null);
   const avant = useRef<boolean | null>(null);
 
   useEffect(() => {
@@ -76,28 +80,41 @@ function Logo() {
       return;
     }
     avant.current = sombre;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const duree = 0.9;
-    const doux = [0.65, 0, 0.35, 1] as const;
-    // Le nouveau thème s'ouvre en cercle depuis le bouton, à droite : la lune attend
-    // que le cercle l'atteigne pour commencer son tour.
-    const delay = "startViewTransition" in document ? 0.4 : 0;
-    animer(
-      "[data-lune]",
-      { rotate: [0, 180, 360], scale: [1, 0.86, 1] },
-      { duration: duree, ease: doux, delay },
+    const racine = portee.current;
+    if (!racine || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Animations natives du navigateur (transform et opacity seulement) : elles tournent
+    // sur la carte graphique, même quand la page est occupée par le changement de thème.
+    const duration = 900;
+    const easing = "cubic-bezier(0.65, 0, 0.35, 1)";
+    // Sur ordinateur, le nouveau thème s'ouvre en cercle depuis le bouton, à droite : la
+    // lune attend que le cercle l'atteigne. Sur téléphone, c'est un fondu : elle part vite.
+    const delay = "startViewTransition" in document ? (ecranTactile() ? 120 : 400) : 0;
+    const options = { duration, easing, delay, fill: "backwards" } as const;
+    racine.querySelector("[data-lune]")?.animate(
+      [
+        { transform: "rotate(0deg) scale(1)" },
+        { transform: "rotate(180deg) scale(0.86)" },
+        { transform: "rotate(360deg) scale(1)" },
+      ],
+      options,
     );
-    animer(
-      "[data-ombre]",
-      { x: [-9, 1, -9], y: [-3, 0, -3] },
-      { duration: duree, ease: doux, delay },
+    racine.querySelector("[data-ombre]")?.animate(
+      [
+        { transform: "translate(-9px, -3px)" },
+        { transform: "translate(1px, 0px)" },
+        { transform: "translate(-9px, -3px)" },
+      ],
+      options,
     );
-    animer(
-      "[data-halo]",
-      { opacity: [0, 0.55, 0], scale: [0.7, 1.5, 1.8] },
-      { duration: duree * 1.1, ease: "easeOut", delay },
+    racine.querySelector("[data-halo]")?.animate(
+      [
+        { opacity: 0, transform: "scale(0.7)" },
+        { opacity: 0.55, transform: "scale(1.5)", offset: 0.45 },
+        { opacity: 0, transform: "scale(1.8)" },
+      ],
+      { duration: duration * 1.1, easing: "ease-out", delay },
     );
-  }, [sombre, animer]);
+  }, [sombre]);
 
   return (
     <Link href="/" className="flex items-center gap-2.5" ref={portee}>
@@ -149,6 +166,23 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
     racine.classList.add("theme-glisse");
     appliquer();
     window.setTimeout(() => racine.classList.remove("theme-glisse"), 600);
+    return;
+  }
+  if (ecranTactile()) {
+    // Sur téléphone, un cercle (clip-path) oblige à redessiner toute la page à chaque
+    // image : saccadé sur iPhone. Le fondu (opacity, transform) reste fluide.
+    vt.call(document, appliquer)
+      .ready.then(() => {
+        racine.animate(
+          { opacity: [0, 1], transform: ["scale(1.015)", "scale(1)"] },
+          {
+            duration: 420,
+            easing: "cubic-bezier(0.33, 1, 0.68, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          },
+        );
+      })
+      .catch(() => {});
     return;
   }
   const r = depuis?.getBoundingClientRect();
