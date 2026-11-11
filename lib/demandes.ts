@@ -39,7 +39,7 @@ export function prochainPassage(maintenant = new Date()) {
   const minutes = paris.getHours() * 60 + paris.getMinutes();
   const suivant = HEURES_PASSAGE.find(([h, m]) => h * 60 + m > minutes);
   const [h] = suivant ?? HEURES_PASSAGE[0];
-  return `${suivant ? "vers" : "demain vers"} ${h} h`;
+  return `${suivant ? "vers" : "demain vers"} ${h}\u00a0h`;
 }
 
 export const useDemandes = create<{ liste: Demande[]; charge: boolean }>(() => ({

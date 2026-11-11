@@ -271,14 +271,14 @@ export function EnvoyerAClaude({
           {etatEnvoi === "ok" ? (
             <p className="mt-1 flex items-start gap-1.5 text-[14px] text-ok" role="status">
               <Check size={16} className="mt-0.5 shrink-0" />
-              Demande envoyée. Claude passe {prochainPassage()} et rédige {resultat} : tu les
-              retrouveras ici, sur tous tes appareils.
+              Demande envoyée. Claude passe {prochainPassage()} pour la traiter : la réponse
+              apparaîtra ici, sur tous tes appareils.
             </p>
           ) : connecte ? (
             <>
               <p className="mt-0.5 flex items-start gap-1.5 text-[13.5px] text-muted">
                 <Clock size={14} className="mt-0.5 shrink-0" />
-                Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
+                Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
                 {prochainPassage()}.
               </p>
               <Bouton className="mt-3 w-full" disabled={etatEnvoi === "envoi"} onClick={() => void envoyer()}>
