@@ -456,8 +456,15 @@ export const useLuno = create<Etat>()(
           publieId: p.id,
           cours: base.cours.trim() ? base.cours : (p.cours ?? ""),
           documents: p.documents ?? base.documents ?? [],
+          // Une carte déjà reprise garde sa progression ; son verso suit la publication
+          // (corrections, notation des formules).
           flashcards: [
-            ...base.flashcards,
+            ...base.flashcards.map((f) => {
+              const k = p.flashcards.find(
+                (x) => x.recto.toLowerCase() === f.recto.toLowerCase(),
+              );
+              return k && k.verso !== f.verso ? { ...f, verso: k.verso } : f;
+            }),
             ...p.flashcards
               .filter((k) => !deja.has(k.recto.toLowerCase()))
               .map(nouvelleCarte),

@@ -15,7 +15,7 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 1,
+    version: 2,
     matiere,
     titre: "Chap. 9 · Décrire un mouvement",
     documents: [
@@ -95,12 +95,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Vecteur vitesse moyenne",
         verso:
-          "v⃗ = MM'⃗ / Δt, avec MM'⃗ le vecteur déplacement et Δt la durée du parcours de M à M'.",
+          "v⃗ = {{MM'⃗ // Δt}}, avec MM'⃗ le vecteur déplacement et Δt la durée du parcours de M à M'.",
       },
       {
         recto: "Vecteur vitesse instantanée (cours, chap. 9)",
         verso:
-          "v⃗ᵢ = MᵢMᵢ₊₁⃗ / (tᵢ₊₁ − tᵢ), avec la durée en s et le déplacement en m.",
+          "v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}, avec la durée en s et le déplacement en m.",
       },
       {
         recto: "Les caractéristiques du vecteur vitesse en Mᵢ",
@@ -134,12 +134,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Vecteur vitesse par encadrement (fiche Euler)",
         verso:
-          "v⃗₂ = M₁M₃⃗ / (t₃ − t₁) : le vecteur vitesse en M₂ est parallèle au segment [M₁M₃].",
+          "v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}} : le vecteur vitesse en M₂ est parallèle au segment [M₁M₃].",
       },
       {
         recto: "Méthode d'Euler",
         verso:
-          "vₓᵢ = (xᵢ₊₁ − xᵢ₋₁) / (tᵢ₊₁ − tᵢ₋₁) et vᵧᵢ = (yᵢ₊₁ − yᵢ₋₁) / (tᵢ₊₁ − tᵢ₋₁) : on calcule les coordonnées des vecteurs vitesse à partir des positions.",
+          "vₓᵢ = {{xᵢ₊₁ − xᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} et vᵧᵢ = {{yᵢ₊₁ − yᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} : on calcule les coordonnées des vecteurs vitesse à partir des positions.",
       },
       {
         recto: "Relation de Chasles dans la méthode d'Euler",
@@ -221,7 +221,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Vecteur vitesse",
           points: [
             {
-              t: "Vitesse moyenne : v⃗ = MM'⃗ / Δt. Vitesse instantanée en Mᵢ : v⃗ᵢ = MᵢMᵢ₊₁⃗ / (tᵢ₊₁ − tᵢ).",
+              t: "Vitesse moyenne : v⃗ = {{MM'⃗ // Δt}}. Vitesse instantanée en Mᵢ : v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}.",
               n: 1,
             },
             {
@@ -271,11 +271,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 2,
             },
             {
-              t: "Par encadrement : v⃗₂ = M₁M₃⃗ / (t₃ − t₁), parallèle au segment [M₁M₃].",
+              t: "Par encadrement : v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}}, parallèle au segment [M₁M₃].",
               n: 2,
             },
             {
-              t: "Coordonnées : vₓᵢ = (xᵢ₊₁ − xᵢ₋₁) / (tᵢ₊₁ − tᵢ₋₁) et vᵧᵢ = (yᵢ₊₁ − yᵢ₋₁) / (tᵢ₊₁ − tᵢ₋₁).",
+              t: "Coordonnées : vₓᵢ = {{xᵢ₊₁ − xᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} et vᵧᵢ = {{yᵢ₊₁ − yᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}}.",
               n: 2,
             },
             {
@@ -366,14 +366,14 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         choix: ["0,30 m/s", "3,0 m/s", "30 m/s", "0,48 m/s"],
         bonneReponse: 1,
         explication:
-          "v = 0,12 m / 0,040 s = 3,0 m/s. Pense à convertir en mètres et en secondes.",
+          "v = {{0,12 m // 0,040 s}} = 3,0 m/s. Pense à convertir en mètres et en secondes.",
       },
       {
         question:
           "On lit x₁ = 0,10 m à t₁ = 0,20 s et x₃ = 0,50 m à t₃ = 0,60 s. Avec la méthode d'Euler, que vaut vₓ₂ ?",
         choix: ["0,50 m/s", "1,0 m/s", "2,0 m/s", "0,83 m/s"],
         bonneReponse: 1,
-        explication: "vₓ₂ = (x₃ − x₁) / (t₃ − t₁) = 0,40 / 0,40 = 1,0 m/s.",
+        explication: "vₓ₂ = {{x₃ − x₁ // t₃ − t₁}} = {{0,40 // 0,40}} = 1,0 m/s.",
       },
       {
         question:
@@ -485,13 +485,13 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         question:
           "Comment calcule-t-on les coordonnées du vecteur vitesse au point M₂ à partir des positions (méthode d'Euler) ?",
         corrige:
-          "On encadre M₂ par M₁ et M₃ : vₓ₂ = (x₃ − x₁) / (t₃ − t₁) et vᵧ₂ = (y₃ − y₁) / (t₃ − t₁). Cela vient de v⃗₂ = M₁M₃⃗ / (t₃ − t₁) et de la relation de Chasles, M₁M₃⃗ = OM₃⃗ − OM₁⃗.",
+          "On encadre M₂ par M₁ et M₃ : vₓ₂ = {{x₃ − x₁ // t₃ − t₁}} et vᵧ₂ = {{y₃ − y₁ // t₃ − t₁}}. Cela vient de v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}} et de la relation de Chasles, M₁M₃⃗ = OM₃⃗ − OM₁⃗.",
       },
     ],
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 1,
+    version: 2,
     matiere,
     titre: "Chap. 11 · Mouvement d'un système et lois de Newton",
     documents: [
@@ -539,7 +539,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Vecteur vitesse par encadrement (chap. 11)",
         verso:
-          "v⃗ᵢ = Mᵢ₋₁Mᵢ₊₁⃗ / (2Δt), avec Δt l'intervalle de temps entre deux positions.",
+          "v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}, avec Δt l'intervalle de temps entre deux positions.",
       },
       {
         recto: "Vecteur variation de vitesse",
@@ -572,7 +572,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       },
       {
         recto: "2e loi de Newton (principe fondamental de la dynamique)",
-        verso: "Dans un référentiel galiléen : ΣF⃗ = m · Δv⃗ / Δt.",
+        verso: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.",
       },
       {
         recto: "Conséquence de la 2e loi sur les directions",
@@ -671,7 +671,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               t: "Circulaire uniforme : Δv⃗ dirigé vers le centre, car la direction de la vitesse change.",
               n: 1,
             },
-            { t: "Vitesse par encadrement : v⃗ᵢ = Mᵢ₋₁Mᵢ₊₁⃗ / (2Δt).", n: 2 },
+            { t: "Vitesse par encadrement : v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}.", n: 2 },
             {
               t: "Méthode pour Δv⃗₃ : tracer v⃗₂ et v⃗₄, reporter v⃗₄ à partir de M₃, ajouter −v⃗₂, puis relier M₃ à l'extrémité.",
               n: 2,
@@ -702,7 +702,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         {
           titre: "2e loi de Newton",
           points: [
-            { t: "Dans un référentiel galiléen : ΣF⃗ = m · Δv⃗ / Δt.", n: 1 },
+            { t: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.", n: 1 },
             { t: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.", n: 1 },
             {
               t: "Un système ne peut accélérer ou changer de direction que si des forces s'exercent sur lui.",
@@ -782,7 +782,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       aRetenir: [
         "Référentiel galiléen",
         "Δv⃗ = v⃗ᵢ₊₁ − v⃗ᵢ₋₁",
-        "ΣF⃗ = m·Δv⃗/Δt",
+        "ΣF⃗ = {{m·Δv⃗ // Δt}}",
         "Principe d'inertie",
         "Pseudo-isolé",
         "Actions réciproques",
@@ -795,7 +795,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Un objet de 2,0 kg voit sa vitesse augmenter de 3,0 m/s en 0,50 s. Quelle est la valeur de la somme des forces ?",
         choix: ["3,0 N", "6,0 N", "12 N", "0,75 N"],
         bonneReponse: 2,
-        explication: "ΣF = m × Δv / Δt = 2,0 × 3,0 / 0,50 = 12 N.",
+        explication: "ΣF = {{m × Δv // Δt}} = {{2,0 × 3,0 // 0,50}} = 12 N.",
       },
       {
         question:
@@ -885,7 +885,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         affirmation:
           "La somme des forces et le vecteur variation de vitesse ont la même direction et le même sens.",
         vrai: true,
-        explication: "C'est une conséquence de la 2e loi : ΣF⃗ = m · Δv⃗ / Δt.",
+        explication: "C'est une conséquence de la 2e loi : ΣF⃗ = {{m·Δv⃗ // Δt}}.",
       },
       {
         type: "vraiFaux",
@@ -953,7 +953,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         type: "ouverte",
         question: "Énonce les trois lois de Newton.",
         corrige:
-          "1re loi (inertie) : un système isolé ou pseudo-isolé reste au repos ou garde un mouvement rectiligne uniforme. 2e loi : dans un référentiel galiléen, ΣF⃗ = m · Δv⃗ / Δt. 3e loi : F⃗A→B = −F⃗B→A.",
+          "1re loi (inertie) : un système isolé ou pseudo-isolé reste au repos ou garde un mouvement rectiligne uniforme. 2e loi : dans un référentiel galiléen, ΣF⃗ = {{m·Δv⃗ // Δt}}. 3e loi : F⃗A→B = −F⃗B→A.",
       },
       {
         type: "ouverte",
@@ -973,7 +973,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 2,
+    version: 3,
     matiere,
     titre: "Les forces en spé PC",
     documents: [
@@ -1292,7 +1292,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-exercices",
-    version: 1,
+    version: 2,
     matiere,
     titre: "Chap. 11 · Fiche d'exercices et DM",
     documents: [
@@ -1315,14 +1315,14 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Définir le système (point matériel de masse m) et le référentiel ; faire le bilan des forces ; écrire la 2e loi de Newton ; projeter sur un axe ; isoler l'inconnue ; faire l'application numérique avec l'unité et les chiffres significatifs.",
       },
       {
-        recto: "Chute libre : que vaut Δv/Δt ?",
+        recto: "Chute libre : que vaut {{Δv // Δt}} ?",
         verso:
-          "Seul le poids agit : m · Δv⃗/Δt = m · g⃗, donc Δv/Δt = g = 9,81 m·s⁻², quelle que soit la masse.",
+          "Seul le poids agit : {{m·Δv⃗ // Δt}} = m · g⃗, donc {{Δv // Δt}} = g = 9,81 m·s⁻², quelle que soit la masse.",
       },
       {
         recto: "Durée d'une variation de vitesse",
         verso:
-          "D'après la 2e loi : Δt = m · Δv / ΣF (en projection sur l'axe du mouvement).",
+          "D'après la 2e loi : Δt = {{m·Δv // ΣF}} (en projection sur l'axe du mouvement).",
       },
       {
         recto: "Δv à l'arrêt complet",
@@ -1392,7 +1392,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 1,
             },
             {
-              t: "Ex. 4, b : si seul le poids agit, raisonne comme dans l'exercice 3 corrigé (Δv/Δt = g), calcule la vitesse après 12 s et compare-la à 53 m·s⁻¹.",
+              t: "Ex. 4, b : si seul le poids agit, raisonne comme dans l'exercice 3 corrigé ({{Δv // Δt}} = g), calcule la vitesse après 12 s et compare-la à 53 m·s⁻¹.",
               n: 1,
             },
             {
@@ -1421,7 +1421,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 2,
             },
             {
-              t: "Ex. 3 (homme-canon) : Δv/Δt = g = 9,81 m·s⁻² ; durée d'ascension Δt = 35 / 9,81 ≈ 3,6 s.",
+              t: "Ex. 3 (homme-canon) : {{Δv // Δt}} = g = 9,81 m·s⁻² ; durée d'ascension Δt = {{35 // 9,81}} ≈ 3,6 s.",
               n: 2,
             },
             {
@@ -1442,7 +1442,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "À vérifier dans la correction",
           points: [
             {
-              t: "Ex. 6, 2a : la correction écrit Δv = 16 m·s⁻¹, puis v_f = 1,6 × 10⁻² m·s⁻¹. La bonne valeur est 16 m·s⁻¹ (1,6 × 10¹) : 1,05 × 10³ / 320 × 5,0 ≈ 16.",
+              t: "Ex. 6, 2a : la correction écrit Δv = 16 m·s⁻¹, puis v_f = 1,6 × 10⁻² m·s⁻¹. La bonne valeur est 16 m·s⁻¹ (1,6 × 10¹) : {{1,05 × 10³ // 320}} × 5,0 ≈ 16.",
               n: 4,
             },
             {
@@ -1455,8 +1455,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       aRetenir: [
         "DM : ex. 1 cas 2 et 3, ex. 4",
         "Interro lundi 16/11",
-        "Δv/Δt = g",
-        "Δt = m·Δv/ΣF",
+        "{{Δv // Δt}} = g",
+        "Δt = {{m·Δv // ΣF}}",
         "Vitesse limite",
         "ΠA > P",
       ],
@@ -1499,7 +1499,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Ex. 2 : une voiture roule à 100 km/h et freine jusqu'à l'arrêt. Quelle est la norme de Δv⃗ ?",
         choix: ["100 m·s⁻¹", "27,8 m·s⁻¹", "360 m·s⁻¹", "3,6 m·s⁻¹"],
         bonneReponse: 1,
-        explication: "Δv = |0 − v| = 100 / 3,6 ≈ 27,8 m·s⁻¹.",
+        explication: "Δv = |0 − v| = {{100 // 3,6}} ≈ 27,8 m·s⁻¹.",
       },
       {
         question:
@@ -1507,7 +1507,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         choix: ["0,23 s", "4,3 s", "43 s", "16 s"],
         bonneReponse: 1,
         explication:
-          "D'après la 2e loi : Δt = m · Δv / F = 1200 × 27,8 / 7700 ≈ 4,3 s. Attention aux conversions : 1,2 t = 1200 kg et 7,7 kN = 7700 N.",
+          "D'après la 2e loi : Δt = {{m·Δv // F}} = {{1200 × 27,8 // 7700}} ≈ 4,3 s. Attention aux conversions : 1,2 t = 1200 kg et 7,7 kN = 7700 N.",
       },
       {
         question:
@@ -1520,14 +1520,14 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         ],
         bonneReponse: 1,
         explication:
-          "Δt = m · Δv / F : si m double, F doit doubler pour garder Δt, soit environ 15,4 kN.",
+          "Δt = {{m·Δv // F}} : si m double, F doit doubler pour garder Δt, soit environ 15,4 kN.",
       },
       {
         question:
           "Ex. 3 : l'homme-canon, soumis à son seul poids, est lancé vers le haut à 35 m·s⁻¹. Combien de temps dure l'ascension ?",
         choix: ["0,28 s", "3,6 s", "35 s", "343 s"],
         bonneReponse: 1,
-        explication: "Δv/Δt = g, donc Δt = Δv / g = 35 / 9,81 ≈ 3,6 s.",
+        explication: "{{Δv // Δt}} = g, donc Δt = {{Δv // g}} = {{35 // 9,81}} ≈ 3,6 s.",
       },
       {
         question:
@@ -1543,12 +1543,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         choix: ["1,6 × 10⁻² m·s⁻¹", "3,3 m·s⁻¹", "16 m·s⁻¹", "2,0 × 10² m·s⁻¹"],
         bonneReponse: 2,
         explication:
-          "Δv = (ΠA − P) × Δt / m = 1,05 × 10³ × 5,0 / 320 ≈ 16 m·s⁻¹. La correction du prof écrit aussi 1,6 × 10⁻² : c'est une coquille.",
+          "Δv = {{(ΠA − P) × Δt // m}} = {{1,05 × 10³ × 5,0 // 320}} ≈ 16 m·s⁻¹. La correction du prof écrit aussi 1,6 × 10⁻² : c'est une coquille.",
       },
       {
         type: "trou",
         texte:
-          "En chute libre, Δv/Δt est égal à ___, l'accélération de la pesanteur.",
+          "En chute libre, {{Δv // Δt}} est égal à ___, l'accélération de la pesanteur.",
         reponses: ["g", "9,81", "9.81"],
         explication: "g = 9,81 m·s⁻² : la masse n'intervient pas.",
       },
@@ -1585,7 +1585,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         question:
           "Ex. 6 : montre que la montgolfière s'élève, en utilisant la 2e loi de Newton.",
         corrige:
-          "Système : la montgolfière, point matériel de masse m. Forces : le poids P⃗ vers le bas et la poussée d'Archimède Π⃗A vers le haut. 2e loi en projection sur un axe vertical vers le haut : ΠA − P = m · Δv/Δt. Comme ΠA ≈ 4,19 × 10³ N > P ≈ 3,14 × 10³ N, Δv/Δt > 0 : Δv⃗ est vers le haut, la montgolfière s'élève.",
+          "Système : la montgolfière, point matériel de masse m. Forces : le poids P⃗ vers le bas et la poussée d'Archimède Π⃗A vers le haut. 2e loi en projection sur un axe vertical vers le haut : ΠA − P = m · {{Δv // Δt}}. Comme ΠA ≈ 4,19 × 10³ N > P ≈ 3,14 × 10³ N, {{Δv // Δt}} > 0 : Δv⃗ est vers le haut, la montgolfière s'élève.",
       },
     ],
   },

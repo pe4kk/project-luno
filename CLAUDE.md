@@ -134,10 +134,15 @@ un PDF ou une photo directement dans le chat.
   quatre choix, `vraiFaux`, `trou` (texte avec « ___ », réponses acceptées),
   `ordre` (éléments donnés dans le bon ordre, idéal pour les chronologies),
   `ouverte` (question et corrigé, l'élève s'auto-évalue). Une série pioche
-  tour à tour dans chaque type. Vecteurs : écrire la flèche combinante
-  U+20D7 après la lettre (« v⃗ᵢ », « MM'⃗ ») ; `components/Formule.tsx` la
-  dessine en CSS, car les polices ne l'ont pas. Tout nouvel affichage de
-  contenu doit passer par `formule()`. **PDF du prof** : les copier dans
+  tour à tour dans chaque type. **Notation des formules**
+  (`components/Formule.tsx`) : vecteur = flèche combinante U+20D7 après la
+  lettre (« v⃗ᵢ », « MM'⃗ »), dessinée en SVG ; fraction =
+  `{{numérateur // dénominateur}}` (sans parenthèses autour), affichée
+  superposée ; indice en lettres = `v_f`. Ne pas utiliser ces notations dans
+  les réponses acceptées d'un `trou`. Tout nouvel affichage de contenu doit
+  passer par `formule()`, et tout texte brut (aria-label…) par `texteBrut()`.
+  Les unités restent en ligne (m·s⁻¹, N/kg). Une nouvelle `version` met à jour
+  le verso des flashcards déjà reprises, en gardant la progression. **PDF du prof** : les copier dans
   `public/documents/<matière>/` et les déclarer dans `documents` du chapitre ;
   ils sont publics (le dépôt l'est). Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
@@ -273,6 +278,8 @@ un PDF ou une photo directement dans le chat.
   (ex. 6 : 1,6 × 10⁻² au lieu de 16 m·s⁻¹). Deux erreurs relevées dans les fiches du prof et
   signalées dans le contenu : Euler présenté comme allemand du XIXe siècle,
   et P⃗ = −R⃗N attribué à la 3e loi.
+- 2026-11-11 : vraies flèches de vecteur et fractions superposées dans tous
+  les contenus de physique (versions augmentées).
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
   cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
   contenu), exercices variés (cinq types), matières sur deux colonnes sur

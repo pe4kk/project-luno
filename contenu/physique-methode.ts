@@ -10,7 +10,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 1,
+  version: 2,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
   flashcards: [
@@ -32,7 +32,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     {
       recto: "Citer la loi",
       verso:
-        "Toujours l'annoncer : « D'après la 2e loi de Newton : ΣF⃗ = m·Δv⃗/Δt », puis « or … » pour remplacer ΣF⃗.",
+        "Toujours l'annoncer : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} », puis « or … » pour remplacer ΣF⃗.",
     },
     {
       recto: "Projection sur un axe",
@@ -42,7 +42,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     {
       recto: "Expression littérale",
       verso:
-        "Isoler l'inconnue avec des lettres, avant tout nombre, et l'encadrer : Δt = Δv / g.",
+        "Isoler l'inconnue avec des lettres, avant tout nombre, et l'encadrer : Δt = {{Δv // g}}.",
     },
     {
       recto: "Définir les lettres",
@@ -110,7 +110,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Titres et données",
         points: [
           {
-            t: "Chaque question commence par un titre souligné : « a) Calcul de la norme de Δv⃗/Δt pendant le vol vertical ».",
+            t: "Chaque question commence par un titre souligné : « a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical ».",
             n: 2,
           },
           {
@@ -135,15 +135,15 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Loi, projection et expression littérale",
         points: [
           {
-            t: "Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = m·Δv⃗/Δt ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ Δv⃗/Δt = g⃗ ».",
+            t: "Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗ ».",
             n: 2,
           },
           {
-            t: "Projette : « en projection suivant (Oy) » ; ensuite on écrit Δv/Δt = g, sans flèche.",
+            t: "Projette : « en projection suivant (Oy) » ; ensuite on écrit {{Δv // Δt}} = g, sans flèche.",
             n: 2,
           },
           {
-            t: "Isole l'inconnue avec des lettres et encadre-la : Δt = Δv / g. Aucun nombre avant cette ligne.",
+            t: "Isole l'inconnue avec des lettres et encadre-la : Δt = {{Δv // g}}. Aucun nombre avant cette ligne.",
             n: 2,
           },
           {
@@ -168,7 +168,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
             n: 2,
           },
           {
-            t: "Exemple du prof : Δt = |0 − 35| / 9,81 = 35 / 9,81 = 3,6 s (2 c.s), car v₀ = 35 n'a que deux chiffres significatifs.",
+            t: "Exemple du prof : Δt = {{|0 − 35| // 9,81}} = {{35 // 9,81}} = 3,6 s (2 c.s), car v₀ = 35 n'a que deux chiffres significatifs.",
             n: 2,
           },
           {
@@ -176,7 +176,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
             n: 3,
           },
           {
-            t: "Unités écrites avec des puissances : m·s⁻¹ pour une vitesse, m·s⁻² pour Δv/Δt ou g, N pour une force.",
+            t: "Unités écrites avec des puissances : m·s⁻¹ pour une vitesse, m·s⁻² pour {{Δv // Δt}} ou g, N pour une force.",
             n: 3,
           },
           {
@@ -231,7 +231,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
             n: 2,
           },
           {
-            t: "Les formules surlignées en vert : v⃗ = MM'⃗ / Δt, v⃗ᵢ = MᵢMᵢ₊₁⃗ / (tᵢ₊₁ − tᵢ), ΣF⃗ = m·Δv⃗/Δt.",
+            t: "Les formules surlignées en vert : v⃗ = {{MM'⃗ // Δt}}, v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}, ΣF⃗ = {{m·Δv⃗ // Δt}}.",
             n: 2,
           },
           {
@@ -281,7 +281,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Après une projection sur un axe, on écrit les grandeurs sans flèche.",
       vrai: true,
       explication:
-        "On ne manipule plus des vecteurs mais leurs valeurs sur l'axe : « g = Δv/Δt suivant (Oy), sans flèche ».",
+        "On ne manipule plus des vecteurs mais leurs valeurs sur l'axe : « g = {{Δv // Δt}} suivant (Oy), sans flèche ».",
     },
     {
       type: "vraiFaux",
@@ -327,7 +327,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "L'expression littérale est encadrée ; le résultat de l'A.N. est souligné.",
     },
     {
-      question: "Quelle est l'unité de Δv/Δt ?",
+      question: "Quelle est l'unité de {{Δv // Δt}} ?",
       choix: ["m·s⁻¹", "m·s⁻²", "N", "s"],
       bonneReponse: 1,
       explication:
@@ -373,7 +373,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
       question:
         "Rédige comme ton prof : une balle de 0,20 kg, lancée verticalement vers le haut à 12 m·s⁻¹, n'est soumise qu'à son poids. Calcule la durée de sa montée.",
       corrige:
-        "b) Calcul de la durée de montée de la balle (souligné). Données : système = {balle}, point matériel de masse m = 0,20 kg ; v₀ = 12 m·s⁻¹ ; bilan des forces : P⃗ = m·g⃗, vertical, vers le bas. D'après la 2e loi de Newton : ΣF⃗ = m·Δv⃗/Δt ; or ΣF⃗ = P⃗ = m·g⃗, donc Δv⃗/Δt = g⃗. En projection suivant (Oy) : Δv/Δt = g, d'où Δt = Δv / g (encadré), avec Δv = |v_f − vᵢ|, v_f = 0 au sommet et vᵢ = 12 m·s⁻¹. A.N. : Δt = 12 / 9,81 = 1,2 s (2 c.s). ⇒ La balle met 1,2 s pour atteindre son point le plus haut.",
+        "b) Calcul de la durée de montée de la balle (souligné). Données : système = {balle}, point matériel de masse m = 0,20 kg ; v₀ = 12 m·s⁻¹ ; bilan des forces : P⃗ = m·g⃗, vertical, vers le bas. D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ; or ΣF⃗ = P⃗ = m·g⃗, donc {{Δv⃗ // Δt}} = g⃗. En projection suivant (Oy) : {{Δv // Δt}} = g, d'où Δt = {{Δv // g}} (encadré), avec Δv = |v_f − vᵢ|, v_f = 0 au sommet et vᵢ = 12 m·s⁻¹. A.N. : Δt = {{12 // 9,81}} = 1,2 s (2 c.s). ⇒ La balle met 1,2 s pour atteindre son point le plus haut.",
     },
     {
       type: "ouverte",
@@ -408,7 +408,7 @@ export const LECON_REDACTION: Lecon = {
         "Ton prof commence chaque question par un titre souligné qui reformule ce qu'on cherche. Ce n'est pas décoratif : ça t'oblige à identifier l'inconnue avant d'écrire quoi que ce soit.",
       ],
       exemple:
-        "Énoncé : « Déterminer la norme du vecteur Δv⃗/Δt pendant le vol vertical. »\nTitre du prof : a) Calcul de la norme de Δv⃗/Δt pendant le vol vertical (souligné).",
+        "Énoncé : « Déterminer la norme du vecteur {{Δv⃗ // Δt}} pendant le vol vertical. »\nTitre du prof : a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical (souligné).",
       question: {
         q: "Quel titre écrirais-tu pour : « L'homme atteint sa hauteur maximale lorsque sa vitesse devient nulle. Déterminer la durée de son ascension » ?",
         r: "b) Calcul de la durée d'ascension du système, souligné. L'inconnue est donc une durée, Δt.",
@@ -434,10 +434,10 @@ export const LECON_REDACTION: Lecon = {
         "Enfin on projette sur l'axe du mouvement : à partir de là, plus de flèches, on travaille avec des valeurs.",
       ],
       exemple:
-        "D'après la 2e loi de Newton : ΣF⃗ = m·Δv⃗/Δt\nor ΣF⃗ = P⃗ = m·g⃗ ⇒ m·g⃗ = m·Δv⃗/Δt ⇒ g⃗ = Δv⃗/Δt\nEn projection suivant (Oy), puisque le mouvement est suivant (Oy) : g = Δv/Δt",
+        "D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}}\nor ΣF⃗ = P⃗ = m·g⃗ ⇒ m·g⃗ = {{m·Δv⃗ // Δt}} ⇒ g⃗ = {{Δv⃗ // Δt}}\nEn projection suivant (Oy), puisque le mouvement est suivant (Oy) : g = {{Δv // Δt}}",
       question: {
         q: "Pourquoi la masse m disparaît-elle ici, et qu'est-ce que ça veut dire physiquement ?",
-        r: "Elle apparaît des deux côtés et se simplifie. En chute libre, Δv/Δt = g quelle que soit la masse : un objet lourd et un objet léger changent de vitesse au même rythme.",
+        r: "Elle apparaît des deux côtés et se simplifie. En chute libre, {{Δv // Δt}} = g quelle que soit la masse : un objet lourd et un objet léger changent de vitesse au même rythme.",
       },
     },
     {
@@ -447,10 +447,10 @@ export const LECON_REDACTION: Lecon = {
         "C'est l'étape la plus souvent sautée, et c'est celle qui rapporte des points même si l'A.N. est fausse.",
       ],
       exemple:
-        "Δv/Δt = g ⇒ Δt = Δv / g (encadré)\navec Δv = |v_f − vᵢ|, où v_f = 0 à l'altitude maximale et vᵢ = v₀ = 35 m·s⁻¹",
+        "{{Δv // Δt}} = g ⇒ Δt = {{Δv // g}} (encadré)\navec Δv = |v_f − vᵢ|, où v_f = 0 à l'altitude maximale et vᵢ = v₀ = 35 m·s⁻¹",
       question: {
-        q: "À partir de ΣF = m·Δv/Δt, isole Δt.",
-        r: "Δt = m·Δv / ΣF. On multiplie les deux côtés par Δt, puis on divise par ΣF.",
+        q: "À partir de ΣF = m·{{Δv // Δt}}, isole Δt.",
+        r: "Δt = {{m·Δv // ΣF}}. On multiplie les deux côtés par Δt, puis on divise par ΣF.",
       },
     },
     {
@@ -460,7 +460,7 @@ export const LECON_REDACTION: Lecon = {
         "Le résultat garde autant de chiffres significatifs que la donnée la moins précise, et ton prof le note entre parenthèses.",
       ],
       exemple:
-        "A.N. : Δt = |0 − 35| / 9,81 = 35 / 9,81 = 3,6 s (2 c.s)\n35 a deux chiffres significatifs, 9,81 en a trois : on garde deux.",
+        "A.N. : Δt = {{|0 − 35| // 9,81}} = {{35 // 9,81}} = 3,6 s (2 c.s)\n35 a deux chiffres significatifs, 9,81 en a trois : on garde deux.",
       question: {
         q: "Données : m = 320 kg et g = 9,81 m·s⁻². La calculatrice donne P = 3139,2. Qu'écris-tu ?",
         r: "P = 3,14 × 10³ N (3 c.s) : trois chiffres significatifs comme les deux données, une puissance de dix, et l'unité.",
@@ -474,7 +474,7 @@ export const LECON_REDACTION: Lecon = {
       ],
       question: {
         q: "Une balle de 0,20 kg est lancée verticalement vers le haut à 12 m·s⁻¹ ; seul son poids agit. Rédige le calcul de la durée de sa montée.",
-        r: "b) Calcul de la durée de montée de la balle (souligné)\nDonnées : système = {balle}, point matériel de masse m = 0,20 kg ; v₀ = 12 m·s⁻¹ ; P⃗ = m·g⃗, vertical, vers le bas\nD'après la 2e loi de Newton : ΣF⃗ = m·Δv⃗/Δt ; or ΣF⃗ = P⃗ = m·g⃗ ⇒ Δv⃗/Δt = g⃗\nEn projection suivant (Oy) : Δv/Δt = g ⇒ Δt = Δv / g (encadré), avec Δv = |0 − 12|\nA.N. : Δt = 12 / 9,81 = 1,2 s (2 c.s)\n⇒ La balle met 1,2 s pour atteindre son point le plus haut.\nCompare partie par partie : s'il te manque le titre, les données ou l'expression encadrée, c'est là que tu perdrais des points.",
+        r: "b) Calcul de la durée de montée de la balle (souligné)\nDonnées : système = {balle}, point matériel de masse m = 0,20 kg ; v₀ = 12 m·s⁻¹ ; P⃗ = m·g⃗, vertical, vers le bas\nD'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ; or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗\nEn projection suivant (Oy) : {{Δv // Δt}} = g ⇒ Δt = {{Δv // g}} (encadré), avec Δv = |0 − 12|\nA.N. : Δt = {{12 // 9,81}} = 1,2 s (2 c.s)\n⇒ La balle met 1,2 s pour atteindre son point le plus haut.\nCompare partie par partie : s'il te manque le titre, les données ou l'expression encadrée, c'est là que tu perdrais des points.",
       },
     },
   ],

@@ -38,7 +38,7 @@ import {
   classeSaisie,
   pluriel,
 } from "@/components/ui";
-import { formule } from "@/components/Formule";
+import { formule, texteBrut } from "@/components/Formule";
 
 export default function Exercices() {
   const { matieres, chapitres, noterFlashcard } = useLuno();
@@ -575,7 +575,7 @@ function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
             {resultat === null && (
               <span className="flex shrink-0">
                 <BoutonIcone
-                  label={`Monter : ${el}`}
+                  label={`Monter : ${texteBrut(el)}`}
                   disabled={i === 0}
                   onClick={() => deplacer(i, -1)}
                   className="disabled:opacity-30"
@@ -583,7 +583,7 @@ function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
                   <ArrowUp size={17} />
                 </BoutonIcone>
                 <BoutonIcone
-                  label={`Descendre : ${el}`}
+                  label={`Descendre : ${texteBrut(el)}`}
                   disabled={i === liste.length - 1}
                   onClick={() => deplacer(i, 1)}
                   className="disabled:opacity-30"
