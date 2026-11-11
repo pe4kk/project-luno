@@ -4,14 +4,17 @@
 //   node scripts/demandes.mjs liste                     demandes en attente (JSON)
 //   node scripts/demandes.mjs repondre <id> <fichier>   dépose la réponse (JSON) et la marque prête
 //   node scripts/demandes.mjs erreur <id> "<message>"   marque la demande en erreur
+//   node scripts/demandes.mjs images <id>               télécharge les photos jointes et
+//                                                       affiche leurs chemins (à ouvrir avec Read)
 //
 // La clé secrète Supabase n'est jamais dans le dépôt : dans l'environnement cloud
 // « project-luno », le proxy réseau l'ajoute lui-même à l'en-tête `apikey` des requêtes
 // vers le projet. On passe par curl, qui utilise ce proxy.
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 
-const URL = "https://jexdghinuyirmyebfxvp.supabase.co/rest/v1/demandes";
+const PROJET = "https://jexdghinuyirmyebfxvp.supabase.co";
+const URL = `${PROJET}/rest/v1/demandes`;
 const CLE = process.env.SUPABASE_CLE_SECRETE || "remplacee-par-le-proxy";
 
 function requete(methode, chemin, corps) {
@@ -48,6 +51,14 @@ function verifierLecon(l) {
     if (e.question) { texteOk(e.question.q, `etapes[${i}].question.q`); texteOk(e.question.r, `etapes[${i}].question.r`); }
   });
 }
+function verifierErreurs(r) {
+  exiger(Array.isArray(r.erreurs) && r.erreurs.length > 0, "erreurs : tableau non vide");
+  (r.erreurs || []).forEach((e, i) => {
+    texteOk(e.titre, `erreurs[${i}].titre`);
+    texteOk(e.correction, `erreurs[${i}].correction`);
+    for (const k of ["erreur", "conseil", "source", "chapitre"]) if (e[k] !== undefined) texteOk(e[k], `erreurs[${i}].${k}`);
+  });
+}
 const TYPES = new Set([undefined, "qcm", "vraiFaux", "trou", "ordre", "ouverte"]);
 function verifierCours(c) {
   texteOk(c.titre, "titre");
@@ -78,13 +89,27 @@ if (commande === "liste") {
   const [ligne] = requete("GET", `?id=eq.${id}&select=id,type,statut`);
   if (!ligne) throw new Error(`Demande ${id} introuvable`);
   const reponse = JSON.parse(readFileSync(arg, "utf8"));
-  if (ligne.type === "lecon") verifierLecon(reponse); else verifierCours(reponse);
+  if (ligne.type === "lecon") verifierLecon(reponse);
+  else if (ligne.type === "erreurs") verifierErreurs(reponse);
+  else verifierCours(reponse);
   if (erreurs.length) {
     console.error("Réponse refusée, à corriger :\n- " + erreurs.join("\n- "));
     process.exit(1);
   }
   requete("PATCH", `?id=eq.${id}`, { statut: "prete", reponse, erreur: null, traite: new Date().toISOString() });
   console.log(`Demande ${id} : réponse déposée.`);
+} else if (commande === "images" && id) {
+  const [ligne] = requete("GET", `?id=eq.${id}&select=meta`);
+  const chemins = ligne?.meta?.images ?? [];
+  const dossier = `/tmp/luno-images/${id}`;
+  mkdirSync(dossier, { recursive: true });
+  for (const [i, chemin] of chemins.entries()) {
+    const fichier = `${dossier}/${i + 1}.jpg`;
+    execFileSync("curl", ["-sSf", "-o", fichier, `${PROJET}/storage/v1/object/demandes/${chemin}`,
+      "-H", `apikey: ${CLE}`]);
+    console.log(fichier);
+  }
+  if (!chemins.length) console.log("(aucune photo)");
 } else if (commande === "erreur" && id && arg) {
   requete("PATCH", `?id=eq.${id}`, { statut: "erreur", erreur: arg, traite: new Date().toISOString() });
   console.log(`Demande ${id} : marquée en erreur.`);

@@ -123,6 +123,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Supabase, y compris celles du navigateur de test : pour tester le site,
     utiliser le faux serveur local (Supabase refuse une clé secrète venant
     d'un navigateur).
+  - **Photos et « Mes erreurs »** (2026-11-11) : la fenêtre d'envoi joint
+    jusqu'à 20 photos, compressées dans le navigateur (1568 px, JPEG), rangées
+    dans le stockage privé `demandes` (`<compte>/<demande>/n.jpg`) ; la tâche
+    les récupère avec `node scripts/demandes.mjs images <id>` puis les lit.
+    Chaque matière a deux onglets, « Chapitres » et « Mes erreurs »
+    (`components/travail/Erreurs.tsx`, `?o=erreurs`) : la fiche des erreurs
+    d'anciennes évaluations (`erreurs` dans les données, synchronisées), à
+    relire avant chaque évaluation, alimentée à la main ou par une demande
+    `erreurs` (photos de la copie corrigée, conseils du prof) dont la réponse
+    est `{ erreurs: [{ titre, erreur, correction, conseil, chapitre, source }] }`.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

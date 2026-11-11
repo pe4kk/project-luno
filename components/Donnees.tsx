@@ -97,6 +97,7 @@ export function BoutonDonnees() {
         chapitres: s.chapitres,
         dsts: s.dsts,
         taches: s.taches,
+        erreurs: s.erreurs,
         publies: s.publies,
         calendrier: s.calendrier,
       },

@@ -152,6 +152,19 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     else if (t.fait && !taches[i].fait) taches[i] = { ...taches[i], fait: true };
   }
 
+  // Erreurs notées : même identifiant ou même titre dans la même matière.
+  const erreurs = [...(a.erreurs ?? [])];
+  for (const e of b.erreurs ?? []) {
+    const x = { ...e, matiereId: matiere(e.matiereId) };
+    const meme = erreurs.some(
+      (y) =>
+        y.id === x.id ||
+        (y.matiereId === x.matiereId &&
+          y.titre.trim().toLowerCase() === x.titre.trim().toLowerCase()),
+    );
+    if (!meme) erreurs.push(x);
+  }
+
   const publies = { ...b.publies };
   for (const [k, v] of Object.entries(a.publies)) publies[k] = Math.max(v, publies[k] ?? 0);
 
@@ -160,6 +173,7 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     chapitres,
     dsts,
     taches,
+    erreurs,
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };

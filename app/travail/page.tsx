@@ -30,6 +30,7 @@ import {
 } from "@/components/ui";
 import { VueChapitre } from "@/components/travail/VueChapitre";
 import { Revision } from "@/components/travail/Revision";
+import { VueErreurs } from "@/components/travail/Erreurs";
 
 const glisse = {
   initial: { opacity: 0, x: 24 },
@@ -152,6 +153,55 @@ function Travail() {
               </div>
             </div>
 
+            <div
+              role="tablist"
+              aria-label="Contenu de la matière"
+              className="mb-5 inline-flex rounded-full border border-line bg-surface p-1 shadow-card"
+            >
+              {[
+                { id: "chapitres", label: "Chapitres" },
+                {
+                  id: "erreurs",
+                  label: `Mes erreurs${
+                    s.erreurs.some((e) => e.matiereId === matiere.id)
+                      ? ` (${s.erreurs.filter((e) => e.matiereId === matiere.id).length})`
+                      : ""
+                  }`,
+                },
+              ].map((o) => {
+                const actif = (params.get("o") === "erreurs" ? "erreurs" : "chapitres") === o.id;
+                return (
+                  <button
+                    key={o.id}
+                    role="tab"
+                    aria-selected={actif}
+                    onClick={() =>
+                      router.replace(
+                        lienTravail({ m: matiere.id, o: o.id === "erreurs" ? "erreurs" : undefined }),
+                        { scroll: false },
+                      )
+                    }
+                    className={`relative min-h-10 rounded-full px-4 text-[14.5px] font-semibold transition-colors ${
+                      actif ? "text-bg" : "text-muted hover:text-ink"
+                    }`}
+                  >
+                    {actif && (
+                      <motion.span
+                        layoutId="onglet-matiere"
+                        className="absolute inset-0 rounded-full bg-ink"
+                        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      />
+                    )}
+                    <span className="relative">{o.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {params.get("o") === "erreurs" ? (
+              <VueErreurs matiere={matiere} />
+            ) : (
+            <>
             <form
               className="mb-5 flex gap-2"
               onSubmit={(e) => {
@@ -242,6 +292,8 @@ function Travail() {
                 </p>
               )}
             </div>
+            </>
+            )}
           </motion.div>
         ) : (
           <motion.div key="matieres" {...glisse}>

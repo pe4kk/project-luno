@@ -1,11 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Clock, Copy, ExternalLink, Send, X } from "lucide-react";
-import { useEffect, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Check, Clock, Copy, ExternalLink, ImagePlus, Send, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lienGithub } from "@/lib/contenu";
-import { envoyerDemande, prochainPassage, type Demande, type TypeDemande } from "@/lib/demandes";
+import { MAX_IMAGES, envoyerDemande, prochainPassage, type Demande, type TypeDemande } from "@/lib/demandes";
 import { synchroDisponible, useSynchro } from "@/lib/synchro";
 
 /** « 1 chapitre », « 2 chapitres », « 0 chapitre ». */
@@ -230,6 +230,8 @@ export function EnvoyerAClaude({
 }) {
   const [copie, setCopie] = useState(false);
   const [etatEnvoi, setEtatEnvoi] = useState<"" | "envoi" | "ok" | "erreur">("");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [avancement, setAvancement] = useState("");
   const connecte = useSynchro((x) => x.session !== null);
   const github = lienGithub(objet, texte);
   const direct = Boolean(demande && synchroDisponible());
@@ -238,8 +240,11 @@ export function EnvoyerAClaude({
     if (!demande) return;
     setEtatEnvoi("envoi");
     try {
-      await envoyerDemande(demande.type, objet, texte, demande.meta);
+      await envoyerDemande(demande.type, objet, texte, demande.meta, photos, (fait, total) =>
+        setAvancement(total ? `Envoi des photos ${Math.min(fait + 1, total)}/${total}…` : ""),
+      );
       setEtatEnvoi("ok");
+      setPhotos([]);
     } catch {
       setEtatEnvoi("erreur");
     }
@@ -281,8 +286,10 @@ export function EnvoyerAClaude({
                 Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
                 {prochainPassage()}.
               </p>
+              <Photos photos={photos} setPhotos={setPhotos} desactive={etatEnvoi === "envoi"} />
               <Bouton className="mt-3 w-full" disabled={etatEnvoi === "envoi"} onClick={() => void envoyer()}>
-                <Send size={16} /> {etatEnvoi === "envoi" ? "Envoi…" : "Envoyer la demande"}
+                <Send size={16} />{" "}
+                {etatEnvoi === "envoi" ? avancement || "Envoi…" : "Envoyer la demande"}
               </Bouton>
               {etatEnvoi === "erreur" && (
                 <p className="mt-2 text-[13.5px] text-bad" role="alert">
@@ -333,6 +340,65 @@ export function EnvoyerAClaude({
         </div>
       </div>
     </Fenetre>
+  );
+}
+
+/** Photos jointes à une demande (cours, évaluation corrigée…), avec leurs vignettes. */
+function Photos({
+  photos,
+  setPhotos,
+  desactive,
+}: {
+  photos: File[];
+  setPhotos: (f: File[]) => void;
+  desactive: boolean;
+}) {
+  const entree = useRef<HTMLInputElement>(null);
+  const vignettes = useMemo(() => photos.map((f) => URL.createObjectURL(f)), [photos]);
+  useEffect(() => () => vignettes.forEach((u) => URL.revokeObjectURL(u)), [vignettes]);
+  return (
+    <div className="mt-3">
+      <input
+        ref={entree}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(e) => {
+          const ajout = [...(e.target.files ?? [])].filter((f) => f.type.startsWith("image/"));
+          setPhotos([...photos, ...ajout].slice(0, MAX_IMAGES));
+          e.target.value = "";
+        }}
+      />
+      {vignettes.length > 0 && (
+        <ul className="mb-2 grid grid-cols-4 gap-2" aria-label="Photos jointes">
+          {vignettes.map((u, i) => (
+            <li key={u} className="relative aspect-square overflow-hidden rounded-lg border border-line bg-surface">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={u} alt={`Photo ${i + 1}`} className="size-full object-cover" />
+              <button
+                type="button"
+                disabled={desactive}
+                onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
+                aria-label={`Retirer la photo ${i + 1}`}
+                className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-surface/90 text-ink shadow-card"
+              >
+                <X size={13} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <Bouton
+        variante="contour"
+        className="w-full !py-2"
+        disabled={desactive || photos.length >= MAX_IMAGES}
+        onClick={() => entree.current?.click()}
+      >
+        <ImagePlus size={16} />
+        {photos.length ? `Ajouter des photos (${photos.length}/${MAX_IMAGES})` : "Ajouter des photos"}
+      </Bouton>
+    </div>
   );
 }
 

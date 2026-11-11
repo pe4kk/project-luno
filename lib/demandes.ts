@@ -4,7 +4,7 @@ import { create } from "zustand";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase, synchroDisponible, useSynchro } from "./synchro";
 import { useLuno } from "./store";
-import type { ChapitrePublie, Lecon } from "./types";
+import type { ChapitrePublie, ErreurNotee, Lecon } from "./types";
 
 /**
  * Demandes envoyées à Claude depuis le site (table `demandes`, voir supabase/schema.sql).
@@ -13,14 +13,19 @@ import type { ChapitrePublie, Lecon } from "./types";
  * (`ChapitrePublie`), que le site affiche ou reprend ici.
  */
 
-export type TypeDemande = "lecon" | "cours";
+export type TypeDemande = "lecon" | "cours" | "erreurs";
+
+/** Réponse à une demande « erreurs » : les erreurs relevées sur l'évaluation envoyée. */
+export type ReponseErreurs = {
+  erreurs: Omit<ErreurNotee, "id" | "matiereId" | "date">[];
+};
 export type Demande = {
   id: string;
   type: TypeDemande;
   titre: string;
-  meta: { matiere?: string; chapitre?: string };
+  meta: { matiere?: string; chapitre?: string; images?: string[] };
   statut: "en_attente" | "prete" | "erreur";
-  reponse: (Lecon | ChapitrePublie) | null;
+  reponse: (Lecon | ChapitrePublie | ReponseErreurs) | null;
   erreur: string | null;
   cree: string;
   traite: string | null;
@@ -65,13 +70,54 @@ export async function chargerDemandes() {
   reprendreCours();
 }
 
+/**
+ * Réduit une photo avant l'envoi : 1568 px au plus grand côté (au-delà, Claude la réduit
+ * de toute façon), en JPEG. Une photo de téléphone passe de 3 à 5 Mo à 200 à 400 Ko.
+ */
+async function compresser(fichier: File): Promise<Blob> {
+  const image = await createImageBitmap(fichier);
+  const echelle = Math.min(1, 1568 / Math.max(image.width, image.height));
+  const toile = document.createElement("canvas");
+  toile.width = Math.round(image.width * echelle);
+  toile.height = Math.round(image.height * echelle);
+  toile.getContext("2d")!.drawImage(image, 0, 0, toile.width, toile.height);
+  image.close();
+  return new Promise((ok, ko) =>
+    toile.toBlob((b) => (b ? ok(b) : ko(new Error("compression"))), "image/jpeg", 0.82),
+  );
+}
+
+export const MAX_IMAGES = 20;
+
+/**
+ * Envoie une demande. Les photos vont d'abord dans le stockage privé `demandes`, dans le
+ * dossier du compte (`<compte>/<demande>/1.jpg`…), et leurs chemins dans `meta.images`.
+ */
 export async function envoyerDemande(
   type: TypeDemande,
   titre: string,
   texte: string,
   meta: Demande["meta"] = {},
+  images: File[] = [],
+  progression?: (fait: number, total: number) => void,
 ) {
-  const { error } = await supabase().from("demandes").insert({ type, titre, texte, meta });
+  const compte = useSynchro.getState().session?.user.id;
+  if (!compte) throw new Error("non connecté");
+  const id = crypto.randomUUID();
+  const chemins: string[] = [];
+  for (const [i, f] of images.slice(0, MAX_IMAGES).entries()) {
+    progression?.(i, images.length);
+    const chemin = `${compte}/${id}/${i + 1}.jpg`;
+    const { error } = await supabase()
+      .storage.from("demandes")
+      .upload(chemin, await compresser(f), { contentType: "image/jpeg" });
+    if (error) throw error;
+    chemins.push(chemin);
+  }
+  progression?.(images.length, images.length);
+  const { error } = await supabase()
+    .from("demandes")
+    .insert({ id, type, titre, texte, meta: { ...meta, images: chemins } });
   if (error) throw error;
   await chargerDemandes();
 }
@@ -99,6 +145,16 @@ export function leconsPerso(liste: Demande[]): Lecon[] {
 function reprendreCours() {
   const { liste } = useDemandes.getState();
   for (const d of liste) {
+    if (d.type === "erreurs" && d.statut === "prete" && d.reponse) {
+      const id = idReponse(d);
+      const s = useLuno.getState();
+      if (s.publies[id]) continue;
+      const m = s.matieres.find((x) => x.nom === d.meta.matiere);
+      if (!m) continue;
+      s.ajouterErreurs(m.id, (d.reponse as ReponseErreurs).erreurs ?? [], d.titre);
+      useLuno.setState((x) => ({ publies: { ...x.publies, [id]: 1 } }));
+      continue;
+    }
     if (d.type !== "cours" || d.statut !== "prete" || !d.reponse) continue;
     const r = d.reponse as ChapitrePublie;
     const id = idReponse(d);

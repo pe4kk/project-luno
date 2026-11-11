@@ -206,4 +206,35 @@ export type Tache = {
   echeance: string;
 };
 
-export type Donnees = { matieres: Matiere[]; chapitres: Chapitre[]; dsts: Dst[]; taches: Tache[] };
+/**
+ * Une erreur relevée dans une ancienne évaluation (ou un conseil du prof), avec sa
+ * correction : la fiche « Mes erreurs » d'une matière, à relire avant chaque évaluation.
+ */
+export type ErreurNotee = {
+  id: string;
+  matiereId: string;
+  /** Ex. « Oublier l'ensemble de dérivabilité ». */
+  titre: string;
+  /** Ce qui a été fait de travers (peut contenir la notation des formules). */
+  erreur: string;
+  /** Comment faire juste. */
+  correction: string;
+  /** Astuce pour ne plus la refaire, facultative. */
+  conseil?: string;
+  /** D'où elle vient : « DST du 24/09 », « conseil du prof »… */
+  source?: string;
+  /** Chapitre concerné, en texte libre. */
+  chapitre?: string;
+  /** AAAA-MM-JJ, date d'ajout. */
+  date: string;
+  /** Combien de fois elle a été refaite (affichée en priorité si > 0). */
+  repetee?: number;
+};
+
+export type Donnees = {
+  matieres: Matiere[];
+  chapitres: Chapitre[];
+  dsts: Dst[];
+  taches: Tache[];
+  erreurs: ErreurNotee[];
+};

@@ -232,3 +232,16 @@ export function lireListe(texte: string, aujourdhui = new Date()): { texte: stri
     })
     .filter((x) => x.texte);
 }
+
+/** Demande d'analyse d'une ancienne évaluation (photos jointes) ou de conseils du prof. */
+export function demandeErreurs(matiere: string, notes: string): string {
+  return [
+    "[Luno] Erreurs d'évaluation",
+    `Matière : ${matiere}`,
+    "Niveau : lycée",
+    "Demande : relève les erreurs de l'évaluation corrigée (photos jointes) ou les conseils ci-dessous, et pour chacune : un titre court, l'erreur, la correction, un conseil pour ne plus la refaire, le chapitre et la source.",
+    notes.trim() ? `\n--- NOTES DE L'ÉLÈVE ---\n${notes.trim()}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}

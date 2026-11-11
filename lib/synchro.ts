@@ -80,6 +80,7 @@ function lesDonnees(): DonneesSynchro {
     chapitres: s.chapitres,
     dsts: s.dsts,
     taches: s.taches,
+    erreurs: s.erreurs,
     publies: s.publies,
     calendrier: s.calendrier,
   };
@@ -204,6 +205,7 @@ export function demarrerSynchro() {
       s.chapitres === avant.chapitres &&
       s.dsts === avant.dsts &&
       s.taches === avant.taches &&
+      s.erreurs === avant.erreurs &&
       s.calendrier === avant.calendrier &&
       s.publies === avant.publies
     )

@@ -7,6 +7,7 @@ import type {
   ChapitrePublie,
   Donnees,
   Dst,
+  ErreurNotee,
   EvenementPublie,
   Flashcard,
   Matiere,
@@ -125,6 +126,14 @@ type Etat = Donnees & {
   supprimerTache: (id: string) => void;
   effacerTachesFaites: () => void;
 
+  ajouterErreurs: (
+    matiereId: string,
+    liste: Omit<ErreurNotee, "id" | "matiereId" | "date">[],
+    origine?: string,
+  ) => number;
+  modifierErreur: (id: string, e: Partial<Omit<ErreurNotee, "id" | "matiereId">>) => void;
+  supprimerErreur: (id: string) => void;
+
   enregistrerDst: (d: Omit<Dst, "id"> & { id?: string }) => void;
   supprimerDst: (id: string) => void;
 
@@ -145,6 +154,7 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   chapitres: s.chapitres,
   dsts: s.dsts,
   taches: s.taches,
+  erreurs: s.erreurs,
   calendrier: s.calendrier,
 });
 
@@ -155,6 +165,29 @@ export const useLuno = create<Etat>()(
       chapitres: [],
       dsts: [],
       taches: [],
+      erreurs: [],
+      ajouterErreurs: (matiereId, liste, origine) => {
+        const neuves: ErreurNotee[] = liste
+          .filter((e) => e.titre?.trim() && e.correction?.trim())
+          .map((e) => ({
+            ...e,
+            id: uid(),
+            matiereId,
+            date: todayISO(),
+            source: e.source ?? origine,
+          }));
+        set((s) => ({ erreurs: [...neuves, ...s.erreurs] }));
+        return neuves.length;
+      },
+      modifierErreur: (id, e) =>
+        set((s) => ({
+          erreurs: s.erreurs.map((x) => (x.id === id ? { ...x, ...e } : x)),
+        })),
+      supprimerErreur: (id) =>
+        set((s) => ({
+          annulation: { message: "Erreur retirée de la fiche", avant: photo(s) },
+          erreurs: s.erreurs.filter((x) => x.id !== id),
+        })),
       ajouterTaches: (liste) => {
         const neuves: Tache[] = liste
           .map((t) => (typeof t === "string" ? { texte: t, echeance: "" } : t))
@@ -261,6 +294,7 @@ export const useLuno = create<Etat>()(
           matieres: s.matieres.filter((m) => m.id !== id),
           chapitres: s.chapitres.filter((c) => c.matiereId !== id),
           dsts: s.dsts.filter((d) => d.matiereId !== id),
+          erreurs: s.erreurs.filter((e) => e.matiereId !== id),
         })),
 
       ajouterChapitre: (matiereId, titre) => {
@@ -493,6 +527,7 @@ export const useLuno = create<Etat>()(
           chapitres: [],
           dsts: [],
           taches: [],
+          erreurs: [],
           publies: {},
           calendrier: null,
         })),
@@ -510,6 +545,7 @@ export const useLuno = create<Etat>()(
         chapitres: s.chapitres,
         dsts: s.dsts,
         taches: s.taches,
+        erreurs: s.erreurs,
         publies: s.publies,
         calendrier: s.calendrier,
       }),
@@ -561,6 +597,7 @@ export function normaliser(
     })),
     dsts: dstsGardes.map((x) => ({ ...x, chapitreIds: x.chapitreIds ?? [] })),
     taches: (d.taches ?? []).map((x) => ({ ...x, echeance: x.echeance ?? "" })),
+    erreurs: d.erreurs ?? [],
     publies,
     calendrier: d.calendrier ?? null,
   };
