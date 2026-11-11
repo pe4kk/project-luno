@@ -38,6 +38,7 @@ import { Revision, type CarteARevoir } from "./Revision";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { Curseur } from "@/components/Curseur";
+import { classePastille, usePastille } from "@/lib/pastille";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
@@ -82,6 +83,7 @@ export function VueChapitre({
     document.getElementById(`onglet-${suivant}`)?.focus();
   };
 
+  const { conteneur: sousOngletsConteneur, pastille: sousOngletsPastille } = usePastille(onglet);
   return (
     <div>
       <Link
@@ -118,32 +120,31 @@ export function VueChapitre({
       </div>
 
       <div
-        className="mb-6 inline-flex max-w-full rounded-2xl border border-line bg-surface p-1 shadow-card"
+        ref={sousOngletsConteneur}
+        className="relative mb-6 inline-flex max-w-full rounded-2xl border border-line bg-surface p-1 shadow-card"
         role="tablist"
         data-aligne-panneau
         aria-label="Contenu du chapitre"
         onKeyDown={surTouche}
       >
+        <span
+          ref={sousOngletsPastille}
+          className={`${classePastille} rounded-xl`}
+          style={{ background: pastel(matiere.couleur, 18) }}
+        />
         {ONGLETS.map(({ id, label, icone: Icone }) => (
           <button
             key={id}
             id={`onglet-${id}`}
             role="tab"
             aria-selected={onglet === id}
+            data-actif={onglet === id}
             aria-controls="panneau-chapitre"
             tabIndex={onglet === id ? 0 : -1}
             onClick={() => setOnglet(id)}
-            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3.5 py-2 text-[14.5px] font-semibold sm:px-5"
+            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3.5 py-2 text-[14.5px] font-semibold transition-colors duration-300 sm:px-5"
             style={{ color: onglet === id ? foncee : "var(--muted)" }}
           >
-            {onglet === id && (
-              <motion.span
-                layoutId="sous-onglet"
-                className="absolute inset-0 rounded-xl"
-                style={{ background: pastel(matiere.couleur, 18) }}
-                transition={{ type: "spring", stiffness: 420, damping: 34 }}
-              />
-            )}
             <Icone size={16} className="relative" />
             <span className="relative">{label}</span>
             {id === "flashcards" && chapitre.flashcards.length > 0 && (
@@ -161,9 +162,9 @@ export function VueChapitre({
           id="panneau-chapitre"
           role="tabpanel"
           aria-labelledby={`onglet-${onglet}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
+          initial={{ opacity: 0, transform: "translate3d(0, 10px, 0)" }}
+          animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+          exit={{ opacity: 0, transform: "translate3d(0, -6px, 0)" }}
           transition={{ duration: 0.22 }}
         >
           {onglet === "cours" && (
@@ -466,11 +467,10 @@ function OngletFlashcards({
             <AnimatePresence initial={false}>
               {cartes.map((c, i) => (
                 <motion.button
-                  layout
                   key={c.id}
-                  initial={{ opacity: 0, y: 12, scale: 0.97 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, transform: "translate3d(0, 12px, 0) scale(0.97)" }}
+                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0) scale(1)" }}
+                  exit={{ opacity: 0, transform: "translate3d(0, 0px, 0) scale(0.95)" }}
                   transition={{ delay: Math.min(i * 0.03, 0.3) }}
                   onClick={() => ouvrir(c)}
                   className="rounded-2xl border border-line bg-surface p-4 text-left shadow-card transition-colors hover:border-ink/30"
@@ -625,8 +625,8 @@ function OngletFiche({
         <div className="mt-4 flex items-baseline justify-between">
           <motion.span
             key={taille}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, transform: "translate3d(0, 6px, 0)" }}
+            animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
             className="font-display text-[28px] text-accent"
           >
             {TAILLES[taille - 1]}

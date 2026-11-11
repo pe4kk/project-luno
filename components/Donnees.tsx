@@ -60,9 +60,9 @@ export function Annulation() {
       {annulation && (
         <motion.div
           role="status"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, transform: "translate3d(0, 20px, 0)" }}
+          animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+          exit={{ opacity: 0, transform: "translate3d(0, 20px, 0)" }}
           className="fixed inset-x-3 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-[440px] items-center justify-between gap-3 rounded-xl bg-night py-1.5 pl-4 pr-1.5 text-[14.5px] text-white shadow-pop lg:bottom-6"
         >
           <span className="min-w-0 truncate">{annulation.message}</span>

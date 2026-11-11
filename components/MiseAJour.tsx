@@ -43,9 +43,9 @@ export function MiseAJour() {
       {nouvelle && (
         <motion.div
           role="status"
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
+          initial={{ opacity: 0, transform: "translate3d(0, -16px, 0)" }}
+          animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+          exit={{ opacity: 0, transform: "translate3d(0, -16px, 0)" }}
           className="fixed inset-x-3 top-[calc(0.75rem+env(safe-area-inset-top))] z-50 mx-auto flex max-w-[440px] items-center justify-between gap-3 rounded-xl bg-night py-1.5 pl-4 pr-1.5 text-[14.5px] text-white shadow-pop"
         >
           <span className="min-w-0">Nouvelle version de Luno</span>

@@ -100,9 +100,9 @@ export default function Exercices() {
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, transform: "translate3d(40px, 0, 0)" }}
+            animate={{ opacity: 1, transform: "translate3d(0px, 0, 0)" }}
+            exit={{ opacity: 0, transform: "translate3d(-40px, 0, 0)" }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
             <Enonce
@@ -116,8 +116,8 @@ export default function Exercices() {
                 <motion.div
                   id="correction"
                   role="status"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, transform: "translate3d(0, 10px, 0)" }}
+                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                   onAnimationComplete={() =>
                     document
                       .getElementById("correction")
@@ -264,8 +264,8 @@ export default function Exercices() {
                   key={c.id}
                   role="radio"
                   aria-checked={actif}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -3 }}
                   onClick={() => setChapitreId(c.id)}
@@ -620,8 +620,8 @@ function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
         </>
       ) : (
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, transform: "translate3d(0, 8px, 0)" }}
+          animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
         >
           <div className="mt-4 rounded-2xl bg-accent-soft p-4">
             <p className="surtitre mb-1 text-accent">Corrigé</p>

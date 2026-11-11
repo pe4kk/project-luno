@@ -243,8 +243,8 @@ export default function Recherche() {
                   {resultats.slice(0, MAX_PAR_GROUPE).map((r, i) => (
                     <motion.li
                       key={r.cle}
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, transform: "translate3d(0, 6px, 0)" }}
+                      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                       transition={{ delay: Math.min(i * 0.02, 0.15) }}
                     >
                       {/* Un PDF est un fichier : lien simple, car Link ajouterait le préfixe du site une seconde fois. */}

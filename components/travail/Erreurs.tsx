@@ -94,9 +94,8 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
               {erreurs.map((e) => (
                 <motion.li
                   key={e.id}
-                  layout
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, transform: "translate3d(0, 10px, 0)" }}
+                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                   exit={{ opacity: 0, scale: 0.97 }}
                   className="rounded-[18px] border border-line bg-surface p-5 shadow-card"
                 >

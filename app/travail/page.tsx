@@ -18,6 +18,7 @@ import {
 import { COULEURS, EMOJIS, encre, estDue, pastel, useLuno } from "@/lib/store";
 import type { Matiere } from "@/lib/types";
 import { lienTravail } from "@/lib/liens";
+import { classePastille, usePastille } from "@/lib/pastille";
 import {
   Bouton,
   BoutonIcone,
@@ -33,9 +34,10 @@ import { Revision } from "@/components/travail/Revision";
 import { VueErreurs } from "@/components/travail/Erreurs";
 
 const glisse = {
-  initial: { opacity: 0, x: 24 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -24 },
+  // En `transform` plutôt qu'en x : le navigateur l'anime seul, sans le fil principal.
+  initial: { opacity: 0, transform: "translate3d(24px, 0, 0)" },
+  animate: { opacity: 1, transform: "translate3d(0px, 0, 0)" },
+  exit: { opacity: 0, transform: "translate3d(-24px, 0, 0)" },
   transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
 };
 
@@ -58,6 +60,8 @@ function Travail() {
       (c) => c.id === params.get("c") && c.matiereId === matiere?.id,
     ) ?? null;
   const revisionDuJour = params.get("r") === "tout";
+  const ongletMatiere = params.get("o") === "erreurs" ? "erreurs" : "chapitres";
+  const { conteneur: ongletsMatiereConteneur, pastille: ongletsMatierePastille } = usePastille(`${matiere?.id}-${ongletMatiere}`);
 
   // Fenêtre de matière : `true` pour une création, la matière pour une modification.
   const [fenetre, setFenetre] = useState<Matiere | true | null>(null);
@@ -156,8 +160,10 @@ function Travail() {
             <div
               role="tablist"
               aria-label="Contenu de la matière"
-              className="mb-5 inline-flex rounded-full border border-line bg-surface p-1 shadow-card"
+              ref={ongletsMatiereConteneur}
+              className="relative mb-5 inline-flex rounded-full border border-line bg-surface p-1 shadow-card"
             >
+              <span ref={ongletsMatierePastille} className={`${classePastille} rounded-full bg-ink`} />
               {[
                 { id: "chapitres", label: "Chapitres" },
                 {
@@ -169,29 +175,23 @@ function Travail() {
                   }`,
                 },
               ].map((o) => {
-                const actif = (params.get("o") === "erreurs" ? "erreurs" : "chapitres") === o.id;
+                const actif = ongletMatiere === o.id;
                 return (
                   <button
                     key={o.id}
                     role="tab"
                     aria-selected={actif}
+                    data-actif={actif}
                     onClick={() =>
                       router.replace(
                         lienTravail({ m: matiere.id, o: o.id === "erreurs" ? "erreurs" : undefined }),
                         { scroll: false },
                       )
                     }
-                    className={`relative min-h-10 rounded-full px-4 text-[14.5px] font-semibold transition-colors ${
+                    className={`relative min-h-10 rounded-full px-4 text-[14.5px] font-semibold transition-colors duration-300 ${
                       actif ? "text-bg" : "text-muted hover:text-ink"
                     }`}
                   >
-                    {actif && (
-                      <motion.span
-                        layoutId="onglet-matiere"
-                        className="absolute inset-0 rounded-full bg-ink"
-                        transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                      />
-                    )}
                     <span className="relative">{o.label}</span>
                   </button>
                 );
@@ -235,9 +235,8 @@ function Travail() {
                   return (
                     <motion.div
                       key={c.id}
-                      layout
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, transform: "translate3d(0, 10px, 0)" }}
+                      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                       whileHover={{ x: 4 }}
                     >
                       <Link
@@ -330,8 +329,8 @@ function Travail() {
                   return (
                     <motion.div
                       key={m.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
+                      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                       transition={{ delay: i * 0.05, duration: 0.4 }}
                       whileHover={{ y: -5 }}
                       whileTap={{ scale: 0.98 }}

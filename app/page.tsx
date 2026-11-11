@@ -185,8 +185,8 @@ export default function Accueil() {
             {RACCOURCIS.map(({ href, titre, texte, icone: Icone, couleur }, i) => (
               <motion.div
                 key={href}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, transform: "translate3d(0, 14px, 0)" }}
+                animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                 transition={{ delay: 0.08 * i + 0.1, duration: 0.4 }}
                 whileHover={{ y: -4 }}
               >

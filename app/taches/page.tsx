@@ -153,10 +153,9 @@ function Ligne({ t, basculer, ouvrir }: { t: Tache; basculer: () => void; ouvrir
   const retard = !t.fait && t.echeance && joursAvant(t.echeance) < 0;
   return (
     <motion.li
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: 24 }}
+      initial={{ opacity: 0, transform: "translate3d(0, 8px, 0)" }}
+      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+      exit={{ opacity: 0, transform: "translate3d(24px, 0, 0)" }}
       transition={{ duration: 0.2 }}
       className="flex items-stretch rounded-2xl border border-line bg-surface shadow-card"
     >

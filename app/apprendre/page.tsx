@@ -108,8 +108,8 @@ function Apprendre() {
               {toutes.map((l, i) => (
                 <motion.div
                   key={l.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -3 }}
                 >
@@ -296,9 +296,9 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
         ) : (
           <motion.div
             key={etape}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, transform: "translate3d(30px, 0, 0)" }}
+            animate={{ opacity: 1, transform: "translate3d(0px, 0, 0)" }}
+            exit={{ opacity: 0, transform: "translate3d(-30px, 0, 0)" }}
             transition={{ duration: 0.25 }}
           >
             {etape === 0 && (
@@ -336,8 +336,8 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
                   {reponseVue ? (
                     <motion.p
                       role="status"
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, transform: "translate3d(0, 6px, 0)" }}
+                      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                       className="whitespace-pre-line mt-2 text-[15px] leading-relaxed"
                     >
                       {formule(e.question.r)}

@@ -25,6 +25,7 @@ import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 import { PanneauJour } from "./PanneauJour";
 import { MoteurSynchro } from "./Synchro";
 import { MiseAJour } from "./MiseAJour";
+import { classePastille, usePastille } from "@/lib/pastille";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
@@ -319,6 +320,8 @@ function ColonnesAvecPanneau({
 export function AppShell({ children }: { children: ReactNode }) {
   const chemin = usePathname();
   const monte = useMonte();
+  const { conteneur: navHautConteneur, pastille: navHautPastille } = usePastille<HTMLElement>(chemin);
+  const { conteneur: navBasConteneur, pastille: navBasPastille } = usePastille<HTMLElement>(chemin);
   const actif = (href: string) =>
     href === "/" ? chemin === "/" : chemin.startsWith(href);
 
@@ -329,25 +332,21 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex w-full max-w-[1180px] 2xl:max-w-[1920px] items-center justify-between gap-4 px-4 py-3.5 sm:px-8">
           <Logo />
           <nav
-            className="hidden items-center gap-1 lg:flex"
+            ref={navHautConteneur}
+            className="relative hidden items-center gap-1 lg:flex"
             aria-label="Navigation principale"
           >
+            <span ref={navHautPastille} className={`${classePastille} rounded-[10px] bg-ink`} />
             {ONGLETS.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 aria-current={actif(href) ? "page" : undefined}
-                className={`relative rounded-[10px] px-3.5 py-2 text-[14px] tracking-[0.04em] transition-colors ${
+                data-actif={actif(href)}
+                className={`relative rounded-[10px] px-3.5 py-2 text-[14px] tracking-[0.04em] transition-colors duration-300 ${
                   actif(href) ? "text-bg" : "text-muted hover:text-ink"
                 }`}
               >
-                {actif(href) && (
-                  <motion.span
-                    layoutId="onglet-actif"
-                    className="absolute inset-0 rounded-[10px] bg-ink"
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                  />
-                )}
                 <span className="relative">{label}</span>
               </Link>
             ))}
@@ -380,8 +379,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <ColonnesAvecPanneau chemin={chemin}>
             <motion.div
               key={chemin}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, transform: "translate3d(0, 14px, 0)" }}
+              animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
               transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
             >
               {children}
@@ -397,9 +396,14 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Barre du bas (téléphone) : fond translucide, pastille cuivrée qui glisse sous l'onglet actif */}
       <nav
-        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-6 rounded-[26px] border border-line bg-surface/80 px-1 py-1.5 shadow-pop backdrop-blur-xl lg:hidden"
+        ref={navBasConteneur}
+        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-6 rounded-[26px] border border-line bg-surface/90 px-1 py-1.5 shadow-pop backdrop-blur-md lg:hidden"
         aria-label="Navigation principale"
       >
+        <span
+          ref={navBasPastille}
+          className={`${classePastille} copper-bg rounded-full shadow-[0_6px_16px_-6px_rgb(201_139_107_/_0.9)]`}
+        />
         {ONGLETS.map(({ href, label, icone: Icone }) => {
           const ici = actif(href);
           return (
@@ -409,21 +413,17 @@ export function AppShell({ children }: { children: ReactNode }) {
               aria-current={ici ? "page" : undefined}
               className="group relative flex min-w-0 flex-col items-center gap-1 py-1"
             >
-              <span className="relative flex h-8 w-12 items-center justify-center">
-                {ici && (
-                  <motion.span
-                    layoutId="onglet-actif-mobile"
-                    className="copper-bg absolute inset-0 rounded-full shadow-[0_6px_16px_-6px_rgb(201_139_107_/_0.9)]"
-                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                  />
-                )}
-                <motion.span
-                  className={`relative ${ici ? "text-on-accent" : "text-muted group-active:text-ink"}`}
-                  animate={{ scale: ici ? 1.08 : 1, y: ici ? -0.5 : 0 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 22 }}
+              <span
+                data-actif={ici}
+                className="relative flex h-8 w-12 items-center justify-center"
+              >
+                <span
+                  className={`relative transition-[transform,color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                    ici ? "-translate-y-px scale-[1.08] text-on-accent" : "text-muted group-active:text-ink"
+                  }`}
                 >
                   <Icone size={19} strokeWidth={ici ? 2.3 : 2} />
-                </motion.span>
+                </span>
               </span>
               <span
                 className={`max-w-full truncate px-0.5 text-[10px] leading-none transition-colors ${

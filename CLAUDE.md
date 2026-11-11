@@ -139,6 +139,14 @@ fiches de révision ; le slider règle la longueur de la fiche.
     cran ; le clavier avance d'un cran. Les points de fiche ne sont plus
     montés et démontés : ils se replient en CSS (classe `repli`, grille
     `0fr ↔ 1fr`), sans `layout` de motion, qui saccadait.
+  - **Fluidité sur téléphone** (2026-11-11) : n'animer que `opacity` et
+    `transform`. Avec motion, écrire `transform: "translate3d(…)"` plutôt que
+    `x` / `y` / `scale` (animés image par image sur le fil principal), et ne
+    pas mettre `layout` sur les listes (gardé seulement pour l'exercice
+    « ordre »). Les pastilles d'onglets passent par `usePastille()`
+    (`lib/pastille.ts`) : mesure FLIP puis `element.animate`, l'onglet actif
+    porte `data-actif`. Pas de `backdrop-filter` plein écran (fenêtres) ; la
+    barre du bas garde un flou léger (`backdrop-blur-md`).
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

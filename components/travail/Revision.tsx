@@ -140,9 +140,9 @@ export function Revision({
       <AnimatePresence mode="wait">
         <motion.div
           key={carte.id}
-          initial={{ opacity: 0, x: 60, rotate: 2 }}
-          animate={{ opacity: 1, x: 0, rotate: 0 }}
-          exit={{ opacity: 0, x: -60, rotate: -2 }}
+          initial={{ opacity: 0, transform: "translate3d(60px, 0, 0) rotate(2deg)" }}
+          animate={{ opacity: 1, transform: "translate3d(0px, 0, 0) rotate(0deg)" }}
+          exit={{ opacity: 0, transform: "translate3d(-60px, 0, 0) rotate(-2deg)" }}
           transition={{ type: "spring", stiffness: 300, damping: 28 }}
           className="flip-scene"
         >

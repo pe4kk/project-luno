@@ -178,9 +178,9 @@ export default function Calendrier() {
               <motion.div
                 key={`${vue.annee}-${vue.mois}`}
                 custom={sens}
-                initial={{ opacity: 0, x: sens * 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: sens * -40 }}
+                initial={{ opacity: 0, transform: `translate3d(${sens * 40}px, 0, 0)` }}
+                animate={{ opacity: 1, transform: "translate3d(0px, 0, 0)" }}
+                exit={{ opacity: 0, transform: `translate3d(${sens * -40}px, 0, 0)` }}
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 className="grid grid-cols-7 gap-1 sm:gap-1.5"
               >
@@ -249,7 +249,6 @@ export default function Calendrier() {
             <AnimatePresence initial={false}>
               {(toutVoir ? aVenir : aVenir.slice(0, 5)).map((d) => (
                 <motion.div
-                  layout
                   key={d.id}
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}

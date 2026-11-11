@@ -137,7 +137,7 @@ export function Fenetre({
     <AnimatePresence>
       {ouverte && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 backdrop-blur-sm sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-night/55 p-3 sm:items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -149,9 +149,9 @@ export function Fenetre({
             aria-modal="true"
             aria-label={titre}
             className="max-h-[88dvh] w-full max-w-[480px] overflow-y-auto rounded-[18px] bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-pop sm:p-6"
-            initial={{ opacity: 0, y: 28, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            initial={{ opacity: 0, transform: "translate3d(0, 28px, 0) scale(0.97)" }}
+            animate={{ opacity: 1, transform: "translate3d(0, 0px, 0) scale(1)" }}
+            exit={{ opacity: 0, transform: "translate3d(0, 16px, 0) scale(0.98)" }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
           >
             <div className="mb-4 flex items-center justify-between gap-2">
