@@ -1,4 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
+import { DEF_HGGSP_INTRO, DEF_HGGSP_AXE1, DEF_HGGSP_AXE2 } from "./definitions";
 
 /**
  * HGGSP Première, thème 4 : « S'informer : un regard critique sur les sources
@@ -12,7 +13,8 @@ const matiere = { nom: "HGGSP", couleur: "#8a5a78", emoji: "🏛️" };
 export const HGGSP_THEME_4: ChapitrePublie[] = [
   {
     id: "hggsp-1re-t4-intro",
-    version: 2,
+    version: 3,
+    definitions: DEF_HGGSP_INTRO,
     matiere,
     titre: "Thème 4 · Introduction : s'informer",
     flashcards: [
@@ -417,7 +419,8 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe1",
-    version: 2,
+    version: 3,
+    definitions: DEF_HGGSP_AXE1,
     matiere,
     titre: "Thème 4 · Axe 1 : les révolutions techniques de l'information",
     flashcards: [
@@ -944,7 +947,8 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe2",
-    version: 2,
+    version: 3,
+    definitions: DEF_HGGSP_AXE2,
     matiere,
     titre: "Thème 4 · Axe 2 : liberté ou contrôle de l'information",
     flashcards: [

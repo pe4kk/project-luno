@@ -32,6 +32,7 @@ import {
 import { VueChapitre } from "@/components/travail/VueChapitre";
 import { Revision } from "@/components/travail/Revision";
 import { VueErreurs } from "@/components/travail/Erreurs";
+import { Emoji } from "@/components/Emoji";
 
 const glisse = {
   // En `transform` plutôt qu'en x : le navigateur l'anime seul, sans le fil principal.
@@ -122,7 +123,7 @@ function Travail() {
               style={{ background: pastel(matiere.couleur, 16) }}
             >
               <div className="min-w-0">
-                <div className="text-[44px] leading-none">{matiere.emoji}</div>
+                <div className="text-[44px] leading-none"><Emoji e={matiere.emoji} /></div>
                 <h1
                   className="mt-3 text-[34px] leading-tight sm:text-[44px]"
                   style={{ color: encre(matiere.couleur) }}
@@ -345,7 +346,7 @@ function Travail() {
                           style={{ background: m.couleur }}
                         />
                         <span className="relative block text-[30px] leading-none sm:text-[38px]">
-                          {m.emoji}
+                          <Emoji e={m.emoji} />
                         </span>
                         <span
                           className="relative mt-6 block hyphens-auto break-words font-display text-[18px] leading-tight sm:mt-10 sm:text-[24px]"
@@ -473,7 +474,7 @@ function FenetreMatiere({
                 key={e}
                 role="radio"
                 aria-checked={emoji === e}
-                aria-label={`Symbole ${e}`}
+                aria-label={e === "🇬🇧" ? "Drapeau britannique" : e === "🇪🇸" ? "Drapeau espagnol" : `Symbole ${e}`}
                 onClick={() => setEmoji(e)}
                 className={`size-11 rounded-xl text-[20px] transition-all ${
                   emoji === e
@@ -481,7 +482,7 @@ function FenetreMatiere({
                     : "hover:bg-ink/5"
                 }`}
               >
-                {e}
+                <Emoji e={e} />
               </button>
             ))}
           </div>

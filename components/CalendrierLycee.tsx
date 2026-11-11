@@ -5,6 +5,7 @@ import { CalendarPlus, Check } from "lucide-react";
 import { useLuno } from "@/lib/store";
 import { CALENDRIER_EVENEMENTS, CALENDRIER_MATIERES, CALENDRIER_TITRE } from "@/contenu/calendrier";
 import { Bouton, Fenetre, pluriel } from "./ui";
+import { Emoji } from "@/components/Emoji";
 
 const GROUPES = ["Tronc commun", "Spécialités et options", "Autres"] as const;
 
@@ -65,7 +66,7 @@ export function CalendrierLycee() {
                       coche ? "border-ink bg-ink text-bg" : "border-line bg-surface text-ink"
                     }`}
                   >
-                    {coche ? <Check size={14} /> : <span>{m.emoji}</span>}
+                    {coche ? <Check size={14} /> : <span><Emoji e={m.emoji} /></span>}
                     {m.nom}
                   </button>
                 );

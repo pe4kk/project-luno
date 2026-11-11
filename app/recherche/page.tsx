@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import {
+  BookMarked,
   BookOpen,
   CalendarDays,
   FileDown,
@@ -109,6 +110,16 @@ export default function Recherche() {
           })),
       ),
     );
+    const gDefs: Resultat[] = chapitres.flatMap((c) =>
+      (c.definitions ?? [])
+        .filter((d) => trouve(d.terme, d.texte))
+        .map((d, i) => ({
+          cle: `${c.id}-def-${i}`,
+          titre: d.terme,
+          detail: d.texte,
+          href: lienTravail({ m: c.matiereId, c: c.id, o: "defs" }),
+        })),
+    );
     const gDocs: Resultat[] = chapitres.flatMap((c) =>
       c.documents
         .filter((d) => trouve(d.titre, c.titre))
@@ -164,6 +175,7 @@ export default function Recherche() {
     return [
       { nom: "Matières et chapitres", icone: BookOpen, resultats: gChapitres },
       { nom: "Flashcards", icone: Layers, resultats: gCartes },
+      { nom: "Définitions", icone: BookMarked, resultats: gDefs },
       { nom: "Fiches", icone: ScrollText, resultats: gFiches },
       { nom: "Documents du prof", icone: FileDown, resultats: gDocs },
       { nom: "Cours", icone: BookOpen, resultats: gCours },

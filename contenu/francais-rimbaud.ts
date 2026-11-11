@@ -1,4 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
+import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
 
 /**
  * Français Première : Rimbaud, « Cahiers de Douai », parcours « Émancipations
@@ -9,7 +10,8 @@ import type { ChapitrePublie } from "@/lib/types";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 2,
+  version: 3,
+  definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
   flashcards: [

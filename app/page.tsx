@@ -7,6 +7,7 @@ import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { Carte, pluriel } from "@/components/ui";
+import { Emoji } from "@/components/Emoji";
 
 const RACCOURCIS = [
   { href: "/calendrier", titre: "Calendrier", texte: "Note tes DST", icone: CalendarDays, couleur: "#b5573d" },
@@ -68,7 +69,7 @@ export default function Accueil() {
               </p>
               <p className="mt-4 text-[20px] font-light">
                 <span className="font-semibold">
-                  {matiere(prochain.matiereId)?.emoji} {matiere(prochain.matiereId)?.nom}
+                  <Emoji e={matiere(prochain.matiereId)?.emoji} /> {matiere(prochain.matiereId)?.nom}
                 </span>{" "}
                 · {prochain.titre}
               </p>
@@ -222,7 +223,7 @@ export default function Accueil() {
                     className="flex min-h-14 items-center gap-3 rounded-2xl px-4 py-3 transition-transform hover:-translate-y-0.5"
                     style={{ background: pastel(m.couleur, 16) }}
                   >
-                    <span className="text-[24px]">{m.emoji}</span>
+                    <span className="text-[24px]"><Emoji e={m.emoji} /></span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[15.5px] font-semibold" style={{ color: encre(m.couleur) }}>
                         {m.nom}

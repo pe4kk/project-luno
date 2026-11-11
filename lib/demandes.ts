@@ -107,10 +107,14 @@ export async function envoyerDemande(
   const chemins: string[] = [];
   for (const [i, f] of images.slice(0, MAX_IMAGES).entries()) {
     progression?.(i, images.length);
-    const chemin = `${compte}/${id}/${i + 1}.jpg`;
+    // Les photos sont réduites en JPEG ; les PDF partent tels quels.
+    const pdf = f.type === "application/pdf";
+    const chemin = `${compte}/${id}/${i + 1}.${pdf ? "pdf" : "jpg"}`;
     const { error } = await supabase()
       .storage.from("demandes")
-      .upload(chemin, await compresser(f), { contentType: "image/jpeg" });
+      .upload(chemin, pdf ? f : await compresser(f), {
+        contentType: pdf ? "application/pdf" : "image/jpeg",
+      });
     if (error) throw error;
     chemins.push(chemin);
   }

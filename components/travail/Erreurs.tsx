@@ -12,6 +12,7 @@ import {
   EnvoyerAClaude,
   EtatVide,
   Fenetre,
+  PiecesJointes,
   classeSaisie,
   pluriel,
 } from "@/components/ui";
@@ -41,6 +42,7 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
   const [brouillon, setBrouillon] = useState<Brouillon>(VIDE);
   const [notes, setNotes] = useState("");
   const [envoi, setEnvoi] = useState(false);
+  const [pieces, setPieces] = useState<File[]>([]);
   const foncee = encre(matiere.couleur);
 
   const ouvrir = (e: ErreurNotee | "nouvelle") => {
@@ -172,6 +174,7 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
             onChange={(e) => setNotes(e.target.value)}
           />
         </Champ>
+        <PiecesJointes fichiers={pieces} setFichiers={setPieces} className="mt-3" />
         <Bouton className="mt-3 w-full" onClick={() => setEnvoi(true)}>
           <Send size={16} /> Envoyer à Claude
         </Bouton>
@@ -188,6 +191,8 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
         texte={demandeErreurs(matiere.nom, notes)}
         resultat="la liste de tes erreurs et leurs corrections"
         demande={{ type: "erreurs", meta: { matiere: matiere.nom } }}
+        pieces={pieces}
+        setPieces={setPieces}
       />
 
       <Fenetre

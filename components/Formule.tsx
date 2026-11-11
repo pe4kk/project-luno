@@ -15,7 +15,11 @@ import { Fragment, type ReactNode } from "react";
  * Pour un texte brut (recherche, aria-label, comparaison), utiliser `texteBrut()`.
  */
 const FLECHE = String.fromCharCode(0x20d7);
-const VECTEUR = new RegExp(`([ΔΣ−]?)([A-Za-z0-9'ᵢₓᵧ₀-₉₊₋]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)`, "g");
+const MORCEAU_INDICE = "[A-Za-z0-9À-ÿ→/]+(?:\\.[A-Za-z0-9À-ÿ→/]+)*";
+const VECTEUR = new RegExp(
+  `([ΔΣ−]?)([A-Za-z0-9'ᵢₓᵧ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
+  "g",
+);
 const FRACTION = /\{\{(.+?) \/\/ (.+?)\}\}/g;
 
 function Fleche() {
@@ -29,7 +33,7 @@ function Fleche() {
   );
 }
 
-const INDICE = /([A-Za-zΔ])_([A-Za-z0-9]+)/g;
+const INDICE = new RegExp(`([A-Za-zΑ-ωΔ])_(${MORCEAU_INDICE})`, "g");
 
 /** « v_f » : indice écrit en petit, sous la ligne. */
 function indices(texte: string, cle: string): ReactNode {
@@ -59,6 +63,7 @@ function vecteurs(texte: string, cle: string): ReactNode {
           <Fleche />
         </span>
         {m[3]}
+        {m[4] && <sub className="indice">{m[4]}</sub>}
       </span>,
     );
     fin = m.index! + m[0].length;

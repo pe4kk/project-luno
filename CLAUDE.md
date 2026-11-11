@@ -123,9 +123,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Supabase, y compris celles du navigateur de test : pour tester le site,
     utiliser le faux serveur local (Supabase refuse une clé secrète venant
     d'un navigateur).
-  - **Photos et « Mes erreurs »** (2026-11-11) : la fenêtre d'envoi joint
-    jusqu'à 20 photos, compressées dans le navigateur (1568 px, JPEG), rangées
-    dans le stockage privé `demandes` (`<compte>/<demande>/n.jpg`) ; la tâche
+  - **Photos, PDF et « Mes erreurs »** (2026-11-11) : `PiecesJointes`
+    (`components/ui.tsx`, boutons « Prendre une photo » et « Photo ou PDF »),
+    visible directement dans le formulaire d'Apprendre, la carte « Mes erreurs »
+    et la fenêtre d'envoi ; jusqu'à 20 fichiers, photos compressées dans le
+    navigateur (1568 px, JPEG), PDF tels quels (20 Mo), rangés dans le stockage
+    privé `demandes` (`<compte>/<demande>/n.jpg|pdf`) ; la tâche
     les récupère avec `node scripts/demandes.mjs images <id>` puis les lit.
     Chaque matière a deux onglets, « Chapitres » et « Mes erreurs »
     (`components/travail/Erreurs.tsx`, `?o=erreurs`) : la fiche des erreurs
@@ -189,6 +192,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Pour filmer une animation, ralentir la page (`Animation.setPlaybackRate`
     et `requestAnimationFrame`) : les captures sont trop lentes sinon.
   - Couleurs de matière : `pastel()` et `var(--mix-fg)` les adaptent au thème.
+  - Emoji de matière : toujours par `<Emoji e={…} />` (`components/Emoji.tsx`),
+    qui dessine les drapeaux 🇬🇧 (LVA) et 🇪🇸 (LVB) en SVG, car Windows ne les
+    affiche pas.
+  - `html` et `body` ont `overflow-x: clip` : le glissement d'entrée d'une page
+    (24 px) faisait dézoomer le téléphone.
   Interface entièrement en français, noms de code en français.
 
 ## Ajouter du contenu (cours envoyés par l'utilisateur)
@@ -202,8 +210,11 @@ un PDF ou une photo directement dans le chat.
 - **Cours** : ajouter une entrée à `contenu/bibliotheque.ts` au format de
   `contenu/physique-mouvement.ts` : `id` stable, `version: 1`, matière (reprendre
   exactement le nom indiqué, la reprise compare les noms), titre du chapitre,
-  10 à 20 flashcards, fiche dont chaque point porte `n` de 1 (essentiel) à 5
-  (détail), et 15 à 20 exercices variés (types dans `lib/types.ts`) : QCM à
+  `definitions` (onglet « Déf », entre Cours et Flashcards : toutes les
+  définitions, propriétés, théorèmes, lois, formules et méthodes du cours,
+  recopiées mot pour mot dans l'ordre du cours, format `DefinitionCours`,
+  modèles dans `contenu/definitions.ts`), 10 à 20 flashcards, fiche dont chaque
+  point porte `n` de 1 (essentiel) à 5 (détail), et 15 à 20 exercices variés (types dans `lib/types.ts`) : QCM à
   quatre choix, `vraiFaux`, `trou` (texte avec « ___ », réponses acceptées),
   `ordre` (éléments donnés dans le bon ordre, idéal pour les chronologies),
   `ouverte` (question et corrigé, l'élève s'auto-évalue). Une série pioche
@@ -211,7 +222,8 @@ un PDF ou une photo directement dans le chat.
   (`components/Formule.tsx`) : vecteur = flèche combinante U+20D7 après la
   lettre (« v⃗ᵢ », « MM'⃗ »), dessinée en SVG ; fraction =
   `{{numérateur // dénominateur}}` (sans parenthèses autour), affichée
-  superposée ; indice en lettres = `v_f`. Ne pas utiliser ces notations dans
+  superposée ; indice en lettres = `v_f`, aussi après une flèche (`R⃗_N`,
+  `F⃗_A→B`) ou une lettre grecque (`ρ_fluide`). Ne pas utiliser ces notations dans
   les réponses acceptées d'un `trou`. Tout nouvel affichage de contenu doit
   passer par `formule()`, et tout texte brut (aria-label…) par `texteBrut()`.
   Les unités restent en ligne (m·s⁻¹, N/kg). Une nouvelle `version` met à jour
@@ -374,6 +386,12 @@ un PDF ou une photo directement dans le chat.
   guidée en 9 étapes. Coquille du polycopié signalée : |x − y| ≥ ||x| − |y||
   (écrit « > »). DST de maths au calendrier : 12/11 (1 h) et 03/12 (2 h) ;
   on ne sait pas s'ils portent sur la dérivation.
+- 2026-11-12 : onglet « Déf » dans chaque chapitre, rempli pour les 9
+  chapitres publiés (environ 100 définitions et propriétés, recopiées des PDF
+  et polycopiés ; pas pour « Fiche d'exercices et DM »), cherchable dans
+  Recherche. Drapeaux pour LVA et LVB (matières existantes mises à jour au
+  chargement). Bouton photo, appareil photo et PDF visibles dans Apprendre et
+  Mes erreurs.
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
   cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
   contenu), exercices variés (cinq types), matières sur deux colonnes sur

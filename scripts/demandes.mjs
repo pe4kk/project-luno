@@ -103,8 +103,8 @@ if (commande === "liste") {
   const chemins = ligne?.meta?.images ?? [];
   const dossier = `/tmp/luno-images/${id}`;
   mkdirSync(dossier, { recursive: true });
-  for (const [i, chemin] of chemins.entries()) {
-    const fichier = `${dossier}/${i + 1}.jpg`;
+  for (const chemin of chemins) {
+    const fichier = `${dossier}/${chemin.split("/").pop()}`;
     execFileSync("curl", ["-sSf", "-o", fichier, `${PROJET}/storage/v1/object/demandes/${chemin}`,
       "-H", `apikey: ${CLE}`]);
     console.log(fichier);

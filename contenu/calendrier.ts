@@ -48,14 +48,14 @@ export const CALENDRIER_MATIERES: MatiereCalendrier[] = [
   {
     nom: "LVA",
     couleur: "#c9a24a",
-    emoji: "🗣️",
+    emoji: "🇬🇧",
     groupe: "Tronc commun",
     parDefaut: true,
   },
   {
     nom: "LVB",
     couleur: "#6f8fae",
-    emoji: "💬",
+    emoji: "🇪🇸",
     groupe: "Tronc commun",
     parDefaut: true,
   },

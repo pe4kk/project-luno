@@ -67,6 +67,7 @@
 }
 
 html {
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
@@ -74,6 +75,9 @@ html {
 
 body {
   font-family: var(--font-sans);
+  /* Une transition qui décale la page (glissement de 24 px) ne doit jamais élargir
+     l'écran : sur téléphone, ça ferait dézoomer toute la page. */
+  overflow-x: clip;
 }
 
 h1,

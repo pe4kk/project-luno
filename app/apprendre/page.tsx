@@ -33,6 +33,7 @@ import {
   EnTete,
   EnvoyerAClaude,
   EtatVide,
+  PiecesJointes,
   classeSaisie,
   pluriel,
 } from "@/components/ui";
@@ -58,6 +59,7 @@ function Apprendre() {
   const [niveau, setNiveau] = useState("Première");
   const [precision, setPrecision] = useState("");
   const [envoi, setEnvoi] = useState(false);
+  const [pieces, setPieces] = useState<File[]>([]);
 
   if (lecon) return <Lecteur key={lecon.id} lecon={lecon} />;
 
@@ -195,6 +197,12 @@ function Apprendre() {
                 onChange={(e) => setPrecision(e.target.value)}
               />
             </Champ>
+            <div>
+              <span className="mb-1.5 block text-[13px] font-semibold text-muted">
+                Photos ou PDF (facultatif)
+              </span>
+              <PiecesJointes fichiers={pieces} setFichiers={setPieces} />
+            </div>
             <Bouton type="submit" disabled={!sujet.trim()}>
               <Send size={16} /> Envoyer à Claude
             </Bouton>
@@ -210,6 +218,8 @@ function Apprendre() {
         texte={demandeLecon(sujet, niveau, precision)}
         resultat="la leçon"
         demande={{ type: "lecon" }}
+        pieces={pieces}
+        setPieces={setPieces}
       />
     </div>
   );

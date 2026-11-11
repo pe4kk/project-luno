@@ -1,4 +1,5 @@
 import type { ChapitrePublie, Lecon } from "@/lib/types";
+import { DEF_MATHS_DERIVATION } from "./definitions";
 import {
   RACINE,
   SECANTE,
@@ -24,7 +25,8 @@ const matiere = { nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" };
 
 export const MATHS_DERIVATION: ChapitrePublie = {
   id: "maths-1re-derivation",
-  version: 1,
+  version: 2,
+  definitions: DEF_MATHS_DERIVATION,
   matiere,
   titre: "Séquence 2 · Dérivation",
   flashcards: [

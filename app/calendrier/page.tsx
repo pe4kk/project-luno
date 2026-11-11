@@ -37,6 +37,7 @@ import {
 } from "@/components/ui";
 import { CalendrierLycee } from "@/components/CalendrierLycee";
 import { PanneauJour } from "@/components/PanneauJour";
+import { Emoji } from "@/components/Emoji";
 
 const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 type Brouillon = Omit<Dst, "id"> & { id?: string };
@@ -217,7 +218,7 @@ export default function Calendrier() {
                                 color: encre(m?.couleur ?? "#888", 55),
                               }}
                             >
-                              {m?.emoji}
+                              <Emoji e={m?.emoji} />
                               <span className="hidden sm:inline">
                                 {" "}
                                 {m?.nom}
@@ -341,7 +342,7 @@ export default function Calendrier() {
                       color: encre(m.couleur),
                     }}
                   >
-                    {m.emoji} {m.nom}
+                    <Emoji e={m.emoji} /> {m.nom}
                   </button>
                 ))}
               </div>
@@ -503,7 +504,7 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
         >
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-[15.5px] font-semibold">
-              {m?.emoji} {m?.nom}
+              <Emoji e={m?.emoji} /> {m?.nom}
             </span>
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[12px] font-bold ${

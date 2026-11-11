@@ -1,4 +1,5 @@
 import type { ChapitrePublie, Lecon } from "@/lib/types";
+import { DEF_PC_METHODE } from "./definitions";
 import { HOMME_CANON } from "./schemas-physique";
 
 /**
@@ -11,7 +12,8 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 3,
+  version: 4,
+  definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
   flashcards: [

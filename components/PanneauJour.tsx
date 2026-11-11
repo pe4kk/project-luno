@@ -12,6 +12,7 @@ import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { compteARebours, dateLongue, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { pluriel } from "./ui";
+import { Emoji } from "@/components/Emoji";
 
 /** Panneau « Aujourd'hui », visible à droite sur les grands écrans, sur toutes les pages. */
 export function PanneauJour() {
@@ -38,7 +39,7 @@ export function PanneauJour() {
             {compteARebours(prochain.date)}
           </p>
           <p className="mt-2 text-[14.5px] font-semibold">
-            {m(prochain.matiereId)?.emoji} {m(prochain.matiereId)?.nom}
+            <Emoji e={m(prochain.matiereId)?.emoji} /> {m(prochain.matiereId)?.nom}
           </p>
           <p className="line-clamp-2 text-[13.5px] text-muted">
             {prochain.titre}

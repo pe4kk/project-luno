@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
+  BookMarked,
   FileDown,
   FileText,
   Layers,
@@ -38,10 +39,13 @@ import { Revision, type CarteARevoir } from "./Revision";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { Curseur } from "@/components/Curseur";
+import { OngletDefinitions } from "./Definitions";
 import { classePastille, usePastille } from "@/lib/pastille";
+import { Emoji } from "@/components/Emoji";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
+  { id: "defs", label: "Déf", icone: BookMarked },
   { id: "flashcards", label: "Flashcards", icone: Layers },
   { id: "fiche", label: "Fiche", icone: ScrollText },
 ] as const;
@@ -90,7 +94,7 @@ export function VueChapitre({
         href={lienTravail({ m: matiere.id })}
         className="-ml-1 mb-2 inline-flex min-h-11 items-center gap-1.5 px-1 text-[14px] font-semibold text-muted transition-colors hover:text-ink"
       >
-        <ArrowLeft size={16} /> {matiere.emoji} {matiere.nom}
+        <ArrowLeft size={16} /> <Emoji e={matiere.emoji} /> {matiere.nom}
       </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
         <h1 className="min-w-0 text-[32px] leading-tight sm:text-[40px]">
@@ -142,10 +146,10 @@ export function VueChapitre({
             aria-controls="panneau-chapitre"
             tabIndex={onglet === id ? 0 : -1}
             onClick={() => setOnglet(id)}
-            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3.5 py-2 text-[14.5px] font-semibold transition-colors duration-300 sm:px-5"
+            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-[14.5px] font-semibold transition-colors duration-300 sm:px-5"
             style={{ color: onglet === id ? foncee : "var(--muted)" }}
           >
-            <Icone size={16} className="relative" />
+            <Icone size={16} className="relative hidden sm:block" />
             <span className="relative">{label}</span>
             {id === "flashcards" && chapitre.flashcards.length > 0 && (
               <span className="relative rounded-full bg-ink/10 px-1.5 text-[11.5px]">
@@ -169,6 +173,13 @@ export function VueChapitre({
         >
           {onglet === "cours" && (
             <OngletCours chapitre={chapitre} envoyer={() => setEnvoi(true)} />
+          )}
+          {onglet === "defs" && (
+            <OngletDefinitions
+              chapitre={chapitre}
+              matiere={matiere}
+              envoyer={() => setEnvoi(true)}
+            />
           )}
           {onglet === "flashcards" && (
             <OngletFlashcards

@@ -38,6 +38,8 @@ export const EMOJIS = [
   "🌍",
   "📚",
   "🗣️",
+  "🇬🇧",
+  "🇪🇸",
   "💶",
   "🏛️",
   "💻",
@@ -505,6 +507,7 @@ export const useLuno = create<Etat>()(
               .map(nouvelleCarte),
           ],
           fiche: p.fiche ?? base.fiche,
+          definitions: p.definitions?.length ? p.definitions : (base.definitions ?? []),
           exercices: p.exercices.length ? p.exercices : base.exercices,
         };
         set({
@@ -581,6 +584,7 @@ export function normaliser(
       tailleFiche: c.tailleFiche ?? 3,
       documents: c.documents ?? [],
       exercices: c.exercices ?? [],
+      definitions: c.definitions ?? [],
       // Les fiches de l'ancien format (une seule taille) ne sont pas reprises.
       fiche:
         c.fiche &&

@@ -7,6 +7,7 @@ import { encre, pastel, useLuno } from "@/lib/store";
 import { Bouton, BoutonIcone, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
+import { Emoji } from "@/components/Emoji";
 
 export type CarteARevoir = { chapitreId: string; carteId: string };
 
@@ -134,7 +135,7 @@ export function Revision({
         </BoutonIcone>
       </div>
       <p className="mb-3 truncate text-[13px] text-muted">
-        {matiere?.emoji} {matiere?.nom} · {chapitre?.titre}
+        <Emoji e={matiere?.emoji} /> {matiere?.nom} · {chapitre?.titre}
       </p>
 
       <AnimatePresence mode="wait">

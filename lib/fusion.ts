@@ -22,6 +22,7 @@ export function alleger(d: DonneesSynchro, bibliotheque: ChapitrePublie[]): Donn
             fiche: null,
             exercices: [],
             documents: [],
+            definitions: [],
             flashcards: c.flashcards.map((f) => ({ ...f, schema: undefined })),
           }
         : c,
@@ -43,6 +44,7 @@ export function regonfler(d: DonneesSynchro, bibliotheque: ChapitrePublie[]): Do
       return {
         ...c,
         fiche: c.fiche ?? p.fiche,
+        definitions: c.definitions?.length ? c.definitions : (p.definitions ?? []),
         exercices: c.exercices.length ? c.exercices : p.exercices,
         documents: c.documents.length ? c.documents : (p.documents ?? []),
         flashcards: c.flashcards.map((f) => {

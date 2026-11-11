@@ -63,3 +63,21 @@ create policy "voir ses photos" on storage.objects for select to authenticated
   using (bucket_id = 'demandes' and (storage.foldername(name))[1] = auth.uid()::text);
 create policy "supprimer ses photos" on storage.objects for delete to authenticated
   using (bucket_id = 'demandes' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- 2026-11-12 : PDF acceptés (20 Mo). Bloc rejouable sans risque : il remplace le précédent.
+alter table public.demandes drop constraint if exists demandes_type_check;
+alter table public.demandes add constraint demandes_type_check
+  check (type in ('lecon', 'cours', 'erreurs'));
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('demandes', 'demandes', false, 20971520, array['image/jpeg', 'application/pdf'])
+on conflict (id) do update
+  set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
+drop policy if exists "envoyer ses photos" on storage.objects;
+drop policy if exists "voir ses photos" on storage.objects;
+drop policy if exists "supprimer ses photos" on storage.objects;
+create policy "envoyer ses photos" on storage.objects for insert to authenticated
+  with check (bucket_id = 'demandes' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "voir ses photos" on storage.objects for select to authenticated
+  using (bucket_id = 'demandes' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "supprimer ses photos" on storage.objects for delete to authenticated
+  using (bucket_id = 'demandes' and (storage.foldername(name))[1] = auth.uid()::text);

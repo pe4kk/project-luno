@@ -40,6 +40,7 @@ import {
 } from "@/components/ui";
 import { formule, texteBrut } from "@/components/Formule";
 import { Curseur } from "@/components/Curseur";
+import { Emoji } from "@/components/Emoji";
 
 export default function Exercices() {
   const { matieres, chapitres, noterFlashcard } = useLuno();
@@ -281,7 +282,7 @@ export default function Exercices() {
                     className="text-[13px] font-semibold"
                     style={{ color: encre(m?.couleur ?? "#888") }}
                   >
-                    {m?.emoji} {m?.nom}
+                    <Emoji e={m?.emoji} /> {m?.nom}
                   </span>
                   <span className="mt-1 block text-[17px] font-semibold">
                     {c.titre}

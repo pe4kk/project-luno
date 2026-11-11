@@ -57,6 +57,18 @@ export type Schema = { l: number; h: number; elements: ElementSchema[]; legende?
  */
 export type PointFiche = { t: string; n: number; schema?: Schema };
 
+/**
+ * Une définition ou une propriété du cours, recopiée telle que le prof l'a écrite
+ * (onglet « Déf » d'un chapitre). `precision` : remarque, condition ou exemple court.
+ */
+export type DefinitionCours = {
+  type: "definition" | "propriete" | "theoreme" | "formule" | "loi" | "methode";
+  terme: string;
+  texte: string;
+  precision?: string;
+  schema?: Schema;
+};
+
 export type Fiche = {
   sections: { titre: string; points: PointFiche[] }[];
   aRetenir: string[];
@@ -129,6 +141,8 @@ export type Chapitre = {
   exercices: Exercice[];
   /** Documents joints (PDF), repris des chapitres publiés. */
   documents: Document[];
+  /** Définitions et propriétés du cours, telles qu'écrites (onglet « Déf »). */
+  definitions?: DefinitionCours[];
   /** Identifiant du chapitre publié dans `contenu/bibliotheque.ts`, s'il en vient. */
   publieId?: string;
 };
@@ -158,6 +172,8 @@ export type ChapitrePublie = {
   titre: string;
   cours?: string;
   documents?: Document[];
+  /** Définitions et propriétés telles qu'elles sont écrites dans le cours. */
+  definitions?: DefinitionCours[];
   flashcards: { recto: string; verso: string; schema?: Schema }[];
   fiche: Fiche | null;
   exercices: Exercice[];

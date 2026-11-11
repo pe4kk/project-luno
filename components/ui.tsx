@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Clock, Copy, ExternalLink, ImagePlus, Send, X } from "lucide-react";
+import { Camera, Check, Clock, Copy, ExternalLink, FileText, Paperclip, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lienGithub } from "@/lib/contenu";
@@ -216,6 +216,8 @@ export function EnvoyerAClaude({
   texte,
   resultat,
   demande,
+  pieces,
+  setPieces,
 }: {
   ouverte: boolean;
   fermer: () => void;
@@ -227,10 +229,15 @@ export function EnvoyerAClaude({
   resultat: string;
   /** Si présent, la demande peut partir directement depuis Luno (compte connecté). */
   demande?: { type: TypeDemande; meta?: Demande["meta"] };
+  /** Pièces jointes choisies avant d'ouvrir la fenêtre (formulaire d'Apprendre, Mes erreurs). */
+  pieces?: File[];
+  setPieces?: (f: File[]) => void;
 }) {
   const [copie, setCopie] = useState(false);
   const [etatEnvoi, setEtatEnvoi] = useState<"" | "envoi" | "ok" | "erreur">("");
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [piecesInternes, setPiecesInternes] = useState<File[]>([]);
+  const photos = pieces ?? piecesInternes;
+  const setPhotos = setPieces ?? setPiecesInternes;
   const [avancement, setAvancement] = useState("");
   const connecte = useSynchro((x) => x.session !== null);
   const github = lienGithub(objet, texte);
@@ -241,7 +248,7 @@ export function EnvoyerAClaude({
     setEtatEnvoi("envoi");
     try {
       await envoyerDemande(demande.type, objet, texte, demande.meta, photos, (fait, total) =>
-        setAvancement(total ? `Envoi des photos ${Math.min(fait + 1, total)}/${total}…` : ""),
+        setAvancement(total ? `Envoi des fichiers ${Math.min(fait + 1, total)}/${total}…` : ""),
       );
       setEtatEnvoi("ok");
       setPhotos([]);
@@ -286,7 +293,12 @@ export function EnvoyerAClaude({
                 Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
                 {prochainPassage()}.
               </p>
-              <Photos photos={photos} setPhotos={setPhotos} desactive={etatEnvoi === "envoi"} />
+              <PiecesJointes
+                fichiers={photos}
+                setFichiers={setPhotos}
+                desactive={etatEnvoi === "envoi"}
+                className="mt-3"
+              />
               <Bouton className="mt-3 w-full" disabled={etatEnvoi === "envoi"} onClick={() => void envoyer()}>
                 <Send size={16} />{" "}
                 {etatEnvoi === "envoi" ? avancement || "Envoi…" : "Envoyer la demande"}
@@ -300,7 +312,9 @@ export function EnvoyerAClaude({
           ) : (
             <p className="mt-0.5 text-[13.5px] text-muted">
               Connecte-toi dans « Mes données » (la roue dentée) pour envoyer ta demande
-              directement : Claude la traite quatre fois par jour.
+              directement, photos et PDF compris : Claude la traite quatre fois par jour.
+              {photos.length > 0 &&
+                " Sans compte, les pièces jointes ne peuvent pas partir : envoie-les-moi dans le chat."}
             </p>
           )}
         </div>
@@ -343,44 +357,82 @@ export function EnvoyerAClaude({
   );
 }
 
-/** Photos jointes à une demande (cours, évaluation corrigée…), avec leurs vignettes. */
-function Photos({
-  photos,
-  setPhotos,
-  desactive,
+/**
+ * Pièces jointes d'une demande : photos (appareil photo ou galerie) et PDF, avec leurs
+ * vignettes. « Prendre une photo » ouvre directement l'appareil photo sur téléphone.
+ */
+export function PiecesJointes({
+  fichiers,
+  setFichiers,
+  desactive = false,
+  className = "",
 }: {
-  photos: File[];
-  setPhotos: (f: File[]) => void;
-  desactive: boolean;
+  fichiers: File[];
+  setFichiers: (f: File[]) => void;
+  desactive?: boolean;
+  className?: string;
 }) {
-  const entree = useRef<HTMLInputElement>(null);
-  const vignettes = useMemo(() => photos.map((f) => URL.createObjectURL(f)), [photos]);
-  useEffect(() => () => vignettes.forEach((u) => URL.revokeObjectURL(u)), [vignettes]);
+  const galerie = useRef<HTMLInputElement>(null);
+  const camera = useRef<HTMLInputElement>(null);
+  const vignettes = useMemo(
+    () => fichiers.map((f) => (f.type.startsWith("image/") ? URL.createObjectURL(f) : "")),
+    [fichiers],
+  );
+  useEffect(() => () => vignettes.forEach((u) => u && URL.revokeObjectURL(u)), [vignettes]);
+  const ajouter = (liste: FileList | null) => {
+    const ok = [...(liste ?? [])].filter(
+      (f) => f.type.startsWith("image/") || f.type === "application/pdf",
+    );
+    setFichiers([...fichiers, ...ok].slice(0, MAX_IMAGES));
+  };
+  const plein = fichiers.length >= MAX_IMAGES;
   return (
-    <div className="mt-3">
+    <div className={className}>
       <input
-        ref={entree}
+        ref={galerie}
         type="file"
-        accept="image/*"
+        accept="image/*,application/pdf"
         multiple
         hidden
         onChange={(e) => {
-          const ajout = [...(e.target.files ?? [])].filter((f) => f.type.startsWith("image/"));
-          setPhotos([...photos, ...ajout].slice(0, MAX_IMAGES));
+          ajouter(e.target.files);
           e.target.value = "";
         }}
       />
-      {vignettes.length > 0 && (
-        <ul className="mb-2 grid grid-cols-4 gap-2" aria-label="Photos jointes">
-          {vignettes.map((u, i) => (
-            <li key={u} className="relative aspect-square overflow-hidden rounded-lg border border-line bg-surface">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={u} alt={`Photo ${i + 1}`} className="size-full object-cover" />
+      <input
+        ref={camera}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden
+        onChange={(e) => {
+          ajouter(e.target.files);
+          e.target.value = "";
+        }}
+      />
+      {fichiers.length > 0 && (
+        <ul className="mb-2 grid grid-cols-4 gap-2" aria-label="Pièces jointes">
+          {fichiers.map((f, i) => (
+            <li
+              key={`${f.name}-${i}`}
+              className="relative aspect-square overflow-hidden rounded-lg border border-line bg-surface"
+            >
+              {vignettes[i] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={vignettes[i]} alt={`Photo ${i + 1}`} className="size-full object-cover" />
+              ) : (
+                <span className="flex size-full flex-col items-center justify-center gap-1 p-1 text-center">
+                  <FileText size={20} className="text-accent" />
+                  <span className="line-clamp-2 break-all text-[10px] leading-tight text-muted">
+                    {f.name}
+                  </span>
+                </span>
+              )}
               <button
                 type="button"
                 disabled={desactive}
-                onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
-                aria-label={`Retirer la photo ${i + 1}`}
+                onClick={() => setFichiers(fichiers.filter((_, j) => j !== i))}
+                aria-label={`Retirer ${f.name}`}
                 className="absolute right-1 top-1 flex size-6 items-center justify-center rounded-full bg-surface/90 text-ink shadow-card"
               >
                 <X size={13} />
@@ -389,15 +441,26 @@ function Photos({
           ))}
         </ul>
       )}
-      <Bouton
-        variante="contour"
-        className="w-full !py-2"
-        disabled={desactive || photos.length >= MAX_IMAGES}
-        onClick={() => entree.current?.click()}
-      >
-        <ImagePlus size={16} />
-        {photos.length ? `Ajouter des photos (${photos.length}/${MAX_IMAGES})` : "Ajouter des photos"}
-      </Bouton>
+      <div className="grid grid-cols-2 gap-2">
+        <Bouton
+          type="button"
+          variante="contour"
+          className="!px-2 !py-2 text-[14px]"
+          disabled={desactive || plein}
+          onClick={() => camera.current?.click()}
+        >
+          <Camera size={16} /> Prendre une photo
+        </Bouton>
+        <Bouton
+          type="button"
+          variante="contour"
+          className="!px-2 !py-2 text-[14px]"
+          disabled={desactive || plein}
+          onClick={() => galerie.current?.click()}
+        >
+          <Paperclip size={16} /> {fichiers.length ? `Fichiers (${fichiers.length})` : "Photo ou PDF"}
+        </Bouton>
+      </div>
     </div>
   );
 }

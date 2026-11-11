@@ -28,6 +28,15 @@ export function SynchroBibliotheque() {
         true,
       );
     }
+    // LVA et LVB ont maintenant les drapeaux anglais et espagnol (2026-11-12) : on met à
+    // jour les matières créées avec les anciens symboles, sans toucher à un choix perso.
+    const anciens: Record<string, [string, string]> = { LVA: ["🗣️", "🇬🇧"], LVB: ["💬", "🇪🇸"] };
+    for (const m of useLuno.getState().matieres) {
+      const a = anciens[m.nom];
+      if (a && m.emoji === a[0]) {
+        useLuno.getState().modifierMatiere(m.id, { nom: m.nom, couleur: m.couleur, emoji: a[1] });
+      }
+    }
     // Les dates viennent après les chapitres, pour pouvoir s'y rattacher.
     const { importerEvenement } = useLuno.getState();
     for (const e of EVENEMENTS) {
