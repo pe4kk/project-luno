@@ -202,15 +202,33 @@ export function lienGithub(
   return { url: base + encodeURIComponent(debut), tronque: true };
 }
 
-/** Onglet « À faire » : une tâche par ligne ; puces, numéros et cases en début de ligne sont retirés. */
-export function lireListe(texte: string): string[] {
+/**
+ * Onglet « À faire » : une tâche par ligne ; puces, numéros et cases en début de ligne
+ * sont retirés. Une date entre parenthèses en fin de ligne, « (13/11) » ou
+ * « (ven. 13/11) », devient l'échéance de la tâche.
+ */
+export function lireListe(texte: string, aujourdhui = new Date()): { texte: string; echeance: string }[] {
   return texte
     .split(/\n+/)
-    .map((l) =>
-      l
+    .map((l) => {
+      let t = l
         .replace(/^\s*(?:[-*•–—·▪◦]|\d+[.)])\s*/, "")
         .replace(/^\s*\[[ xX]?\]\s*/, "")
-        .trim(),
-    )
-    .filter(Boolean);
+        .trim();
+      let echeance = "";
+      const m = t.match(/\s*\((?:[a-zà-ü.]+\s*)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\)\s*$/i);
+      if (m) {
+        const jour = Number(m[1]);
+        const mois = Number(m[2]);
+        if (jour >= 1 && jour <= 31 && mois >= 1 && mois <= 12) {
+          let annee = m[3] ? Number(m[3].length === 2 ? "20" + m[3] : m[3]) : aujourdhui.getFullYear();
+          // Sans année : la prochaine occurrence de cette date (on tolère un mois de retard).
+          if (!m[3] && new Date(annee, mois - 1, jour).getTime() < aujourdhui.getTime() - 31 * 86_400_000) annee++;
+          echeance = `${annee}-${String(mois).padStart(2, "0")}-${String(jour).padStart(2, "0")}`;
+          t = t.slice(0, m.index).trim();
+        }
+      }
+      return { texte: t, echeance };
+    })
+    .filter((x) => x.texte);
 }

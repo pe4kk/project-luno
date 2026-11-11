@@ -73,6 +73,15 @@ export type Ouverte = {
 
 export type Exercice = Qcm | VraiFaux | Trou | Ordre | Ouverte;
 
+/** Document joint à un chapitre (PDF du professeur), publié dans `public/documents/`. */
+export type Document = {
+  titre: string;
+  /** Chemin depuis `public/`, sans barre au début : `documents/…/fichier.pdf`. */
+  fichier: string;
+  /** Ex. « Cours du prof, 4 pages ». */
+  detail?: string;
+};
+
 export type Chapitre = {
   id: string;
   matiereId: string;
@@ -83,6 +92,8 @@ export type Chapitre = {
   tailleFiche: number;
   /** Exercices rédigés (sinon, ils sont tirés des flashcards). */
   exercices: Exercice[];
+  /** Documents joints (PDF), repris des chapitres publiés. */
+  documents: Document[];
   /** Identifiant du chapitre publié dans `contenu/bibliotheque.ts`, s'il en vient. */
   publieId?: string;
 };
@@ -111,6 +122,7 @@ export type ChapitrePublie = {
   matiere: { nom: string; couleur: string; emoji: string };
   titre: string;
   cours?: string;
+  documents?: Document[];
   flashcards: { recto: string; verso: string }[];
   fiche: Fiche | null;
   exercices: Exercice[];

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
+  FileDown,
   FileText,
   Layers,
   Pencil,
@@ -21,7 +22,7 @@ import type { Chapitre, Flashcard, Matiere } from "@/lib/types";
 import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { demandeCours, repererDefinitions } from "@/lib/contenu";
 import { joursAvant } from "@/lib/dates";
-import { lienTravail } from "@/lib/liens";
+import { lienFichier, lienTravail } from "@/lib/liens";
 import {
   Bouton,
   BoutonIcone,
@@ -34,6 +35,7 @@ import {
   pluriel,
 } from "@/components/ui";
 import { Revision, type CarteARevoir } from "./Revision";
+import { formule } from "@/components/Formule";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
@@ -55,9 +57,13 @@ export function VueChapitre({
 }) {
   const s = useLuno();
   const router = useRouter();
-  const onglet: Onglet = ONGLETS.some((o) => o.id === ongletDemande) ? (ongletDemande as Onglet) : "cours";
+  const onglet: Onglet = ONGLETS.some((o) => o.id === ongletDemande)
+    ? (ongletDemande as Onglet)
+    : "cours";
   const setOnglet = (o: Onglet) =>
-    router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o }), { scroll: false });
+    router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o }), {
+      scroll: false,
+    });
   const [renommer, setRenommer] = useState(false);
   const [titre, setTitre] = useState(chapitre.titre);
   const [envoi, setEnvoi] = useState(false);
@@ -83,7 +89,9 @@ export function VueChapitre({
         <ArrowLeft size={16} /> {matiere.emoji} {matiere.nom}
       </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
-        <h1 className="min-w-0 text-[32px] leading-tight sm:text-[40px]">{chapitre.titre}</h1>
+        <h1 className="min-w-0 text-[32px] leading-tight sm:text-[40px]">
+          {chapitre.titre}
+        </h1>
         <div className="flex shrink-0">
           <BoutonIcone
             label="Renommer le chapitre"
@@ -155,9 +163,15 @@ export function VueChapitre({
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.22 }}
         >
-          {onglet === "cours" && <OngletCours chapitre={chapitre} envoyer={() => setEnvoi(true)} />}
+          {onglet === "cours" && (
+            <OngletCours chapitre={chapitre} envoyer={() => setEnvoi(true)} />
+          )}
           {onglet === "flashcards" && (
-            <OngletFlashcards chapitre={chapitre} envoyer={() => setEnvoi(true)} versCours={() => setOnglet("cours")} />
+            <OngletFlashcards
+              chapitre={chapitre}
+              envoyer={() => setEnvoi(true)}
+              versCours={() => setOnglet("cours")}
+            />
           )}
           {onglet === "fiche" && (
             <OngletFiche
@@ -170,7 +184,11 @@ export function VueChapitre({
         </motion.div>
       </AnimatePresence>
 
-      <Fenetre ouverte={renommer} fermer={() => setRenommer(false)} titre="Renommer le chapitre">
+      <Fenetre
+        ouverte={renommer}
+        fermer={() => setRenommer(false)}
+        titre="Renommer le chapitre"
+      >
         <form
           className="flex flex-col gap-4"
           onSubmit={(e) => {
@@ -181,7 +199,13 @@ export function VueChapitre({
           }}
         >
           <Champ label="Titre">
-            <input autoFocus required className={classeSaisie} value={titre} onChange={(e) => setTitre(e.target.value)} />
+            <input
+              autoFocus
+              required
+              className={classeSaisie}
+              value={titre}
+              onChange={(e) => setTitre(e.target.value)}
+            />
           </Champ>
           <Bouton type="submit" className="self-end">
             Enregistrer
@@ -201,12 +225,53 @@ export function VueChapitre({
   );
 }
 
-function OngletCours({ chapitre, envoyer }: { chapitre: Chapitre; envoyer: () => void }) {
+function Documents({ chapitre }: { chapitre: Chapitre }) {
+  if (chapitre.documents.length === 0) return null;
+  return (
+    <Carte className="mb-5">
+      <p className="mb-3 text-[17px] font-semibold">Documents du prof</p>
+      <ul className="grid gap-2 sm:grid-cols-2">
+        {chapitre.documents.map((d) => (
+          <li key={d.fichier}>
+            <a
+              href={lienFichier(d.fichier)}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex min-h-14 items-center gap-3 rounded-xl border border-line bg-bg/50 px-3 py-2.5 transition-colors hover:border-ink/30"
+            >
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
+                <FileDown size={18} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-medium leading-snug">
+                  {d.titre}
+                </span>
+                <span className="block text-[12.5px] text-muted">
+                  {d.detail ?? "PDF"}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Carte>
+  );
+}
+
+function OngletCours({
+  chapitre,
+  envoyer,
+}: {
+  chapitre: Chapitre;
+  envoyer: () => void;
+}) {
   const majCours = useLuno((s) => s.majCours);
   const ajouterFlashcards = useLuno((s) => s.ajouterFlashcards);
   const fichier = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState("");
-  const mots = chapitre.cours.trim() ? chapitre.cours.trim().split(/\s+/).length : 0;
+  const mots = chapitre.cours.trim()
+    ? chapitre.cours.trim().split(/\s+/).length
+    : 0;
 
   const reperer = () => {
     const trouvees = repererDefinitions(chapitre.cours);
@@ -221,62 +286,78 @@ function OngletCours({ chapitre, envoyer }: { chapitre: Chapitre; envoyer: () =>
   };
 
   return (
-    <Carte>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="min-w-0 flex-1 text-[14.5px] text-muted">
-          Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une photo, envoie-le directement à
-          Claude dans votre conversation.
-        </p>
-        <input
-          ref={fichier}
-          type="file"
-          accept=".txt,.md,text/plain"
-          hidden
-          onChange={async (e) => {
-            const f = e.target.files?.[0];
-            if (f) majCours(chapitre.id, await f.text());
-            e.target.value = "";
-          }}
+    <>
+      <Documents chapitre={chapitre} />
+      <Carte>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <p className="min-w-0 flex-1 text-[14.5px] text-muted">
+            {chapitre.documents.length > 0 ? "Tes notes sur ce chapitre. " : ""}
+            Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une
+            photo, envoie-le directement à Claude dans votre conversation.
+          </p>
+          <input
+            ref={fichier}
+            type="file"
+            accept=".txt,.md,text/plain"
+            hidden
+            onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (f) majCours(chapitre.id, await f.text());
+              e.target.value = "";
+            }}
+          />
+          <Bouton variante="contour" onClick={() => fichier.current?.click()}>
+            <Upload size={16} /> Importer (.txt, .md)
+          </Bouton>
+        </div>
+        <textarea
+          aria-label="Texte du cours"
+          className={classeSaisie + " min-h-[320px] resize-y leading-relaxed"}
+          placeholder={
+            "Exemple :\n\nI. Nombre dérivé\nNombre dérivé : limite du taux de variation quand h tend vers 0.\n…"
+          }
+          value={chapitre.cours}
+          onChange={(e) => majCours(chapitre.id, e.target.value)}
         />
-        <Bouton variante="contour" onClick={() => fichier.current?.click()}>
-          <Upload size={16} /> Importer (.txt, .md)
-        </Bouton>
-      </div>
-      <textarea
-        aria-label="Texte du cours"
-        className={classeSaisie + " min-h-[320px] resize-y leading-relaxed"}
-        placeholder={"Exemple :\n\nI. Nombre dérivé\nNombre dérivé : limite du taux de variation quand h tend vers 0.\n…"}
-        value={chapitre.cours}
-        onChange={(e) => majCours(chapitre.id, e.target.value)}
-      />
-      <p className="mt-2 text-[13px] text-muted">{pluriel(mots, "mot")} · enregistré automatiquement</p>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-xl bg-accent-soft p-4">
-          <p className="text-[15px] font-semibold">Flashcards, fiche et exercices</p>
-          <p className="mt-0.5 text-[13.5px] text-ink/75">
-            Claude les rédige à partir de ton cours et les ajoute au site.
-          </p>
-          <Bouton className="mt-3" disabled={!mots} onClick={envoyer}>
-            <Send size={16} /> Envoyer à Claude
-          </Bouton>
-        </div>
-        <div className="rounded-xl border border-line p-4">
-          <p className="text-[15px] font-semibold">Flashcards rapides</p>
-          <p className="mt-0.5 text-[13.5px] text-muted">
-            Transforme en flashcards les lignes écrites « Terme : définition ».
-          </p>
-          <Bouton variante="contour" className="mt-3" disabled={!mots} onClick={reperer}>
-            <Search size={16} /> Repérer les définitions
-          </Bouton>
-        </div>
-      </div>
-      {message && (
-        <p role="status" className="mt-3 text-[14px] text-ink">
-          {message}
+        <p className="mt-2 text-[13px] text-muted">
+          {pluriel(mots, "mot")} · enregistré automatiquement
         </p>
-      )}
-    </Carte>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-xl bg-accent-soft p-4">
+            <p className="text-[15px] font-semibold">
+              Flashcards, fiche et exercices
+            </p>
+            <p className="mt-0.5 text-[13.5px] text-ink/75">
+              Claude les rédige à partir de ton cours et les ajoute au site.
+            </p>
+            <Bouton className="mt-3" disabled={!mots} onClick={envoyer}>
+              <Send size={16} /> Envoyer à Claude
+            </Bouton>
+          </div>
+          <div className="rounded-xl border border-line p-4">
+            <p className="text-[15px] font-semibold">Flashcards rapides</p>
+            <p className="mt-0.5 text-[13.5px] text-muted">
+              Transforme en flashcards les lignes écrites « Terme : définition
+              ».
+            </p>
+            <Bouton
+              variante="contour"
+              className="mt-3"
+              disabled={!mots}
+              onClick={reperer}
+            >
+              <Search size={16} /> Repérer les définitions
+            </Bouton>
+          </div>
+        </div>
+        {message && (
+          <p role="status" className="mt-3 text-[14px] text-ink">
+            {message}
+          </p>
+        )}
+      </Carte>
+    </>
   );
 }
 
@@ -311,7 +392,8 @@ function OngletFlashcards({
   const lancer = (liste: Flashcard[]) =>
     setSeance(liste.map((c) => ({ chapitreId: chapitre.id, carteId: c.id })));
 
-  if (seance) return <Revision cartes={seance} terminer={() => setSeance(null)} />;
+  if (seance)
+    return <Revision cartes={seance} terminer={() => setSeance(null)} />;
 
   return (
     <div>
@@ -346,7 +428,8 @@ function OngletFlashcards({
                     : "Tout est à jour"}
                 </p>
                 <p className="mt-0.5 text-[14px] text-muted">
-                  {pluriel(cartes.length, "flashcard")} dans ce chapitre. Touche une carte pour la modifier.
+                  {pluriel(cartes.length, "flashcard")} dans ce chapitre. Touche
+                  une carte pour la modifier.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -367,7 +450,9 @@ function OngletFlashcards({
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-line">
               <motion.div
                 className="h-full rounded-full bg-ok"
-                animate={{ width: `${((cartes.length - dues.length) / cartes.length) * 100}%` }}
+                animate={{
+                  width: `${((cartes.length - dues.length) / cartes.length) * 100}%`,
+                }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
               />
             </div>
@@ -387,16 +472,22 @@ function OngletFlashcards({
                   className="rounded-2xl border border-line bg-surface p-4 text-left shadow-card transition-colors hover:border-ink/30"
                 >
                   <span className="flex items-start justify-between gap-3">
-                    <span className="text-[15.5px] font-semibold">{c.recto}</span>
+                    <span className="text-[15.5px] font-semibold">
+                      {formule(c.recto)}
+                    </span>
                     <span
                       className={`shrink-0 rounded-full px-2 py-0.5 text-[11.5px] font-semibold ${
-                        estDue(c) ? "bg-accent-soft text-accent" : "bg-ink/5 text-muted"
+                        estDue(c)
+                          ? "bg-accent-soft text-accent"
+                          : "bg-ink/5 text-muted"
                       }`}
                     >
                       {prochaineRevue(c)}
                     </span>
                   </span>
-                  <span className="mt-1 block text-[14px] leading-snug text-muted">{c.verso}</span>
+                  <span className="mt-1 block text-[14px] leading-snug text-muted">
+                    {formule(c.verso)}
+                  </span>
                 </motion.button>
               ))}
             </AnimatePresence>
@@ -407,7 +498,11 @@ function OngletFlashcards({
       <Fenetre
         ouverte={edition !== null}
         fermer={() => setEdition(null)}
-        titre={edition === "nouvelle" ? "Nouvelle flashcard" : "Modifier la flashcard"}
+        titre={
+          edition === "nouvelle"
+            ? "Nouvelle flashcard"
+            : "Modifier la flashcard"
+        }
       >
         <form
           className="flex flex-col gap-4"
@@ -421,10 +516,22 @@ function OngletFlashcards({
           }}
         >
           <Champ label="Recto (terme ou question)">
-            <input autoFocus required className={classeSaisie} value={recto} onChange={(e) => setRecto(e.target.value)} />
+            <input
+              autoFocus
+              required
+              className={classeSaisie}
+              value={recto}
+              onChange={(e) => setRecto(e.target.value)}
+            />
           </Champ>
           <Champ label="Verso (définition ou réponse)">
-            <textarea required rows={4} className={classeSaisie} value={verso} onChange={(e) => setVerso(e.target.value)} />
+            <textarea
+              required
+              rows={4}
+              className={classeSaisie}
+              value={verso}
+              onChange={(e) => setVerso(e.target.value)}
+            />
           </Champ>
           <div className="flex items-center justify-between">
             {edition !== "nouvelle" && edition ? (
@@ -442,7 +549,9 @@ function OngletFlashcards({
             ) : (
               <span />
             )}
-            <Bouton type="submit">{edition === "nouvelle" ? "Ajouter" : "Enregistrer"}</Bouton>
+            <Bouton type="submit">
+              {edition === "nouvelle" ? "Ajouter" : "Enregistrer"}
+            </Bouton>
           </div>
         </form>
       </Fenetre>
@@ -503,7 +612,9 @@ function OngletFiche({
           >
             {TAILLES[taille - 1]}
           </motion.span>
-          <span className="text-[13px] text-muted">{pluriel(nbPoints, "point")}</span>
+          <span className="text-[13px] text-muted">
+            {pluriel(nbPoints, "point")}
+          </span>
         </div>
         <input
           type="range"
@@ -515,7 +626,9 @@ function OngletFiche({
           aria-valuetext={TAILLES[taille - 1]}
           onChange={(e) => majTaille(chapitre.id, Number(e.target.value))}
           className="luno-range mt-4"
-          style={{ "--fill": `${((taille - 1) / 4) * 100}%` } as React.CSSProperties}
+          style={
+            { "--fill": `${((taille - 1) / 4) * 100}%` } as React.CSSProperties
+          }
         />
         <div className="mt-2 flex justify-between text-[12px] text-muted">
           <span>L&apos;essentiel</span>
@@ -524,7 +637,10 @@ function OngletFiche({
       </Carte>
 
       <article className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
-        <div className="px-6 py-5 sm:px-8" style={{ background: pastel(matiere.couleur, 16) }}>
+        <div
+          className="px-6 py-5 sm:px-8"
+          style={{ background: pastel(matiere.couleur, 16) }}
+        >
           <p className="surtitre" style={{ color: foncee }}>
             Fiche de révision · {TAILLES[taille - 1]}
           </p>
@@ -538,11 +654,14 @@ function OngletFiche({
               <h3 className="mb-2 flex items-center gap-2.5 text-[18px]">
                 <span
                   className="flex size-6 items-center justify-center rounded-md font-sans text-[12.5px] font-semibold"
-                  style={{ background: pastel(matiere.couleur, 30), color: foncee }}
+                  style={{
+                    background: pastel(matiere.couleur, 30),
+                    color: foncee,
+                  }}
                 >
                   {i + 1}
                 </span>
-                {sec.titre}
+                {formule(sec.titre)}
               </h3>
               <ul className="flex flex-col gap-1.5 pl-1">
                 <AnimatePresence initial={false}>
@@ -556,8 +675,11 @@ function OngletFiche({
                       transition={{ duration: 0.22 }}
                       className="flex gap-2.5 overflow-hidden text-[15px] leading-relaxed"
                     >
-                      <span className="mt-[10px] size-1.5 shrink-0 rounded-full" style={{ background: matiere.couleur }} />
-                      <span>{p.t}</span>
+                      <span
+                        className="mt-[10px] size-1.5 shrink-0 rounded-full"
+                        style={{ background: matiere.couleur }}
+                      />
+                      <span>{formule(p.t)}</span>
                     </motion.li>
                   ))}
                 </AnimatePresence>
@@ -569,8 +691,11 @@ function OngletFiche({
               <p className="surtitre mb-2 text-accent">Mots-clés à retenir</p>
               <div className="flex flex-wrap gap-2">
                 {fiche.aRetenir.map((m) => (
-                  <span key={m} className="rounded-full bg-surface px-3 py-1 text-[13.5px] font-semibold">
-                    {m}
+                  <span
+                    key={m}
+                    className="rounded-full bg-surface px-3 py-1 text-[13.5px] font-semibold"
+                  >
+                    {formule(m)}
                   </span>
                 ))}
               </div>

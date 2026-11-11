@@ -23,7 +23,7 @@ const JOURS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 type Brouillon = Omit<Dst, "id"> & { id?: string };
 
 export default function Calendrier() {
-  const { matieres, chapitres, dsts, enregistrerDst, supprimerDst, chargerExemple } = useLuno();
+  const { matieres, chapitres, dsts, enregistrerDst, supprimerDst } = useLuno();
   const aujourdhui = todayISO();
   const [vue, setVue] = useState(() => {
     const d = new Date();
@@ -73,7 +73,7 @@ export default function Calendrier() {
         <EtatVide
           icone={<CalendarDays size={26} />}
           titre="Commence par créer une matière"
-          texte="Chaque DST est rattaché à une matière. Reprends le calendrier du lycée ci-dessus, crée tes matières dans l'onglet Travail, ou charge l'exemple pour essayer."
+          texte="Chaque DST est rattaché à une matière. Reprends le calendrier du lycée ci-dessus, ou crée tes matières dans l'onglet Travail."
           action={
             <>
               <Link
@@ -82,9 +82,6 @@ export default function Calendrier() {
               >
                 Créer une matière
               </Link>
-              <Bouton variante="contour" onClick={chargerExemple}>
-                Charger l&apos;exemple
-              </Bouton>
             </>
           }
         />

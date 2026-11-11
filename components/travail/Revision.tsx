@@ -5,10 +5,17 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, RotateCcw, X } from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
 import { Bouton, BoutonIcone, pluriel } from "@/components/ui";
+import { formule } from "@/components/Formule";
 
 export type CarteARevoir = { chapitreId: string; carteId: string };
 
-export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; terminer: () => void }) {
+export function Revision({
+  cartes,
+  terminer,
+}: {
+  cartes: CarteARevoir[];
+  terminer: () => void;
+}) {
   const { chapitres, matieres, noterFlashcard } = useLuno();
   // Le paquet est figé au début de la séance.
   const [paquet] = useState(cartes);
@@ -17,7 +24,8 @@ export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; termine
   const [sues, setSues] = useState(0);
 
   const courant = paquet[index];
-  const chapitre = courant && chapitres.find((c) => c.id === courant.chapitreId);
+  const chapitre =
+    courant && chapitres.find((c) => c.id === courant.chapitreId);
   const carte = chapitre?.flashcards.find((f) => f.id === courant.carteId);
   const matiere = chapitre && matieres.find((m) => m.id === chapitre.matiereId);
   const couleur = matiere?.couleur ?? "#b5573d";
@@ -58,7 +66,12 @@ export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; termine
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.1 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 14,
+            delay: 0.1,
+          }}
           className="mb-4 flex size-16 items-center justify-center rounded-full bg-ok/15 text-ok"
         >
           <Check size={30} />
@@ -88,7 +101,9 @@ export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; termine
   if (!carte) {
     return (
       <div className="mx-auto max-w-[460px] text-center">
-        <p className="text-[15px] text-muted">Cette carte n&apos;existe plus.</p>
+        <p className="text-[15px] text-muted">
+          Cette carte n&apos;existe plus.
+        </p>
         <Bouton className="mt-4" onClick={() => setIndex((i) => i + 1)}>
           Carte suivante
         </Bouton>
@@ -109,7 +124,11 @@ export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; termine
         <span className="text-[13px] font-semibold text-muted">
           {index + 1} / {paquet.length}
         </span>
-        <BoutonIcone label="Quitter la révision" onClick={terminer} className="-mr-2">
+        <BoutonIcone
+          label="Quitter la révision"
+          onClick={terminer}
+          className="-mr-2"
+        >
           <X size={18} />
         </BoutonIcone>
       </div>
@@ -138,16 +157,23 @@ export function Revision({ cartes, terminer }: { cartes: CarteARevoir[]; termine
               className="flip-face absolute inset-0 flex flex-col items-center justify-center rounded-[18px] border-[1.5px] border-ink p-6 shadow-[6px_6px_0_var(--blush)]"
               style={{ background: pastel(couleur, 14) }}
             >
-              <span className="font-display text-[26px] italic leading-tight sm:text-[32px]" style={{ color: encre(couleur) }}>
-                {carte.recto}
+              <span
+                className="font-display text-[26px] italic leading-tight sm:text-[32px]"
+                style={{ color: encre(couleur) }}
+              >
+                {formule(carte.recto)}
               </span>
-              <span className="absolute bottom-4 text-[13px] text-muted">Touche la carte pour la retourner</span>
+              <span className="absolute bottom-4 text-[13px] text-muted">
+                Touche la carte pour la retourner
+              </span>
             </span>
             <span
               className="flip-face absolute inset-0 flex items-center justify-center overflow-y-auto rounded-[18px] border-[1.5px] border-ink bg-surface p-6 shadow-[6px_6px_0_var(--blush)]"
               style={{ transform: "rotateY(180deg)" }}
             >
-              <span className="text-[17px] leading-relaxed sm:text-[19px]">{carte.verso}</span>
+              <span className="text-[17px] leading-relaxed sm:text-[19px]">
+                {formule(carte.verso)}
+              </span>
             </span>
           </motion.button>
         </motion.div>

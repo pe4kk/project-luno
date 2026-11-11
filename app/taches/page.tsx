@@ -109,14 +109,15 @@ export default function Taches() {
       {/* Coller une liste */}
       <Fenetre ouverte={collage !== null} fermer={() => setCollage(null)} titre="Coller une liste">
         <p className="text-[14.5px] text-muted">
-          Une tâche par ligne. Les tirets, puces et numéros en début de ligne sont retirés tout seuls.
+          Une tâche par ligne. Les tirets, puces et numéros en début de ligne sont retirés tout seuls ; une
+          date entre parenthèses en fin de ligne, comme « (13/11) », devient l&apos;échéance.
         </p>
         <textarea
           autoFocus
           rows={7}
           aria-label="Liste à coller"
           className={classeSaisie + " mt-3"}
-          placeholder={"- Réviser le thème 4 d'HGGSP\n- Lire « Ma Bohème »\n- Rendre le DM de maths"}
+          placeholder={"- Réviser le thème 4 d'HGGSP\n- Lire « Ma Bohème » (14/11)\n- Rendre le DM de maths (ven. 13/11)"}
           value={collage ?? ""}
           onChange={(e) => setCollage(e.target.value)}
         />

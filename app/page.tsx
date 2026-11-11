@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, CalendarDays, Check, Eraser, GraduationCap, ListTodo, Target } from "lucide-react";
-import { aExemple, encre, estDue, pastel, useLuno } from "@/lib/store";
+import { ArrowRight, BookOpen, CalendarDays, Check, GraduationCap, ListTodo, Target } from "lucide-react";
+import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
-import { Bouton, Carte, pluriel } from "@/components/ui";
+import { Carte, pluriel } from "@/components/ui";
 
 const RACCOURCIS = [
   { href: "/calendrier", titre: "Calendrier", texte: "Note tes DST", icone: CalendarDays, couleur: "#b5573d" },
@@ -47,18 +47,6 @@ export default function Accueil() {
       <h1 className="mt-1 text-[42px] leading-[1.05] sm:text-[56px]">
         {salutation()} <span className="italic text-accent">!</span>
       </h1>
-
-      {aExemple(s) && (
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-soft px-4 py-3">
-          <p className="min-w-0 flex-1 text-[14.5px]">
-            <strong>Tu regardes des données d&apos;exemple.</strong> Efface-les quand tu veux commencer avec
-            les tiennes.
-          </p>
-          <Bouton variante="contour" onClick={s.effacerExemple}>
-            <Eraser size={16} /> Effacer l&apos;exemple
-          </Bouton>
-        </div>
-      )}
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
         {/* Prochain DST */}
@@ -192,13 +180,6 @@ export default function Accueil() {
 
       {vide ? (
         <>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-soft px-4 py-3">
-            <p className="min-w-0 flex-1 text-[14.5px]">
-              <strong>Tout est vide pour l&apos;instant.</strong> Charge des données d&apos;exemple pour
-              découvrir le site : tu pourras les effacer en un geste.
-            </p>
-            <Bouton onClick={s.chargerExemple}>Charger l&apos;exemple</Bouton>
-          </div>
           <h2 className="mb-4 mt-10 text-[22px]">Par où commencer</h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
             {RACCOURCIS.map(({ href, titre, texte, icone: Icone, couleur }, i) => (

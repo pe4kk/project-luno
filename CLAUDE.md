@@ -38,8 +38,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
 ## Réponses de l'utilisateur (2026-11-10)
 
 - Utilisateurs : lui et des amis, chacun avec son compte (pas un produit public).
-- Niveau : lycée. L'utilisateur est en **Première** (2026-2027) et suit la
-  spécialité HGGSP ; ses autres spécialités ne sont pas connues.
+- Niveau : lycée. L'utilisateur est en **Première** (2026-2027) ; spécialités
+  connues : HGGSP et physique-chimie (la troisième n'est pas connue).
 - IA : **pas de clé d'API** (il ne veut rien payer en plus de son abonnement
   Claude). Le site n'appelle aucune IA : Claude rédige flashcards, fiches,
   exercices et leçons dans une conversation, puis les publie dans `contenu/`.
@@ -117,18 +117,25 @@ demande » du site), ou déposée en ticket GitHub (lire avec
 un PDF ou une photo directement dans le chat.
 
 - **Cours** : ajouter une entrée à `contenu/bibliotheque.ts` au format de
-  `contenu/exemple.ts` : `id` stable, `version: 1`, matière (reprendre
+  `contenu/physique-mouvement.ts` : `id` stable, `version: 1`, matière (reprendre
   exactement le nom indiqué, la reprise compare les noms), titre du chapitre,
   10 à 20 flashcards, fiche dont chaque point porte `n` de 1 (essentiel) à 5
   (détail), et 15 à 20 exercices variés (types dans `lib/types.ts`) : QCM à
   quatre choix, `vraiFaux`, `trou` (texte avec « ___ », réponses acceptées),
   `ordre` (éléments donnés dans le bon ordre, idéal pour les chronologies),
   `ouverte` (question et corrigé, l'élève s'auto-évalue). Une série pioche
-  tour à tour dans chaque type. Rester
+  tour à tour dans chaque type. Vecteurs : écrire la flèche combinante
+  U+20D7 après la lettre (« v⃗ᵢ », « MM'⃗ ») ; `components/Formule.tsx` la
+  dessine en CSS, car les polices ne l'ont pas. Tout nouvel affichage de
+  contenu doit passer par `formule()`. **PDF du prof** : les copier dans
+  `public/documents/<matière>/` et les déclarer dans `documents` du chapitre ;
+  ils sont publics (le dépôt l'est). Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
   augmenter `version`.
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
+- Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
+  `physique-mouvement.ts`.
 - Ses anciennes fiches faites dans d'autres conversations sont des documents
   Claude Docs visibles avec l'outil Artifact (`action: list`), à lire avec le
   connecteur Claude Docs. Déjà repris : « HGGSP Thème 4 » (fiches courtes et
@@ -139,7 +146,9 @@ un PDF ou une photo directement dans le chat.
 - **Tâches (« À faire »)** : elles vivent dans le navigateur de l'utilisateur,
   Claude ne peut pas y écrire. Quand il dicte ses tâches dans le chat, lui
   répondre par une liste propre (une tâche par ligne, dans un bloc de code)
-  qu'il colle dans l'onglet avec « Coller une liste ».
+  qu'il colle dans l'onglet avec « Coller une liste ». Une date entre
+  parenthèses en fin de ligne, « (13/11) » ou « (ven. 13/11) », devient
+  l'échéance.
 - **Calendrier du lycée** : `contenu/calendrier.ts` contient les DST de
   Première 2026-2027 relevés sur une photo du document du lycée (sans les
   heures). Relevé revérifié le 2026-11-10 sur la photo agrandie, ligne par
@@ -222,6 +231,15 @@ un PDF ou une photo directement dans le chat.
 - Calendrier des DST de Première 2026-2027 disponible à l'import (47 dates).
 - Onglet « À faire » (`app/taches/`, 2026-11-10) : ajout direct, collage
   d'une liste, cocher et décocher, échéance facultative, aperçu à l'accueil.
+- 2026-11-11 : données d'exemple retirées du site (boutons, bandeaux,
+  chapitre « Dérivation ») ; `normaliser()` efface les anciennes données
+  `ex-…` des navigateurs (format version 3), en gardant une matière d'exemple
+  si un vrai DST ou chapitre s'y rattache. Physique-Chimie : trois chapitres
+  (Chap. 9, Chap. 11, les forces) avec les cinq PDF du prof, 67 flashcards,
+  55 exercices, pour l'évaluation de cours du lundi 16/11/2026 (chap. 9 et 11
+  supposés ; à confirmer). Deux erreurs relevées dans les fiches du prof et
+  signalées dans le contenu : Euler présenté comme allemand du XIXe siècle,
+  et P⃗ = −R⃗N attribué à la 3e loi.
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
   cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
   contenu), exercices variés (cinq types), matières sur deux colonnes sur

@@ -4,7 +4,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Chapitre, ChapitrePublie, Donnees, Dst, Flashcard, Matiere, Tache } from "./types";
 import { dansJours, todayISO } from "./dates";
-import { EXEMPLE_DERIVATION } from "@/contenu/exemple";
 import { CALENDRIER_EVENEMENTS, CALENDRIER_MATIERES } from "@/contenu/calendrier";
 
 export const COULEURS = [
@@ -21,7 +20,10 @@ export const COULEURS = [
 export const EMOJIS = ["📐", "⚗️", "🧬", "🌍", "📚", "🗣️", "💶", "🏛️", "💻", "🎨", "🎵", "⚽"];
 
 const uid = () => crypto.randomUUID();
-/** Les données d'exemple portent ce préfixe, pour pouvoir les retirer. */
+/**
+ * Les anciennes données d'exemple (retirées le 2026-11-11) portaient ce préfixe :
+ * `normaliser()` les efface des navigateurs qui les avaient chargées.
+ */
 const EX = "ex-";
 
 const nouvelleCarte = (c: { recto: string; verso: string }): Flashcard => ({
@@ -59,7 +61,7 @@ type Etat = Donnees & {
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
   noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
 
-  ajouterTaches: (textes: string[]) => number;
+  ajouterTaches: (taches: (string | { texte: string; echeance: string })[]) => number;
   modifierTache: (id: string, t: Partial<Omit<Tache, "id">>) => void;
   supprimerTache: (id: string) => void;
   effacerTachesFaites: () => void;
@@ -68,8 +70,6 @@ type Etat = Donnees & {
   supprimerDst: (id: string) => void;
 
   importerPublie: (p: ChapitrePublie, prefixe?: string) => string;
-  chargerExemple: () => void;
-  effacerExemple: () => void;
   toutEffacer: () => void;
   remplacerTout: (d: Donnees) => void;
 };
@@ -92,11 +92,12 @@ export const useLuno = create<Etat>()(
       chapitres: [],
       dsts: [],
       taches: [],
-      ajouterTaches: (textes) => {
-        const neuves: Tache[] = textes
-          .map((t) => t.trim())
-          .filter(Boolean)
-          .map((texte) => ({ id: uid(), texte, fait: false, echeance: "" }));
+      ajouterTaches: (liste) => {
+        const neuves: Tache[] = liste
+          .map((t) => (typeof t === "string" ? { texte: t, echeance: "" } : t))
+          .map((t) => ({ texte: t.texte.trim(), echeance: t.echeance }))
+          .filter((t) => t.texte)
+          .map((t) => ({ id: uid(), texte: t.texte, fait: false, echeance: t.echeance }));
         set((s) => ({ taches: [...s.taches, ...neuves] }));
         return neuves.length;
       },
@@ -181,7 +182,7 @@ export const useLuno = create<Etat>()(
         set((s) => ({
           chapitres: [
             ...s.chapitres,
-            { id, matiereId, titre, cours: "", flashcards: [], fiche: null, tailleFiche: 3, exercices: [] },
+            { id, matiereId, titre, cours: "", documents: [], flashcards: [], fiche: null, tailleFiche: 3, exercices: [] },
           ],
         }));
         return id;
@@ -274,6 +275,7 @@ export const useLuno = create<Etat>()(
           matiereId: matiere.id,
           titre: p.titre,
           cours: "",
+          documents: [],
           flashcards: [],
           fiche: null,
           tailleFiche: 3,
@@ -284,6 +286,7 @@ export const useLuno = create<Etat>()(
           ...base,
           publieId: p.id,
           cours: base.cours.trim() ? base.cours : (p.cours ?? ""),
+          documents: p.documents ?? base.documents ?? [],
           flashcards: [
             ...base.flashcards,
             ...p.flashcards.filter((k) => !deja.has(k.recto.toLowerCase())).map(nouvelleCarte),
@@ -301,54 +304,6 @@ export const useLuno = create<Etat>()(
         return chapitre.id;
       },
 
-      chargerExemple: () => {
-        if (get().matieres.some((m) => m.id.startsWith(EX))) return;
-        const m = (nom: string, couleur: string, emoji: string): Matiere => ({ id: EX + uid(), nom, couleur, emoji });
-        const pc = m("Physique-Chimie", "#6f8fae", "⚗️");
-        const hg = m("Histoire-Géo", "#c98b6b", "🌍");
-        const svt = m("SVT", "#7d9a84", "🧬");
-        const vide = { cours: "", flashcards: [], fiche: null, tailleFiche: 3, exercices: [] };
-        const chap = (matiereId: string, titre: string): Chapitre => ({ id: EX + uid(), matiereId, titre, ...vide });
-        const meca = chap(pc.id, "Mouvement et forces");
-        const gf = chap(hg.id, "La guerre froide");
-        const adn = chap(svt.id, "ADN et division cellulaire");
-        set((s) => ({ matieres: [...s.matieres, pc, hg, svt], chapitres: [...s.chapitres, meca, gf, adn] }));
-        const derivId = get().importerPublie(EXEMPLE_DERIVATION, EX);
-        const maths = get().chapitres.find((c) => c.id === derivId)!.matiereId;
-        const dst = (matiereId: string, c: Chapitre | string, j: number, heure: string, dureeMin: number, salle: string, notes = ""): Dst => ({
-          id: EX + uid(),
-          matiereId,
-          titre: typeof c === "string" ? "Dérivation" : c.titre,
-          date: dansJours(j),
-          heure,
-          dureeMin,
-          salle,
-          notes,
-          chapitreIds: [typeof c === "string" ? c : c.id],
-        });
-        set((s) => ({
-          dsts: [
-            ...s.dsts,
-            dst(maths, derivId, 3, "08:00", 120, "B204", "Calculatrice autorisée"),
-            dst(hg.id, gf, 8, "14:00", 120, "A012"),
-            dst(pc.id, meca, 15, "10:00", 90, "Labo 2"),
-            dst(svt.id, adn, 22, "08:00", 60, "C110"),
-          ],
-        }));
-      },
-      effacerExemple: () =>
-        set((s) => {
-          const ex = new Set(s.matieres.filter((m) => m.id.startsWith(EX)).map((m) => m.id));
-          const publies = { ...s.publies };
-          delete publies[EXEMPLE_DERIVATION.id];
-          return {
-            annulation: { message: "Données d'exemple effacées", avant: photo(s) },
-            matieres: s.matieres.filter((m) => !ex.has(m.id)),
-            chapitres: s.chapitres.filter((c) => !ex.has(c.matiereId) && !c.id.startsWith(EX)),
-            dsts: s.dsts.filter((d) => !ex.has(d.matiereId) && !d.id.startsWith(EX)),
-            publies,
-          };
-        }),
       toutEffacer: () =>
         set((s) => ({
           annulation: { message: "Toutes les données ont été effacées", avant: photo(s) },
@@ -367,7 +322,7 @@ export const useLuno = create<Etat>()(
     }),
     {
       name: "luno-v1",
-      version: 2,
+      version: 3,
       partialize: (s) => ({
         matieres: s.matieres,
         chapitres: s.chapitres,
@@ -386,11 +341,19 @@ export function normaliser(
   d: Partial<Donnees> & { publies?: Record<string, number>; calendrier?: string[] | null },
 ) {
   const aujourdhui = todayISO();
+  // Retire les chapitres et DST d'exemple. Une matière d'exemple n'est gardée que si un
+  // vrai chapitre ou un vrai DST s'y rattache (par exemple un DST du calendrier du lycée).
+  const chapitresGardes = (d.chapitres ?? []).filter((c) => !c.id.startsWith(EX));
+  const dstsGardes = (d.dsts ?? []).filter((x) => !x.id.startsWith(EX));
+  const utilisees = new Set([...chapitresGardes.map((c) => c.matiereId), ...dstsGardes.map((x) => x.matiereId)]);
+  const publies = { ...(d.publies ?? {}) };
+  delete publies["exemple-derivation"];
   return {
-    matieres: d.matieres ?? [],
-    chapitres: (d.chapitres ?? []).map((c) => ({
+    matieres: (d.matieres ?? []).filter((m) => !m.id.startsWith(EX) || utilisees.has(m.id)),
+    chapitres: chapitresGardes.map((c) => ({
       ...c,
       tailleFiche: c.tailleFiche ?? 3,
+      documents: c.documents ?? [],
       exercices: c.exercices ?? [],
       // Les fiches de l'ancien format (une seule taille) ne sont pas reprises.
       fiche: c.fiche && c.fiche.sections?.every((s) => s.points.every((p) => typeof p === "object")) ? c.fiche : null,
@@ -400,14 +363,13 @@ export function normaliser(
         echeance: f.echeance ?? aujourdhui,
       })),
     })),
-    dsts: (d.dsts ?? []).map((x) => ({ ...x, chapitreIds: x.chapitreIds ?? [] })),
+    dsts: dstsGardes.map((x) => ({ ...x, chapitreIds: x.chapitreIds ?? [] })),
     taches: (d.taches ?? []).map((x) => ({ ...x, echeance: x.echeance ?? "" })),
-    publies: d.publies ?? {},
+    publies,
     calendrier: d.calendrier ?? null,
   };
 }
 
-export const aExemple = (s: Donnees) => s.matieres.some((m) => m.id.startsWith(EX));
 
 /** Fond pastel dérivé de la couleur d'une matière. */
 export const pastel = (couleur: string, pct = 14) =>

@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { Download, Eraser, Settings, Sparkles, Trash2, Undo2, Upload } from "lucide-react";
-import { aExemple, normaliser, useLuno } from "@/lib/store";
+import { Download, Settings, Trash2, Undo2, Upload } from "lucide-react";
+import { normaliser, useLuno } from "@/lib/store";
 import { BIBLIOTHEQUE } from "@/contenu/bibliotheque";
 import { todayISO } from "@/lib/dates";
 import { Bouton, Fenetre, pluriel } from "./ui";
@@ -144,28 +144,6 @@ export function BoutonDonnees() {
           </p>
         </div>
         <div className="mt-5 flex flex-col gap-2 border-t border-line pt-4">
-          {!aExemple(s) && (
-            <Bouton
-              variante="contour"
-              onClick={() => {
-                s.chargerExemple();
-                setOuverte(false);
-              }}
-            >
-              <Sparkles size={16} /> Charger des données d&apos;exemple
-            </Bouton>
-          )}
-          {aExemple(s) && (
-            <Bouton
-              variante="contour"
-              onClick={() => {
-                s.effacerExemple();
-                setOuverte(false);
-              }}
-            >
-              <Eraser size={16} /> Effacer les données d&apos;exemple
-            </Bouton>
-          )}
           <Bouton
             variante="fantome"
             className="!text-bad"

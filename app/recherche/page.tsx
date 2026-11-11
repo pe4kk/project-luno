@@ -3,18 +3,53 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { BookOpen, CalendarDays, GraduationCap, Layers, ListTodo, ScrollText, Search, X } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  FileDown,
+  GraduationCap,
+  Layers,
+  ListTodo,
+  ScrollText,
+  Search,
+  X,
+} from "lucide-react";
 import { useLuno } from "@/lib/store";
 import { simplifier } from "@/lib/contenu";
 import { dateLongue } from "@/lib/dates";
-import { lienTravail } from "@/lib/liens";
+import { lienFichier, lienTravail } from "@/lib/liens";
 import { LECONS } from "@/contenu/lecons";
 import { BoutonIcone, EnTete, classeSaisie, pluriel } from "@/components/ui";
+import { formule } from "@/components/Formule";
 
-type Resultat = { cle: string; titre: string; detail: string; href: string };
+type Resultat = {
+  cle: string;
+  titre: string;
+  detail: string;
+  href: string;
+  externe?: boolean;
+};
 type Groupe = { nom: string; icone: typeof Search; resultats: Resultat[] };
 
 const MAX_PAR_GROUPE = 8;
+
+const classeResultat =
+  "block rounded-2xl border border-line bg-surface px-4 py-3 shadow-card transition-colors hover:border-ink/30";
+
+function ContenuResultat({ r }: { r: Resultat }) {
+  return (
+    <>
+      <span className="block text-[15.5px] font-medium leading-snug">
+        {formule(r.titre)}
+      </span>
+      {r.detail && (
+        <span className="mt-0.5 line-clamp-2 block text-[13.5px] text-muted">
+          {formule(r.detail)}
+        </span>
+      )}
+    </>
+  );
+}
 
 export default function Recherche() {
   const { matieres, chapitres, dsts, taches } = useLuno();
@@ -37,7 +72,12 @@ export default function Recherche() {
     const gChapitres: Resultat[] = [
       ...matieres
         .filter((m) => trouve(m.nom))
-        .map((m) => ({ cle: m.id, titre: `${m.emoji} ${m.nom}`, detail: "Matière", href: lienTravail({ m: m.id }) })),
+        .map((m) => ({
+          cle: m.id,
+          titre: `${m.emoji} ${m.nom}`,
+          detail: "Matière",
+          href: lienTravail({ m: m.id }),
+        })),
       ...chapitres
         .filter((c) => trouve(c.titre))
         .map((c) => ({
@@ -69,6 +109,17 @@ export default function Recherche() {
           })),
       ),
     );
+    const gDocs: Resultat[] = chapitres.flatMap((c) =>
+      c.documents
+        .filter((d) => trouve(d.titre, c.titre))
+        .map((d) => ({
+          cle: d.fichier,
+          titre: d.titre,
+          detail: `${d.detail ?? "PDF"} · ${etiquette(c.matiereId)}`,
+          href: lienFichier(d.fichier),
+          externe: true,
+        })),
+    );
     const gCours: Resultat[] = chapitres
       .filter((c) => c.cours && trouve(c.cours))
       .map((c) => ({
@@ -78,7 +129,9 @@ export default function Recherche() {
         href: lienTravail({ m: c.matiereId, c: c.id, o: "cours" }),
       }));
     const gDsts: Resultat[] = dsts
-      .filter((d) => trouve(d.titre, nomMatiere(d.matiereId)?.nom ?? "", d.notes))
+      .filter((d) =>
+        trouve(d.titre, nomMatiere(d.matiereId)?.nom ?? "", d.notes),
+      )
       .sort((a, b) => a.date.localeCompare(b.date))
       .map((d) => ({
         cle: d.id,
@@ -88,15 +141,31 @@ export default function Recherche() {
       }));
     const gTaches: Resultat[] = taches
       .filter((t) => trouve(t.texte))
-      .map((t) => ({ cle: t.id, titre: t.texte, detail: t.fait ? "Terminée" : "À faire", href: "/taches" }));
+      .map((t) => ({
+        cle: t.id,
+        titre: t.texte,
+        detail: t.fait ? "Terminée" : "À faire",
+        href: "/taches",
+      }));
     const gLecons: Resultat[] = LECONS.filter((l) =>
-      trouve(l.titre, l.matiere, l.intro, ...l.etapes.flatMap((e) => [e.titre, ...e.texte])),
-    ).map((l) => ({ cle: l.id, titre: l.titre, detail: `${l.matiere} · ${l.niveau}`, href: `/apprendre?l=${l.id}` }));
+      trouve(
+        l.titre,
+        l.matiere,
+        l.intro,
+        ...l.etapes.flatMap((e) => [e.titre, ...e.texte]),
+      ),
+    ).map((l) => ({
+      cle: l.id,
+      titre: l.titre,
+      detail: `${l.matiere} · ${l.niveau}`,
+      href: `/apprendre?l=${l.id}`,
+    }));
 
     return [
       { nom: "Matières et chapitres", icone: BookOpen, resultats: gChapitres },
       { nom: "Flashcards", icone: Layers, resultats: gCartes },
       { nom: "Fiches", icone: ScrollText, resultats: gFiches },
+      { nom: "Documents du prof", icone: FileDown, resultats: gDocs },
       { nom: "Cours", icone: BookOpen, resultats: gCours },
       { nom: "DST", icone: CalendarDays, resultats: gDsts },
       { nom: "À faire", icone: ListTodo, resultats: gTaches },
@@ -110,31 +179,51 @@ export default function Recherche() {
 
   return (
     <div className="mx-auto max-w-[760px]">
-      <EnTete titre="Recherche" sousTitre="Dans tes matières, flashcards, fiches, cours, DST, tâches et leçons." />
+      <EnTete
+        titre="Recherche"
+        sousTitre="Dans tes matières, flashcards, fiches, documents, DST, tâches et leçons."
+      />
       <div className="relative mb-6">
-        <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
+        <Search
+          size={18}
+          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted"
+        />
         <input
           autoFocus
           type="search"
           enterKeyHint="search"
           aria-label="Rechercher"
-          className={classeSaisie + " !bg-surface !py-3.5 !pl-11 !pr-12 [&::-webkit-search-cancel-button]:hidden"}
+          className={
+            classeSaisie +
+            " !bg-surface !py-3.5 !pl-11 !pr-12 [&::-webkit-search-cancel-button]:hidden"
+          }
           placeholder="Ex. Dreyfus, dérivée, syllepse…"
           value={requete}
           onChange={(e) => setRequete(e.target.value)}
         />
         {requete && (
-          <BoutonIcone label="Effacer la recherche" onClick={() => setRequete("")} className="absolute right-1 top-1/2 -translate-y-1/2">
+          <BoutonIcone
+            label="Effacer la recherche"
+            onClick={() => setRequete("")}
+            className="absolute right-1 top-1/2 -translate-y-1/2"
+          >
             <X size={17} />
           </BoutonIcone>
         )}
       </div>
 
       {!assez ? (
-        <p className="text-[14.5px] text-muted">Tape au moins deux lettres. Les accents et les majuscules ne comptent pas.</p>
+        <p className="text-[14.5px] text-muted">
+          Tape au moins deux lettres. Les accents et les majuscules ne comptent
+          pas.
+        </p>
       ) : total === 0 ? (
-        <p role="status" className="rounded-2xl border border-dashed border-ink/20 p-6 text-center text-[14.5px] text-muted">
-          Aucun résultat pour « {requete.trim()} ». Essaie un mot plus court ou un synonyme.
+        <p
+          role="status"
+          className="rounded-2xl border border-dashed border-ink/20 p-6 text-center text-[14.5px] text-muted"
+        >
+          Aucun résultat pour « {requete.trim()} ». Essaie un mot plus court ou
+          un synonyme.
         </p>
       ) : (
         <>
@@ -146,7 +235,9 @@ export default function Recherche() {
               <section key={nom}>
                 <h2 className="mb-2 flex items-center gap-2 text-[18px]">
                   <Icone size={17} className="text-accent" /> {nom}
-                  <span className="font-sans text-[13px] font-medium text-muted">{resultats.length}</span>
+                  <span className="font-sans text-[13px] font-medium text-muted">
+                    {resultats.length}
+                  </span>
                 </h2>
                 <ul className="flex flex-col gap-2">
                   {resultats.slice(0, MAX_PAR_GROUPE).map((r, i) => (
@@ -156,19 +247,28 @@ export default function Recherche() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: Math.min(i * 0.02, 0.15) }}
                     >
-                      <Link
-                        href={r.href}
-                        className="block rounded-2xl border border-line bg-surface px-4 py-3 shadow-card transition-colors hover:border-ink/30"
-                      >
-                        <span className="block text-[15.5px] font-medium leading-snug">{r.titre}</span>
-                        {r.detail && <span className="mt-0.5 line-clamp-2 block text-[13.5px] text-muted">{r.detail}</span>}
-                      </Link>
+                      {/* Un PDF est un fichier : lien simple, car Link ajouterait le préfixe du site une seconde fois. */}
+                      {r.externe ? (
+                        <a
+                          href={r.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={classeResultat}
+                        >
+                          <ContenuResultat r={r} />
+                        </a>
+                      ) : (
+                        <Link href={r.href} className={classeResultat}>
+                          <ContenuResultat r={r} />
+                        </Link>
+                      )}
                     </motion.li>
                   ))}
                 </ul>
                 {resultats.length > MAX_PAR_GROUPE && (
                   <p className="mt-2 text-[13px] text-muted">
-                    Et {resultats.length - MAX_PAR_GROUPE} de plus : précise ta recherche pour les voir.
+                    Et {resultats.length - MAX_PAR_GROUPE} de plus : précise ta
+                    recherche pour les voir.
                   </p>
                 )}
               </section>

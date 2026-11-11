@@ -3,7 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, ArrowUp, Check, Eye, RotateCcw, Target, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  Eye,
+  RotateCcw,
+  Target,
+  X,
+} from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
 import {
   MIN_CARTES_QCM,
@@ -13,8 +21,24 @@ import {
   preparerExercices,
   reponseJuste,
 } from "@/lib/contenu";
-import type { Exercice, Ordre, Ouverte, Qcm, Trou, VraiFaux } from "@/lib/types";
-import { Bouton, BoutonIcone, Carte, EnTete, EtatVide, classeSaisie, pluriel } from "@/components/ui";
+import type {
+  Exercice,
+  Ordre,
+  Ouverte,
+  Qcm,
+  Trou,
+  VraiFaux,
+} from "@/lib/types";
+import {
+  Bouton,
+  BoutonIcone,
+  Carte,
+  EnTete,
+  EtatVide,
+  classeSaisie,
+  pluriel,
+} from "@/components/ui";
+import { formule } from "@/components/Formule";
 
 export default function Exercices() {
   const { matieres, chapitres, noterFlashcard } = useLuno();
@@ -48,19 +72,27 @@ export default function Exercices() {
       setResultat(juste);
       if (juste) setScore((x) => x + 1);
       // Une erreur remet la flashcard d'origine dans les cartes à revoir.
-      else if ("carteId" in q && q.carteId) noterFlashcard(chapitre.id, q.carteId, false);
+      else if ("carteId" in q && q.carteId)
+        noterFlashcard(chapitre.id, q.carteId, false);
     };
     const explication = "explication" in q ? q.explication : "";
     return (
       <div className="mx-auto max-w-[640px]">
         <div className="mb-4 flex items-center gap-3">
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-line">
-            <motion.div className="h-full rounded-full bg-accent" animate={{ width: `${(index / questions.length) * 100}%` }} />
+            <motion.div
+              className="h-full rounded-full bg-accent"
+              animate={{ width: `${(index / questions.length) * 100}%` }}
+            />
           </div>
           <span className="text-[13px] font-semibold text-muted">
             {index + 1} / {questions.length}
           </span>
-          <BoutonIcone label="Quitter les exercices" onClick={quitter} className="-mr-2">
+          <BoutonIcone
+            label="Quitter les exercices"
+            onClick={quitter}
+            className="-mr-2"
+          >
             <X size={18} />
           </BoutonIcone>
         </div>
@@ -72,7 +104,12 @@ export default function Exercices() {
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Enonce q={q} titre={chapitre.titre} resultat={resultat} repondre={repondre} />
+            <Enonce
+              q={q}
+              titre={chapitre.titre}
+              resultat={resultat}
+              repondre={repondre}
+            />
             <AnimatePresence>
               {resultat !== null && (
                 <motion.div
@@ -81,7 +118,9 @@ export default function Exercices() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   onAnimationComplete={() =>
-                    document.getElementById("correction")?.scrollIntoView({ behavior: "smooth", block: "nearest" })
+                    document
+                      .getElementById("correction")
+                      ?.scrollIntoView({ behavior: "smooth", block: "nearest" })
                   }
                   className="mt-5 flex scroll-mb-28 flex-wrap items-center justify-between gap-3 rounded-2xl bg-ink/5 p-4"
                 >
@@ -95,7 +134,7 @@ export default function Exercices() {
                           ? "Bonne réponse."
                           : "Pas tout à fait."}
                     </strong>{" "}
-                    {explication}
+                    {formule(explication)}
                   </p>
                   <Bouton
                     autoFocus
@@ -104,7 +143,9 @@ export default function Exercices() {
                       setIndex((i) => i + 1);
                     }}
                   >
-                    {index + 1 === questions.length ? "Voir le résultat" : "Suivante"}
+                    {index + 1 === questions.length
+                      ? "Voir le résultat"
+                      : "Suivante"}
                   </Bouton>
                 </motion.div>
               )}
@@ -127,8 +168,21 @@ export default function Exercices() {
         className="mx-auto flex max-w-[460px] flex-col items-center rounded-[18px] border border-line bg-surface p-8 text-center shadow-card sm:p-10"
       >
         <div className="relative mb-5">
-          <svg width="140" height="140" viewBox="0 0 140 140" className="-rotate-90" aria-hidden>
-            <circle cx="70" cy="70" r={R} fill="none" stroke="var(--line)" strokeWidth="12" />
+          <svg
+            width="140"
+            height="140"
+            viewBox="0 0 140 140"
+            className="-rotate-90"
+            aria-hidden
+          >
+            <circle
+              cx="70"
+              cy="70"
+              r={R}
+              fill="none"
+              stroke="var(--line)"
+              strokeWidth="12"
+            />
             <motion.circle
               cx="70"
               cy="70"
@@ -148,14 +202,21 @@ export default function Exercices() {
           </span>
         </div>
         <h2 className="text-[28px]">
-          {pct === 1 ? "Sans faute !" : pct >= 0.7 ? "Bien joué" : pct >= 0.5 ? "Pas mal" : "À retravailler"}
+          {pct === 1
+            ? "Sans faute !"
+            : pct >= 0.7
+              ? "Bien joué"
+              : pct >= 0.5
+                ? "Pas mal"
+                : "À retravailler"}
         </h2>
         <p className="mt-1 text-[15px] text-muted">{chapitre?.titre}</p>
-        {score < questions.length && questions.some((q) => "carteId" in q && q.carteId) && (
-          <p className="mt-2 text-[13.5px] text-muted">
-            Les notions ratées sont revenues dans tes flashcards à revoir.
-          </p>
-        )}
+        {score < questions.length &&
+          questions.some((q) => "carteId" in q && q.carteId) && (
+            <p className="mt-2 text-[13.5px] text-muted">
+              Les notions ratées sont revenues dans tes flashcards à revoir.
+            </p>
+          )}
         <div className="mt-6 flex gap-2">
           <Bouton variante="contour" onClick={lancer}>
             <RotateCcw size={16} /> Rejouer
@@ -169,7 +230,10 @@ export default function Exercices() {
   // Choix du chapitre
   return (
     <div>
-      <EnTete titre="S'exercer" sousTitre="Des exercices sur tes chapitres, corrigés tout de suite." />
+      <EnTete
+        titre="S'exercer"
+        sousTitre="Des exercices sur tes chapitres, corrigés tout de suite."
+      />
       {disponibles.length === 0 ? (
         <EtatVide
           icone={<Target size={26} />}
@@ -186,7 +250,11 @@ export default function Exercices() {
         />
       ) : (
         <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
-          <div className="grid h-fit gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Chapitre">
+          <div
+            className="grid h-fit gap-3 sm:grid-cols-2"
+            role="radiogroup"
+            aria-label="Chapitre"
+          >
             {disponibles.map((c, i) => {
               const m = matieres.find((x) => x.id === c.matiereId);
               const actif = c.id === chapitreId;
@@ -203,16 +271,27 @@ export default function Exercices() {
                   className="rounded-2xl border-2 p-4 text-left shadow-card transition-colors"
                   style={{
                     borderColor: actif ? m?.couleur : "var(--line)",
-                    background: actif ? pastel(m?.couleur ?? "#888", 12) : "var(--surface)",
+                    background: actif
+                      ? pastel(m?.couleur ?? "#888", 12)
+                      : "var(--surface)",
                   }}
                 >
-                  <span className="text-[13px] font-semibold" style={{ color: encre(m?.couleur ?? "#888") }}>
+                  <span
+                    className="text-[13px] font-semibold"
+                    style={{ color: encre(m?.couleur ?? "#888") }}
+                  >
                     {m?.emoji} {m?.nom}
                   </span>
-                  <span className="mt-1 block text-[17px] font-semibold">{c.titre}</span>
+                  <span className="mt-1 block text-[17px] font-semibold">
+                    {c.titre}
+                  </span>
                   <span className="text-[13px] text-muted">
                     {c.exercices.length > 0
-                      ? pluriel(c.exercices.length, "exercice rédigé", "exercices rédigés")
+                      ? pluriel(
+                          c.exercices.length,
+                          "exercice rédigé",
+                          "exercices rédigés",
+                        )
                       : `Exercices tirés de tes ${c.flashcards.length} flashcards`}
                   </span>
                 </motion.button>
@@ -223,7 +302,9 @@ export default function Exercices() {
             <p className="text-[17px] font-semibold">Nombre de questions</p>
             <div className="mt-3 flex items-baseline justify-between">
               <span className="font-display text-[36px] text-accent">{n}</span>
-              <span className="text-[13px] text-muted">{chapitre ? `max. ${max}` : ""}</span>
+              <span className="text-[13px] text-muted">
+                {chapitre ? `max. ${max}` : ""}
+              </span>
             </div>
             <input
               type="range"
@@ -234,9 +315,17 @@ export default function Exercices() {
               aria-label="Nombre de questions"
               onChange={(e) => setNombre(Number(e.target.value))}
               className="luno-range mt-3 disabled:opacity-50"
-              style={{ "--fill": `${max > min ? ((n - min) / (max - min)) * 100 : 100}%` } as React.CSSProperties}
+              style={
+                {
+                  "--fill": `${max > min ? ((n - min) / (max - min)) * 100 : 100}%`,
+                } as React.CSSProperties
+              }
             />
-            <Bouton className="mt-6 w-full" disabled={!chapitre} onClick={lancer}>
+            <Bouton
+              className="mt-6 w-full"
+              disabled={!chapitre}
+              onClick={lancer}
+            >
               {chapitre ? "Commencer" : "Choisis un chapitre"}
             </Bouton>
           </Carte>
@@ -254,7 +343,11 @@ const TYPES: Record<string, string> = {
   ouverte: "Question ouverte",
 };
 
-type PropsEnonce<T> = { q: T; resultat: boolean | null; repondre: (juste: boolean) => void };
+type PropsEnonce<T> = {
+  q: T;
+  resultat: boolean | null;
+  repondre: (juste: boolean) => void;
+};
 
 const classeChoix = (etat: "neutre" | "bon" | "faux" | "eteint") =>
   `flex min-h-[52px] items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left text-[16px] font-medium transition-colors ${
@@ -287,18 +380,39 @@ function ExQcm({ q, resultat, repondre }: PropsEnonce<Qcm>) {
   const [choisi, setChoisi] = useState<number | null>(null);
   return (
     <>
-      {q.consigne && <p className="mt-2 text-[14.5px] text-muted">{q.consigne}</p>}
-      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.question}</h2>
-      <div className="mt-5 flex flex-col gap-2.5" role="group" aria-label="Réponses">
+      {q.consigne && (
+        <p className="mt-2 text-[14.5px] text-muted">{formule(q.consigne)}</p>
+      )}
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
+        {formule(q.question)}
+      </h2>
+      <div
+        className="mt-5 flex flex-col gap-2.5"
+        role="group"
+        aria-label="Réponses"
+      >
         {q.choix.map((c, i) => {
           const bon = i === q.bonneReponse;
-          const etat = resultat === null ? "neutre" : bon ? "bon" : i === choisi ? "faux" : "eteint";
+          const etat =
+            resultat === null
+              ? "neutre"
+              : bon
+                ? "bon"
+                : i === choisi
+                  ? "faux"
+                  : "eteint";
           return (
             <motion.button
               key={c}
               disabled={resultat !== null}
               whileHover={resultat === null ? { x: 4 } : undefined}
-              animate={etat === "faux" ? { x: [0, -8, 8, -5, 5, 0] } : etat === "bon" ? { scale: [1, 1.03, 1] } : {}}
+              animate={
+                etat === "faux"
+                  ? { x: [0, -8, 8, -5, 5, 0] }
+                  : etat === "bon"
+                    ? { scale: [1, 1.03, 1] }
+                    : {}
+              }
               transition={{ duration: 0.4 }}
               onClick={() => {
                 setChoisi(i);
@@ -307,9 +421,15 @@ function ExQcm({ q, resultat, repondre }: PropsEnonce<Qcm>) {
               className={classeChoix(etat)}
             >
               <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/5 text-[13px] font-semibold">
-                {etat === "bon" ? <Check size={15} /> : etat === "faux" ? <X size={15} /> : "ABCD"[i]}
+                {etat === "bon" ? (
+                  <Check size={15} />
+                ) : etat === "faux" ? (
+                  <X size={15} />
+                ) : (
+                  "ABCD"[i]
+                )}
               </span>
-              {c}
+              {formule(c)}
             </motion.button>
           );
         })}
@@ -322,11 +442,24 @@ function ExVraiFaux({ q, resultat, repondre }: PropsEnonce<VraiFaux>) {
   const [choisi, setChoisi] = useState<boolean | null>(null);
   return (
     <>
-      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.affirmation}</h2>
-      <div className="mt-5 grid grid-cols-2 gap-3" role="group" aria-label="Réponses">
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
+        {formule(q.affirmation)}
+      </h2>
+      <div
+        className="mt-5 grid grid-cols-2 gap-3"
+        role="group"
+        aria-label="Réponses"
+      >
         {[true, false].map((v) => {
           const bon = v === q.vrai;
-          const etat = resultat === null ? "neutre" : bon ? "bon" : v === choisi ? "faux" : "eteint";
+          const etat =
+            resultat === null
+              ? "neutre"
+              : bon
+                ? "bon"
+                : v === choisi
+                  ? "faux"
+                  : "eteint";
           return (
             <button
               key={String(v)}
@@ -357,15 +490,19 @@ function ExTrou({ q, resultat, repondre }: PropsEnonce<Trou>) {
       }}
     >
       <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
-        {avant}
+        {formule(avant)}
         <span
           className={`mx-1 inline-block min-w-[90px] rounded-lg border-b-2 px-2 text-center ${
-            resultat === null ? "border-accent text-accent" : resultat ? "border-ok bg-ok/10 text-ok" : "border-bad bg-bad/10 text-bad"
+            resultat === null
+              ? "border-accent text-accent"
+              : resultat
+                ? "border-ok bg-ok/10 text-ok"
+                : "border-bad bg-bad/10 text-bad"
           }`}
         >
-          {resultat === null ? saisie || "…" : q.reponses[0]}
+          {resultat === null ? saisie || "…" : formule(q.reponses[0])}
         </span>
-        {apres}
+        {formule(apres ?? "")}
       </h2>
       <div className="mt-5 flex gap-2">
         <input
@@ -379,7 +516,11 @@ function ExTrou({ q, resultat, repondre }: PropsEnonce<Trou>) {
           value={saisie}
           onChange={(e) => setSaisie(e.target.value)}
         />
-        <Bouton type="submit" className="shrink-0" disabled={resultat !== null || !saisie.trim()}>
+        <Bouton
+          type="submit"
+          className="shrink-0"
+          disabled={resultat !== null || !saisie.trim()}
+        >
           Valider
         </Bouton>
       </div>
@@ -405,8 +546,12 @@ function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
   const liste = resultat === null ? ordre : q.elements;
   return (
     <>
-      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.consigne}</h2>
-      {resultat !== null && <p className="mt-2 text-[14px] text-muted">Voici le bon ordre :</p>}
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
+        {formule(q.consigne)}
+      </h2>
+      {resultat !== null && (
+        <p className="mt-2 text-[14px] text-muted">Voici le bon ordre :</p>
+      )}
       <ol className="mt-4 flex flex-col gap-2">
         {liste.map((el, i) => (
           <motion.li
@@ -414,16 +559,27 @@ function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
             key={el}
             transition={{ type: "spring", stiffness: 500, damping: 38 }}
             className={`flex items-center gap-2 rounded-2xl border-2 bg-surface py-1.5 pl-3 pr-1.5 ${
-              resultat === null ? "border-line" : ordre[i] === el ? "border-ok" : "border-bad"
+              resultat === null
+                ? "border-line"
+                : ordre[i] === el
+                  ? "border-ok"
+                  : "border-bad"
             }`}
           >
             <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/5 text-[13px] font-semibold">
               {i + 1}
             </span>
-            <span className="min-w-0 flex-1 py-1.5 text-[15.5px] font-medium">{el}</span>
+            <span className="min-w-0 flex-1 py-1.5 text-[15.5px] font-medium">
+              {formule(el)}
+            </span>
             {resultat === null && (
               <span className="flex shrink-0">
-                <BoutonIcone label={`Monter : ${el}`} disabled={i === 0} onClick={() => deplacer(i, -1)} className="disabled:opacity-30">
+                <BoutonIcone
+                  label={`Monter : ${el}`}
+                  disabled={i === 0}
+                  onClick={() => deplacer(i, -1)}
+                  className="disabled:opacity-30"
+                >
                   <ArrowUp size={17} />
                 </BoutonIcone>
                 <BoutonIcone
@@ -440,7 +596,10 @@ function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
         ))}
       </ol>
       {resultat === null && (
-        <Bouton className="mt-4 w-full" onClick={() => repondre(ordre.every((el, i) => el === q.elements[i]))}>
+        <Bouton
+          className="mt-4 w-full"
+          onClick={() => repondre(ordre.every((el, i) => el === q.elements[i]))}
+        >
           Valider l&apos;ordre
         </Bouton>
       )}
@@ -452,26 +611,42 @@ function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
   const [vu, setVu] = useState(false);
   return (
     <>
-      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.question}</h2>
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
+        {formule(q.question)}
+      </h2>
       {!vu ? (
         <>
-          <p className="mt-3 text-[14.5px] text-muted">Réponds de tête ou sur un brouillon, puis compare avec le corrigé.</p>
+          <p className="mt-3 text-[14.5px] text-muted">
+            Réponds de tête ou sur un brouillon, puis compare avec le corrigé.
+          </p>
           <Bouton className="mt-4" onClick={() => setVu(true)}>
             <Eye size={16} /> Voir le corrigé
           </Bouton>
         </>
       ) : (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <div className="mt-4 rounded-2xl bg-accent-soft p-4">
             <p className="surtitre mb-1 text-accent">Corrigé</p>
-            <p className="text-[15.5px] leading-relaxed">{q.corrige}</p>
+            <p className="text-[15.5px] leading-relaxed">
+              {formule(q.corrige)}
+            </p>
           </div>
           {resultat === null && (
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <Bouton variante="contour" className="!border-bad/40 !text-bad" onClick={() => repondre(false)}>
+              <Bouton
+                variante="contour"
+                className="!border-bad/40 !text-bad"
+                onClick={() => repondre(false)}
+              >
                 <X size={17} /> À revoir
               </Bouton>
-              <Bouton className="!bg-accent !text-on-accent" onClick={() => repondre(true)}>
+              <Bouton
+                className="!bg-accent !text-on-accent"
+                onClick={() => repondre(true)}
+              >
                 <Check size={17} /> J&apos;avais l&apos;essentiel
               </Bouton>
             </div>
