@@ -973,7 +973,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 1,
+    version: 2,
     matiere,
     titre: "Les forces en spé PC",
     documents: [
@@ -1032,7 +1032,10 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso:
           "P = m · g, vertical, vers le bas. À la surface d'une planète, le poids est assimilé à la force de gravitation.",
       },
-      { recto: "Valeur de g sur Terre", verso: "Environ 9,8 N/kg." },
+      {
+        recto: "Valeur de g sur Terre",
+        verso: "g = 9,81 N/kg (ou m·s⁻²), la valeur qu'utilise ton prof.",
+      },
       {
         recto: "Poussée d'Archimède Π⃗A",
         verso:
@@ -1085,7 +1088,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Forces à distance",
           points: [
             {
-              t: "Poids : P = m · g, vertical, vers le bas (g ≈ 9,8 N/kg sur Terre).",
+              t: "Poids : P = m · g, vertical, vers le bas (g = 9,81 N/kg sur Terre).",
               n: 1,
             },
             {
@@ -1167,18 +1170,18 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Le poids s'exerce sans contact. Les trois autres sont des forces de contact.",
       },
       {
-        question: "Quel est le poids d'un élève de 60 kg (g = 9,8 N/kg) ?",
+        question: "Quel est le poids d'un élève de 60 kg (g = 9,81 N/kg) ?",
         choix: ["60 N", "6,1 N", "5,9 × 10² N", "9,8 N"],
         bonneReponse: 2,
-        explication: "P = m · g = 60 × 9,8 = 588 N, soit environ 5,9 × 10² N.",
+        explication: "P = m · g = 60 × 9,81 ≈ 589 N, soit environ 5,9 × 10² N.",
       },
       {
         question:
-          "Un objet de 2,0 L est entièrement immergé dans l'eau (ρ = 1000 kg/m³, g = 9,8 N/kg). Quelle est la poussée d'Archimède ?",
+          "Un objet de 2,0 L est entièrement immergé dans l'eau (ρ = 1000 kg/m³, g = 9,81 N/kg). Quelle est la poussée d'Archimède ?",
         choix: ["2,0 N", "20 N", "2,0 × 10³ N", "0,20 N"],
         bonneReponse: 1,
         explication:
-          "ΠA = 1000 × 2,0 × 10⁻³ × 9,8 ≈ 19,6 N, soit environ 20 N. Attention : 2,0 L = 2,0 × 10⁻³ m³.",
+          "ΠA = 1000 × 2,0 × 10⁻³ × 9,81 ≈ 19,6 N, soit environ 20 N. Attention : 2,0 L = 2,0 × 10⁻³ m³.",
       },
       {
         question:
@@ -1242,7 +1245,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         type: "trou",
         texte: "Le poids se calcule avec la formule P = m × ___.",
         reponses: ["g"],
-        explication: "g ≈ 9,8 N/kg à la surface de la Terre.",
+        explication: "g = 9,81 N/kg à la surface de la Terre.",
       },
       {
         type: "trou",
@@ -1284,6 +1287,305 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Pourquoi un objet qui tombe dans l'air finit-il par atteindre une vitesse constante ?",
         corrige:
           "Le frottement de l'air augmente avec la vitesse. Quand il devient égal au poids, les forces se compensent : d'après le principe d'inertie, la vitesse reste alors constante. C'est la vitesse limite.",
+      },
+    ],
+  },
+  {
+    id: "pc-1re-chap11-exercices",
+    version: 1,
+    matiere,
+    titre: "Chap. 11 · Fiche d'exercices et DM",
+    documents: [
+      {
+        titre: "Exercices du Chap. 11",
+        fichier: `${dossier}/exercices-chap11.pdf`,
+        detail: "Énoncés · 4 pages",
+      },
+      {
+        titre: "Correction des exercices du Chap. 11",
+        fichier: `${dossier}/correction-exercices-chap11.pdf`,
+        detail:
+          "Correction manuscrite · 6 pages · à ouvrir après avoir cherché",
+      },
+    ],
+    flashcards: [
+      {
+        recto: "Les étapes d'une rédaction en dynamique",
+        verso:
+          "Définir le système (point matériel de masse m) et le référentiel ; faire le bilan des forces ; écrire la 2e loi de Newton ; projeter sur un axe ; isoler l'inconnue ; faire l'application numérique avec l'unité et les chiffres significatifs.",
+      },
+      {
+        recto: "Chute libre : que vaut Δv/Δt ?",
+        verso:
+          "Seul le poids agit : m · Δv⃗/Δt = m · g⃗, donc Δv/Δt = g = 9,81 m·s⁻², quelle que soit la masse.",
+      },
+      {
+        recto: "Durée d'une variation de vitesse",
+        verso:
+          "D'après la 2e loi : Δt = m · Δv / ΣF (en projection sur l'axe du mouvement).",
+      },
+      {
+        recto: "Δv à l'arrêt complet",
+        verso:
+          "Δv = |v_f − vᵢ| avec v_f = 0 : la norme de la variation de vitesse est égale à la vitesse initiale.",
+      },
+      {
+        recto: "Reconnaître la vitesse limite sur une chronophotographie",
+        verso:
+          "À partir d'une position, les points sont également espacés : la vitesse est constante, Δv⃗ = 0⃗, donc les forces se compensent (P⃗ + f⃗ = 0⃗).",
+      },
+      {
+        recto: "Une montgolfière s'élève-t-elle ?",
+        verso:
+          "Oui si la poussée d'Archimède est plus grande que le poids : ΠA > P, la somme des forces et Δv⃗ sont alors vers le haut.",
+      },
+      {
+        recto: "Valeur trop grande dans un calcul de vitesse",
+        verso:
+          "Souvent parce qu'on a négligé une force, en général le frottement de l'air, qui freine le système.",
+      },
+      {
+        recto: "Convertir des km/h en m/s",
+        verso: "On divise par 3,6. Exemple : 100 km/h ≈ 27,8 m/s.",
+      },
+    ],
+    fiche: {
+      sections: [
+        {
+          titre: "Le travail demandé par ton prof",
+          points: [
+            {
+              t: "Faire les exercices sans la correction d'abord, puis seulement les corriger avec le PDF.",
+              n: 1,
+            },
+            {
+              t: "DM pour le lundi 16/11 : rédiger sur feuille les cas 2 et 3 de l'exercice 1, et l'exercice 4.",
+              n: 1,
+            },
+            {
+              t: "Interrogation de cours d'une heure le lundi 16/11, dès la première séance : chap. 9, chap. 11 et les trois fiches méthode.",
+              n: 1,
+            },
+            {
+              t: "La fiche méthode sur la méthode d'Euler prépare le TP du retour en classe.",
+              n: 2,
+            },
+            {
+              t: "L'exercice 7 (chute parabolique) sera fait en classe.",
+              n: 3,
+            },
+            {
+              t: "Les documents s'intitulent « Chap. 13 » : c'est bien le chapitre 11 du mail.",
+              n: 5,
+            },
+          ],
+        },
+        {
+          titre: "Pistes pour le DM, sans la réponse",
+          points: [
+            {
+              t: "Ex. 1, cas 2 : inspire-toi du cas 1 corrigé. Regarde comment évolue l'écart entre les points dans le sens du mouvement : accéléré ou ralenti ? Déduis-en le sens de Δv⃗₂, puis choisis la proposition.",
+              n: 1,
+            },
+            {
+              t: "Ex. 1, cas 3 : applique la fiche méthode « tracer le vecteur variation de vitesse » au point 2, puis compare ton tracé aux deux propositions.",
+              n: 1,
+            },
+            {
+              t: "Ex. 4, b : si seul le poids agit, raisonne comme dans l'exercice 3 corrigé (Δv/Δt = g), calcule la vitesse après 12 s et compare-la à 53 m·s⁻¹.",
+              n: 1,
+            },
+            {
+              t: "Ex. 4, c : quand la vitesse est stabilisée, raisonne comme dans l'exercice 5 corrigé : que vaut Δv⃗, et qu'en déduit le principe d'inertie ?",
+              n: 1,
+            },
+            {
+              t: "Ex. 4, a : sur ton schéma, place le point, P⃗, f⃗ et Δv⃗ entre le départ (vitesse nulle) et la vitesse stabilisée ; pas besoin d'échelle.",
+              n: 2,
+            },
+            {
+              t: "Rédige chaque fois : système, référentiel, bilan des forces, loi utilisée, puis conclusion justifiée.",
+              n: 2,
+            },
+          ],
+        },
+        {
+          titre: "Ce que dit la correction (exercices hors DM)",
+          points: [
+            {
+              t: "Ex. 1, schémas : A faux (v⃗ n'est pas tangent) ; B vrai (rectiligne décéléré) ; C faux (ΣF⃗ et Δv⃗ pas de même sens) ; D vrai.",
+              n: 2,
+            },
+            {
+              t: "Ex. 1, cas 1 : points de plus en plus espacés, mouvement accéléré vers la droite ; Δv⃗₃ vers la droite : proposition A.",
+              n: 2,
+            },
+            {
+              t: "Ex. 3 (homme-canon) : Δv/Δt = g = 9,81 m·s⁻² ; durée d'ascension Δt = 35 / 9,81 ≈ 3,6 s.",
+              n: 2,
+            },
+            {
+              t: "Ex. 5 (vitesse limite) : vitesse constante après une position donnée, donc Δv⃗ = 0⃗ ; principe d'inertie : P⃗ + f⃗ = 0⃗.",
+              n: 2,
+            },
+            {
+              t: "Ex. 6 (montgolfière) : P ≈ 3,14 × 10³ N, ΠA ≈ 4,19 × 10³ N, donc ΠA > P : elle s'élève. Après 5,0 s, v ≈ 16 m·s⁻¹ ; après 1,0 min, v ≈ 2,0 × 10² m·s⁻¹, beaucoup trop : on a négligé le frottement de l'air.",
+              n: 3,
+            },
+            {
+              t: "Ex. 2 (freinage) n'est pas dans la correction : voir les exercices de ce chapitre.",
+              n: 3,
+            },
+          ],
+        },
+        {
+          titre: "À vérifier dans la correction",
+          points: [
+            {
+              t: "Ex. 6, 2a : la correction écrit Δv = 16 m·s⁻¹, puis v_f = 1,6 × 10⁻² m·s⁻¹. La bonne valeur est 16 m·s⁻¹ (1,6 × 10¹) : 1,05 × 10³ / 320 × 5,0 ≈ 16.",
+              n: 4,
+            },
+            {
+              t: "Ex. 5 : l'énoncé parle de la cinquième position, la correction de la dixième. Regarde la chronophotographie pour trancher.",
+              n: 4,
+            },
+          ],
+        },
+      ],
+      aRetenir: [
+        "DM : ex. 1 cas 2 et 3, ex. 4",
+        "Interro lundi 16/11",
+        "Δv/Δt = g",
+        "Δt = m·Δv/ΣF",
+        "Vitesse limite",
+        "ΠA > P",
+      ],
+    },
+    exercices: [
+      {
+        type: "vraiFaux",
+        affirmation:
+          "Fiche d'exercices, ex. 1, schéma A : les vecteurs sont bien représentés.",
+        vrai: false,
+        explication:
+          "Le vecteur vitesse v⃗ n'est pas tangent à la trajectoire, alors qu'il doit toujours l'être.",
+      },
+      {
+        type: "vraiFaux",
+        affirmation:
+          "Fiche d'exercices, ex. 1, schéma B : les vecteurs sont bien représentés.",
+        vrai: true,
+        explication:
+          "v⃗ est tangent, ΣF⃗ et Δv⃗ sont colinéaires et de même sens. Δv⃗ est opposé à v⃗ : le mouvement est rectiligne décéléré, ce qui est possible.",
+      },
+      {
+        type: "vraiFaux",
+        affirmation:
+          "Fiche d'exercices, ex. 1, schéma C : les vecteurs sont bien représentés.",
+        vrai: false,
+        explication:
+          "ΣF⃗ et Δv⃗ ne sont pas de même sens, ce qui contredit la 2e loi de Newton.",
+      },
+      {
+        type: "vraiFaux",
+        affirmation:
+          "Fiche d'exercices, ex. 1, schéma D : les vecteurs sont bien représentés.",
+        vrai: true,
+        explication:
+          "ΣF⃗ et Δv⃗ sont colinéaires et de même sens, et v⃗ est tangent à la trajectoire.",
+      },
+      {
+        question:
+          "Ex. 2 : une voiture roule à 100 km/h et freine jusqu'à l'arrêt. Quelle est la norme de Δv⃗ ?",
+        choix: ["100 m·s⁻¹", "27,8 m·s⁻¹", "360 m·s⁻¹", "3,6 m·s⁻¹"],
+        bonneReponse: 1,
+        explication: "Δv = |0 − v| = 100 / 3,6 ≈ 27,8 m·s⁻¹.",
+      },
+      {
+        question:
+          "Ex. 2 : la voiture de 1,2 t est freinée par une force de 7,7 kN. Combien de temps dure le freinage ?",
+        choix: ["0,23 s", "4,3 s", "43 s", "16 s"],
+        bonneReponse: 1,
+        explication:
+          "D'après la 2e loi : Δt = m · Δv / F = 1200 × 27,8 / 7700 ≈ 4,3 s. Attention aux conversions : 1,2 t = 1200 kg et 7,7 kN = 7700 N.",
+      },
+      {
+        question:
+          "Ex. 2 : pour qu'un véhicule deux fois plus lourd, à la même vitesse, s'arrête dans la même durée, il faut…",
+        choix: [
+          "la même force de freinage",
+          "une force deux fois plus grande",
+          "une force deux fois plus petite",
+          "une force quatre fois plus grande",
+        ],
+        bonneReponse: 1,
+        explication:
+          "Δt = m · Δv / F : si m double, F doit doubler pour garder Δt, soit environ 15,4 kN.",
+      },
+      {
+        question:
+          "Ex. 3 : l'homme-canon, soumis à son seul poids, est lancé vers le haut à 35 m·s⁻¹. Combien de temps dure l'ascension ?",
+        choix: ["0,28 s", "3,6 s", "35 s", "343 s"],
+        bonneReponse: 1,
+        explication: "Δv/Δt = g, donc Δt = Δv / g = 35 / 9,81 ≈ 3,6 s.",
+      },
+      {
+        question:
+          "Ex. 6 : une montgolfière de 320 kg a un volume de 350 m³ (ρair = 1,22 kg·m⁻³). Que vaut la poussée d'Archimède ?",
+        choix: ["3,14 × 10³ N", "4,19 × 10³ N", "427 N", "1,05 × 10³ N"],
+        bonneReponse: 1,
+        explication:
+          "ΠA = ρair × V × g = 1,22 × 350 × 9,81 ≈ 4,19 × 10³ N. Le poids vaut 320 × 9,81 ≈ 3,14 × 10³ N.",
+      },
+      {
+        question:
+          "Ex. 6 : partie de l'arrêt, quelle vitesse atteint la montgolfière en 5,0 s ?",
+        choix: ["1,6 × 10⁻² m·s⁻¹", "3,3 m·s⁻¹", "16 m·s⁻¹", "2,0 × 10² m·s⁻¹"],
+        bonneReponse: 2,
+        explication:
+          "Δv = (ΠA − P) × Δt / m = 1,05 × 10³ × 5,0 / 320 ≈ 16 m·s⁻¹. La correction du prof écrit aussi 1,6 × 10⁻² : c'est une coquille.",
+      },
+      {
+        type: "trou",
+        texte:
+          "En chute libre, Δv/Δt est égal à ___, l'accélération de la pesanteur.",
+        reponses: ["g", "9,81", "9.81"],
+        explication: "g = 9,81 m·s⁻² : la masse n'intervient pas.",
+      },
+      {
+        type: "trou",
+        texte:
+          "Ex. 6 : la vitesse calculée après une minute est trop grande, car on a négligé le ___ de l'air.",
+        reponses: ["frottement", "frottements"],
+        explication: "Le frottement de l'air freine la montgolfière.",
+      },
+      {
+        type: "ordre",
+        consigne:
+          "Remets dans l'ordre les étapes d'une rédaction en dynamique.",
+        elements: [
+          "Définir le système et le référentiel",
+          "Faire le bilan des forces",
+          "Écrire la 2e loi de Newton",
+          "Projeter sur l'axe du mouvement",
+          "Faire l'application numérique",
+        ],
+        explication:
+          "C'est la démarche suivie dans toute la correction du prof.",
+      },
+      {
+        type: "ouverte",
+        question:
+          "Ex. 5 : une bille tombe dans l'huile ; à partir d'une position, ses positions sont également espacées. Que peut-on dire de sa vitesse, de Δv⃗ et des forces ?",
+        corrige:
+          "La vitesse est constante, le mouvement est rectiligne uniforme, donc Δv⃗ = 0⃗. D'après le principe d'inertie, les forces se compensent : le poids P⃗ est compensé par le frottement fluide f⃗, vertical vers le haut (P⃗ + f⃗ = 0⃗). La bille a atteint sa vitesse limite.",
+      },
+      {
+        type: "ouverte",
+        question:
+          "Ex. 6 : montre que la montgolfière s'élève, en utilisant la 2e loi de Newton.",
+        corrige:
+          "Système : la montgolfière, point matériel de masse m. Forces : le poids P⃗ vers le bas et la poussée d'Archimède Π⃗A vers le haut. 2e loi en projection sur un axe vertical vers le haut : ΠA − P = m · Δv/Δt. Comme ΠA ≈ 4,19 × 10³ N > P ≈ 3,14 × 10³ N, Δv/Δt > 0 : Δv⃗ est vers le haut, la montgolfière s'élève.",
       },
     ],
   },

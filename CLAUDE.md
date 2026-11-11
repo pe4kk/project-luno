@@ -236,8 +236,15 @@ un PDF ou une photo directement dans le chat.
   `ex-…` des navigateurs (format version 3), en gardant une matière d'exemple
   si un vrai DST ou chapitre s'y rattache. Physique-Chimie : trois chapitres
   (Chap. 9, Chap. 11, les forces) avec les cinq PDF du prof, 67 flashcards,
-  55 exercices, pour l'évaluation de cours du lundi 16/11/2026 (chap. 9 et 11
-  supposés ; à confirmer). Deux erreurs relevées dans les fiches du prof et
+  55 exercices. Le mail du prof (reçu le 2026-11-11) confirme : interro de
+  cours d'1 h le lundi 16/11/2026 sur chap. 9, chap. 11 et les trois fiches
+  méthode ; DM à rendre le même jour (ex. 1 cas 2 et 3, ex. 4 de la fiche
+  d'exercices du chap. 11, à rédiger sur feuille). Quatrième chapitre « Fiche
+  d'exercices et DM » : énoncé (converti du .docx en PDF) et correction du
+  prof, exercices tirés des parties corrigées, pistes de méthode pour le DM.
+  **Ne pas rédiger le DM à sa place** : la correction du prof ne le contient
+  pas, et il doit le faire lui-même. Coquille relevée dans la correction
+  (ex. 6 : 1,6 × 10⁻² au lieu de 16 m·s⁻¹). Deux erreurs relevées dans les fiches du prof et
   signalées dans le contenu : Euler présenté comme allemand du XIXe siècle,
   et P⃗ = −R⃗N attribué à la 3e loi.
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
