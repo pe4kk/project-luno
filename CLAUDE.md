@@ -109,7 +109,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     fenêtre « Envoyer à Claude » (leçon dans Apprendre, cours d'un chapitre),
     un compte connecté écrit une ligne dans la table `demandes`
     (`lib/demandes.ts`). Une tâche planifiée (session neuve, environnement
-    `project-luno`, `CRON_TZ=Europe/Paris 7 8,13,18,20 * * *`) les traite avec
+    `project-luno`, `CRON_TZ=Europe/Paris 7 6,13,18,20 * * *`, 6 h au lieu de 8 h depuis le 2026-11-12) les traite avec
     `node scripts/demandes.mjs liste | repondre <id> <fichier.json> | erreur`.
     La réponse va dans la ligne (format `Lecon` ou `ChapitrePublie`, mêmes
     règles de rédaction et de notation que `contenu/`) : rien n'est poussé

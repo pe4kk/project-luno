@@ -8,7 +8,7 @@ import type { ChapitrePublie, ErreurNotee, Lecon } from "./types";
 
 /**
  * Demandes envoyées à Claude depuis le site (table `demandes`, voir supabase/schema.sql).
- * Une tâche planifiée les traite à 8 h 07, 13 h 07, 18 h 07 et 20 h 07 (heure de Paris)
+ * Une tâche planifiée les traite à 6 h 07, 13 h 07, 18 h 07 et 20 h 07 (heure de Paris)
  * et dépose la réponse dans la ligne : une leçon (`Lecon`) ou un chapitre
  * (`ChapitrePublie`), que le site affiche ou reprend ici.
  */
@@ -32,7 +32,7 @@ export type Demande = {
 };
 
 export const HEURES_PASSAGE = [
-  [8, 7],
+  [6, 7],
   [13, 7],
   [18, 7],
   [20, 7],

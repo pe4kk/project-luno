@@ -290,7 +290,7 @@ export function EnvoyerAClaude({
             <>
               <p className="mt-0.5 flex items-start gap-1.5 text-[13.5px] text-muted">
                 <Clock size={14} className="mt-0.5 shrink-0" />
-                Claude passe quatre fois par jour (8 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
+                Claude passe quatre fois par jour (6 h, 13 h, 18 h, 20 h). Prochain passage :{" "}
                 {prochainPassage()}.
               </p>
               <PiecesJointes
