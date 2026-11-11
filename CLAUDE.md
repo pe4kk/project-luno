@@ -117,7 +117,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Apprendre (« rédigée pour toi ») et reprend les cours prêts dans le
     chapitre (`importerPublie`, id `dem-<id>`). La clé secrète Supabase est
     un secret réseau de l'environnement (en-tête `apikey`), jamais dans le
-    dépôt.
+    dépôt. Tâche planifiée : `trig_01WDyj9wkFnJJNcpE5iopcLG` (créée le
+    2026-11-11 ; elle démarre sans dépôt attaché et doit le cloner). Dans cet
+    environnement, le proxy met la clé secrète sur toutes les requêtes vers
+    Supabase, y compris celles du navigateur de test : pour tester le site,
+    utiliser le faux serveur local (Supabase refuse une clé secrète venant
+    d'un navigateur).
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
