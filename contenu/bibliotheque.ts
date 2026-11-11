@@ -3,6 +3,7 @@ import { HGGSP_THEME_4 } from "./hggsp-theme4";
 import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
 import { PHYSIQUE_MOUVEMENT } from "./physique-mouvement";
 import { PHYSIQUE_METHODE } from "./physique-methode";
+import { MATHS_DERIVATION } from "./maths-derivation";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -18,4 +19,5 @@ export const BIBLIOTHEQUE: ChapitrePublie[] = [
   FRANCAIS_RIMBAUD,
   ...PHYSIQUE_MOUVEMENT,
   PHYSIQUE_METHODE,
+  MATHS_DERIVATION,
 ];

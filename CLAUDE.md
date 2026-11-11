@@ -193,7 +193,8 @@ un PDF ou une photo directement dans le chat.
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
   `physique-mouvement.ts`, `physique-methode.ts` (fiche « Rédiger comme ton
-  prof l'attend » et leçon guidée du même nom).
+  prof l'attend » et leçon guidée du même nom), `maths-derivation.ts`
+  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`).
 - **Dates publiées** (`contenu/evenements.ts`) : chaque entrée crée un DST
   `pub-<id>` chez tous les utilisateurs, rattaché aux chapitres publiés
   indiqués par leur `id`. Une date supprimée par l'utilisateur ne revient
@@ -324,6 +325,13 @@ un PDF ou une photo directement dans le chat.
 - 2026-11-11 : vraies flèches de vecteur et fractions superposées dans tous
   les contenus de physique ; 21 schémas explicatifs repris des cours et
   fiches méthode du prof (fiches, 21 flashcards, leçon de rédaction).
+- 2026-11-11 : Mathématiques (spécialité), séquence 2 « Dérivation », repris
+  de 15 photos (polycopié du prof, fiches d'exercices Transmath 1re,
+  démonstrations du cahier) : 25 flashcards, fiche à cinq tailles avec 5
+  schémas, 26 exercices parallèles (pas les corrigés de ses fiches), leçon
+  guidée en 9 étapes. Coquille du polycopié signalée : |x − y| ≥ ||x| − |y||
+  (écrit « > »). DST de maths au calendrier : 12/11 (1 h) et 03/12 (2 h) ;
+  on ne sait pas s'ils portent sur la dérivation.
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
   cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
   contenu), exercices variés (cinq types), matières sur deux colonnes sur
