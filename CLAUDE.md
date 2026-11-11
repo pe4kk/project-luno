@@ -90,6 +90,20 @@ fiches de révision ; le slider règle la longueur de la fiche.
     le `localStorage`, clé `luno-v1`, format version 2 (`normaliser()` reprend
     les anciens formats et les sauvegardes importées). Toute suppression passe
     par `annulation` (message « Annuler » pendant 8 s), jamais par `confirm()`.
+  - **Synchronisation** (choisie le 2026-11-11 : comptes Supabase, tout
+    synchroniser) : `lib/synchro.ts` (connexion adresse + mot de passe, une
+    ligne `donnees` par compte, envoi 1 s après chaque modification, réception
+    en direct et au retour sur l'onglet, attente hors connexion),
+    `lib/fusion.ts` (`alleger()` retire le contenu publié avant l'envoi,
+    `regonfler()` le remet ; `fusionner()` réunit deux appareils : matières par
+    nom, chapitres par `publieId`, cartes par recto, en gardant la meilleure
+    progression), `components/Synchro.tsx` (section dans « Mes données »,
+    pastille sur le bouton). Table et règles RLS : `supabase/schema.sql`.
+    L'adresse du projet et la clé publique « anon » vont dans `lib/synchro.ts`
+    (pas secrètes ; ne jamais y mettre la clé `service_role`). Sans elles, la
+    synchro est masquée. Testée contre un faux serveur local (pas d'accès à
+    Supabase depuis les sessions cloud) ; le direct (Realtime) n'a pas pu
+    être testé.
   - `lib/contenu.ts` : outils sans IA (repérage des lignes « Terme :
     définition », QCM tirés des flashcards, texte des demandes à Claude).
   - `lib/liens.ts` : l'onglet Travail garde matière, chapitre et sous-onglet
@@ -249,6 +263,7 @@ un PDF ou une photo directement dans le chat.
 | 2026-11-10 | Suppression annulable plutôt que demande de confirmation | Critique de design, « corrige tout » demandé par l'utilisateur |
 | 2026-11-11 | Grand écran : contenu élargi et panneau « Aujourd'hui » aligné | Choisi par l'utilisateur parmi 6 maquettes (A, B, C, A+B, A+C, A+B aligné) |
 | 2026-11-11 | Fond du thème sombre uni, sans halo | Le halo terracotta en haut à droite le gênait |
+| 2026-11-11 | Synchro par comptes Supabase (adresse + mot de passe, sans mail de confirmation), toutes les données | Choix de l'utilisateur ; le mot de passe évite les mails (limités par Supabase) et marche dans l'app installée sur l'iPhone |
 
 ## État d'avancement
 
@@ -307,8 +322,11 @@ un PDF ou une photo directement dans le chat.
   révision automatique avant un DST, export des DST vers le calendrier du
   téléphone, vacances scolaires, notes et moyennes, flashcards inversées,
   mode DST blanc, espace bac de français, impression PDF, hors connexion.
-- Pas encore fait : comptes, synchronisation entre appareils, tests
-  automatisés dans le dépôt.
+- 2026-11-11 : synchronisation entre appareils écrite et publiée, **en
+  attente du projet Supabase de l'utilisateur** (adresse et clé publique à
+  mettre dans `lib/synchro.ts`, « Confirm email » désactivé, `schema.sql`
+  exécuté).
+- Pas encore fait : tests automatisés dans le dépôt.
 
 ## Prochaines étapes
 
@@ -316,8 +334,10 @@ un PDF ou une photo directement dans le chat.
    contenu ») et traiter les nouveaux cours qu'il envoie.
 2. Obtenir sa confirmation que le site en ligne s'affiche bien sur son
    téléphone, et ses retours.
-3. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub
-   en attente ; comptes pour synchroniser entre appareils.
+3. Brancher Supabase dès qu'il donne l'adresse et la clé publique, puis lui
+   faire vérifier la synchro entre son téléphone et son ordinateur.
+4. À trancher avec lui : tâche planifiée qui traite seule les tickets GitHub
+   en attente.
 
 ## Préférences de l'utilisateur
 

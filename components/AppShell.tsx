@@ -23,6 +23,7 @@ import {
 } from "react";
 import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 import { PanneauJour } from "./PanneauJour";
+import { MoteurSynchro } from "./Synchro";
 
 const ONGLETS = [
   { href: "/", label: "Accueil", icone: Home },
@@ -355,6 +356,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       <SynchroBibliotheque />
+      <MoteurSynchro />
       <Annulation />
 
       {/* Barre du bas (téléphone) : fond translucide, pastille cuivrée qui glisse sous l'onglet actif */}

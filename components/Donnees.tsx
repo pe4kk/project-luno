@@ -10,6 +10,8 @@ import { EVENEMENTS } from "@/contenu/evenements";
 import { CALENDRIER_MATIERES } from "@/contenu/calendrier";
 import { todayISO } from "@/lib/dates";
 import { Bouton, Fenetre, pluriel } from "./ui";
+import { CompteSynchro, PastilleSynchro } from "./Synchro";
+import { useSynchro } from "@/lib/synchro";
 
 /** Reprend les chapitres publiés que ce navigateur n'a pas encore (ou dans une version plus ancienne). */
 export function SynchroBibliotheque() {
@@ -78,6 +80,7 @@ export function Annulation() {
 
 export function BoutonDonnees() {
   const s = useLuno();
+  const connecte = useSynchro((x) => x.session !== null);
   const [ouverte, setOuverte] = useState(false);
   const [erreur, setErreur] = useState("");
   const fichier = useRef<HTMLInputElement>(null);
@@ -131,21 +134,27 @@ export function BoutonDonnees() {
         onClick={() => setOuverte(true)}
         aria-label="Mes données"
         title="Mes données"
-        className="flex size-11 items-center justify-center rounded-[10px] border border-line bg-surface text-ink transition-colors hover:border-ink/40"
+        className="relative flex size-11 items-center justify-center rounded-[10px] border border-line bg-surface text-ink transition-colors hover:border-ink/40"
       >
         <Settings size={18} />
+        <PastilleSynchro />
       </button>
       <Fenetre
         ouverte={ouverte}
         fermer={() => setOuverte(false)}
         titre="Mes données"
       >
+        <CompteSynchro />
         <p className="text-[14.5px] leading-relaxed text-muted">
-          Tes matières, tes DST, tes tâches et ta progression sont enregistrés
-          dans ce navigateur uniquement ({pluriel(s.matieres.length, "matière")}
-          , {pluriel(s.dsts.length, "DST", "DST")},{" "}
-          {pluriel(nbCartes, "flashcard")}). Fais une sauvegarde de temps en
-          temps, et pour passer sur un autre appareil.
+          {connecte
+            ? "Sur cet appareil"
+            : "Sans compte, tes matières, tes DST, tes tâches et ta progression restent dans ce navigateur uniquement"}{" "}
+          ({pluriel(s.matieres.length, "matière")},{" "}
+          {pluriel(s.dsts.length, "DST", "DST")},{" "}
+          {pluriel(nbCartes, "flashcard")}).{" "}
+          {connecte
+            ? "Une sauvegarde reste utile de temps en temps."
+            : "Fais une sauvegarde de temps en temps."}
         </p>
         <div className="mt-4 flex flex-col gap-2">
           <Bouton onClick={exporter} disabled={vide}>
@@ -183,6 +192,11 @@ export function BoutonDonnees() {
           >
             <Trash2 size={16} /> Tout effacer
           </Bouton>
+          {connecte && (
+            <p className="text-[13px] text-muted">
+              Effacer vide aussi tes autres appareils connectés.
+            </p>
+          )}
         </div>
       </Fenetre>
     </>
