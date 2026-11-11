@@ -36,6 +36,7 @@ import {
 } from "@/components/ui";
 import { Revision, type CarteARevoir } from "./Revision";
 import { formule } from "@/components/Formule";
+import { DessinSchema } from "@/components/Schema";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
@@ -489,6 +490,14 @@ function OngletFlashcards({
                   <span className="mt-1 block text-[14px] leading-snug text-muted">
                     {formule(c.verso)}
                   </span>
+                  {c.schema && (
+                    <DessinSchema
+                      schema={c.schema}
+                      dansBouton
+                      hauteurMax={150}
+                      className="mt-3 !p-2.5"
+                    />
+                  )}
                 </motion.button>
               ))}
             </AnimatePresence>
@@ -680,7 +689,15 @@ function OngletFiche({
                         className="mt-[10px] size-1.5 shrink-0 rounded-full"
                         style={{ background: matiere.couleur }}
                       />
-                      <span>{formule(p.t)}</span>
+                      <span className="min-w-0 flex-1">
+                        {formule(p.t)}
+                        {p.schema && (
+                          <DessinSchema
+                            schema={p.schema}
+                            className="mb-2 mt-3 max-w-[520px]"
+                          />
+                        )}
+                      </span>
                     </motion.li>
                   ))}
                 </AnimatePresence>

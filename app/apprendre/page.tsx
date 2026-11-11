@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { LECONS } from "@/contenu/lecons";
 import { formule } from "@/components/Formule";
+import { DessinSchema } from "@/components/Schema";
 import type { Lecon } from "@/lib/types";
 import { demandeLecon } from "@/lib/contenu";
 import {
@@ -274,6 +275,9 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
                   <p key={t}>{formule(t)}</p>
                 ))}
               </div>
+              {e.schema && (
+                <DessinSchema schema={e.schema} className="mt-4 max-w-[520px]" />
+              )}
               {e.exemple && (
                 <div className="mt-4 rounded-xl bg-accent-soft p-4">
                   <p className="surtitre mb-1 text-accent">Exemple</p>

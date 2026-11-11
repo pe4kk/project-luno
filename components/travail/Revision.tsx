@@ -6,6 +6,7 @@ import { Check, RotateCcw, X } from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
 import { Bouton, BoutonIcone, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
+import { DessinSchema } from "@/components/Schema";
 
 export type CarteARevoir = { chapitreId: string; carteId: string };
 
@@ -150,7 +151,11 @@ export function Revision({
             animate={{ rotateY: retournee ? 180 : 0 }}
             transition={{ type: "spring", stiffness: 180, damping: 22 }}
             style={{ transformStyle: "preserve-3d" }}
-            className="relative block h-[min(320px,calc(100dvh-530px))] min-h-[160px] w-full cursor-pointer text-center"
+            className={`relative block w-full cursor-pointer text-center ${
+              carte.schema
+                ? "h-[min(400px,calc(100dvh-440px))] min-h-[300px]"
+                : "h-[min(320px,calc(100dvh-530px))] min-h-[160px]"
+            }`}
             aria-label={retournee ? "Voir le recto" : "Voir la réponse"}
           >
             <span
@@ -168,12 +173,26 @@ export function Revision({
               </span>
             </span>
             <span
-              className="flip-face absolute inset-0 flex items-center justify-center overflow-y-auto rounded-[18px] border-[1.5px] border-ink bg-surface p-6 shadow-[6px_6px_0_var(--blush)]"
+              className="flip-face absolute inset-0 flex flex-col items-center gap-4 overflow-y-auto [&>:first-child]:mt-auto [&>:last-child]:mb-auto rounded-[18px] border-[1.5px] border-ink bg-surface p-6 shadow-[6px_6px_0_var(--blush)]"
               style={{ transform: "rotateY(180deg)" }}
             >
-              <span className="text-[17px] leading-relaxed sm:text-[19px]">
+              <span
+                className={
+                  carte.schema
+                    ? "text-[15.5px] leading-snug sm:text-[18px]"
+                    : "text-[17px] leading-relaxed sm:text-[19px]"
+                }
+              >
                 {formule(carte.verso)}
               </span>
+              {carte.schema && (
+                <DessinSchema
+                  schema={carte.schema}
+                  dansBouton
+                  hauteurMax={110}
+                  className="w-full max-w-[400px] shrink-0 !px-3 !py-2.5"
+                />
+              )}
             </span>
           </motion.button>
         </motion.div>

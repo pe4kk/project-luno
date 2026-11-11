@@ -10,6 +10,7 @@ import type {
   EvenementPublie,
   Flashcard,
   Matiere,
+  Schema,
   Tache,
 } from "./types";
 import { dansJours, todayISO } from "./dates";
@@ -72,7 +73,7 @@ const ANCIENS_EXEMPLES = new Set([
 const estExemple = (id: string) =>
   id.startsWith(EX) || ANCIENS_EXEMPLES.has(id);
 
-const nouvelleCarte = (c: { recto: string; verso: string }): Flashcard => ({
+const nouvelleCarte = (c: { recto: string; verso: string; schema?: Schema }): Flashcard => ({
   ...c,
   id: uid(),
   niveau: 0,
@@ -463,7 +464,7 @@ export const useLuno = create<Etat>()(
               const k = p.flashcards.find(
                 (x) => x.recto.toLowerCase() === f.recto.toLowerCase(),
               );
-              return k && k.verso !== f.verso ? { ...f, verso: k.verso } : f;
+              return k ? { ...f, verso: k.verso, schema: k.schema } : f;
             }),
             ...p.flashcards
               .filter((k) => !deja.has(k.recto.toLowerCase()))

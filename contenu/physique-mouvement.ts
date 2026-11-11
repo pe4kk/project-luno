@@ -1,4 +1,26 @@
 import type { ChapitrePublie } from "@/lib/types";
+import {
+  ARCHIMEDE,
+  CARACTERISER,
+  CONSTRUCTION_DELTA_V,
+  COORDONNEES,
+  COULOMB,
+  DEUXIEME_LOI,
+  ENCADREMENT,
+  EULER,
+  FROTTEMENT,
+  FUSEE,
+  GRAVITATION,
+  REACTION,
+  RELATIVITE,
+  RESSORT,
+  SKIEUR,
+  TENSION,
+  TRAJECTOIRES,
+  VARIATION_RECTILIGNE,
+  VITESSE_INSTANTANEE,
+  VITESSE_MOYENNE,
+} from "./schemas-physique";
 
 /**
  * Physique-Chimie Première (spécialité) : mouvement et interactions.
@@ -15,7 +37,7 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 2,
+    version: 3,
     matiere,
     titre: "Chap. 9 · Décrire un mouvement",
     documents: [
@@ -68,7 +90,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Origine au centre du Soleil, axes dirigés vers trois étoiles lointaines supposées fixes. Pour le système solaire : planètes, comètes.",
       },
       {
-        recto: "Relativité du mouvement",
+        recto: "Relativité du mouvement", schema: RELATIVITE,
         verso:
           "Le mouvement dépend du référentiel. Une balle lâchée dans un train tombe verticalement pour un passager, mais décrit une courbe vue depuis le quai.",
       },
@@ -83,7 +105,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Courbe orientée formée par l'ensemble des positions successives du point au cours du mouvement ; elle indique le sens et la direction du mouvement.",
       },
       {
-        recto: "Les trois types de trajectoires",
+        recto: "Les trois types de trajectoires", schema: TRAJECTOIRES,
         verso:
           "Rectiligne (une droite), circulaire (un cercle), curviligne (une courbe quelconque).",
       },
@@ -93,12 +115,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Le vecteur MM'⃗ qui relie deux positions successives M et M', orienté dans le sens du mouvement.",
       },
       {
-        recto: "Vecteur vitesse moyenne",
+        recto: "Vecteur vitesse moyenne", schema: VITESSE_MOYENNE,
         verso:
           "v⃗ = {{MM'⃗ // Δt}}, avec MM'⃗ le vecteur déplacement et Δt la durée du parcours de M à M'.",
       },
       {
-        recto: "Vecteur vitesse instantanée (cours, chap. 9)",
+        recto: "Vecteur vitesse instantanée (cours, chap. 9)", schema: VITESSE_INSTANTANEE,
         verso:
           "v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}, avec la durée en s et le déplacement en m.",
       },
@@ -122,7 +144,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "Trajectoire droite et vecteur vitesse qui ne varie pas.",
       },
       {
-        recto: "Mouvement rectiligne non uniforme",
+        recto: "Mouvement rectiligne non uniforme", schema: CARACTERISER,
         verso:
           "Trajectoire droite et vecteur vitesse qui varie : accéléré si la vitesse augmente (v₃ > v₁), décéléré si elle diminue (v₃ < v₁).",
       },
@@ -132,12 +154,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "La vitesse est le taux de variation de la position ; en mathématiques, on parle de dérivée de la position.",
       },
       {
-        recto: "Vecteur vitesse par encadrement (fiche Euler)",
+        recto: "Vecteur vitesse par encadrement (fiche Euler)", schema: ENCADREMENT,
         verso:
           "v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}} : le vecteur vitesse en M₂ est parallèle au segment [M₁M₃].",
       },
       {
-        recto: "Méthode d'Euler",
+        recto: "Méthode d'Euler", schema: EULER,
         verso:
           "vₓᵢ = {{xᵢ₊₁ − xᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} et vᵧᵢ = {{yᵢ₊₁ − yᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} : on calcule les coordonnées des vecteurs vitesse à partir des positions.",
       },
@@ -184,7 +206,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Le mouvement dépend du référentiel : une balle lâchée dans un train tombe tout droit pour un passager, mais décrit une courbe vue du quai.",
-              n: 2,
+              n: 2, schema: RELATIVITE,
             },
             {
               t: "Le référentiel terrestre convient aux mouvements plus courts qu'une rotation de la Terre sur elle-même.",
@@ -205,7 +227,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Elle peut être rectiligne (droite), circulaire (cercle) ou curviligne (courbe quelconque).",
-              n: 2,
+              n: 2, schema: TRAJECTOIRES,
             },
             {
               t: "Une chronophotographie montre les positions prises à intervalles de temps égaux : c'est l'outil de base des exercices.",
@@ -213,7 +235,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Une position est repérée par ses coordonnées dans un repère gradué à une échelle adaptée, et par l'instant t correspondant.",
-              n: 4,
+              n: 4, schema: COORDONNEES,
             },
           ],
         },
@@ -222,7 +244,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           points: [
             {
               t: "Vitesse moyenne : v⃗ = {{MM'⃗ // Δt}}. Vitesse instantanée en Mᵢ : v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}.",
-              n: 1,
+              n: 1, schema: VITESSE_MOYENNE,
             },
             {
               t: "Le vecteur vitesse est toujours tangent à la trajectoire.",
@@ -230,7 +252,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Ses caractéristiques : origine au point Mᵢ, direction du segment [MᵢMᵢ₊₁], sens du mouvement, longueur proportionnelle à la vitesse selon l'échelle.",
-              n: 2,
+              n: 2, schema: VITESSE_INSTANTANEE,
             },
             {
               t: "Attention : le chap. 11 et la fiche Euler calculent la vitesse en Mᵢ par encadrement, avec Mᵢ₋₁ et Mᵢ₊₁. Utilise la formule demandée dans l'énoncé.",
@@ -259,7 +281,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Sur une chronophotographie : points également espacés, uniforme ; de plus en plus espacés, accéléré ; de plus en plus serrés, décéléré.",
-              n: 2,
+              n: 2, schema: CARACTERISER,
             },
           ],
         },
@@ -276,7 +298,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Coordonnées : vₓᵢ = {{xᵢ₊₁ − xᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} et vᵧᵢ = {{yᵢ₊₁ − yᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}}.",
-              n: 2,
+              n: 2, schema: EULER,
             },
             {
               t: "On y arrive avec la relation de Chasles : M₁M₃⃗ = OM₃⃗ − OM₁⃗.",
@@ -491,7 +513,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 2,
+    version: 3,
     matiere,
     titre: "Chap. 11 · Mouvement d'un système et lois de Newton",
     documents: [
@@ -537,7 +559,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "Uniquement dans un référentiel galiléen.",
       },
       {
-        recto: "Vecteur vitesse par encadrement (chap. 11)",
+        recto: "Vecteur vitesse par encadrement (chap. 11)", schema: ENCADREMENT,
         verso:
           "v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}, avec Δt l'intervalle de temps entre deux positions.",
       },
@@ -551,7 +573,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "Δv⃗ = 0⃗ : le vecteur vitesse ne change pas.",
       },
       {
-        recto: "Δv⃗ dans un mouvement rectiligne accéléré ou ralenti",
+        recto: "Δv⃗ dans un mouvement rectiligne accéléré ou ralenti", schema: VARIATION_RECTILIGNE,
         verso:
           "Accéléré : Δv⃗ dans le sens du mouvement. Ralenti : Δv⃗ dans le sens opposé.",
       },
@@ -566,7 +588,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Par une force, représentée par un vecteur : origine au point du système, direction et sens de l'action, longueur proportionnelle à la valeur en newtons (N).",
       },
       {
-        recto: "Résultante des forces",
+        recto: "Résultante des forces", schema: SKIEUR,
         verso:
           "La somme vectorielle ΣF⃗ de toutes les forces qui s'exercent sur le système.",
       },
@@ -575,7 +597,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.",
       },
       {
-        recto: "Conséquence de la 2e loi sur les directions",
+        recto: "Conséquence de la 2e loi sur les directions", schema: DEUXIEME_LOI,
         verso: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.",
       },
       {
@@ -617,12 +639,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "À toute action d'un système A sur un système B correspond une réaction égale et opposée de B sur A : F⃗A→B = −F⃗B→A.",
       },
       {
-        recto: "Propulsion d'une fusée",
+        recto: "Propulsion d'une fusée", schema: FUSEE,
         verso:
           "La fusée expulse des gaz vers le bas ; d'après la 3e loi, les gaz exercent sur la fusée une force vers le haut, F⃗gaz/fusée, qui la fait décoller.",
       },
       {
-        recto: "Tracer Δv⃗₃ (fiche méthode)",
+        recto: "Tracer Δv⃗₃ (fiche méthode)", schema: CONSTRUCTION_DELTA_V,
         verso:
           "Tracer v⃗₂ en M₂ et v⃗₄ en M₄ ; reporter v⃗₄ à partir de M₃ ; ajouter −v⃗₂ au bout ; relier M₃ à l'extrémité obtenue : c'est Δv⃗₃.",
       },
@@ -665,16 +687,16 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             { t: "Δv⃗ᵢ = v⃗ᵢ₊₁ − v⃗ᵢ₋₁.", n: 1 },
             {
               t: "Rectiligne uniforme : Δv⃗ = 0⃗. Accéléré : Δv⃗ dans le sens du mouvement. Ralenti : Δv⃗ dans le sens opposé.",
-              n: 1,
+              n: 1, schema: VARIATION_RECTILIGNE,
             },
             {
               t: "Circulaire uniforme : Δv⃗ dirigé vers le centre, car la direction de la vitesse change.",
               n: 1,
             },
-            { t: "Vitesse par encadrement : v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}.", n: 2 },
+            { t: "Vitesse par encadrement : v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}.", n: 2, schema: ENCADREMENT },
             {
               t: "Méthode pour Δv⃗₃ : tracer v⃗₂ et v⃗₄, reporter v⃗₄ à partir de M₃, ajouter −v⃗₂, puis relier M₃ à l'extrémité.",
-              n: 2,
+              n: 2, schema: CONSTRUCTION_DELTA_V,
             },
             {
               t: "Dans la fiche méthode (Lune, mouvement uniforme), tous les vecteurs vitesse ont la même longueur : 2,0 cm.",
@@ -695,7 +717,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Exemple du cours : un skieur tiré par un téléski subit la tension T⃗, la réaction R⃗ et le poids P⃗.",
-              n: 4,
+              n: 4, schema: SKIEUR,
             },
           ],
         },
@@ -703,7 +725,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "2e loi de Newton",
           points: [
             { t: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.", n: 1 },
-            { t: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.", n: 1 },
+            { t: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.", n: 1, schema: DEUXIEME_LOI },
             {
               t: "Un système ne peut accélérer ou changer de direction que si des forces s'exercent sur lui.",
               n: 2,
@@ -753,7 +775,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Exemple : la fusée pousse les gaz vers le bas, les gaz poussent la fusée vers le haut.",
-              n: 2,
+              n: 2, schema: FUSEE,
             },
             {
               t: "Les deux forces s'exercent sur deux systèmes différents (l'une sur A, l'autre sur B).",
@@ -973,7 +995,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 3,
+    version: 4,
     matiere,
     titre: "Les forces en spé PC",
     documents: [
@@ -991,7 +1013,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       },
       { recto: "Unité de force", verso: "Le newton (N)." },
       {
-        recto: "Réaction normale R⃗N d'un support",
+        recto: "Réaction normale R⃗N d'un support", schema: REACTION,
         verso:
           "Force exercée par le support sur l'objet ; pour un support horizontal, verticale vers le haut.",
       },
@@ -1000,11 +1022,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "P⃗ + R⃗N = 0⃗, donc R⃗N = −P⃗ : les deux forces se compensent.",
       },
       {
-        recto: "Tension T⃗ d'un fil",
+        recto: "Tension T⃗ d'un fil", schema: TENSION,
         verso: "Force dirigée le long du fil, vers le point d'attache.",
       },
       {
-        recto: "Frottement fluide f⃗",
+        recto: "Frottement fluide f⃗", schema: FROTTEMENT,
         verso:
           "Force exercée par un fluide (air, eau) sur un objet en mouvement, opposée au mouvement : dans une chute, f⃗ est vers le haut.",
       },
@@ -1018,12 +1040,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Dans une chute avec frottements, quand le frottement compense le poids, la vitesse devient constante : c'est la vitesse limite.",
       },
       {
-        recto: "Force de rappel d'un ressort",
+        recto: "Force de rappel d'un ressort", schema: RESSORT,
         verso:
           "Loi de Hooke : F⃗r = −k · Δl⃗, avec k la constante de raideur et Δl⃗ l'allongement du ressort.",
       },
       {
-        recto: "Force de gravitation F⃗g",
+        recto: "Force de gravitation F⃗g", schema: GRAVITATION,
         verso:
           "Force à distance entre deux corps qui ont une masse, dirigée vers le corps attracteur. On l'utilise loin de la surface de la Terre : par exemple pour la Lune.",
       },
@@ -1037,7 +1059,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "g = 9,81 N/kg (ou m·s⁻²), la valeur qu'utilise ton prof.",
       },
       {
-        recto: "Poussée d'Archimède Π⃗A",
+        recto: "Poussée d'Archimède Π⃗A", schema: ARCHIMEDE,
         verso:
           "Force verticale, vers le haut, exercée par un fluide sur un objet immergé : ΠA = ρfluide × Vimmergé × g.",
       },
@@ -1047,7 +1069,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Force à distance qui s'exerce uniquement entre deux corps portant des charges électriques.",
       },
       {
-        recto: "Charges électriques : attraction ou répulsion ?",
+        recto: "Charges électriques : attraction ou répulsion ?", schema: COULOMB,
         verso:
           "Deux charges de signes opposés s'attirent ; deux charges de même signe se repoussent.",
       },
@@ -1064,15 +1086,15 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           points: [
             {
               t: "Réaction normale R⃗N : exercée par un support ; verticale vers le haut pour un support horizontal.",
-              n: 1,
+              n: 1, schema: REACTION,
             },
             {
               t: "Tension T⃗ : le long du fil, vers le point d'attache.",
-              n: 1,
+              n: 1, schema: TENSION,
             },
             {
               t: "Frottement fluide f⃗ : opposé au mouvement dans l'air ou l'eau.",
-              n: 1,
+              n: 1, schema: FROTTEMENT,
             },
             {
               t: "D'après ta fiche, la force de rappel d'un ressort est très marginale en Première et ne tombera pas en DST.",
@@ -1080,7 +1102,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Force de rappel d'un ressort (loi de Hooke) : F⃗r = −k · Δl⃗, k constante de raideur, Δl⃗ allongement.",
-              n: 4,
+              n: 4, schema: RESSORT,
             },
           ],
         },
@@ -1093,15 +1115,15 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             },
             {
               t: "Gravitation F⃗g : dirigée vers le corps attracteur ; on l'utilise loin de la surface, pour la Lune ou un satellite.",
-              n: 1,
+              n: 1, schema: GRAVITATION,
             },
             {
               t: "Poussée d'Archimède Π⃗A : verticale, vers le haut, exercée par un fluide sur un objet immergé.",
-              n: 1,
+              n: 1, schema: ARCHIMEDE,
             },
             {
               t: "Force de Coulomb F⃗e : uniquement entre corps chargés ; signes opposés, attraction ; même signe, répulsion.",
-              n: 1,
+              n: 1, schema: COULOMB,
             },
             {
               t: "À la surface d'une planète, le poids est assimilé à la force de gravitation : P⃗ ≈ F⃗g.",

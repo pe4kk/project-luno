@@ -142,7 +142,18 @@ un PDF ou une photo directement dans le chat.
   les réponses acceptées d'un `trou`. Tout nouvel affichage de contenu doit
   passer par `formule()`, et tout texte brut (aria-label…) par `texteBrut()`.
   Les unités restent en ligne (m·s⁻¹, N/kg). Une nouvelle `version` met à jour
-  le verso des flashcards déjà reprises, en gardant la progression. **PDF du prof** : les copier dans
+  le verso et le schéma des flashcards déjà reprises, en gardant la progression.
+  **Schémas** (demandé le 2026-11-11 : il les trouve essentiels pour
+  comprendre) : redessiner les schémas des PDF du prof, minimalistes, en
+  données (`Schema` dans `lib/types.ts`, dessiné par `components/Schema.tsx`) :
+  `fleche`, `point` (rond ou croix de chronophotographie), `trait` (courbe
+  lissée), `cercle`, `rect`, `texte` (`main: true` = annotation manuscrite),
+  `axes`, `sol`, `ressort`. On les met sur un point de fiche (`schema`), une
+  flashcard (affiché avec la réponse) ou une étape de leçon. Couleurs :
+  vitesses en `encre`, Δv⃗ en `accent`, forces en `cuivre`, constructions en
+  `doux`. Ceux de physique sont dans `contenu/schemas-physique.ts` (21
+  schémas). Toujours les vérifier en capture, clair et sombre, ordinateur et
+  téléphone : les textes manuscrits débordent vite. **PDF du prof** : les copier dans
   `public/documents/<matière>/` et les déclarer dans `documents` du chapitre ;
   ils sont publics (le dépôt l'est). Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
@@ -279,7 +290,8 @@ un PDF ou une photo directement dans le chat.
   signalées dans le contenu : Euler présenté comme allemand du XIXe siècle,
   et P⃗ = −R⃗N attribué à la 3e loi.
 - 2026-11-11 : vraies flèches de vecteur et fractions superposées dans tous
-  les contenus de physique (versions augmentées).
+  les contenus de physique ; 21 schémas explicatifs repris des cours et
+  fiches méthode du prof (fiches, 21 flashcards, leçon de rédaction).
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
   cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
   contenu), exercices variés (cinq types), matières sur deux colonnes sur

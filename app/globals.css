@@ -17,6 +17,8 @@
   --ok: #2b7a67;
   --bad: #b83a30;
   --mix-fg: #000000;
+  /* Schémas : forces en cuivre, distinctes des variations de vitesse (accent). */
+  --schema-force: #c07a58;
   --shadow-rgb: 185 122 92;
   color-scheme: light;
 }
@@ -38,6 +40,7 @@
   --ok: #5fc0a8;
   --bad: #ef8a78;
   --mix-fg: #ffffff;
+  --schema-force: #e9b8ab;
   --shadow-rgb: 0 0 0;
   color-scheme: dark;
 }
@@ -189,6 +192,18 @@ input[type="range"].luno-range::-moz-range-thumb {
 }
 .vec-fleche polyline {
   stroke-width: 7.5;
+}
+
+/* Schéma explicatif (components/Schema.tsx) : un cadre discret, couleur de fond du site. */
+.schema {
+  margin: 0;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg);
+}
+.schema svg {
+  margin-inline: auto;
 }
 
 /* Indice écrit « v_f » dans les contenus. */

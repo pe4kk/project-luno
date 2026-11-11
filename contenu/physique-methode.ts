@@ -1,4 +1,5 @@
 import type { ChapitrePublie, Lecon } from "@/lib/types";
+import { HOMME_CANON } from "./schemas-physique";
 
 /**
  * Physique-Chimie : la façon de rédiger qu'attend le professeur, relevée dans sa
@@ -10,7 +11,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 2,
+  version: 3,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
   flashcards: [
@@ -25,7 +26,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Système = {…} considéré comme un point matériel de masse m ; les valeurs de l'énoncé avec leurs unités ; le bilan des forces.",
     },
     {
-      recto: "Bilan des forces",
+      recto: "Bilan des forces", schema: HOMME_CANON,
       verso:
         "Chaque force avec son nom, sa direction et son sens : « P⃗ = m·g⃗, vertical, vers le bas ».",
     },
@@ -119,7 +120,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
           },
           {
             t: "Bilan des forces : chaque force avec direction et sens, par exemple « P⃗ = m·g⃗, vertical, vers le bas ».",
-            n: 2,
+            n: 2, schema: HOMME_CANON,
           },
           {
             t: "Pense aussi au référentiel (terrestre, supposé galiléen) : les lois de Newton n'y sont valables que s'il est galiléen.",
@@ -416,6 +417,7 @@ export const LECON_REDACTION: Lecon = {
     },
     {
       titre: "Les données et le bilan des forces",
+      schema: HOMME_CANON,
       texte: [
         "Ensuite, un bloc « Données : » qui pose le cadre. On y écrit le système, considéré comme un point matériel de masse m, les valeurs de l'énoncé avec leurs unités, et le bilan des forces.",
         "Dans le bilan, chaque force a un nom, une direction et un sens.",

@@ -17,10 +17,45 @@ export type Flashcard = {
   intervalle: number;
   /** AAAA-MM-JJ : la carte est à revoir dès que cette date est atteinte. */
   echeance: string;
+  /** Schéma affiché avec la réponse. */
+  schema?: Schema;
 };
 
-/** Un point de fiche. `n` est la plus petite taille (1 à 5) à laquelle il apparaît. */
-export type PointFiche = { t: string; n: number };
+/** Coordonnées dans un schéma : x vers la droite, y vers le bas. */
+export type PointSchema = [number, number];
+
+/** Couleur d'un élément de schéma, adaptée aux deux thèmes. */
+export type TonSchema = "encre" | "accent" | "cuivre" | "doux" | "ok";
+
+/**
+ * Élément d'un schéma (voir `components/Schema.tsx`). Les noms (`nom`, `t`) suivent la
+ * notation des contenus : « v⃗₂ » dessine une flèche au-dessus de v, « v_f » un indice.
+ */
+export type ElementSchema =
+  /** Vecteur : flèche de `de` à `a`, avec son nom placé en `pos` (sinon à côté du milieu). */
+  | { f: "fleche"; de: PointSchema; a: PointSchema; ton?: TonSchema; nom?: string; pos?: PointSchema; pointille?: boolean }
+  /** Position : petit rond, ou croix comme sur une chronophotographie. */
+  | { f: "point"; en: PointSchema; nom?: string; pos?: PointSchema; ton?: TonSchema; forme?: "rond" | "croix" }
+  /** Ligne brisée, ou courbe lissée passant par les points (trajectoire). */
+  | { f: "trait"; points: PointSchema[]; ton?: TonSchema; courbe?: boolean; pointille?: boolean; ferme?: boolean; plein?: boolean; fin?: boolean }
+  | { f: "cercle"; centre: PointSchema; r: number; ton?: TonSchema; plein?: boolean; pointille?: boolean }
+  | { f: "rect"; de: PointSchema; a: PointSchema; ton?: TonSchema; plein?: boolean; arrondi?: number }
+  /** Texte ; `main` l'écrit à la main (Caveat), comme les annotations du prof. */
+  | { f: "texte"; en: PointSchema; t: string; ton?: TonSchema; taille?: number; ancre?: "start" | "middle" | "end"; main?: boolean }
+  /** Repère : axes de longueurs `x` et `y` depuis l'origine (vers la droite et vers le haut). */
+  | { f: "axes"; origine: PointSchema; x: number; y: number; noms?: [string, string]; o?: string }
+  /** Sol ou support hachuré. */
+  | { f: "sol"; de: PointSchema; a: PointSchema }
+  | { f: "ressort"; de: PointSchema; a: PointSchema; spires?: number; ton?: TonSchema };
+
+/** Schéma explicatif dessiné en SVG ; `l` × `h` est la taille de la zone de dessin. */
+export type Schema = { l: number; h: number; elements: ElementSchema[]; legende?: string };
+
+/**
+ * Un point de fiche. `n` est la plus petite taille (1 à 5) à laquelle il apparaît.
+ * Un `schema` s'affiche sous le texte du point.
+ */
+export type PointFiche = { t: string; n: number; schema?: Schema };
 
 export type Fiche = {
   sections: { titre: string; points: PointFiche[] }[];
@@ -123,7 +158,7 @@ export type ChapitrePublie = {
   titre: string;
   cours?: string;
   documents?: Document[];
-  flashcards: { recto: string; verso: string }[];
+  flashcards: { recto: string; verso: string; schema?: Schema }[];
   fiche: Fiche | null;
   exercices: Exercice[];
 };
@@ -157,6 +192,7 @@ export type Lecon = {
     titre: string;
     texte: string[];
     exemple?: string;
+    schema?: Schema;
     question?: { q: string; r: string };
   }[];
 };
