@@ -11,4 +11,7 @@ import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
  * exercices. Pour corriger un chapitre déjà publié, modifier son contenu et
  * augmenter `version`. Format : voir `exemple.ts`.
  */
-export const BIBLIOTHEQUE: ChapitrePublie[] = [...HGGSP_THEME_4, FRANCAIS_RIMBAUD];
+export const BIBLIOTHEQUE: ChapitrePublie[] = [
+  ...HGGSP_THEME_4,
+  FRANCAIS_RIMBAUD,
+];

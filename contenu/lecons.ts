@@ -17,7 +17,8 @@ export const LECONS: Lecon[] = [
           "Une plante verte ne mange pas : elle fabrique elle-même sa matière organique. On dit qu'elle est autotrophe.",
           "Pour cela, elle utilise l'énergie de la lumière pour transformer du dioxyde de carbone (CO₂) et de l'eau (H₂O) en glucose, un sucre. Cette transformation s'appelle la photosynthèse.",
         ],
-        exemple: "Un arbre de plusieurs tonnes a construit l'essentiel de sa masse à partir du CO₂ de l'air, pas à partir de la terre.",
+        exemple:
+          "Un arbre de plusieurs tonnes a construit l'essentiel de sa masse à partir du CO₂ de l'air, pas à partir de la terre.",
         question: {
           q: "D'où vient le carbone qui compose le bois d'un arbre ?",
           r: "Du dioxyde de carbone de l'air, fixé par la photosynthèse.",

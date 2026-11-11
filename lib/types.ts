@@ -28,6 +28,7 @@ export type Fiche = {
 };
 
 export type Qcm = {
+  type?: "qcm";
   /** Petite consigne affichée au-dessus de la question. */
   consigne?: string;
   question: string;
@@ -38,6 +39,40 @@ export type Qcm = {
   carteId?: string;
 };
 
+export type VraiFaux = {
+  type: "vraiFaux";
+  affirmation: string;
+  vrai: boolean;
+  explication: string;
+  carteId?: string;
+};
+
+/** Texte à trous : `texte` contient « ___ » à l'endroit du mot à trouver. */
+export type Trou = {
+  type: "trou";
+  texte: string;
+  /** Réponses acceptées (casse, accents et petites fautes de frappe sont tolérés). */
+  reponses: string[];
+  explication: string;
+};
+
+/** Éléments à remettre dans l'ordre : `elements` est donné dans le bon ordre. */
+export type Ordre = {
+  type: "ordre";
+  consigne: string;
+  elements: string[];
+  explication: string;
+};
+
+/** Question ouverte : l'élève répond de tête, lit le corrigé et s'évalue. */
+export type Ouverte = {
+  type: "ouverte";
+  question: string;
+  corrige: string;
+};
+
+export type Exercice = Qcm | VraiFaux | Trou | Ordre | Ouverte;
+
 export type Chapitre = {
   id: string;
   matiereId: string;
@@ -46,8 +81,8 @@ export type Chapitre = {
   flashcards: Flashcard[];
   fiche: Fiche | null;
   tailleFiche: number;
-  /** Exercices rédigés (sinon, les QCM sont tirés des flashcards). */
-  exercices: Qcm[];
+  /** Exercices rédigés (sinon, ils sont tirés des flashcards). */
+  exercices: Exercice[];
   /** Identifiant du chapitre publié dans `contenu/bibliotheque.ts`, s'il en vient. */
   publieId?: string;
 };
@@ -78,7 +113,7 @@ export type ChapitrePublie = {
   cours?: string;
   flashcards: { recto: string; verso: string }[];
   fiche: Fiche | null;
-  exercices: Qcm[];
+  exercices: Exercice[];
 };
 
 export type Lecon = {

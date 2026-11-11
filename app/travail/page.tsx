@@ -198,7 +198,7 @@ function Travail() {
                 }
               />
             ) : (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
                 {matieres.map((m, i) => {
                   const chaps = chapitres.filter((c) => c.matiereId === m.id);
                   const nbCartes = chaps.reduce((n, c) => n + c.flashcards.length, 0);
@@ -213,22 +213,24 @@ function Travail() {
                     >
                       <Link
                         href={lienTravail({ m: m.id })}
-                        className="relative block overflow-hidden rounded-[18px] p-6 shadow-card transition-shadow hover:shadow-pop"
+                        className="relative block h-full overflow-hidden rounded-[18px] p-4 shadow-card transition-shadow hover:shadow-pop sm:p-6"
                         style={{ background: pastel(m.couleur, 15) }}
                       >
                         <span
-                          className="absolute -right-8 -top-8 size-32 rounded-full opacity-25"
+                          className="absolute -right-8 -top-8 size-24 rounded-full opacity-25 sm:size-32"
                           style={{ background: m.couleur }}
                         />
-                        <span className="relative block text-[38px] leading-none">{m.emoji}</span>
+                        <span className="relative block text-[30px] leading-none sm:text-[38px]">{m.emoji}</span>
                         <span
-                          className="relative mt-10 block font-display text-[24px] leading-tight"
+                          className="relative mt-6 block hyphens-auto break-words font-display text-[18px] leading-tight sm:mt-10 sm:text-[24px]"
                           style={{ color: encre(m.couleur) }}
                         >
                           {m.nom}
                         </span>
-                        <span className="relative mt-1 block text-[13.5px] text-ink/70">
-                          {pluriel(chaps.length, "chapitre")} · {pluriel(nbCartes, "flashcard")}
+                        <span className="relative mt-1 block text-[12.5px] text-ink/70 sm:text-[13.5px]">
+                          {pluriel(chaps.length, "chapitre")}
+                          <span className="hidden sm:inline"> · {pluriel(nbCartes, "flashcard")}</span>
+                          <span className="block sm:hidden">{pluriel(nbCartes, "flashcard")}</span>
                         </span>
                       </Link>
                     </motion.div>

@@ -3,19 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, RotateCcw, Target, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Eye, RotateCcw, Target, X } from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
-import { MIN_CARTES_QCM, maxQuestions, peutSExercer, preparerQcm } from "@/lib/contenu";
-import type { Qcm } from "@/lib/types";
-import { Bouton, BoutonIcone, Carte, EnTete, EtatVide, pluriel } from "@/components/ui";
+import {
+  MIN_CARTES_QCM,
+  maxQuestions,
+  melangerAutrement,
+  peutSExercer,
+  preparerExercices,
+  reponseJuste,
+} from "@/lib/contenu";
+import type { Exercice, Ordre, Ouverte, Qcm, Trou, VraiFaux } from "@/lib/types";
+import { Bouton, BoutonIcone, Carte, EnTete, EtatVide, classeSaisie, pluriel } from "@/components/ui";
 
 export default function Exercices() {
   const { matieres, chapitres, noterFlashcard } = useLuno();
   const [chapitreId, setChapitreId] = useState<string | null>(null);
   const [nombre, setNombre] = useState(5);
-  const [questions, setQuestions] = useState<Qcm[] | null>(null);
+  const [questions, setQuestions] = useState<Exercice[] | null>(null);
   const [index, setIndex] = useState(0);
-  const [choisi, setChoisi] = useState<number | null>(null);
+  const [resultat, setResultat] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
 
   const disponibles = chapitres.filter(peutSExercer);
@@ -26,16 +33,24 @@ export default function Exercices() {
 
   const lancer = () => {
     if (!chapitre) return;
-    setQuestions(preparerQcm(chapitre, n));
+    setQuestions(preparerExercices(chapitre, n));
     setIndex(0);
     setScore(0);
-    setChoisi(null);
+    setResultat(null);
   };
   const quitter = () => setQuestions(null);
 
   // Séance en cours
   if (questions && chapitre && index < questions.length) {
     const q = questions[index];
+    const repondre = (juste: boolean) => {
+      if (resultat !== null) return;
+      setResultat(juste);
+      if (juste) setScore((x) => x + 1);
+      // Une erreur remet la flashcard d'origine dans les cartes à revoir.
+      else if ("carteId" in q && q.carteId) noterFlashcard(chapitre.id, q.carteId, false);
+    };
+    const explication = "explication" in q ? q.explication : "";
     return (
       <div className="mx-auto max-w-[640px]">
         <div className="mb-4 flex items-center gap-3">
@@ -57,45 +72,9 @@ export default function Exercices() {
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="surtitre text-muted">{q.consigne ?? chapitre.titre}</p>
-            <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.question}</h2>
-            <div className="mt-5 flex flex-col gap-2.5" role="group" aria-label="Réponses">
-              {q.choix.map((c, i) => {
-                const bon = i === q.bonneReponse;
-                const etat = choisi === null ? "neutre" : bon ? "bon" : i === choisi ? "faux" : "eteint";
-                return (
-                  <motion.button
-                    key={c}
-                    disabled={choisi !== null}
-                    whileHover={choisi === null ? { x: 4 } : undefined}
-                    animate={etat === "faux" ? { x: [0, -8, 8, -5, 5, 0] } : etat === "bon" ? { scale: [1, 1.03, 1] } : {}}
-                    transition={{ duration: 0.4 }}
-                    onClick={() => {
-                      setChoisi(i);
-                      if (bon) setScore((s) => s + 1);
-                      // Une erreur remet la flashcard d'origine dans les cartes à revoir.
-                      else if (q.carteId) noterFlashcard(chapitre.id, q.carteId, false);
-                    }}
-                    className={`flex min-h-[52px] items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left text-[16px] font-medium transition-colors ${
-                      etat === "bon"
-                        ? "border-ok bg-ok/10 text-ok"
-                        : etat === "faux"
-                          ? "border-bad bg-bad/10 text-bad"
-                          : etat === "eteint"
-                            ? "border-line bg-surface text-muted"
-                            : "border-line bg-surface hover:border-accent"
-                    }`}
-                  >
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/5 text-[13px] font-semibold">
-                      {etat === "bon" ? <Check size={15} /> : etat === "faux" ? <X size={15} /> : "ABCD"[i]}
-                    </span>
-                    {c}
-                  </motion.button>
-                );
-              })}
-            </div>
+            <Enonce q={q} titre={chapitre.titre} resultat={resultat} repondre={repondre} />
             <AnimatePresence>
-              {choisi !== null && (
+              {resultat !== null && (
                 <motion.div
                   id="correction"
                   role="status"
@@ -107,13 +86,21 @@ export default function Exercices() {
                   className="mt-5 flex scroll-mb-28 flex-wrap items-center justify-between gap-3 rounded-2xl bg-ink/5 p-4"
                 >
                   <p className="min-w-0 flex-1 text-[14.5px]">
-                    <strong>{choisi === q.bonneReponse ? "Bonne réponse." : "Pas tout à fait."}</strong>{" "}
-                    {q.explication}
+                    <strong>
+                      {q.type === "ouverte"
+                        ? resultat
+                          ? "C'est noté."
+                          : "À retravailler."
+                        : resultat
+                          ? "Bonne réponse."
+                          : "Pas tout à fait."}
+                    </strong>{" "}
+                    {explication}
                   </p>
                   <Bouton
                     autoFocus
                     onClick={() => {
-                      setChoisi(null);
+                      setResultat(null);
                       setIndex((i) => i + 1);
                     }}
                   >
@@ -164,7 +151,7 @@ export default function Exercices() {
           {pct === 1 ? "Sans faute !" : pct >= 0.7 ? "Bien joué" : pct >= 0.5 ? "Pas mal" : "À retravailler"}
         </h2>
         <p className="mt-1 text-[15px] text-muted">{chapitre?.titre}</p>
-        {score < questions.length && questions.some((q) => q.carteId) && (
+        {score < questions.length && questions.some((q) => "carteId" in q && q.carteId) && (
           <p className="mt-2 text-[13.5px] text-muted">
             Les notions ratées sont revenues dans tes flashcards à revoir.
           </p>
@@ -226,7 +213,7 @@ export default function Exercices() {
                   <span className="text-[13px] text-muted">
                     {c.exercices.length > 0
                       ? pluriel(c.exercices.length, "exercice rédigé", "exercices rédigés")
-                      : `QCM tirés de tes ${c.flashcards.length} flashcards`}
+                      : `Exercices tirés de tes ${c.flashcards.length} flashcards`}
                   </span>
                 </motion.button>
               );
@@ -256,5 +243,241 @@ export default function Exercices() {
         </div>
       )}
     </div>
+  );
+}
+
+const TYPES: Record<string, string> = {
+  qcm: "Question à choix",
+  vraiFaux: "Vrai ou faux",
+  trou: "Texte à trous",
+  ordre: "Remise en ordre",
+  ouverte: "Question ouverte",
+};
+
+type PropsEnonce<T> = { q: T; resultat: boolean | null; repondre: (juste: boolean) => void };
+
+const classeChoix = (etat: "neutre" | "bon" | "faux" | "eteint") =>
+  `flex min-h-[52px] items-center gap-3 rounded-2xl border-2 px-4 py-3 text-left text-[16px] font-medium transition-colors ${
+    etat === "bon"
+      ? "border-ok bg-ok/10 text-ok"
+      : etat === "faux"
+        ? "border-bad bg-bad/10 text-bad"
+        : etat === "eteint"
+          ? "border-line bg-surface text-muted"
+          : "border-line bg-surface hover:border-accent"
+  }`;
+
+function Enonce({ q, titre, ...p }: PropsEnonce<Exercice> & { titre: string }) {
+  const type = q.type ?? "qcm";
+  return (
+    <>
+      <p className="surtitre text-muted">
+        {TYPES[type]} · {titre}
+      </p>
+      {type === "qcm" && <ExQcm q={q as Qcm} {...p} />}
+      {type === "vraiFaux" && <ExVraiFaux q={q as VraiFaux} {...p} />}
+      {type === "trou" && <ExTrou q={q as Trou} {...p} />}
+      {type === "ordre" && <ExOrdre q={q as Ordre} {...p} />}
+      {type === "ouverte" && <ExOuverte q={q as Ouverte} {...p} />}
+    </>
+  );
+}
+
+function ExQcm({ q, resultat, repondre }: PropsEnonce<Qcm>) {
+  const [choisi, setChoisi] = useState<number | null>(null);
+  return (
+    <>
+      {q.consigne && <p className="mt-2 text-[14.5px] text-muted">{q.consigne}</p>}
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.question}</h2>
+      <div className="mt-5 flex flex-col gap-2.5" role="group" aria-label="Réponses">
+        {q.choix.map((c, i) => {
+          const bon = i === q.bonneReponse;
+          const etat = resultat === null ? "neutre" : bon ? "bon" : i === choisi ? "faux" : "eteint";
+          return (
+            <motion.button
+              key={c}
+              disabled={resultat !== null}
+              whileHover={resultat === null ? { x: 4 } : undefined}
+              animate={etat === "faux" ? { x: [0, -8, 8, -5, 5, 0] } : etat === "bon" ? { scale: [1, 1.03, 1] } : {}}
+              transition={{ duration: 0.4 }}
+              onClick={() => {
+                setChoisi(i);
+                repondre(bon);
+              }}
+              className={classeChoix(etat)}
+            >
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/5 text-[13px] font-semibold">
+                {etat === "bon" ? <Check size={15} /> : etat === "faux" ? <X size={15} /> : "ABCD"[i]}
+              </span>
+              {c}
+            </motion.button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function ExVraiFaux({ q, resultat, repondre }: PropsEnonce<VraiFaux>) {
+  const [choisi, setChoisi] = useState<boolean | null>(null);
+  return (
+    <>
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.affirmation}</h2>
+      <div className="mt-5 grid grid-cols-2 gap-3" role="group" aria-label="Réponses">
+        {[true, false].map((v) => {
+          const bon = v === q.vrai;
+          const etat = resultat === null ? "neutre" : bon ? "bon" : v === choisi ? "faux" : "eteint";
+          return (
+            <button
+              key={String(v)}
+              disabled={resultat !== null}
+              onClick={() => {
+                setChoisi(v);
+                repondre(bon);
+              }}
+              className={classeChoix(etat) + " justify-center !text-[17px]"}
+            >
+              {v ? "Vrai" : "Faux"}
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function ExTrou({ q, resultat, repondre }: PropsEnonce<Trou>) {
+  const [saisie, setSaisie] = useState("");
+  const [avant, apres] = q.texte.split("___");
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (saisie.trim()) repondre(reponseJuste(saisie, q.reponses));
+      }}
+    >
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">
+        {avant}
+        <span
+          className={`mx-1 inline-block min-w-[90px] rounded-lg border-b-2 px-2 text-center ${
+            resultat === null ? "border-accent text-accent" : resultat ? "border-ok bg-ok/10 text-ok" : "border-bad bg-bad/10 text-bad"
+          }`}
+        >
+          {resultat === null ? saisie || "…" : q.reponses[0]}
+        </span>
+        {apres}
+      </h2>
+      <div className="mt-5 flex gap-2">
+        <input
+          autoFocus
+          aria-label="Mot manquant"
+          autoComplete="off"
+          autoCapitalize="none"
+          disabled={resultat !== null}
+          className={classeSaisie + " !bg-surface"}
+          placeholder="Écris le mot manquant"
+          value={saisie}
+          onChange={(e) => setSaisie(e.target.value)}
+        />
+        <Bouton type="submit" className="shrink-0" disabled={resultat !== null || !saisie.trim()}>
+          Valider
+        </Bouton>
+      </div>
+      {resultat === false && (
+        <p className="mt-2 text-[13.5px] text-muted">
+          Tu avais écrit « {saisie.trim()} ».
+        </p>
+      )}
+    </form>
+  );
+}
+
+function ExOrdre({ q, resultat, repondre }: PropsEnonce<Ordre>) {
+  const [ordre, setOrdre] = useState(() => melangerAutrement(q.elements));
+  const deplacer = (i: number, pas: number) =>
+    setOrdre((o) => {
+      const j = i + pas;
+      if (j < 0 || j >= o.length) return o;
+      const n = [...o];
+      [n[i], n[j]] = [n[j], n[i]];
+      return n;
+    });
+  const liste = resultat === null ? ordre : q.elements;
+  return (
+    <>
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.consigne}</h2>
+      {resultat !== null && <p className="mt-2 text-[14px] text-muted">Voici le bon ordre :</p>}
+      <ol className="mt-4 flex flex-col gap-2">
+        {liste.map((el, i) => (
+          <motion.li
+            layout
+            key={el}
+            transition={{ type: "spring", stiffness: 500, damping: 38 }}
+            className={`flex items-center gap-2 rounded-2xl border-2 bg-surface py-1.5 pl-3 pr-1.5 ${
+              resultat === null ? "border-line" : ordre[i] === el ? "border-ok" : "border-bad"
+            }`}
+          >
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-ink/5 text-[13px] font-semibold">
+              {i + 1}
+            </span>
+            <span className="min-w-0 flex-1 py-1.5 text-[15.5px] font-medium">{el}</span>
+            {resultat === null && (
+              <span className="flex shrink-0">
+                <BoutonIcone label={`Monter : ${el}`} disabled={i === 0} onClick={() => deplacer(i, -1)} className="disabled:opacity-30">
+                  <ArrowUp size={17} />
+                </BoutonIcone>
+                <BoutonIcone
+                  label={`Descendre : ${el}`}
+                  disabled={i === liste.length - 1}
+                  onClick={() => deplacer(i, 1)}
+                  className="disabled:opacity-30"
+                >
+                  <ArrowDown size={17} />
+                </BoutonIcone>
+              </span>
+            )}
+          </motion.li>
+        ))}
+      </ol>
+      {resultat === null && (
+        <Bouton className="mt-4 w-full" onClick={() => repondre(ordre.every((el, i) => el === q.elements[i]))}>
+          Valider l&apos;ordre
+        </Bouton>
+      )}
+    </>
+  );
+}
+
+function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
+  const [vu, setVu] = useState(false);
+  return (
+    <>
+      <h2 className="mt-2 text-[22px] leading-snug sm:text-[24px]">{q.question}</h2>
+      {!vu ? (
+        <>
+          <p className="mt-3 text-[14.5px] text-muted">Réponds de tête ou sur un brouillon, puis compare avec le corrigé.</p>
+          <Bouton className="mt-4" onClick={() => setVu(true)}>
+            <Eye size={16} /> Voir le corrigé
+          </Bouton>
+        </>
+      ) : (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="mt-4 rounded-2xl bg-accent-soft p-4">
+            <p className="surtitre mb-1 text-accent">Corrigé</p>
+            <p className="text-[15.5px] leading-relaxed">{q.corrige}</p>
+          </div>
+          {resultat === null && (
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <Bouton variante="contour" className="!border-bad/40 !text-bad" onClick={() => repondre(false)}>
+                <X size={17} /> À revoir
+              </Bouton>
+              <Bouton className="!bg-accent !text-on-accent" onClick={() => repondre(true)}>
+                <Check size={17} /> J&apos;avais l&apos;essentiel
+              </Bouton>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </>
   );
 }

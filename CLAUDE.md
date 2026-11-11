@@ -65,7 +65,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - `app/` : `page.tsx` (accueil), `calendrier/`, `taches/` (onglet « À
     faire »), `travail/`, `apprendre/`, `exercices/` (onglet « S'exercer »).
     Six onglets : c'est le maximum qui tient dans la barre du bas sur
-    téléphone.
+    téléphone. `recherche/` n'est pas un onglet : on y accède par la loupe
+    de la barre du haut.
   - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
     thème), barre du bas sur téléphone, transition entre pages.
   - `components/Donnees.tsx` : fenêtre « Mes données » (sauvegarde,
@@ -119,7 +120,11 @@ un PDF ou une photo directement dans le chat.
   `contenu/exemple.ts` : `id` stable, `version: 1`, matière (reprendre
   exactement le nom indiqué, la reprise compare les noms), titre du chapitre,
   10 à 20 flashcards, fiche dont chaque point porte `n` de 1 (essentiel) à 5
-  (détail), 6 à 10 exercices QCM à quatre choix avec explication. Rester
+  (détail), et 15 à 20 exercices variés (types dans `lib/types.ts`) : QCM à
+  quatre choix, `vraiFaux`, `trou` (texte avec « ___ », réponses acceptées),
+  `ordre` (éléments donnés dans le bon ordre, idéal pour les chronologies),
+  `ouverte` (question et corrigé, l'élève s'auto-évalue). Une série pioche
+  tour à tour dans chaque type. Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
   augmenter `version`.
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
@@ -217,6 +222,14 @@ un PDF ou une photo directement dans le chat.
 - Calendrier des DST de Première 2026-2027 disponible à l'import (47 dates).
 - Onglet « À faire » (`app/taches/`, 2026-11-10) : ajout direct, collage
   d'une liste, cocher et décocher, échéance facultative, aperçu à l'accueil.
+- 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille
+  cuivrée qui glisse), page Recherche (sans accents ni casse, dans tout le
+  contenu), exercices variés (cinq types), matières sur deux colonnes sur
+  téléphone.
+- Idées proposées le 2026-11-10 et pas encore demandées : planning de
+  révision automatique avant un DST, export des DST vers le calendrier du
+  téléphone, vacances scolaires, notes et moyennes, flashcards inversées,
+  mode DST blanc, espace bac de français, impression PDF, hors connexion.
 - Pas encore fait : comptes, synchronisation entre appareils, tests
   automatisés dans le dépôt.
 

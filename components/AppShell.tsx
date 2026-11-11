@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { BookOpen, CalendarDays, GraduationCap, Home, ListTodo, Moon, Sun, Target } from "lucide-react";
+import { BookOpen, CalendarDays, GraduationCap, Home, ListTodo, Moon, Search, Sun, Target } from "lucide-react";
 import { useSyncExternalStore, type ReactNode } from "react";
 import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 
@@ -105,6 +105,19 @@ export function AppShell({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <Link
+              href="/recherche"
+              aria-label="Rechercher"
+              title="Rechercher"
+              aria-current={chemin.startsWith("/recherche") ? "page" : undefined}
+              className={`flex size-11 items-center justify-center rounded-[10px] border transition-colors ${
+                chemin.startsWith("/recherche")
+                  ? "border-ink bg-ink text-bg"
+                  : "border-line bg-surface text-ink hover:border-ink/40"
+              }`}
+            >
+              <Search size={18} />
+            </Link>
             <BoutonDonnees />
             <BoutonTheme />
           </div>
@@ -128,31 +141,46 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SynchroBibliotheque />
       <Annulation />
 
-      {/* Barre du bas (téléphone) */}
+      {/* Barre du bas (téléphone) : fond translucide, pastille cuivrée qui glisse sous l'onglet actif */}
       <nav
-        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 flex justify-between rounded-2xl bg-night px-1.5 py-1.5 shadow-pop lg:hidden"
+        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-6 rounded-[26px] border border-line bg-surface/80 px-1 py-1.5 shadow-pop backdrop-blur-xl lg:hidden"
         aria-label="Navigation principale"
       >
-        {ONGLETS.map(({ href, label, icone: Icone }) => (
-          <Link
-            key={href}
-            href={href}
-            aria-current={actif(href) ? "page" : undefined}
-            className={`relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-medium ${
-              actif(href) ? "text-[#2a2a2d]" : "text-white/70"
-            }`}
-          >
-            {actif(href) && (
-              <motion.span
-                layoutId="onglet-actif-mobile"
-                className="absolute inset-0 rounded-xl bg-[#e6bfb5]"
-                transition={{ type: "spring", stiffness: 420, damping: 34 }}
-              />
-            )}
-            <Icone size={20} className="relative" />
-            <span className="relative truncate">{label}</span>
-          </Link>
-        ))}
+        {ONGLETS.map(({ href, label, icone: Icone }) => {
+          const ici = actif(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={ici ? "page" : undefined}
+              className="group relative flex min-w-0 flex-col items-center gap-1 py-1"
+            >
+              <span className="relative flex h-8 w-12 items-center justify-center">
+                {ici && (
+                  <motion.span
+                    layoutId="onglet-actif-mobile"
+                    className="copper-bg absolute inset-0 rounded-full shadow-[0_6px_16px_-6px_rgb(201_139_107_/_0.9)]"
+                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  />
+                )}
+                <motion.span
+                  className={`relative ${ici ? "text-on-accent" : "text-muted group-active:text-ink"}`}
+                  animate={{ scale: ici ? 1.08 : 1, y: ici ? -0.5 : 0 }}
+                  transition={{ type: "spring", stiffness: 420, damping: 22 }}
+                >
+                  <Icone size={19} strokeWidth={ici ? 2.3 : 2} />
+                </motion.span>
+              </span>
+              <span
+                className={`max-w-full truncate px-0.5 text-[10px] leading-none transition-colors ${
+                  ici ? "font-semibold text-ink" : "font-medium text-muted"
+                }`}
+              >
+                {label}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
     </div>
   );
