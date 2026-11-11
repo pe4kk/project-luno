@@ -133,6 +133,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     relire avant chaque évaluation, alimentée à la main ou par une demande
     `erreurs` (photos de la copie corrigée, conseils du prof) dont la réponse
     est `{ erreurs: [{ titre, erreur, correction, conseil, chapitre, source }] }`.
+  - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
+    curseurs passent par lui. Le bouton suit le doigt en continu (`step`
+    0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au
+    cran ; le clavier avance d'un cran. Les points de fiche ne sont plus
+    montés et démontés : ils se replient en CSS (classe `repli`, grille
+    `0fr ↔ 1fr`), sans `layout` de motion, qui saccadait.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

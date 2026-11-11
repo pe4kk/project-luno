@@ -37,6 +37,7 @@ import {
 import { Revision, type CarteARevoir } from "./Revision";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
+import { Curseur } from "@/components/Curseur";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
@@ -605,10 +606,17 @@ function OngletFiche({
     );
   }
 
-  const sections = fiche.sections
-    .map((sec) => ({ ...sec, points: sec.points.filter((p) => p.n <= taille) }))
-    .filter((sec) => sec.points.length > 0);
-  const nbPoints = sections.reduce((n, sec) => n + sec.points.length, 0);
+  // Toutes les sections et tous les points restent dans la page : ceux qui dépassent la
+  // taille choisie sont repliés en CSS (classe `repli`), ce qui garde le curseur fluide.
+  let rang = 0;
+  const sections = fiche.sections.map((sec) => {
+    const visible = sec.points.some((p) => p.n <= taille);
+    return { ...sec, visible, numero: visible ? ++rang : rang };
+  });
+  const nbPoints = fiche.sections.reduce(
+    (n, sec) => n + sec.points.filter((p) => p.n <= taille).length,
+    0,
+  );
 
   return (
     <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
@@ -627,19 +635,15 @@ function OngletFiche({
             {pluriel(nbPoints, "point")}
           </span>
         </div>
-        <input
-          type="range"
+        <Curseur
           min={1}
           max={5}
-          step={1}
           value={taille}
-          aria-label="Taille de la fiche"
-          aria-valuetext={TAILLES[taille - 1]}
-          onChange={(e) => majTaille(chapitre.id, Number(e.target.value))}
-          className="luno-range mt-4"
-          style={
-            { "--fill": `${((taille - 1) / 4) * 100}%` } as React.CSSProperties
-          }
+          onChange={(v) => majTaille(chapitre.id, v)}
+          label="Taille de la fiche"
+          valueText={TAILLES[taille - 1]}
+          reperes
+          className="mt-4"
         />
         <div className="mt-2 flex justify-between text-[12px] text-muted">
           <span>L&apos;essentiel</span>
@@ -659,10 +663,11 @@ function OngletFiche({
             {chapitre.titre}
           </h2>
         </div>
-        <div className="flex flex-col gap-6 px-6 py-6 sm:px-8">
-          {sections.map((sec, i) => (
-            <section key={sec.titre}>
-              <h3 className="mb-2 flex items-center gap-2.5 text-[18px]">
+        <div className="flex flex-col px-6 pb-6 pt-1 sm:px-8">
+          {sections.map((sec) => (
+            <section key={sec.titre} className="repli" data-ouvert={sec.visible}>
+              <div>
+              <h3 className="mb-2 mt-5 flex items-center gap-2.5 text-[18px]">
                 <span
                   className="flex size-6 items-center justify-center rounded-md font-sans text-[12.5px] font-semibold"
                   style={{
@@ -670,22 +675,19 @@ function OngletFiche({
                     color: foncee,
                   }}
                 >
-                  {i + 1}
+                  {sec.numero}
                 </span>
                 {formule(sec.titre)}
               </h3>
-              <ul className="flex flex-col gap-1.5 pl-1">
-                <AnimatePresence initial={false}>
+              <ul className="flex flex-col pl-1">
                   {sec.points.map((p) => (
-                    <motion.li
-                      layout
+                    <li
                       key={p.t}
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.22 }}
-                      className="flex gap-2.5 overflow-hidden text-[15px] leading-relaxed"
+                      className="repli"
+                      data-ouvert={p.n <= taille}
+                      aria-hidden={p.n > taille || undefined}
                     >
+                      <div className="flex gap-2.5 py-[3px] text-[15px] leading-relaxed">
                       <span
                         className="mt-[10px] size-1.5 shrink-0 rounded-full"
                         style={{ background: matiere.couleur }}
@@ -699,14 +701,15 @@ function OngletFiche({
                           />
                         )}
                       </span>
-                    </motion.li>
+                      </div>
+                    </li>
                   ))}
-                </AnimatePresence>
               </ul>
+              </div>
             </section>
           ))}
           {fiche.aRetenir.length > 0 && (
-            <div className="rounded-2xl bg-accent-soft p-4">
+            <div className="mt-6 rounded-2xl bg-accent-soft p-4">
               <p className="surtitre mb-2 text-accent">Mots-clés à retenir</p>
               <div className="flex flex-wrap gap-2">
                 {fiche.aRetenir.map((m) => (

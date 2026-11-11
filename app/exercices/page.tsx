@@ -39,6 +39,7 @@ import {
   pluriel,
 } from "@/components/ui";
 import { formule, texteBrut } from "@/components/Formule";
+import { Curseur } from "@/components/Curseur";
 
 export default function Exercices() {
   const { matieres, chapitres, noterFlashcard } = useLuno();
@@ -306,20 +307,14 @@ export default function Exercices() {
                 {chapitre ? `max. ${max}` : ""}
               </span>
             </div>
-            <input
-              type="range"
+            <Curseur
               min={min}
               max={max}
               value={n}
               disabled={!chapitre || max === min}
-              aria-label="Nombre de questions"
-              onChange={(e) => setNombre(Number(e.target.value))}
-              className="luno-range mt-3 disabled:opacity-50"
-              style={
-                {
-                  "--fill": `${max > min ? ((n - min) / (max - min)) * 100 : 100}%`,
-                } as React.CSSProperties
-              }
+              label="Nombre de questions"
+              onChange={setNombre}
+              className="mt-3"
             />
             <Bouton
               className="mt-6 w-full"
