@@ -161,7 +161,11 @@ un PDF ou une photo directement dans le chat.
   Première 2026-2027 relevés sur une photo du document du lycée (sans les
   heures). Relevé revérifié le 2026-11-10 sur la photo agrandie, ligne par
   ligne : dates et durées conformes. Les DST de Première tombent le jeudi ;
-  les autres jours sont des rattrapages, oraux blancs ou semaine de bac blanc. Chaque utilisateur choisit ses matières dans la page Calendrier ;
+  les autres jours sont des rattrapages, oraux blancs ou semaine de bac blanc.
+  **Ajouté tout seul à la première visite** (chaque navigateur a ses propres
+  données : rien ne passe du téléphone à l'ordinateur), avec les matières
+  `parDefaut` : tronc commun, bac blanc, HGGSP et Physique-Chimie. Chacun
+  change ses matières dans la page Calendrier ;
   les DST repris ont un identifiant `cal-<rang>` : ne pas réordonner la liste,
   ajouter à la fin, sinon les ajouts des utilisateurs (heure, chapitres liés)
   se décalent. Les EAF de juin n'y sont pas, faute de date.
@@ -242,7 +246,11 @@ un PDF ou une photo directement dans le chat.
 - 2026-11-11 : données d'exemple retirées du site (boutons, bandeaux,
   chapitre « Dérivation ») ; `normaliser()` efface les anciennes données
   `ex-…` des navigateurs (format version 3), en gardant une matière d'exemple
-  si un vrai DST ou chapitre s'y rattache. Physique-Chimie : trois chapitres
+  si un vrai DST ou chapitre s'y rattache. Le 2026-11-11, l'utilisateur
+  voyait encore les exemples sur son ordinateur : ils venaient de la toute
+  première version, sans préfixe (`m-maths`, `c-deriv`, `d1`…). Ils sont
+  maintenant reconnus aussi (`ANCIENS_EXEMPLES`, format version 4). Leçon
+  d'exemple « photosynthèse » retirée. Physique-Chimie : trois chapitres
   (Chap. 9, Chap. 11, les forces) avec les cinq PDF du prof, 67 flashcards,
   55 exercices. Le mail du prof (reçu le 2026-11-11) confirme : interro de
   cours d'1 h le lundi 16/11/2026 sur chap. 9, chap. 11 et les trois fiches

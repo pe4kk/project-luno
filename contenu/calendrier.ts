@@ -78,7 +78,7 @@ export const CALENDRIER_MATIERES: MatiereCalendrier[] = [
     couleur: "#8a5a78",
     emoji: "🏛️",
     groupe: "Spécialités et options",
-    parDefaut: false,
+    parDefaut: true,
   },
   {
     nom: "HLP",
@@ -106,7 +106,7 @@ export const CALENDRIER_MATIERES: MatiereCalendrier[] = [
     couleur: "#6f8fae",
     emoji: "⚗️",
     groupe: "Spécialités et options",
-    parDefaut: false,
+    parDefaut: true,
   },
   {
     nom: "NSI",

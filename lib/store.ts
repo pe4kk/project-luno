@@ -51,6 +51,27 @@ const uid = () => crypto.randomUUID();
  */
 const EX = "ex-";
 
+/** Identifiants des données d'exemple de la toute première version du site (sans préfixe). */
+const ANCIENS_EXEMPLES = new Set([
+  "m-maths",
+  "m-pc",
+  "m-hg",
+  "m-fr",
+  "m-svt",
+  "m-ang",
+  "c-deriv",
+  "c-suites",
+  "c-gf",
+  "c-meca",
+  "c-adn",
+  "d1",
+  "d2",
+  "d3",
+  "d4",
+]);
+const estExemple = (id: string) =>
+  id.startsWith(EX) || ANCIENS_EXEMPLES.has(id);
+
 const nouvelleCarte = (c: { recto: string; verso: string }): Flashcard => ({
   ...c,
   id: uid(),
@@ -66,7 +87,7 @@ type Etat = Donnees & {
   publies: Record<string, number>;
   /** Matières choisies pour le calendrier du lycée, ou `null` s'il n'a pas été repris. */
   calendrier: string[] | null;
-  importerCalendrier: (noms: string[]) => void;
+  importerCalendrier: (noms: string[], silencieux?: boolean) => void;
   /** Dernière suppression, tant qu'elle peut être annulée. */
   annulation: {
     message: string;
@@ -166,7 +187,7 @@ export const useLuno = create<Etat>()(
       // Reprend le calendrier du lycée pour les matières choisies. Les DST repris portent
       // un identifiant « cal-… » : un nouvel import les remplace en gardant ce que
       // l'utilisateur y a ajouté (heure, salle, notes, chapitres).
-      importerCalendrier: (noms) =>
+      importerCalendrier: (noms, silencieux = false) =>
         set((s) => {
           const matieres = [...s.matieres];
           const idDe = (nom: string) => {
@@ -211,6 +232,7 @@ export const useLuno = create<Etat>()(
               ...repris,
             ],
             calendrier: noms,
+            ...(silencieux ? { annulation: s.annulation } : {}),
           };
         }),
       annulation: null,
@@ -474,7 +496,7 @@ export const useLuno = create<Etat>()(
     }),
     {
       name: "luno-v1",
-      version: 3,
+      version: 4,
       partialize: (s) => ({
         matieres: s.matieres,
         chapitres: s.chapitres,
@@ -498,10 +520,8 @@ export function normaliser(
   const aujourdhui = todayISO();
   // Retire les chapitres et DST d'exemple. Une matière d'exemple n'est gardée que si un
   // vrai chapitre ou un vrai DST s'y rattache (par exemple un DST du calendrier du lycée).
-  const chapitresGardes = (d.chapitres ?? []).filter(
-    (c) => !c.id.startsWith(EX),
-  );
-  const dstsGardes = (d.dsts ?? []).filter((x) => !x.id.startsWith(EX));
+  const chapitresGardes = (d.chapitres ?? []).filter((c) => !estExemple(c.id));
+  const dstsGardes = (d.dsts ?? []).filter((x) => !estExemple(x.id));
   const utilisees = new Set([
     ...chapitresGardes.map((c) => c.matiereId),
     ...dstsGardes.map((x) => x.matiereId),
@@ -510,7 +530,7 @@ export function normaliser(
   delete publies["exemple-derivation"];
   return {
     matieres: (d.matieres ?? []).filter(
-      (m) => !m.id.startsWith(EX) || utilisees.has(m.id),
+      (m) => !estExemple(m.id) || utilisees.has(m.id),
     ),
     chapitres: chapitresGardes.map((c) => ({
       ...c,

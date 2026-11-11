@@ -7,6 +7,7 @@ import { Download, Settings, Trash2, Undo2, Upload } from "lucide-react";
 import { normaliser, useLuno } from "@/lib/store";
 import { BIBLIOTHEQUE } from "@/contenu/bibliotheque";
 import { EVENEMENTS } from "@/contenu/evenements";
+import { CALENDRIER_MATIERES } from "@/contenu/calendrier";
 import { todayISO } from "@/lib/dates";
 import { Bouton, Fenetre, pluriel } from "./ui";
 
@@ -16,6 +17,14 @@ export function SynchroBibliotheque() {
     const { publies, importerPublie } = useLuno.getState();
     for (const p of BIBLIOTHEQUE) {
       if (publies[p.id] !== p.version) importerPublie(p);
+    }
+    // Le calendrier du lycée s'ajoute tout seul à la première visite, avec les matières
+    // cochées par défaut ; on peut ensuite les changer depuis la page Calendrier.
+    if (useLuno.getState().calendrier === null) {
+      useLuno.getState().importerCalendrier(
+        CALENDRIER_MATIERES.filter((m) => m.parDefaut).map((m) => m.nom),
+        true,
+      );
     }
     // Les dates viennent après les chapitres, pour pouvoir s'y rattacher.
     const { importerEvenement } = useLuno.getState();
