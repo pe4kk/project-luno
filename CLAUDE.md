@@ -105,6 +105,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Ne jamais écrire la clé secrète (`sb_secret_…`) nulle part. L'environnement
     `project-luno` autorise ce serveur, ce qui permet de tester pour de vrai
     (testé le 2026-11-11 : fusion, envoi, hors connexion, direct).
+  - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
+    Recharger » quand `version.json` (écrit à chaque build par
+    `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
+    2026-11-11 : son iPhone gardait l'ancienne version (cache de 10 min de
+    GitHub Pages, app de l'écran d'accueil restée ouverte).
   - `lib/contenu.ts` : outils sans IA (repérage des lignes « Terme :
     définition », QCM tirés des flashcards, texte des demandes à Claude).
   - `lib/liens.ts` : l'onglet Travail garde matière, chapitre et sous-onglet
