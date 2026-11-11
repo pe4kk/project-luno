@@ -105,14 +105,14 @@ export default function Calendrier() {
 
       <CalendrierLycee />
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_340px]">
-        <Carte className="!p-3 sm:!p-6">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+        <Carte className="min-w-0 !p-3 sm:!p-6">
           <div className="mb-4 flex items-center justify-between gap-2">
-            <h2 className="text-[20px] sm:text-[24px]">{titreMois(vue.annee, vue.mois)}</h2>
-            <div className="flex items-center gap-1">
+            <h2 className="min-w-0 text-[20px] leading-tight sm:text-[24px]">{titreMois(vue.annee, vue.mois)}</h2>
+            <div className="flex shrink-0 items-center gap-1">
               <Bouton
                 variante="fantome"
-                className="!px-3"
+                className="!px-2 sm:!px-3"
                 onClick={() => {
                   const d = new Date();
                   setSens(1);

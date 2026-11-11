@@ -2,9 +2,21 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Chapitre, ChapitrePublie, Donnees, Dst, Flashcard, Matiere, Tache } from "./types";
+import type {
+  Chapitre,
+  ChapitrePublie,
+  Donnees,
+  Dst,
+  EvenementPublie,
+  Flashcard,
+  Matiere,
+  Tache,
+} from "./types";
 import { dansJours, todayISO } from "./dates";
-import { CALENDRIER_EVENEMENTS, CALENDRIER_MATIERES } from "@/contenu/calendrier";
+import {
+  CALENDRIER_EVENEMENTS,
+  CALENDRIER_MATIERES,
+} from "@/contenu/calendrier";
 
 export const COULEURS = [
   "#b5573d",
@@ -17,7 +29,20 @@ export const COULEURS = [
   "#8a5a78",
 ];
 
-export const EMOJIS = ["📐", "⚗️", "🧬", "🌍", "📚", "🗣️", "💶", "🏛️", "💻", "🎨", "🎵", "⚽"];
+export const EMOJIS = [
+  "📐",
+  "⚗️",
+  "🧬",
+  "🌍",
+  "📚",
+  "🗣️",
+  "💶",
+  "🏛️",
+  "💻",
+  "🎨",
+  "🎵",
+  "⚽",
+];
 
 const uid = () => crypto.randomUUID();
 /**
@@ -43,7 +68,10 @@ type Etat = Donnees & {
   calendrier: string[] | null;
   importerCalendrier: (noms: string[]) => void;
   /** Dernière suppression, tant qu'elle peut être annulée. */
-  annulation: { message: string; avant: Donnees & { calendrier: string[] | null } } | null;
+  annulation: {
+    message: string;
+    avant: Donnees & { calendrier: string[] | null };
+  } | null;
   annuler: () => void;
   oublierAnnulation: () => void;
 
@@ -56,12 +84,21 @@ type Etat = Donnees & {
   supprimerChapitre: (id: string) => void;
   majCours: (chapitreId: string, cours: string) => void;
   majTailleFiche: (chapitreId: string, taille: number) => void;
-  ajouterFlashcards: (chapitreId: string, cartes: { recto: string; verso: string }[]) => number;
-  modifierFlashcard: (chapitreId: string, carteId: string, c: { recto: string; verso: string }) => void;
+  ajouterFlashcards: (
+    chapitreId: string,
+    cartes: { recto: string; verso: string }[],
+  ) => number;
+  modifierFlashcard: (
+    chapitreId: string,
+    carteId: string,
+    c: { recto: string; verso: string },
+  ) => void;
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
   noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
 
-  ajouterTaches: (taches: (string | { texte: string; echeance: string })[]) => number;
+  ajouterTaches: (
+    taches: (string | { texte: string; echeance: string })[],
+  ) => number;
   modifierTache: (id: string, t: Partial<Omit<Tache, "id">>) => void;
   supprimerTache: (id: string) => void;
   effacerTachesFaites: () => void;
@@ -70,12 +107,16 @@ type Etat = Donnees & {
   supprimerDst: (id: string) => void;
 
   importerPublie: (p: ChapitrePublie, prefixe?: string) => string;
+  importerEvenement: (e: EvenementPublie) => void;
   toutEffacer: () => void;
   remplacerTout: (d: Donnees) => void;
 };
 
-const majChapitre = (liste: Chapitre[], id: string, f: (c: Chapitre) => Chapitre) =>
-  liste.map((c) => (c.id === id ? f(c) : c));
+const majChapitre = (
+  liste: Chapitre[],
+  id: string,
+  f: (c: Chapitre) => Chapitre,
+) => liste.map((c) => (c.id === id ? f(c) : c));
 
 const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   matieres: s.matieres,
@@ -97,12 +138,19 @@ export const useLuno = create<Etat>()(
           .map((t) => (typeof t === "string" ? { texte: t, echeance: "" } : t))
           .map((t) => ({ texte: t.texte.trim(), echeance: t.echeance }))
           .filter((t) => t.texte)
-          .map((t) => ({ id: uid(), texte: t.texte, fait: false, echeance: t.echeance }));
+          .map((t) => ({
+            id: uid(),
+            texte: t.texte,
+            fait: false,
+            echeance: t.echeance,
+          }));
         set((s) => ({ taches: [...s.taches, ...neuves] }));
         return neuves.length;
       },
       modifierTache: (id, t) =>
-        set((s) => ({ taches: s.taches.map((x) => (x.id === id ? { ...x, ...t } : x)) })),
+        set((s) => ({
+          taches: s.taches.map((x) => (x.id === id ? { ...x, ...t } : x)),
+        })),
       supprimerTache: (id) =>
         set((s) => ({
           annulation: { message: "Tâche supprimée", avant: photo(s) },
@@ -122,7 +170,9 @@ export const useLuno = create<Etat>()(
         set((s) => {
           const matieres = [...s.matieres];
           const idDe = (nom: string) => {
-            let m = matieres.find((x) => x.nom.toLowerCase() === nom.toLowerCase());
+            let m = matieres.find(
+              (x) => x.nom.toLowerCase() === nom.toLowerCase(),
+            );
             if (!m) {
               const c = CALENDRIER_MATIERES.find((x) => x.nom === nom)!;
               m = { id: uid(), nom: c.nom, couleur: c.couleur, emoji: c.emoji };
@@ -130,7 +180,9 @@ export const useLuno = create<Etat>()(
             }
             return m.id;
           };
-          const anciens = new Map(s.dsts.filter((d) => d.id.startsWith("cal-")).map((d) => [d.id, d]));
+          const anciens = new Map(
+            s.dsts.filter((d) => d.id.startsWith("cal-")).map((d) => [d.id, d]),
+          );
           const repris: Dst[] = [];
           CALENDRIER_EVENEMENTS.forEach((ev, i) => {
             if (!noms.includes(ev.matiere)) return;
@@ -149,14 +201,23 @@ export const useLuno = create<Etat>()(
             });
           });
           return {
-            annulation: { message: "Calendrier du lycée mis à jour", avant: photo(s) },
+            annulation: {
+              message: "Calendrier du lycée mis à jour",
+              avant: photo(s),
+            },
             matieres,
-            dsts: [...s.dsts.filter((d) => !d.id.startsWith("cal-")), ...repris],
+            dsts: [
+              ...s.dsts.filter((d) => !d.id.startsWith("cal-")),
+              ...repris,
+            ],
             calendrier: noms,
           };
         }),
       annulation: null,
-      annuler: () => set((s) => (s.annulation ? { ...s.annulation.avant, annulation: null } : {})),
+      annuler: () =>
+        set((s) =>
+          s.annulation ? { ...s.annulation.avant, annulation: null } : {},
+        ),
       oublierAnnulation: () => set({ annulation: null }),
 
       ajouterMatiere: (m) => {
@@ -165,7 +226,9 @@ export const useLuno = create<Etat>()(
         return id;
       },
       modifierMatiere: (id, m) =>
-        set((s) => ({ matieres: s.matieres.map((x) => (x.id === id ? { ...m, id } : x)) })),
+        set((s) => ({
+          matieres: s.matieres.map((x) => (x.id === id ? { ...m, id } : x)),
+        })),
       supprimerMatiere: (id) =>
         set((s) => ({
           annulation: {
@@ -182,13 +245,25 @@ export const useLuno = create<Etat>()(
         set((s) => ({
           chapitres: [
             ...s.chapitres,
-            { id, matiereId, titre, cours: "", documents: [], flashcards: [], fiche: null, tailleFiche: 3, exercices: [] },
+            {
+              id,
+              matiereId,
+              titre,
+              cours: "",
+              documents: [],
+              flashcards: [],
+              fiche: null,
+              tailleFiche: 3,
+              exercices: [],
+            },
           ],
         }));
         return id;
       },
       renommerChapitre: (id, titre) =>
-        set((s) => ({ chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, titre })) })),
+        set((s) => ({
+          chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, titre })),
+        })),
       supprimerChapitre: (id) =>
         set((s) => ({
           annulation: {
@@ -196,19 +271,36 @@ export const useLuno = create<Etat>()(
             avant: photo(s),
           },
           chapitres: s.chapitres.filter((c) => c.id !== id),
-          dsts: s.dsts.map((d) => ({ ...d, chapitreIds: d.chapitreIds.filter((x) => x !== id) })),
+          dsts: s.dsts.map((d) => ({
+            ...d,
+            chapitreIds: d.chapitreIds.filter((x) => x !== id),
+          })),
         })),
       majCours: (id, cours) =>
-        set((s) => ({ chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, cours })) })),
+        set((s) => ({
+          chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, cours })),
+        })),
       majTailleFiche: (id, tailleFiche) =>
-        set((s) => ({ chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, tailleFiche })) })),
+        set((s) => ({
+          chapitres: majChapitre(s.chapitres, id, (c) => ({
+            ...c,
+            tailleFiche,
+          })),
+        })),
       ajouterFlashcards: (id, cartes) => {
         const chapitre = get().chapitres.find((c) => c.id === id);
         if (!chapitre) return 0;
-        const deja = new Set(chapitre.flashcards.map((f) => f.recto.toLowerCase()));
-        const neuves = cartes.filter((k) => !deja.has(k.recto.toLowerCase())).map(nouvelleCarte);
+        const deja = new Set(
+          chapitre.flashcards.map((f) => f.recto.toLowerCase()),
+        );
+        const neuves = cartes
+          .filter((k) => !deja.has(k.recto.toLowerCase()))
+          .map(nouvelleCarte);
         set((s) => ({
-          chapitres: majChapitre(s.chapitres, id, (c) => ({ ...c, flashcards: [...c.flashcards, ...neuves] })),
+          chapitres: majChapitre(s.chapitres, id, (c) => ({
+            ...c,
+            flashcards: [...c.flashcards, ...neuves],
+          })),
         }));
         return neuves.length;
       },
@@ -216,7 +308,9 @@ export const useLuno = create<Etat>()(
         set((s) => ({
           chapitres: majChapitre(s.chapitres, id, (c) => ({
             ...c,
-            flashcards: c.flashcards.map((f) => (f.id === carteId ? { ...f, ...k } : f)),
+            flashcards: c.flashcards.map((f) =>
+              f.id === carteId ? { ...f, ...k } : f,
+            ),
           })),
         })),
       supprimerFlashcard: (id, carteId) =>
@@ -235,9 +329,17 @@ export const useLuno = create<Etat>()(
             ...c,
             flashcards: c.flashcards.map((f) => {
               if (f.id !== carteId) return f;
-              if (!su) return { ...f, niveau: 1, intervalle: 0, echeance: todayISO() };
-              const intervalle = f.intervalle ? Math.min(f.intervalle * 2, 60) : 1;
-              return { ...f, niveau: 2, intervalle, echeance: dansJours(intervalle) };
+              if (!su)
+                return { ...f, niveau: 1, intervalle: 0, echeance: todayISO() };
+              const intervalle = f.intervalle
+                ? Math.min(f.intervalle * 2, 60)
+                : 1;
+              return {
+                ...f,
+                niveau: 2,
+                intervalle,
+                echeance: dansJours(intervalle),
+              };
             }),
           })),
         })),
@@ -245,7 +347,11 @@ export const useLuno = create<Etat>()(
       enregistrerDst: (d) =>
         set((s) => {
           if (d.id) {
-            return { dsts: s.dsts.map((x) => (x.id === d.id ? ({ ...d, id: d.id } as Dst) : x)) };
+            return {
+              dsts: s.dsts.map((x) =>
+                x.id === d.id ? ({ ...d, id: d.id } as Dst) : x,
+              ),
+            };
           }
           return { dsts: [...s.dsts, { ...d, id: uid() }] };
         }),
@@ -257,9 +363,49 @@ export const useLuno = create<Etat>()(
 
       // Reprend un chapitre publié : crée la matière et le chapitre au besoin,
       // ajoute les flashcards manquantes, remplace la fiche et les exercices.
+      // Ajoute (ou met à jour) une date publiée par Claude. Une fois reprise, elle n'est plus
+      // recréée si l'utilisateur la supprime, sauf si sa version augmente.
+      importerEvenement: (ev) =>
+        set((s) => {
+          const matieres = [...s.matieres];
+          let matiere = matieres.find(
+            (m) => m.nom.toLowerCase() === ev.matiere.nom.toLowerCase(),
+          );
+          if (!matiere) {
+            matiere = { ...ev.matiere, id: uid() };
+            matieres.push(matiere);
+          }
+          const id = `pub-${ev.id}`;
+          const avant = s.dsts.find((d) => d.id === id);
+          const chapitreIds = (ev.chapitres ?? [])
+            .map((pid) => s.chapitres.find((c) => c.publieId === pid)?.id)
+            .filter((x): x is string => Boolean(x));
+          const dst: Dst = {
+            id,
+            matiereId: matiere.id,
+            titre: ev.titre,
+            date: ev.date,
+            heure: avant?.heure || ev.heure || "",
+            dureeMin: ev.dureeMin,
+            salle: avant?.salle ?? "",
+            notes: avant?.notes || ev.notes || "",
+            chapitreIds: [
+              ...new Set([...(avant?.chapitreIds ?? []), ...chapitreIds]),
+            ],
+          };
+          return {
+            matieres,
+            dsts: avant
+              ? s.dsts.map((d) => (d.id === id ? dst : d))
+              : [...s.dsts, dst],
+            publies: { ...s.publies, [`evt:${ev.id}`]: ev.version },
+          };
+        }),
       importerPublie: (p, prefixe = "") => {
         const s = get();
-        let matiere = s.matieres.find((m) => m.nom.toLowerCase() === p.matiere.nom.toLowerCase());
+        let matiere = s.matieres.find(
+          (m) => m.nom.toLowerCase() === p.matiere.nom.toLowerCase(),
+        );
         const matieres = [...s.matieres];
         if (!matiere) {
           matiere = { ...p.matiere, id: prefixe + uid() };
@@ -268,7 +414,8 @@ export const useLuno = create<Etat>()(
         const existant = s.chapitres.find(
           (c) =>
             c.publieId === p.id ||
-            (c.matiereId === matiere!.id && c.titre.toLowerCase() === p.titre.toLowerCase()),
+            (c.matiereId === matiere!.id &&
+              c.titre.toLowerCase() === p.titre.toLowerCase()),
         );
         const base: Chapitre = existant ?? {
           id: prefixe + uid(),
@@ -289,7 +436,9 @@ export const useLuno = create<Etat>()(
           documents: p.documents ?? base.documents ?? [],
           flashcards: [
             ...base.flashcards,
-            ...p.flashcards.filter((k) => !deja.has(k.recto.toLowerCase())).map(nouvelleCarte),
+            ...p.flashcards
+              .filter((k) => !deja.has(k.recto.toLowerCase()))
+              .map(nouvelleCarte),
           ],
           fiche: p.fiche ?? base.fiche,
           exercices: p.exercices.length ? p.exercices : base.exercices,
@@ -306,7 +455,10 @@ export const useLuno = create<Etat>()(
 
       toutEffacer: () =>
         set((s) => ({
-          annulation: { message: "Toutes les données ont été effacées", avant: photo(s) },
+          annulation: {
+            message: "Toutes les données ont été effacées",
+            avant: photo(s),
+          },
           matieres: [],
           chapitres: [],
           dsts: [],
@@ -338,25 +490,41 @@ export const useLuno = create<Etat>()(
 
 /** Complète des données anciennes ou importées pour qu'elles suivent le format actuel. */
 export function normaliser(
-  d: Partial<Donnees> & { publies?: Record<string, number>; calendrier?: string[] | null },
+  d: Partial<Donnees> & {
+    publies?: Record<string, number>;
+    calendrier?: string[] | null;
+  },
 ) {
   const aujourdhui = todayISO();
   // Retire les chapitres et DST d'exemple. Une matière d'exemple n'est gardée que si un
   // vrai chapitre ou un vrai DST s'y rattache (par exemple un DST du calendrier du lycée).
-  const chapitresGardes = (d.chapitres ?? []).filter((c) => !c.id.startsWith(EX));
+  const chapitresGardes = (d.chapitres ?? []).filter(
+    (c) => !c.id.startsWith(EX),
+  );
   const dstsGardes = (d.dsts ?? []).filter((x) => !x.id.startsWith(EX));
-  const utilisees = new Set([...chapitresGardes.map((c) => c.matiereId), ...dstsGardes.map((x) => x.matiereId)]);
+  const utilisees = new Set([
+    ...chapitresGardes.map((c) => c.matiereId),
+    ...dstsGardes.map((x) => x.matiereId),
+  ]);
   const publies = { ...(d.publies ?? {}) };
   delete publies["exemple-derivation"];
   return {
-    matieres: (d.matieres ?? []).filter((m) => !m.id.startsWith(EX) || utilisees.has(m.id)),
+    matieres: (d.matieres ?? []).filter(
+      (m) => !m.id.startsWith(EX) || utilisees.has(m.id),
+    ),
     chapitres: chapitresGardes.map((c) => ({
       ...c,
       tailleFiche: c.tailleFiche ?? 3,
       documents: c.documents ?? [],
       exercices: c.exercices ?? [],
       // Les fiches de l'ancien format (une seule taille) ne sont pas reprises.
-      fiche: c.fiche && c.fiche.sections?.every((s) => s.points.every((p) => typeof p === "object")) ? c.fiche : null,
+      fiche:
+        c.fiche &&
+        c.fiche.sections?.every((s) =>
+          s.points.every((p) => typeof p === "object"),
+        )
+          ? c.fiche
+          : null,
       flashcards: (c.flashcards ?? []).map((f) => ({
         ...f,
         intervalle: f.intervalle ?? 0,
@@ -369,7 +537,6 @@ export function normaliser(
     calendrier: d.calendrier ?? null,
   };
 }
-
 
 /** Fond pastel dérivé de la couleur d'une matière. */
 export const pastel = (couleur: string, pct = 14) =>

@@ -4,11 +4,29 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, Clock, Eye, GraduationCap, Send } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Clock,
+  Eye,
+  GraduationCap,
+  Send,
+} from "lucide-react";
 import { LECONS } from "@/contenu/lecons";
+import { formule } from "@/components/Formule";
 import type { Lecon } from "@/lib/types";
 import { demandeLecon } from "@/lib/contenu";
-import { Bouton, Carte, Champ, EnTete, EnvoyerAClaude, EtatVide, classeSaisie, pluriel } from "@/components/ui";
+import {
+  Bouton,
+  Carte,
+  Champ,
+  EnTete,
+  EnvoyerAClaude,
+  EtatVide,
+  classeSaisie,
+  pluriel,
+} from "@/components/ui";
 
 const NIVEAUX = ["Seconde", "Première", "Terminale"];
 
@@ -32,7 +50,10 @@ function Apprendre() {
 
   return (
     <div>
-      <EnTete titre="Apprendre" sousTitre="Des leçons pas à pas, rédigées pour toi sur le sujet de ton choix." />
+      <EnTete
+        titre="Apprendre"
+        sousTitre="Des leçons pas à pas, rédigées pour toi sur le sujet de ton choix."
+      />
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div>
           <h2 className="mb-3 text-[20px]">Tes leçons</h2>
@@ -59,7 +80,9 @@ function Apprendre() {
                     <p className="surtitre text-accent">
                       {l.matiere} · {l.niveau}
                     </p>
-                    <p className="mt-2 font-display text-[22px] leading-tight">{l.titre}</p>
+                    <p className="mt-2 font-display text-[22px] leading-tight">
+                      {l.titre}
+                    </p>
                     <p className="mt-3 flex items-center gap-3 text-[13px] text-muted">
                       <span className="flex items-center gap-1">
                         <Clock size={13} /> {l.duree}
@@ -76,8 +99,8 @@ function Apprendre() {
         <Carte className="h-fit">
           <h2 className="text-[20px]">Demander une leçon</h2>
           <p className="mt-1 text-[14px] text-muted">
-            Claude la rédige et l&apos;ajoute ici. Pour apprendre en discutant, pose-lui directement tes
-            questions dans votre conversation.
+            Claude la rédige et l&apos;ajoute ici. Pour apprendre en discutant,
+            pose-lui directement tes questions dans votre conversation.
           </p>
           <form
             className="mt-4 flex flex-col gap-3"
@@ -96,8 +119,14 @@ function Apprendre() {
               />
             </Champ>
             <div>
-              <span className="mb-1.5 block text-[13px] font-semibold text-muted">Niveau</span>
-              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Niveau">
+              <span className="mb-1.5 block text-[13px] font-semibold text-muted">
+                Niveau
+              </span>
+              <div
+                className="flex flex-wrap gap-2"
+                role="radiogroup"
+                aria-label="Niveau"
+              >
                 {NIVEAUX.map((n) => (
                   <button
                     type="button"
@@ -106,7 +135,9 @@ function Apprendre() {
                     aria-checked={niveau === n}
                     onClick={() => setNiveau(n)}
                     className={`min-h-11 rounded-full px-4 text-[14px] font-medium transition-colors ${
-                      niveau === n ? "bg-ink text-bg" : "bg-ink/5 text-ink hover:bg-ink/10"
+                      niveau === n
+                        ? "bg-ink text-bg"
+                        : "bg-ink/5 text-ink hover:bg-ink/10"
                     }`}
                   >
                     {n}
@@ -165,7 +196,9 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
       <p className="surtitre text-accent">
         {lecon.matiere} · {lecon.niveau}
       </p>
-      <h1 className="mt-1 text-[34px] leading-tight sm:text-[44px]">{lecon.titre}</h1>
+      <h1 className="mt-1 text-[34px] leading-tight sm:text-[44px]">
+        {lecon.titre}
+      </h1>
 
       {/* Progression */}
       <ol className="my-6 flex gap-2" aria-label="Étapes de la leçon">
@@ -177,8 +210,12 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
               aria-label={`Étape ${i + 1} : ${x.titre}`}
               className="flex min-h-11 w-full flex-col justify-center gap-1.5"
             >
-              <span className={`h-1.5 rounded-full transition-colors ${i < etape || fini ? "bg-ok" : i === etape ? "bg-accent" : "bg-line"}`} />
-              <span className={`hidden truncate text-left text-[12.5px] sm:block ${i === etape ? "font-semibold" : "text-muted"}`}>
+              <span
+                className={`h-1.5 rounded-full transition-colors ${i < etape || fini ? "bg-ok" : i === etape ? "bg-accent" : "bg-line"}`}
+              />
+              <span
+                className={`hidden truncate text-left text-[12.5px] sm:block ${i === etape ? "font-semibold" : "text-muted"}`}
+              >
                 {x.titre}
               </span>
             </button>
@@ -199,7 +236,8 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
             </div>
             <h2 className="text-[28px]">Leçon terminée</h2>
             <p className="mt-1 max-w-[380px] text-[15px] text-muted">
-              Si un point reste flou, reprends l&apos;étape concernée ou pose ta question à Claude.
+              Si un point reste flou, reprends l&apos;étape concernée ou pose ta
+              question à Claude.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               <Bouton variante="contour" onClick={() => aller(0)}>
@@ -221,7 +259,11 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
             exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.25 }}
           >
-            {etape === 0 && <p className="mb-5 text-[16px] leading-relaxed text-muted">{lecon.intro}</p>}
+            {etape === 0 && (
+              <p className="mb-5 text-[16px] leading-relaxed text-muted">
+                {formule(lecon.intro)}
+              </p>
+            )}
             <Carte>
               <p className="surtitre text-muted">
                 Étape {etape + 1} sur {total}
@@ -229,30 +271,38 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
               <h2 className="mt-1 text-[26px]">{e.titre}</h2>
               <div className="mt-3 flex flex-col gap-3 text-[16px] leading-relaxed">
                 {e.texte.map((t) => (
-                  <p key={t}>{t}</p>
+                  <p key={t}>{formule(t)}</p>
                 ))}
               </div>
               {e.exemple && (
                 <div className="mt-4 rounded-xl bg-accent-soft p-4">
                   <p className="surtitre mb-1 text-accent">Exemple</p>
-                  <p className="text-[15px] leading-relaxed">{e.exemple}</p>
+                  <p className="whitespace-pre-line text-[15px] leading-relaxed">
+                    {formule(e.exemple)}
+                  </p>
                 </div>
               )}
               {e.question && (
                 <div className="mt-4 rounded-xl border border-line p-4">
                   <p className="surtitre mb-1 text-muted">Vérifie-toi</p>
-                  <p className="text-[15.5px] font-semibold">{e.question.q}</p>
+                  <p className="text-[15.5px] font-semibold">
+                    {formule(e.question.q)}
+                  </p>
                   {reponseVue ? (
                     <motion.p
                       role="status"
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-2 text-[15px] leading-relaxed"
+                      className="whitespace-pre-line mt-2 text-[15px] leading-relaxed"
                     >
-                      {e.question.r}
+                      {formule(e.question.r)}
                     </motion.p>
                   ) : (
-                    <Bouton variante="contour" className="mt-3" onClick={() => setReponseVue(true)}>
+                    <Bouton
+                      variante="contour"
+                      className="mt-3"
+                      onClick={() => setReponseVue(true)}
+                    >
                       <Eye size={16} /> Voir la réponse
                     </Bouton>
                   )}
@@ -260,11 +310,16 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
               )}
             </Carte>
             <div className="mt-5 flex justify-between gap-2">
-              <Bouton variante="fantome" disabled={etape === 0} onClick={() => aller(etape - 1)}>
+              <Bouton
+                variante="fantome"
+                disabled={etape === 0}
+                onClick={() => aller(etape - 1)}
+              >
                 <ArrowLeft size={16} /> Précédent
               </Bouton>
               <Bouton onClick={() => aller(etape + 1)}>
-                {etape + 1 === total ? "Terminer" : "Suivant"} <ArrowRight size={16} />
+                {etape + 1 === total ? "Terminer" : "Suivant"}{" "}
+                <ArrowRight size={16} />
               </Bouton>
             </div>
           </motion.div>

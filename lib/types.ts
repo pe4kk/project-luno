@@ -128,6 +128,24 @@ export type ChapitrePublie = {
   exercices: Exercice[];
 };
 
+/** Date publiée par Claude dans le calendrier de l'utilisateur (`contenu/evenements.ts`). */
+export type EvenementPublie = {
+  /** Identifiant stable : le DST créé s'appelle `pub-<id>`. */
+  id: string;
+  /** À augmenter pour corriger un événement déjà publié. */
+  version: number;
+  matiere: { nom: string; couleur: string; emoji: string };
+  titre: string;
+  /** AAAA-MM-JJ */
+  date: string;
+  heure?: string;
+  /** 0 si la durée n'est pas connue. */
+  dureeMin: number;
+  notes?: string;
+  /** Identifiants `id` des chapitres publiés à réviser. */
+  chapitres?: string[];
+};
+
 export type Lecon = {
   id: string;
   titre: string;

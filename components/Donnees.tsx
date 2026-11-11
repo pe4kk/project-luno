@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Download, Settings, Trash2, Undo2, Upload } from "lucide-react";
 import { normaliser, useLuno } from "@/lib/store";
 import { BIBLIOTHEQUE } from "@/contenu/bibliotheque";
+import { EVENEMENTS } from "@/contenu/evenements";
 import { todayISO } from "@/lib/dates";
 import { Bouton, Fenetre, pluriel } from "./ui";
 
@@ -15,6 +16,12 @@ export function SynchroBibliotheque() {
     const { publies, importerPublie } = useLuno.getState();
     for (const p of BIBLIOTHEQUE) {
       if (publies[p.id] !== p.version) importerPublie(p);
+    }
+    // Les dates viennent après les chapitres, pour pouvoir s'y rattacher.
+    const { importerEvenement } = useLuno.getState();
+    for (const e of EVENEMENTS) {
+      if (useLuno.getState().publies[`evt:${e.id}`] !== e.version)
+        importerEvenement(e);
     }
   }, []);
   return null;
@@ -66,7 +73,8 @@ export function BoutonDonnees() {
   const [erreur, setErreur] = useState("");
   const fichier = useRef<HTMLInputElement>(null);
   const nbCartes = s.chapitres.reduce((n, c) => n + c.flashcards.length, 0);
-  const vide = s.matieres.length === 0 && s.dsts.length === 0 && s.taches.length === 0;
+  const vide =
+    s.matieres.length === 0 && s.dsts.length === 0 && s.taches.length === 0;
 
   const exporter = () => {
     const contenu = JSON.stringify(
@@ -83,7 +91,9 @@ export function BoutonDonnees() {
       null,
       2,
     );
-    const url = URL.createObjectURL(new Blob([contenu], { type: "application/json" }));
+    const url = URL.createObjectURL(
+      new Blob([contenu], { type: "application/json" }),
+    );
     const a = document.createElement("a");
     a.href = url;
     a.download = `luno-sauvegarde-${todayISO()}.json`;
@@ -95,11 +105,14 @@ export function BoutonDonnees() {
     setErreur("");
     try {
       const d = JSON.parse(await f.text());
-      if (d?.application !== "luno" || !Array.isArray(d.matieres)) throw new Error("format");
+      if (d?.application !== "luno" || !Array.isArray(d.matieres))
+        throw new Error("format");
       s.remplacerTout(normaliser(d));
       setOuverte(false);
     } catch {
-      setErreur("Ce fichier n'est pas une sauvegarde Luno. Choisis un fichier « luno-sauvegarde-….json ».");
+      setErreur(
+        "Ce fichier n'est pas une sauvegarde Luno. Choisis un fichier « luno-sauvegarde-….json ».",
+      );
     }
   };
 
@@ -113,12 +126,17 @@ export function BoutonDonnees() {
       >
         <Settings size={18} />
       </button>
-      <Fenetre ouverte={ouverte} fermer={() => setOuverte(false)} titre="Mes données">
+      <Fenetre
+        ouverte={ouverte}
+        fermer={() => setOuverte(false)}
+        titre="Mes données"
+      >
         <p className="text-[14.5px] leading-relaxed text-muted">
-          Tes matières, tes DST, tes tâches et ta progression sont enregistrés dans ce navigateur uniquement (
-          {pluriel(s.matieres.length, "matière")}, {pluriel(s.dsts.length, "DST", "DST")},{" "}
-          {pluriel(nbCartes, "flashcard")}). Fais une sauvegarde de temps en temps, et pour passer sur un
-          autre appareil.
+          Tes matières, tes DST, tes tâches et ta progression sont enregistrés
+          dans ce navigateur uniquement ({pluriel(s.matieres.length, "matière")}
+          , {pluriel(s.dsts.length, "DST", "DST")},{" "}
+          {pluriel(nbCartes, "flashcard")}). Fais une sauvegarde de temps en
+          temps, et pour passer sur un autre appareil.
         </p>
         <div className="mt-4 flex flex-col gap-2">
           <Bouton onClick={exporter} disabled={vide}>
@@ -140,7 +158,8 @@ export function BoutonDonnees() {
           </Bouton>
           {erreur && <p className="text-[13.5px] text-bad">{erreur}</p>}
           <p className="text-[13px] text-muted">
-            Restaurer remplace les données actuelles. Tu peux annuler juste après.
+            Restaurer remplace les données actuelles. Tu peux annuler juste
+            après.
           </p>
         </div>
         <div className="mt-5 flex flex-col gap-2 border-t border-line pt-4">
