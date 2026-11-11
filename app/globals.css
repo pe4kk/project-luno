@@ -69,13 +69,6 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-:root[data-theme="dark"] body {
-  background-image:
-    radial-gradient(800px 500px at 85% -5%, rgb(181 87 61 / 0.25), transparent 65%),
-    radial-gradient(600px 500px at 0% 100%, rgb(230 191 181 / 0.08), transparent 65%);
-  background-attachment: fixed;
-}
-
 body {
   font-family: var(--font-sans);
 }
