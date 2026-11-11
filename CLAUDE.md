@@ -65,7 +65,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - `app/` : `page.tsx` (accueil), `calendrier/`, `taches/` (onglet « À
     faire »), `travail/`, `apprendre/`, `exercices/` (onglet « S'exercer »).
     Six onglets : c'est le maximum qui tient dans la barre du bas sur
-    téléphone. `recherche/` n'est pas un onglet : on y accède par la loupe
+    téléphone. Une grille ou une rangée trop large sur téléphone fait dézoomer
+  toute la page et coupe le bas des fenêtres : les tests doivent comparer
+  `innerWidth` à `visualViewport.width`. `recherche/` n'est pas un onglet : on y accède par la loupe
     de la barre du haut.
   - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
     thème), barre du bas sur téléphone, transition entre pages.
@@ -135,7 +137,13 @@ un PDF ou une photo directement dans le chat.
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
-  `physique-mouvement.ts`.
+  `physique-mouvement.ts`, `physique-methode.ts` (fiche « Rédiger comme ton
+  prof l'attend » et leçon guidée du même nom).
+- **Dates publiées** (`contenu/evenements.ts`) : chaque entrée crée un DST
+  `pub-<id>` chez tous les utilisateurs, rattaché aux chapitres publiés
+  indiqués par leur `id`. Une date supprimée par l'utilisateur ne revient
+  pas, sauf si sa `version` augmente. Publiées : interro de PC et DM du
+  16/11/2026.
 - Ses anciennes fiches faites dans d'autres conversations sont des documents
   Claude Docs visibles avec l'outil Artifact (`action: list`), à lire avec le
   connecteur Claude Docs. Déjà repris : « HGGSP Thème 4 » (fiches courtes et
@@ -269,4 +277,14 @@ un PDF ou une photo directement dans le chat.
 
 ## Préférences de l'utilisateur
 
-_À remplir au fil des conversations._
+- (2026-11-11) Quand il transmet une consigne datée (mail d'un prof, DM,
+  interro), **Claude ajoute lui-même la date au calendrier** dans
+  `contenu/evenements.ts`, rattachée aux chapitres, au lieu de lui demander
+  de le faire. Les tâches « À faire » restent à coller par lui (Claude n'y
+  a pas accès) : lui fournir la liste prête à coller.
+- (2026-11-11) Il veut que Claude **utilise le skill « learn »** pour l'aider
+  à apprendre : diagnostiquer avant d'expliquer, une question à la fois,
+  exemples parallèles plutôt que la réponse à un travail noté. Les leçons de
+  l'onglet Apprendre sont construites sur ce principe.
+- Il veut des fiches qui reflètent **ce que son prof attend** (méthode de
+  rédaction, encadrés, A.N.), pas seulement le contenu du cours.
