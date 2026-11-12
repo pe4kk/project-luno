@@ -227,7 +227,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     séance repart d'une feuille blanche.
     Les touches de la calculatrice écrivent au curseur (vu sur son iPhone le
     2026-11-12 : elles écrivaient toujours à la fin) ; en-tête en icônes seules
-    sous 420 px. Touche fraction a⁄b (insère « ()÷() », curseur dans le
+    sous 420 px. Dessin au doigt sur iPhone : `touchstart`/`touchmove` refusés
+    sur la toile (écouteurs non passifs) et page figée (`overflow: hidden`) tant
+    que la feuille est ouverte, sinon un trait vertical faisait défiler la page. Touche fraction a⁄b (insère « ()÷() », curseur dans le
     numérateur ; une sélection devient le numérateur), aperçu dessiné de la
     fraction au-dessus du résultat, C dans le coin de l'écran de calcul.
   - **Suite de la critique de design du 2026-11-12** (« corrige » demandé) :

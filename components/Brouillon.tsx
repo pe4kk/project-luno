@@ -68,6 +68,18 @@ export function AvecBrouillon({
 }) {
   const grand = useGrandEcran();
   const [ouvert, setOuvert] = useState(false);
+  // Téléphone : la page derrière la feuille ne doit pas défiler pendant qu'on dessine.
+  useEffect(() => {
+    if (!ouvert || grand !== false) return;
+    const html = document.documentElement;
+    const avant = [html.style.overflow, document.body.style.overflow, html.style.overscrollBehavior];
+    html.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    return () => {
+      [html.style.overflow, document.body.style.overflow, html.style.overscrollBehavior] = avant;
+    };
+  }, [ouvert, grand]);
   // Une séance = un jeu de brouillons : une nouvelle série repart d'une feuille blanche.
   const [seance] = useState(() => Math.random().toString(36).slice(2));
   const panneau = <Panneau cle={`${seance}:${cle}`} cs={cs} versAN={versAN} fermer={() => setOuvert(false)} />;
@@ -136,7 +148,7 @@ export function AvecBrouillon({
               animate={{ transform: "translate3d(0, 0%, 0)" }}
               exit={{ transform: "translate3d(0, 100%, 0)" }}
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 bottom-0 z-[46] flex h-[72dvh] overflow-x-hidden flex-col overflow-hidden rounded-t-[24px] bg-surface pb-[env(safe-area-inset-bottom)] shadow-pop"
+              className="fixed inset-x-0 bottom-0 z-[46] flex h-[72dvh] touch-pan-y overflow-x-hidden overscroll-contain flex-col overflow-hidden rounded-t-[24px] bg-surface pb-[env(safe-area-inset-bottom)] shadow-pop"
             >
               <button
                 type="button"
@@ -235,6 +247,20 @@ function Panneau({
 
 function Dessin({ cle }: { cle: string }) {
   const toile = useRef<HTMLCanvasElement>(null);
+  // Sur iPhone, `touch-action: none` ne suffit pas toujours : un trait vertical faisait
+  // défiler la page. On refuse donc le geste tactile à la source (écouteurs non passifs) ;
+  // les événements « pointer » qui dessinent continuent d'arriver.
+  useEffect(() => {
+    const c = toile.current;
+    if (!c) return;
+    const bloquer = (e: TouchEvent) => e.preventDefault();
+    c.addEventListener("touchstart", bloquer, { passive: false });
+    c.addEventListener("touchmove", bloquer, { passive: false });
+    return () => {
+      c.removeEventListener("touchstart", bloquer);
+      c.removeEventListener("touchmove", bloquer);
+    };
+  }, []);
   const base = useRef<HTMLCanvasElement | null>(null);
   const encours = useRef<Trait | null>(null);
   const image = useRef(0);
