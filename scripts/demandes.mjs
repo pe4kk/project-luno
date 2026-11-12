@@ -73,6 +73,11 @@ function verifierErreurs(r) {
     for (const k of ["erreur", "conseil", "source", "chapitre"]) if (e[k] !== undefined) texteOk(e[k], `erreurs[${i}].${k}`);
   });
 }
+function verifierNote(r) {
+  exiger(r && r.note && typeof r.note === "object", "note : { titre, texte }");
+  texteOk(r.note?.titre, "note.titre");
+  texteOk(r.note?.texte, "note.texte");
+}
 const TYPES = new Set([undefined, "qcm", "vraiFaux", "trou", "ordre", "ouverte"]);
 function verifierCours(c) {
   texteOk(c.titre, "titre");
@@ -106,6 +111,7 @@ if (commande === "liste") {
   if (ligne.type === "lecon") verifierLecon(reponse);
   else if (ligne.type === "erreurs" && ligne.meta?.bilan) verifierBilan(reponse);
   else if (ligne.type === "erreurs") verifierErreurs(reponse);
+  else if (ligne.meta?.note) verifierNote(reponse);
   else verifierCours(reponse);
   if (erreurs.length) {
     console.error("Réponse refusée, à corriger :\n- " + erreurs.join("\n- "));

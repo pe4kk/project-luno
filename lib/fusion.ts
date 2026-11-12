@@ -176,6 +176,15 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     if (!meme) erreurs.push(x);
   }
 
+  // Notes : même identifiant, on garde la version modifiée en dernier.
+  const notes = [...(a.notes ?? [])];
+  for (const n of b.notes ?? []) {
+    const x = { ...n, matiereId: matiere(n.matiereId) };
+    const i = notes.findIndex((y) => y.id === x.id);
+    if (i < 0) notes.push(x);
+    else if ((x.modifie ?? 0) > (notes[i].modifie ?? 0)) notes[i] = x;
+  }
+
   const publies = { ...b.publies };
   for (const [k, v] of Object.entries(a.publies)) publies[k] = Math.max(v, publies[k] ?? 0);
 
@@ -185,6 +194,7 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     dsts,
     taches,
     erreurs,
+    notes,
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };

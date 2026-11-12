@@ -313,10 +313,37 @@ export type ErreurNotee = {
   repetee?: number;
 };
 
+/** Un document joint à une note : photo ou PDF rangé dans le stockage privé du compte. */
+export type DocumentNote = {
+  /** Nom du fichier d'origine. */
+  nom: string;
+  /** Chemin dans le stockage `demandes` : `<compte>/notes/<note>/<n>.jpg|pdf`. */
+  chemin: string;
+  type: "image" | "pdf";
+};
+
+/**
+ * Une note d'une matière (onglet « Notes ») : un texte libre (exposé, oral, notes de
+ * cours, brouillon de rédaction…) et ses documents joints.
+ */
+export type NoteMatiere = {
+  id: string;
+  matiereId: string;
+  titre: string;
+  /** Texte libre ; la notation des formules et la mise en forme ([[ ]], __ __, == ==) sont dessinées. */
+  texte: string;
+  documents: DocumentNote[];
+  /** AAAA-MM-JJ, date de création. */
+  date: string;
+  /** Horodatage (ms) de la dernière modification : la fusion garde la plus récente. */
+  modifie: number;
+};
+
 export type Donnees = {
   matieres: Matiere[];
   chapitres: Chapitre[];
   dsts: Dst[];
   taches: Tache[];
   erreurs: ErreurNotee[];
+  notes: NoteMatiere[];
 };

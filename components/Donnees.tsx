@@ -112,6 +112,7 @@ export function BoutonDonnees() {
         dsts: s.dsts,
         taches: s.taches,
         erreurs: s.erreurs,
+        notes: s.notes,
         publies: s.publies,
         calendrier: s.calendrier,
       },

@@ -32,6 +32,7 @@ import {
 } from "@/components/ui";
 import { VueChapitre } from "@/components/travail/VueChapitre";
 import { Revision } from "@/components/travail/Revision";
+import { VueNotes } from "@/components/travail/Notes";
 import { VueErreurs } from "@/components/travail/Erreurs";
 import { Emoji } from "@/components/Emoji";
 
@@ -65,7 +66,8 @@ function Travail() {
   // « Préparer » un DST depuis l'accueil : toutes les cartes de ses chapitres.
   const dstRevise = s.dsts.find((d) => d.id === params.get("r"));
   const duJour = revisionDuJour2(chapitres, s.dsts, s.jour);
-  const ongletMatiere = params.get("o") === "erreurs" ? "erreurs" : "chapitres";
+  const ongletMatiere =
+    params.get("o") === "erreurs" ? "erreurs" : params.get("o") === "notes" ? "notes" : "chapitres";
   const { conteneur: ongletsMatiereConteneur, pastille: ongletsMatierePastille } = usePastille(`${matiere?.id}-${ongletMatiere}`);
 
   // Fenêtre de matière : `true` pour une création, la matière pour une modification.
@@ -192,6 +194,14 @@ function Travail() {
                       : ""
                   }`,
                 },
+                {
+                  id: "notes",
+                  label: `Notes${
+                    s.notes.some((n) => n.matiereId === matiere.id)
+                      ? ` (${s.notes.filter((n) => n.matiereId === matiere.id).length})`
+                      : ""
+                  }`,
+                },
               ].map((o) => {
                 const actif = ongletMatiere === o.id;
                 return (
@@ -202,7 +212,7 @@ function Travail() {
                     data-actif={actif}
                     onClick={() =>
                       router.replace(
-                        lienTravail({ m: matiere.id, o: o.id === "erreurs" ? "erreurs" : undefined }),
+                        lienTravail({ m: matiere.id, o: o.id === "chapitres" ? undefined : o.id }),
                         { scroll: false },
                       )
                     }
@@ -216,8 +226,10 @@ function Travail() {
               })}
             </div>
 
-            {params.get("o") === "erreurs" ? (
+            {ongletMatiere === "erreurs" ? (
               <VueErreurs matiere={matiere} />
+            ) : ongletMatiere === "notes" ? (
+              <VueNotes matiere={matiere} noteId={params.get("n")} />
             ) : (
             <>
             <form

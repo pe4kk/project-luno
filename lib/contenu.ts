@@ -234,6 +234,17 @@ export function lireListe(texte: string, aujourdhui = new Date()): { texte: stri
 }
 
 /** Demande d'analyse d'une ancienne évaluation (photos jointes) ou de conseils du prof. */
+export function demandeNote(matiere: string, precision: string): string {
+  return [
+    "[Luno] Texte à taper",
+    `Matière : ${matiere}`,
+    "Demande : tape fidèlement le texte manuscrit des photos jointes (sans les mots barrés), en gardant les paragraphes, pour l'onglet Notes. Réponse : { note: { titre, texte } }.",
+    precision.trim() ? `\n--- PRÉCISIONS DE L'ÉLÈVE ---\n${precision.trim()}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 export function demandeErreurs(matiere: string, notes: string): string {
   return [
     "[Luno] Erreurs d'évaluation",

@@ -4,7 +4,7 @@ import { create } from "zustand";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase, synchroDisponible, useSynchro } from "./synchro";
 import { useLuno } from "./store";
-import type { ChapitrePublie, ErreurNotee, Lecon } from "./types";
+import type { ChapitrePublie, DocumentNote, ErreurNotee, Lecon } from "./types";
 
 /**
  * Demandes envoyées à Claude depuis le site (table `demandes`, voir supabase/schema.sql).
@@ -21,6 +21,12 @@ export type ReponseErreurs = {
   /** Bilan d'une interro blanche (demande « erreurs » avec `meta.bilan`). */
   bilan?: { resume: string; pointsForts: string[]; aRetravailler: string[]; conseils: string[] };
 };
+/**
+ * Réponse à une demande « cours » avec `meta.note` : un texte manuscrit (photos) tapé
+ * par Claude, rangé dans l'onglet « Notes » de la matière.
+ */
+export type ReponseNote = { note: { titre: string; texte: string } };
+
 export type Demande = {
   id: string;
   type: TypeDemande;
@@ -29,9 +35,17 @@ export type Demande = {
    * `bilan` : bilan d'une interro blanche. La table n'accepte que trois types : il passe
    * par le type « erreurs », ce qui évite de modifier la base.
    */
-  meta: { matiere?: string; chapitre?: string; images?: string[]; bilan?: boolean; matieres?: string[] };
+  meta: {
+    matiere?: string;
+    chapitre?: string;
+    images?: string[];
+    bilan?: boolean;
+    matieres?: string[];
+    /** Texte à taper pour l'onglet « Notes » (passe par le type « cours »). */
+    note?: boolean;
+  };
   statut: "en_attente" | "prete" | "erreur";
-  reponse: (Lecon | ChapitrePublie | ReponseErreurs) | null;
+  reponse: (Lecon | ChapitrePublie | ReponseErreurs | ReponseNote) | null;
   erreur: string | null;
   cree: string;
   traite: string | null;
@@ -80,7 +94,7 @@ export async function chargerDemandes() {
  * Réduit une photo avant l'envoi : 1568 px au plus grand côté (au-delà, Claude la réduit
  * de toute façon), en JPEG. Une photo de téléphone passe de 3 à 5 Mo à 200 à 400 Ko.
  */
-async function compresser(fichier: File): Promise<Blob> {
+export async function compresser(fichier: File): Promise<Blob> {
   const image = await createImageBitmap(fichier);
   const echelle = Math.min(1, 1568 / Math.max(image.width, image.height));
   const toile = document.createElement("canvas");
@@ -132,6 +146,36 @@ export async function envoyerDemande(
   await chargerDemandes();
 }
 
+/**
+ * Joint une photo (réduite en JPEG) ou un PDF à une note : rangé dans le stockage privé
+ * du compte, `<compte>/notes/<note>/<horodatage>.jpg|pdf`.
+ */
+export async function envoyerDocumentNote(noteId: string, f: File): Promise<DocumentNote> {
+  const compte = useSynchro.getState().session?.user.id;
+  if (!compte) throw new Error("non connecté");
+  const pdf = f.type === "application/pdf";
+  const chemin = `${compte}/notes/${noteId}/${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${pdf ? "pdf" : "jpg"}`;
+  const { error } = await supabase()
+    .storage.from("demandes")
+    .upload(chemin, pdf ? f : await compresser(f), {
+      contentType: pdf ? "application/pdf" : "image/jpeg",
+    });
+  if (error) throw error;
+  return { nom: f.name, chemin, type: pdf ? "pdf" : "image" };
+}
+
+/** Adresse temporaire (1 h) d'un document joint, ou `null` sans compte ou sans réseau. */
+export async function lienDocumentNote(chemin: string): Promise<string | null> {
+  if (!useSynchro.getState().session) return null;
+  const { data } = await supabase().storage.from("demandes").createSignedUrl(chemin, 3600);
+  return data?.signedUrl ?? null;
+}
+
+export async function retirerDocumentNote(chemin: string) {
+  if (!useSynchro.getState().session) return;
+  await supabase().storage.from("demandes").remove([chemin]);
+}
+
 export async function supprimerDemande(id: string) {
   await supabase().from("demandes").delete().eq("id", id);
   await chargerDemandes();
@@ -175,6 +219,22 @@ function reprendreCours() {
       }
       if (!d.meta.bilan && parMatiere.size === 0) continue;
       for (const [mid, l] of parMatiere) s.ajouterErreurs(mid, l, d.titre);
+      useLuno.setState((x) => ({ publies: { ...x.publies, [id]: 1 } }));
+      continue;
+    }
+    if (d.type === "cours" && d.meta.note) {
+      if (d.statut !== "prete" || !d.reponse) continue;
+      const id = idReponse(d);
+      const s = useLuno.getState();
+      const r = (d.reponse as ReponseNote).note;
+      // L'identifiant de la note est celui de la demande : deux appareils qui la
+      // reprennent en même temps n'en font qu'une à la synchronisation.
+      if (s.publies[id] || !r?.texte || s.notes.some((n) => n.id === id)) continue;
+      const nom = d.meta.matiere?.trim() || "Notes";
+      const mid =
+        s.matieres.find((x) => x.nom === nom)?.id ??
+        s.ajouterMatiere({ nom, couleur: "#9a8f8a", emoji: "📝" });
+      s.ajouterNote(mid, { id, titre: r.titre, texte: r.texte, documents: [] });
       useLuno.setState((x) => ({ publies: { ...x.publies, [id]: 1 } }));
       continue;
     }

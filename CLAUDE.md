@@ -138,6 +138,17 @@ fiches de révision ; le slider règle la longueur de la fiche.
     relire avant chaque évaluation, alimentée à la main ou par une demande
     `erreurs` (photos de la copie corrigée, conseils du prof) dont la réponse
     est `{ erreurs: [{ titre, erreur, correction, conseil, chapitre, source }] }`.
+  - **Notes d'une matière** (2026-11-12, demandé pour son oral d'EMC) : troisième
+    onglet « Notes » à côté de « Chapitres » et « Mes erreurs »
+    (`components/travail/Notes.tsx`, `?o=notes&n=<note>`). Une note = titre + texte
+    libre (écrit ou dicté), modes Lire / Modifier, enregistrement automatique, nombre
+    de mots et durée à l'oral (130 mots/min), copier, « Télécharger pour Word » (.doc
+    en HTML), documents joints (photos et PDF dans le stockage `demandes`,
+    `<compte>/notes/<note>/…`, compte connecté seulement ; le seau n'accepte que JPEG
+    et PDF). `notes` dans les données (synchronisées, fusion par id, la plus récente
+    gagne). Carte « Faire taper une feuille » : demande de type `cours` avec
+    `meta.note: true`, réponse `{ note: { titre, texte } }` (vérifiée par
+    `verifierNote()`), reprise en note avec l'id `dem-<id>` (matière créée si absente).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au
