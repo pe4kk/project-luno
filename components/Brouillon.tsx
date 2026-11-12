@@ -68,16 +68,41 @@ export function AvecBrouillon({
 }) {
   const grand = useGrandEcran();
   const [ouvert, setOuvert] = useState(false);
-  // Téléphone : la page derrière la feuille ne doit pas défiler pendant qu'on dessine.
+  // Téléphone : la page derrière la feuille ne doit pas bouger pendant qu'on dessine.
+  // Dans un navigateur ouvert depuis une appli (✕ en haut, boussole en bas), tirer vers
+  // le bas quand la page est tout en haut ferme le navigateur : vu sur son iPhone le
+  // 2026-11-12, chaque trait vertical faisait descendre toute la fenêtre. On garde donc
+  // la page à au moins 1 px du haut, et le site refuse lui-même tout glissement de doigt
+  // dans le brouillon (sauf dans les zones qui défilent : notes, calculatrice).
   useEffect(() => {
     if (!ouvert || grand !== false) return;
     const html = document.documentElement;
-    const avant = [html.style.overflow, document.body.style.overflow, html.style.overscrollBehavior];
-    html.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+    const avant = { marge: body.style.paddingBottom, rebond: html.style.overscrollBehavior, y: window.scrollY };
+    body.style.paddingBottom = "100dvh";
     html.style.overscrollBehavior = "none";
+    if (window.scrollY < 1) window.scrollTo(0, 1);
+    const position = window.scrollY;
+    const bloquer = (e: TouchEvent) => {
+      const cible = e.target as HTMLElement | null;
+      if (!cible?.closest?.("[data-brouillon]")) return;
+      if (cible.closest("[data-defile]")) return;
+      e.preventDefault();
+    };
+    // Si la page bouge quand même (barre d'adresse, clavier), on la remet en place.
+    const recaler = () => {
+      // Pendant la saisie au clavier (notes), iOS déplace la page pour montrer le champ.
+      if (document.activeElement?.matches?.("textarea, input")) return;
+      if (window.scrollY < 1) window.scrollTo(0, position);
+    };
+    document.addEventListener("touchmove", bloquer, { passive: false });
+    window.addEventListener("scroll", recaler);
     return () => {
-      [html.style.overflow, document.body.style.overflow, html.style.overscrollBehavior] = avant;
+      document.removeEventListener("touchmove", bloquer);
+      window.removeEventListener("scroll", recaler);
+      body.style.paddingBottom = avant.marge;
+      html.style.overscrollBehavior = avant.rebond;
+      window.scrollTo(0, avant.y);
     };
   }, [ouvert, grand]);
   // Une séance = un jeu de brouillons : une nouvelle série repart d'une feuille blanche.
@@ -133,6 +158,7 @@ export function AvecBrouillon({
           <>
             <motion.div
               key="voile"
+              data-brouillon
               aria-hidden
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -142,6 +168,7 @@ export function AvecBrouillon({
             />
             <motion.div
               key="feuille"
+              data-brouillon
               role="dialog"
               aria-label="Brouillon"
               initial={{ transform: "translate3d(0, 100%, 0)" }}
@@ -536,6 +563,7 @@ function Notes({ cle }: { cle: string }) {
     <div className="flex min-h-0 flex-1 flex-col px-3 pb-3 lg:p-4">
       <textarea
         aria-label="Notes de brouillon"
+        data-defile
         value={texte}
         onChange={(e) => {
           setTexte(e.target.value);
@@ -688,7 +716,7 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 lg:p-4">
+    <div data-defile className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-3 pb-3 lg:p-4">
       <div className="relative rounded-[14px] bg-bg px-3.5 py-2.5 text-right">
         <button
           type="button"

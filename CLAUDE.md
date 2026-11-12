@@ -228,8 +228,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Les touches de la calculatrice écrivent au curseur (vu sur son iPhone le
     2026-11-12 : elles écrivaient toujours à la fin) ; en-tête en icônes seules
     sous 420 px. Dessin au doigt sur iPhone : `touchstart`/`touchmove` refusés
-    sur la toile (écouteurs non passifs) et page figée (`overflow: hidden`) tant
-    que la feuille est ouverte, sinon un trait vertical faisait défiler la page. Touche fraction a⁄b (insère « ()÷() », curseur dans le
+    sur la toile, et tout glissement dans la feuille (`data-brouillon`, sauf
+    `data-defile`) refusé au niveau du document. Ne pas figer la page tout en
+    haut : dans un navigateur intégré à une appli (✕ en haut, boussole en bas),
+    tirer vers le bas depuis le haut ferme le navigateur (vu le 2026-11-12) ;
+    on garde la page à 1 px du haut (marge basse de 100dvh pendant l'ouverture). Touche fraction a⁄b (insère « ()÷() », curseur dans le
     numérateur ; une sélection devient le numérateur), aperçu dessiné de la
     fraction au-dessus du résultat, C dans le coin de l'écran de calcul.
   - **Suite de la critique de design du 2026-11-12** (« corrige » demandé) :
