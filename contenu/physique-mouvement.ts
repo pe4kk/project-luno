@@ -1,4 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
+import { CALCULS_CHAP11, CALCULS_CHAP9, CALCULS_FORCES, PROBLEMES_CHAP11 } from "./physique-entrainement";
 import { DEF_PC_CHAP9, DEF_PC_CHAP11, DEF_PC_FORCES } from "./definitions";
 import {
   ARCHIMEDE,
@@ -38,7 +39,8 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 4,
+    version: 5,
+    calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
     titre: "Chap. 9 · Décrire un mouvement",
@@ -515,7 +517,9 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 4,
+    version: 5,
+    problemes: PROBLEMES_CHAP11,
+    calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
     matiere,
     titre: "Chap. 11 · Mouvement d'un système et lois de Newton",
@@ -998,7 +1002,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 5,
+    version: 6,
+    calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
     titre: "Les forces en spé PC",

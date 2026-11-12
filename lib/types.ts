@@ -69,6 +69,56 @@ export type DefinitionCours = {
   schema?: Schema;
 };
 
+/**
+ * Problème rédigé comme en DST (S'exercer → Problèmes) : l'élève écrit chaque étape
+ * comme sur sa copie, puis compare à ce que le prof attend et coche le barème.
+ */
+export type EtapeProbleme = {
+  titre: string;
+  consigne: string;
+  /** La ligne attendue sur la copie (notation des formules autorisée). */
+  attendu: string;
+  /** Points du barème à cocher, chacun vaut `points / criteres.length`. */
+  criteres: string[];
+  points?: number;
+};
+export type Probleme = {
+  id: string;
+  titre: string;
+  enonce: string;
+  question: string;
+  schema?: Schema;
+  duree?: string;
+  etapes: EtapeProbleme[];
+};
+
+/** Donnée tirée au hasard entre `min` et `max`, par pas de `pas` (qui fixe les décimales). */
+export type VariableCalcul = { nom: string; min: number; max: number; pas: number };
+
+/**
+ * Calcul à valeurs changeantes (S'exercer → Calculs) : `enonce`, `question` et `methode`
+ * contiennent {nom} (valeur tirée) et {resultat} ; `formule` est une expression simple
+ * (+ − * / ^, parenthèses, sqrt) sur les noms des variables et constantes.
+ */
+export type Calcul = {
+  id: string;
+  titre: string;
+  enonce: string;
+  question: string;
+  variables: VariableCalcul[];
+  constantes?: Record<string, number>;
+  /** Expression littérale attendue, encadrée sur la copie : « Δt = {{Δv // g}} ». */
+  litterale: string;
+  formule: string;
+  /** « Δt », « F » : la grandeur cherchée. */
+  inconnue: string;
+  unite: string;
+  unitesProposees: string[];
+  /** Chiffres significatifs imposés ; sinon ceux de la donnée la moins précise. */
+  cs?: number;
+  methode: string;
+};
+
 export type Fiche = {
   sections: { titre: string; points: PointFiche[] }[];
   aRetenir: string[];
@@ -143,6 +193,9 @@ export type Chapitre = {
   documents: Document[];
   /** Définitions et propriétés du cours, telles qu'écrites (onglet « Déf »). */
   definitions?: DefinitionCours[];
+  /** Problèmes rédigés et calculs à valeurs changeantes (S'exercer). */
+  problemes?: Probleme[];
+  calculs?: Calcul[];
   /** Identifiant du chapitre publié dans `contenu/bibliotheque.ts`, s'il en vient. */
   publieId?: string;
 };
@@ -174,6 +227,8 @@ export type ChapitrePublie = {
   documents?: Document[];
   /** Définitions et propriétés telles qu'elles sont écrites dans le cours. */
   definitions?: DefinitionCours[];
+  problemes?: Probleme[];
+  calculs?: Calcul[];
   flashcards: { recto: string; verso: string; schema?: Schema }[];
   fiche: Fiche | null;
   exercices: Exercice[];

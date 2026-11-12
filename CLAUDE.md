@@ -150,6 +150,27 @@ fiches de révision ; le slider règle la longueur de la fiche.
     (`lib/pastille.ts`) : mesure FLIP puis `element.animate`, l'onglet actif
     porte `data-actif`. Pas de `backdrop-filter` plein écran (fenêtres) ; la
     barre du bas garde un flou léger (`backdrop-blur-md`).
+  - **S'exercer, quatre modes** (2026-11-12, choisis parmi 4 maquettes : A, C,
+    D) : « Série » (exercices rapides), « Problèmes » (A : situation réelle
+    rédigée étape par étape, l'élève compare à `attendu` et coche le barème
+    `criteres`, `components/exercices/Probleme.tsx`), « Calculs » (C : valeurs
+    tirées à chaque version, vérifie valeur, unité et chiffres significatifs,
+    `Calcul.tsx`, `lib/calcul.ts`), « Interro blanche » (D : questions de cours
+    tirées de l'onglet Déf + calculs, chrono 30 min / 1 h ou sans, correction
+    seulement à la remise, auto-notation des questions de cours, note sur 20,
+    erreurs envoyées dans « Mes erreurs », `Interro.tsx`). Types `Probleme` et
+    `Calcul` dans `lib/types.ts`, champs `problemes` et `calculs` d'un
+    chapitre ; contenu de physique dans `contenu/physique-entrainement.ts`
+    (3 problèmes, 6 calculs ; rien du DM). Dans un `Calcul`, `{nom}` = valeur
+    tirée, `{resultat}` = résultat ; `formule` en syntaxe simple (`m * v / dt`,
+    conversions écrites en nombres dans la formule) ; éviter les bornes qui
+    changent le nombre de c.s (« 0,8 », « 100 »).
+  - **Saisie de formules au téléphone** (`components/SaisieFormule.tsx`,
+    `lib/saisie.ts`) : raccourcis tapés (`del` → Δ, `sig` → Σ, `*` → ·, `^2` →
+    ², `^-1` → ⁻¹, `=>` → ⇒, `->` → →, `<=` → ≤, `!=` → ≠, `~=` → ≈, `sqrt` → √,
+    `pi` → π, `rho` → ρ), barre de touches (Δ, Σ, flèche de vecteur, fraction,
+    ², ⁻¹, ·, ×10^, √, ⇒) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
+    en vraie fraction (`versNotation`), les unités comme m/s restent en ligne.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
@@ -399,7 +420,7 @@ un PDF ou une photo directement dans le chat.
 - Idées proposées le 2026-11-10 et pas encore demandées : planning de
   révision automatique avant un DST, export des DST vers le calendrier du
   téléphone, vacances scolaires, notes et moyennes, flashcards inversées,
-  mode DST blanc, espace bac de français, impression PDF, hors connexion.
+  espace bac de français, impression PDF, hors connexion.
 - 2026-11-11 : synchronisation entre appareils en ligne (table créée,
   confirmation par mail désactivée). Pas encore confirmée par l'utilisateur
   sur ses appareils.

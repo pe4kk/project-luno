@@ -26,7 +26,7 @@ export function repererDefinitions(
   return trouvees;
 }
 
-function melanger<T>(liste: T[]): T[] {
+export function melanger<T>(liste: T[]): T[] {
   const a = [...liste];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

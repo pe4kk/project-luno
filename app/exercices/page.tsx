@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -41,8 +41,11 @@ import {
 import { formule, texteBrut } from "@/components/Formule";
 import { Curseur } from "@/components/Curseur";
 import { Emoji } from "@/components/Emoji";
+import { ModeCalculs, ModeProblemes } from "@/components/exercices/Modes";
+import { ModeInterro } from "@/components/exercices/Interro";
+import { classePastille, usePastille } from "@/lib/pastille";
 
-export default function Exercices() {
+function ModeSerie({ entete }: { entete: ReactNode }) {
   const { matieres, chapitres, noterFlashcard } = useLuno();
   const [chapitreId, setChapitreId] = useState<string | null>(null);
   const [nombre, setNombre] = useState(5);
@@ -232,10 +235,7 @@ export default function Exercices() {
   // Choix du chapitre
   return (
     <div>
-      <EnTete
-        titre="S'exercer"
-        sousTitre="Des exercices sur tes chapitres, corrigés tout de suite."
-      />
+      {entete}
       {disponibles.length === 0 ? (
         <EtatVide
           icone={<Target size={26} />}
@@ -650,5 +650,69 @@ function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
         </motion.div>
       )}
     </>
+  );
+}
+
+const MODES = [
+  { id: "serie", label: "Série", court: "Série" },
+  { id: "problemes", label: "Problèmes", court: "Problèmes" },
+  { id: "calculs", label: "Calculs", court: "Calculs" },
+  { id: "interro", label: "Interro blanche", court: "Interro" },
+] as const;
+type Mode = (typeof MODES)[number]["id"];
+
+export default function Exercices() {
+  const [mode, setMode] = useState<Mode>("serie");
+  const { conteneur, pastille } = usePastille(mode);
+  const entete = (
+    <>
+      <EnTete
+        titre="S'exercer"
+        sousTitre={
+          mode === "serie"
+            ? "Des exercices sur tes chapitres, corrigés tout de suite."
+            : mode === "problemes"
+              ? "Des situations réelles, rédigées comme ton prof l'attend."
+              : mode === "calculs"
+                ? "Expression littérale, A.N., unité, chiffres significatifs."
+                : "Comme le jour J : pas de correction avant de rendre la copie."
+        }
+      />
+      <div
+        ref={conteneur}
+        role="tablist"
+        aria-label="Mode"
+        className="relative mb-5 flex w-full max-w-[520px] rounded-full border border-line bg-surface p-1 shadow-card sm:inline-flex sm:w-auto"
+      >
+        <span ref={pastille} className={`${classePastille} rounded-full bg-ink`} />
+        {MODES.map((o) => {
+          const actif = mode === o.id;
+          return (
+            <button
+              key={o.id}
+              role="tab"
+              aria-selected={actif}
+              data-actif={actif}
+              onClick={() => setMode(o.id)}
+              className={`relative z-10 min-h-10 flex-1 whitespace-nowrap rounded-full px-2.5 text-[13.5px] font-semibold transition-colors duration-200 sm:flex-none sm:px-4 sm:text-[14px] ${
+                actif ? "text-bg" : "text-muted hover:text-ink"
+              }`}
+            >
+              <span className="sm:hidden">{o.court}</span>
+              <span className="hidden sm:inline">{o.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+  return mode === "serie" ? (
+    <ModeSerie entete={entete} />
+  ) : mode === "problemes" ? (
+    <ModeProblemes entete={entete} />
+  ) : mode === "calculs" ? (
+    <ModeCalculs entete={entete} />
+  ) : (
+    <ModeInterro entete={entete} />
   );
 }
