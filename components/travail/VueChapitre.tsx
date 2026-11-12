@@ -65,7 +65,9 @@ export function VueChapitre({
 }) {
   const s = useLuno();
   const router = useRouter();
-  const onglet: Onglet = ONGLETS.some((o) => o.id === ongletDemande)
+  // Pas de définitions dans ce chapitre : pas d'onglet Déf (demandé le 2026-11-12).
+  const onglets = ONGLETS.filter((o) => o.id !== "defs" || (chapitre.definitions?.length ?? 0) > 0);
+  const onglet: Onglet = onglets.some((o) => o.id === ongletDemande)
     ? (ongletDemande as Onglet)
     : "cours";
   const setOnglet = (o: Onglet) =>
@@ -79,11 +81,11 @@ export function VueChapitre({
 
   // Flèches gauche et droite pour passer d'un onglet à l'autre.
   const surTouche = (e: React.KeyboardEvent) => {
-    const i = ONGLETS.findIndex((o) => o.id === onglet);
+    const i = onglets.findIndex((o) => o.id === onglet);
     const pas = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
     if (!pas) return;
     e.preventDefault();
-    const suivant = ONGLETS[(i + pas + ONGLETS.length) % ONGLETS.length].id;
+    const suivant = onglets[(i + pas + onglets.length) % onglets.length].id;
     setOnglet(suivant);
     document.getElementById(`onglet-${suivant}`)?.focus();
   };
@@ -137,7 +139,7 @@ export function VueChapitre({
           className={`${classePastille} rounded-xl`}
           style={{ background: pastel(matiere.couleur, 18) }}
         />
-        {ONGLETS.map(({ id, label, icone: Icone }) => (
+        {onglets.map(({ id, label, icone: Icone }) => (
           <button
             key={id}
             id={`onglet-${id}`}

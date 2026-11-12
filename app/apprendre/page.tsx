@@ -15,7 +15,9 @@ import {
   Send,
   Sparkles,
   X,
+  FileText,
 } from "lucide-react";
+import { lienFichier } from "@/lib/liens";
 import { LECONS } from "@/contenu/lecons";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
@@ -54,6 +56,8 @@ function Apprendre() {
   const demandes = useDemandes((x) => x.liste);
   const perso = leconsPerso(demandes);
   const toutes = [...perso, ...LECONS];
+  const lecons = toutes.filter((l) => !l.methode);
+  const methodes = toutes.filter((l) => l.methode);
   const lecon = toutes.find((l) => l.id === params.get("l"));
   const enCours = demandes.filter((d) => d.type === "lecon" && d.statut !== "prete");
   const [sujet, setSujet] = useState("");
@@ -100,43 +104,23 @@ function Apprendre() {
               ))}
             </ul>
           )}
-          {toutes.length === 0 ? (
+          {lecons.length === 0 ? (
             <EtatVide
               icone={<GraduationCap size={26} />}
               titre="Pas encore de leçon"
               texte="Demande un sujet à Claude : la leçon apparaîtra ici une fois rédigée."
             />
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {toutes.map((l, i) => (
-                <motion.div
-                  key={l.id}
-                  initial={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
-                  animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ y: -3 }}
-                >
-                  <Link
-                    href={`/apprendre?l=${l.id}`}
-                    className="block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
-                  >
-                    <p className="surtitre flex items-center gap-1.5 text-accent">
-                      {l.id.startsWith("dem-") && <Sparkles size={12} aria-label="Rédigée pour toi" />}
-                      {l.matiere} · {l.niveau}
-                    </p>
-                    <p className="mt-2 font-display text-[22px] leading-tight">
-                      {l.titre}
-                    </p>
-                    <p className="mt-3 flex items-center gap-3 text-[13px] text-muted">
-                      <span className="flex items-center gap-1">
-                        <Clock size={13} /> {l.duree}
-                      </span>
-                      <span>{pluriel(l.etapes.length, "étape")}</span>
-                    </p>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+            <GrilleLecons liste={lecons} />
+          )}
+          {methodes.length > 0 && (
+            <>
+              <h2 className="mb-1 mt-8 text-[20px]">Méthodes</h2>
+              <p className="mb-3 text-[14px] text-muted">
+                Les méthodes de tes profs, pas à pas : ce qu&apos;ils attendent sur ta copie.
+              </p>
+              <GrilleLecons liste={methodes} />
+            </>
           )}
         </div>
 
@@ -287,11 +271,22 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
             <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-ok/15 text-ok">
               <Check size={30} />
             </div>
-            <h2 className="text-[28px]">Leçon terminée</h2>
+            <h2 className="text-[28px]">{lecon.methode ? "Méthode terminée" : "Leçon terminée"}</h2>
             <p className="mt-1 max-w-[380px] text-[15px] text-muted">
               Si un point reste flou, reprends l&apos;étape concernée ou pose ta
               question à Claude.
             </p>
+            {lecon.entrainement && (
+              <div className="mt-5 max-w-[440px] rounded-2xl bg-accent-soft p-4 text-left">
+                <p className="text-[14.5px] leading-relaxed">{lecon.entrainement.texte}</p>
+                <Link
+                  href={lecon.entrainement.lien}
+                  className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-[10px] bg-ink px-4 text-[14.5px] font-medium text-bg"
+                >
+                  S&apos;entraîner <ArrowRight size={16} />
+                </Link>
+              </div>
+            )}
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               <Bouton variante="contour" onClick={() => aller(0)}>
                 Relire
@@ -316,6 +311,28 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
               <p className="mb-5 text-[16px] leading-relaxed text-muted">
                 {formule(lecon.intro)}
               </p>
+            )}
+            {etape === 0 && lecon.documents && lecon.documents.length > 0 && (
+              <ul className="mb-5 flex flex-col gap-2" aria-label="Fiches du prof">
+                {lecon.documents.map((d) => (
+                  <li key={d.fichier}>
+                    <a
+                      href={lienFichier(d.fichier)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex min-h-14 items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-card transition-colors hover:border-ink/25"
+                    >
+                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                        <FileText size={18} />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[15px] font-semibold leading-snug">{d.titre}</span>
+                        {d.detail && <span className="block text-[13px] text-muted">{d.detail}</span>}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             )}
             <Carte>
               <p className="surtitre text-muted">
@@ -381,6 +398,44 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+function GrilleLecons({ liste }: { liste: Lecon[] }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {liste.map((l, i) => (
+        <motion.div
+          key={l.id}
+          initial={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+          animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+          transition={{ delay: i * 0.05 }}
+          whileHover={{ y: -3 }}
+        >
+          <Link
+            href={`/apprendre?l=${l.id}`}
+            className="block h-full rounded-[18px] border border-line bg-surface p-5 shadow-card transition-shadow hover:shadow-pop"
+          >
+            <p className="surtitre flex items-center gap-1.5 text-accent">
+              {l.id.startsWith("dem-") && <Sparkles size={12} aria-label="Rédigée pour toi" />}
+              {l.matiere} · {l.methode ? "Méthode" : l.niveau}
+            </p>
+            <p className="mt-2 font-display text-[22px] leading-tight">{l.titre}</p>
+            <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
+              <span className="flex items-center gap-1">
+                <Clock size={13} /> {l.duree}
+              </span>
+              <span>{pluriel(l.etapes.length, "étape")}</span>
+              {l.documents?.length ? (
+                <span className="flex items-center gap-1">
+                  <FileText size={13} /> fiche du prof
+                </span>
+              ) : null}
+            </p>
+          </Link>
+        </motion.div>
+      ))}
     </div>
   );
 }

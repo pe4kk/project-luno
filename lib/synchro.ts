@@ -7,7 +7,7 @@ import {
   type SupabaseClient,
 } from "@supabase/supabase-js";
 import { create } from "zustand";
-import { BIBLIOTHEQUE } from "@/contenu/bibliotheque";
+import { BIBLIOTHEQUE, PUBLIES_RETIRES } from "@/contenu/bibliotheque";
 import { alleger, fusionner, regonfler, type DonneesSynchro } from "./fusion";
 import { normaliser, useLuno } from "./store";
 
@@ -90,7 +90,7 @@ let applique = false;
 /** Remplace les données locales par celles reçues, sans déclencher de nouvel envoi. */
 function appliquer(d: DonneesSynchro) {
   applique = true;
-  const n = normaliser(regonfler(d, BIBLIOTHEQUE));
+  const n = normaliser(regonfler(d, BIBLIOTHEQUE, PUBLIES_RETIRES));
   useLuno.setState({ ...n, annulation: null });
   applique = false;
   // Le contenu publié depuis la dernière visite de l'autre appareil est repris ici.
@@ -144,12 +144,12 @@ export function synchroniser(): Promise<void> {
         await envoyer(compte, local);
       } else if (!connu) {
         // Premier passage de ce navigateur sur ce compte : on réunit les deux.
-        const fusion = fusionner(regonfler(distant.contenu, BIBLIOTHEQUE), local);
+        const fusion = fusionner(regonfler(distant.contenu, BIBLIOTHEQUE, PUBLIES_RETIRES), local);
         appliquer(fusion);
         await envoyer(compte, lesDonnees());
       } else if (distant.maj > connu.maj) {
         if (connu.sale) {
-          appliquer(fusionner(lesDonnees(), regonfler(distant.contenu, BIBLIOTHEQUE)));
+          appliquer(fusionner(lesDonnees(), regonfler(distant.contenu, BIBLIOTHEQUE, PUBLIES_RETIRES)));
           await envoyer(compte, lesDonnees());
         } else {
           appliquer(distant.contenu);

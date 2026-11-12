@@ -33,11 +33,16 @@ export function alleger(d: DonneesSynchro, bibliotheque: ChapitrePublie[]): Donn
 }
 
 /** L'inverse d'`alleger()` : remet le contenu publié dans les chapitres qui en viennent. */
-export function regonfler(d: DonneesSynchro, bibliotheque: ChapitrePublie[]): DonneesSynchro {
+export function regonfler(
+  d: DonneesSynchro,
+  bibliotheque: ChapitrePublie[],
+  retires: string[] = [],
+): DonneesSynchro {
   const parId = new Map(bibliotheque.map((p) => [p.id, p]));
   return {
     ...d,
-    chapitres: d.chapitres.map((c) => {
+    // Un chapitre publié puis retiré ne revient pas par un autre appareil.
+    chapitres: d.chapitres.filter((c) => !c.publieId || !retires.includes(c.publieId)).map((c) => {
       const p = c.publieId ? parId.get(c.publieId) : undefined;
       if (!p) return c;
       const schemas = new Map(

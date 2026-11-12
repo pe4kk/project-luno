@@ -398,6 +398,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
 /** Leçon guidée (onglet Apprendre), construite comme une séance de tutorat : une étape, un exemple, une question. */
 export const LECON_REDACTION: Lecon = {
   id: "pc-redaction",
+  methode: true,
   titre: "Rédiger une réponse de physique comme ton prof l'attend",
   matiere: "Physique-Chimie",
   niveau: "Première",

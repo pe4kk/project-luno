@@ -1,6 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
 import { HGGSP_THEME_4 } from "./hggsp-theme4";
-import { HGGSP_METHODE } from "./hggsp-methode";
 import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
 import { PHYSIQUE_MOUVEMENT } from "./physique-mouvement";
 import { PHYSIQUE_METHODE } from "./physique-methode";
@@ -17,9 +16,14 @@ import { MATHS_DERIVATION } from "./maths-derivation";
  */
 export const BIBLIOTHEQUE: ChapitrePublie[] = [
   ...HGGSP_THEME_4,
-  ...HGGSP_METHODE,
   FRANCAIS_RIMBAUD,
   ...PHYSIQUE_MOUVEMENT,
   PHYSIQUE_METHODE,
   MATHS_DERIVATION,
 ];
+
+/**
+ * Chapitres publiés puis retirés : ils sont effacés des navigateurs qui les avaient
+ * repris. Les méthodes d'HGGSP sont devenues des leçons d'Apprendre (2026-11-12).
+ */
+export const PUBLIES_RETIRES = ["hggsp-1re-methode-etude-critique", "hggsp-1re-methode-dissertation"];

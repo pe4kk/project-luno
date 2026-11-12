@@ -1,4 +1,5 @@
 import type { ChapitrePublie } from "@/lib/types";
+import { PROBLEMES_DISSERTATION, PROBLEMES_ETUDE_CRITIQUE } from "./hggsp-methode";
 import { DEF_HGGSP_INTRO, DEF_HGGSP_AXE1, DEF_HGGSP_AXE2 } from "./definitions";
 
 /**
@@ -947,7 +948,9 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe2",
-    version: 3,
+    version: 4,
+    // Problèmes à rédiger (méthode du prof, 2026-11-12) sur des documents de cet axe.
+    problemes: [...PROBLEMES_ETUDE_CRITIQUE, ...PROBLEMES_DISSERTATION],
     definitions: DEF_HGGSP_AXE2,
     matiere,
     titre: "Thème 4 · Axe 2 : liberté ou contrôle de l'information",

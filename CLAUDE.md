@@ -350,13 +350,17 @@ un PDF ou une photo directement dans le chat.
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
   `physique-mouvement.ts`, `physique-methode.ts` (fiche « Rédiger comme ton
   prof l'attend » et leçon guidée du même nom), `maths-derivation.ts`
-  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`), `hggsp-methode.ts` (2026-11-12 : « Méthode · Étude critique de
-  document(s) » et « Méthode · Réussir la dissertation », d'après les deux fiches
-  du prof, PDF dans `public/documents/hggsp/` ; Déf mot pour mot, 16 flashcards,
-  fiche à cinq tailles, 18 et 19 exercices, et des problèmes à rédiger étape par
-  étape : étude critique de l'article 11 de 1789, confrontation 1789 / loi de
-  1881, dissertation « L'État face à la liberté de l'information, de 1881 à nos
-  jours », atelier de problématique ; exemples tirés du thème 4).
+  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`). **Méthodes** (demandé le 2026-11-12 : dans Apprendre, pas dans Travail) :
+  leçons avec `methode: true`, rangées sous « Méthodes » dans Apprendre, avec
+  `documents` (PDF du prof, affichés au début) et `entrainement` (lien de fin vers
+  S'exercer). `hggsp-methode.ts` : « L'étude critique de document(s) » et
+  « Réussir la dissertation » (fiches du prof dans `public/documents/hggsp/`) ;
+  leurs problèmes à rédiger (étude critique de l'article 11 de 1789, 1789 / 1881,
+  dissertation « L'État face à la liberté de l'information », atelier de
+  problématique) sont rattachés au chapitre « Thème 4 · Axe 2 ». Les anciens
+  chapitres « Méthode · … » d'HGGSP sont dans `PUBLIES_RETIRES`
+  (`contenu/bibliotheque.ts`) : effacés au chargement et à la synchro. Pour une
+  nouvelle méthode, écrire une leçon, pas un chapitre.
 - **Dates publiées** (`contenu/evenements.ts`) : chaque entrée crée un DST
   `pub-<id>` chez tous les utilisateurs, rattaché aux chapitres publiés
   indiqués par leur `id`. Une date supprimée par l'utilisateur ne revient
@@ -497,7 +501,8 @@ un PDF ou une photo directement dans le chat.
 - 2026-11-12 : onglet « Déf » dans chaque chapitre, rempli pour les 9
   chapitres publiés (environ 100 définitions et propriétés, recopiées des PDF
   et polycopiés ; pas pour « Fiche d'exercices et DM »), cherchable dans
-  Recherche. Drapeaux pour LVA et LVB (matières existantes mises à jour au
+  Recherche. L'onglet Déf n'apparaît que si le chapitre a des définitions
+  (demandé le 2026-11-12). Drapeaux pour LVA et LVB (matières existantes mises à jour au
   chargement). Bouton photo, appareil photo et PDF visibles dans Apprendre et
   Mes erreurs.
 - 2026-11-11 : barre d'onglets mobile redessinée (fond translucide, pastille

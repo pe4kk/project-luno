@@ -271,6 +271,12 @@ export type Lecon = {
     schema?: Schema;
     question?: { q: string; r: string };
   }[];
+  /** Fiche méthode (rangée à part, sous « Méthodes », dans Apprendre). */
+  methode?: boolean;
+  /** PDF du prof, proposés au début de la leçon. */
+  documents?: Document[];
+  /** À la fin : où s'entraîner, par exemple les problèmes de S'exercer. */
+  entrainement?: { texte: string; lien: string };
 };
 
 /** Une chose à faire (onglet « À faire »). */
