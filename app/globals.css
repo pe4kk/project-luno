@@ -326,3 +326,39 @@ html.theme-glisse *::after {
 @media (prefers-reduced-motion: reduce) {
   .dictee-onde { animation: none; opacity: 0; }
 }
+
+/* Mise en forme d'une copie : encadré, souligné, surligné (réponses des élèves, corrigés). */
+.encadre {
+  display: inline-block;
+  border: 1.8px solid var(--accent);
+  border-radius: 5px;
+  padding: 0 0.35em;
+  margin: 0.1em 0;
+}
+.souligne {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+mark.surligne {
+  background: color-mix(in srgb, var(--copper) 30%, transparent);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 0.15em;
+}
+
+/* Brouillon : papier à petits carreaux (dessin) et à lignes (notes). */
+.papier-carreaux {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--muted) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--muted) 16%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.papier-lignes {
+  background-color: var(--surface);
+  background-image: linear-gradient(transparent 27px, color-mix(in srgb, var(--muted) 20%, transparent) 27px);
+  background-size: 100% 28px;
+  background-attachment: local;
+}

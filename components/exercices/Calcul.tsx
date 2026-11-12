@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AvecBrouillon } from "@/components/Brouillon";
 import { motion } from "motion/react";
 import { Eye, RefreshCw, X } from "lucide-react";
 import { formule } from "@/components/Formule";
@@ -98,6 +99,15 @@ export function LecteurCalcul({ calcul, quitter }: { calcul: Calcul; quitter: ()
   };
 
   return (
+    <AvecBrouillon
+      cle={`calc-${calcul.id}-${numero}`}
+      cs={version.cs}
+      versAN={(t) => {
+        setValeur(t);
+        setVerdict(null);
+        setIllisible(false);
+      }}
+    >
     <div className="mx-auto max-w-[640px]">
       <div className="mb-4 flex items-center justify-between gap-3">
         <span className="rounded-full bg-ink/5 px-3 py-1 text-[12.5px] font-semibold text-muted">
@@ -188,5 +198,6 @@ export function LecteurCalcul({ calcul, quitter }: { calcul: Calcul; quitter: ()
         Même situation, autres nombres : refais la méthode jusqu&apos;à ce qu&apos;elle devienne automatique.
       </p>
     </div>
+    </AvecBrouillon>
   );
 }

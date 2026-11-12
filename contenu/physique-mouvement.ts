@@ -517,7 +517,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 5,
+    version: 6,
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,

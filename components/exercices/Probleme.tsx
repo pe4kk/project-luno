@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { AvecBrouillon } from "@/components/Brouillon";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, CheckCircle2, ChevronRight, Eye, RotateCcw, X } from "lucide-react";
-import { formule } from "@/components/Formule";
+import { aEncadre, formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { SaisieFormule } from "@/components/SaisieFormule";
 import { Bouton, BoutonIcone } from "@/components/ui";
@@ -41,6 +42,10 @@ export function LecteurProbleme({
       t + (e.criteres.length ? (pointsEtape(e) * coches[i].filter(Boolean).length) / e.criteres.length : 0),
     0,
   );
+  // Réflexe des encadrés : vérifié pour l'habitude, jamais compté dans la note.
+  const aEncadrer = probleme.etapes.map((e, i) => (e.encadrer ? aEncadre(reponses[i]) : null));
+  const encadresAttendus = aEncadrer.filter((x) => x !== null).length;
+  const encadresFaits = aEncadrer.filter((x) => x === true).length;
   const manques = probleme.etapes.flatMap((e, i) =>
     e.criteres.filter((_, k) => !coches[i][k]).map((c) => ({ critere: c, etape: e })),
   );
@@ -54,6 +59,7 @@ export function LecteurProbleme({
   };
 
   return (
+    <AvecBrouillon cle={`pb-${probleme.id}`}>
     <div className="mx-auto max-w-[680px]">
       <div className="mb-4 flex items-center gap-3">
         <div className="flex flex-1 gap-1.5" aria-hidden>
@@ -124,6 +130,18 @@ export function LecteurProbleme({
                         <p className="surtitre text-accent">Ce que ton prof attend</p>
                         <p className="mt-1.5 whitespace-pre-line text-[15px] leading-relaxed">{formule(e.attendu)}</p>
                       </div>
+                      {e.encadrer && (
+                        <p
+                          className={`mt-3 flex items-start gap-2 rounded-xl px-3.5 py-2.5 text-[14px] ${
+                            aEncadrer[etape] ? "bg-ok/10 text-ok" : "bg-ink/5 text-muted"
+                          }`}
+                        >
+                          <span className="encadre !my-0 shrink-0 text-[12px] leading-[18px]">a</span>
+                          {aEncadrer[etape]
+                            ? "Résultat encadré : bon réflexe."
+                            : "Ton prof attend ce résultat encadré : sélectionne-le puis touche « Encadrer ». Ça ne change pas ta note ici."}
+                        </p>
+                      )}
                       <p className="mt-4 text-[14px] font-semibold">Coche ce que tu as écrit :</p>
                       <ul className="mt-1.5 flex flex-col gap-1.5">
                         {e.criteres.map((c, k) => {
@@ -222,12 +240,19 @@ export function LecteurProbleme({
                 Autre problème
               </Bouton>
             </div>
+            {encadresAttendus > 0 && (
+              <p className={`mt-3 text-[14px] ${encadresFaits === encadresAttendus ? "text-ok" : "text-muted"}`}>
+                Réflexe : {encadresFaits} résultat{encadresFaits > 1 ? "s" : ""} encadré{encadresFaits > 1 ? "s" : ""} sur{" "}
+                {encadresAttendus}
+                {encadresFaits === encadresAttendus ? ", comme ton prof l'attend." : " (sans effet sur ta note)."}
+              </p>
+            )}
             {reponses.some(Boolean) && (
               <details className="mt-5 text-[14px]">
                 <summary className="cursor-pointer font-semibold">Relire ta rédaction</summary>
                 <ol className="mt-2 flex list-decimal flex-col gap-1.5 pl-5 text-muted">
                   {reponses.map((r, i) => (
-                    <li key={i}>{r ? (scientifique ? formule(versNotation(r)) : r) : <em>(vide)</em>}</li>
+                    <li key={i}>{r ? formule(scientifique ? versNotation(r) : r) : <em>(vide)</em>}</li>
                   ))}
                 </ol>
               </details>
@@ -236,6 +261,7 @@ export function LecteurProbleme({
         )}
       </AnimatePresence>
     </div>
+    </AvecBrouillon>
   );
 }
 

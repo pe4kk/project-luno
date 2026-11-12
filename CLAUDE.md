@@ -202,6 +202,29 @@ fiches de révision ; le slider règle la longueur de la fiche.
     vérifiée par `verifierBilan()` dans `scripts/demandes.mjs` ; les erreurs
     vont dans « Mes erreurs » de leur matière, le bilan s'affiche sous « Tes
     bilans » dans l'onglet Interro blanche.
+  - **Encadrer, souligner, surligner** (2026-11-12, idées 1 et 3 choisies sur
+    maquettes) : notation `[[encadré]]`, `__souligné__` (exactement deux « _ »,
+    pour ne pas toucher aux trous « ___ »), `==surligné==`, dessinée par
+    `formule()` partout (classes `encadre`, `souligne`, `surligne`), retirée
+    par `sansMiseEnForme()`. Dans `SaisieFormule`, une sélection fait
+    apparaître une bulle « Encadrer / Souligner / Surligner » sous le champ
+    (au-dessus, le menu de l'iPhone la cacherait ; la sélection est suivie par
+    `selectionchange`), touche ▢ dans la barre. Problèmes : `encadrer: true`
+    sur une étape = le prof attend un résultat encadré ; Luno le vérifie
+    (`aEncadre()`) et le dit, **sans jamais compter dans la note** (demandé :
+    c'est un réflexe à prendre). Ne pas mettre « encadré » dans `criteres`.
+    Dans `attendu`, écrire le résultat entre `[[ ]]`.
+  - **Brouillon** (2026-11-12, idées B et C) : `components/Brouillon.tsx`,
+    `<AvecBrouillon cle cs versAN>` autour des quatre lecteurs de S'exercer.
+    Onglets Dessin (toile à petits carreaux : stylo sensible à la pression du
+    stylet, surligneur, flèche droite, gomme, 4 couleurs du thème, annuler,
+    tout effacer), Notes, Calculatrice (`evaluer()` de `lib/calcul.ts`, Ans,
+    historique, arrondi au nombre de c.s choisi, « Mettre … dans l'A.N. »
+    pour les calculs). Téléphone : feuille qui glisse du bas, en portail sur
+    `body` (sinon la barre du bas passe devant), bouton rond au-dessus de la
+    barre. Ordinateur (≥ 1024 px) : panneau collant à droite de la question.
+    Un brouillon par question, en mémoire seulement, jamais noté ; une nouvelle
+    séance repart d'une feuille blanche.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

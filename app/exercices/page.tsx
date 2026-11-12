@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { AvecBrouillon } from "@/components/Brouillon";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -82,6 +83,7 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
     };
     const explication = "explication" in q ? q.explication : "";
     return (
+      <AvecBrouillon cle={`serie-${chapitre.id}-${index}`}>
       <div className="mx-auto max-w-[640px]">
         <div className="mb-4 flex items-center gap-3">
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-line">
@@ -158,6 +160,7 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
           </motion.div>
         </AnimatePresence>
       </div>
+      </AvecBrouillon>
     );
   }
 

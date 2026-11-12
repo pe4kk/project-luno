@@ -86,7 +86,7 @@ export function versNotation(texte: string): string {
       num = t.slice(g + 1, i - 1);
     } else {
       debutNum = i;
-      while (debutNum > 0 && !/[\s=+−\-,;:(⇒→≈<>]/.test(t[debutNum - 1])) debutNum--;
+      while (debutNum > 0 && !/[\s=+−\-,;:(⇒→≈<>\[\]]/.test(t[debutNum - 1]) && t.slice(debutNum - 2, debutNum) !== "__") debutNum--;
       num = t.slice(debutNum, i);
     }
     let finDen: number;
@@ -97,7 +97,7 @@ export function versNotation(texte: string): string {
       den = t.slice(i + 2, h - 1);
     } else {
       finDen = i + 1;
-      while (finDen < t.length && !/[\s=+−\-,;:)·×⇒→≈<>/]/.test(t[finDen])) finDen++;
+      while (finDen < t.length && !/[\s=+−\-,;:)·×⇒→≈<>/\[\]]/.test(t[finDen]) && t.slice(finDen, finDen + 2) !== "__") finDen++;
       den = t.slice(i + 1, finDen);
     }
     const unite = UNITES.has(num.trim()) && UNITES.has(den.trim());

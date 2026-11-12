@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { AvecBrouillon } from "@/components/Brouillon";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronLeft, ChevronRight, Clock, ScrollText, Send, X } from "lucide-react";
 import { formule } from "@/components/Formule";
@@ -368,7 +369,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
                   <p className="mt-1 text-[15.5px] font-semibold">{formule(consigneCours(q.def))}</p>
                   <p className="mt-2 text-[12px] font-semibold uppercase tracking-wider text-muted">Ta réponse</p>
                   <p className="mt-0.5 whitespace-pre-line text-[15px] leading-relaxed">
-                    {reponses[i].texte.trim() ? (q.scientifique ? formule(versNotation(reponses[i].texte)) : reponses[i].texte) : <em className="text-muted">Pas de réponse</em>}
+                    {reponses[i].texte.trim() ? formule(q.scientifique ? versNotation(reponses[i].texte) : reponses[i].texte) : <em className="text-muted">Pas de réponse</em>}
                   </p>
                   <div className="mt-3 rounded-xl bg-accent-soft p-3.5">
                     <p className="text-[12px] font-semibold uppercase tracking-wider text-accent">Dans le cours</p>
@@ -428,6 +429,15 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
   const changer = (r: { texte: string; unite: string }) => setReponses(reponses.map((x, i) => (i === index ? r : x)));
 
   return (
+    <AvecBrouillon
+      cle={`interro-${debut}-${index}`}
+      cs={q.type === "calcul" ? q.version.cs : undefined}
+      versAN={
+        q.type === "calcul"
+          ? (t) => setReponses((rs) => rs.map((x, i) => (i === index ? { ...x, texte: t } : x)))
+          : undefined
+      }
+    >
     <div className="mx-auto max-w-[680px]">
       <div className="mb-3 flex items-center justify-between gap-3">
         {restant !== null ? (
@@ -530,6 +540,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
         </Bouton>
       )}
     </div>
+    </AvecBrouillon>
   );
 }
 

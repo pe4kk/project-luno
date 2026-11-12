@@ -91,14 +91,16 @@ export const PROBLEMES_CHAP11: Probleme[] = [
       {
         titre: "Expression littérale",
         consigne: "Isole f, avec des lettres seulement.",
-        attendu: "f = {{m·v_i // Δt}}   (à encadrer)",
-        criteres: ["Lettres seulement, aucun nombre", "Expression encadrée"],
+        attendu: "[[f = {{m·v_i // Δt}}]]",
+        criteres: ["Lettres seulement, aucun nombre"],
+        encadrer: true,
       },
       {
         titre: "A.N.",
         consigne: "Fais l'application numérique.",
-        attendu: "f = {{1,2 × 10³ × 25 // 4,0}} = 7,5 × 10³ N",
+        attendu: "f = {{1,2 × 10³ × 25 // 4,0}} = [[7,5 × 10³ N]]",
         criteres: ["Valeurs en unités SI", "Résultat 7,5 × 10³ N", "Unité N", "2 chiffres significatifs"],
+        encadrer: true,
         points: 1.5,
       },
       {
@@ -147,13 +149,15 @@ export const PROBLEMES_CHAP11: Probleme[] = [
       {
         titre: "Expression littérale",
         consigne: "Isole Δt.",
-        attendu: "Δt = {{v_0 // g}}   (à encadrer)",
-        criteres: ["Lettres seulement", "Expression encadrée"],
+        attendu: "[[Δt = {{v_0 // g}}]]",
+        criteres: ["Lettres seulement"],
+        encadrer: true,
       },
       {
         titre: "A.N. et conclusion",
         consigne: "Fais l'A.N. et conclus.",
-        attendu: "Δt = {{15 // 9,81}} = 1,5 s. La balle atteint le sommet 1,5 s après le lancer ; sa masse n'intervient pas.",
+        attendu: "Δt = {{15 // 9,81}} = [[1,5 s]]. La balle atteint le sommet 1,5 s après le lancer ; sa masse n'intervient pas.",
+        encadrer: true,
         criteres: ["1,5 s", "Unité s", "2 chiffres significatifs (comme v_0)", "Phrase de conclusion"],
         points: 1.5,
       },
@@ -179,7 +183,8 @@ export const PROBLEMES_CHAP11: Probleme[] = [
       {
         titre: "Vitesse",
         consigne: "Calcule la valeur de la vitesse du palet.",
-        attendu: "v = {{M_0M_1 // τ}} = {{1,2 × 10⁻² // 40 × 10⁻³}} = 0,30 m·s⁻¹",
+        attendu: "v = {{M_0M_1 // τ}} = {{1,2 × 10⁻² // 40 × 10⁻³}} = [[0,30 m·s⁻¹]]",
+        encadrer: true,
         criteres: ["Distances en m et durée en s", "0,30 m·s⁻¹ avec son unité", "2 chiffres significatifs"],
       },
       {

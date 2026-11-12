@@ -81,6 +81,11 @@ export type EtapeProbleme = {
   /** Points du barème à cocher, chacun vaut `points / criteres.length`. */
   criteres: string[];
   points?: number;
+  /**
+   * Le prof attend un résultat encadré à cette étape. Luno vérifie que l'élève l'a fait
+   * ([[ … ]]), pour prendre le réflexe, sans que cela compte dans la note.
+   */
+  encadrer?: boolean;
 };
 export type Probleme = {
   id: string;

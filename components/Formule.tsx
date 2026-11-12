@@ -72,7 +72,7 @@ function vecteurs(texte: string, cle: string): ReactNode {
   return morceaux.map((x, i) => <Fragment key={`${cle}${i}`}>{x}</Fragment>);
 }
 
-export function formule(texte: string): ReactNode {
+function formuleSimple(texte: string): ReactNode {
   if (!texte.includes("{{")) return vecteurs(texte, "");
   const morceaux: ReactNode[] = [];
   let fin = 0;
@@ -90,10 +90,44 @@ export function formule(texte: string): ReactNode {
   return morceaux.map((x, i) => <Fragment key={i}>{x}</Fragment>);
 }
 
+/**
+ * Mise en forme d'une copie : [[encadré]], __souligné__, ==surligné==. Le soulignement
+ * demande exactement deux « _ », pour ne pas confondre avec les trous « ___ ».
+ */
+export const MISE_EN_FORME = /\[\[([\s\S]+?)\]\]|(?<!_)__(?!_)([\s\S]+?)(?<!_)__(?!_)|==([\s\S]+?)==/g;
+
+export function formule(texte: string): ReactNode {
+  if (!/\[\[|__|==/.test(texte)) return formuleSimple(texte);
+  const morceaux: ReactNode[] = [];
+  let fin = 0;
+  for (const m of texte.matchAll(MISE_EN_FORME)) {
+    if (m.index! > fin) morceaux.push(<Fragment key={`t${fin}`}>{formuleSimple(texte.slice(fin, m.index))}</Fragment>);
+    const [, cadre, souligne, surligne] = m;
+    morceaux.push(
+      cadre !== undefined ? (
+        <span key={`m${m.index}`} className="encadre">{formuleSimple(cadre)}</span>
+      ) : souligne !== undefined ? (
+        <span key={`m${m.index}`} className="souligne">{formuleSimple(souligne)}</span>
+      ) : (
+        <mark key={`m${m.index}`} className="surligne">{formuleSimple(surligne ?? "")}</mark>
+      ),
+    );
+    fin = m.index! + m[0].length;
+  }
+  if (fin < texte.length) morceaux.push(<Fragment key={`t${fin}`}>{formuleSimple(texte.slice(fin))}</Fragment>);
+  return morceaux;
+}
+
+/** Retire la mise en forme ([[ ]], __ __, == ==) et garde le texte. */
+export const sansMiseEnForme = (texte: string) => texte.replace(MISE_EN_FORME, (_, a, b, c) => a ?? b ?? c ?? "");
+
+/** Vrai si la réponse contient au moins un encadré. */
+export const aEncadre = (texte: string) => /\[\[[\s\S]*?\S[\s\S]*?\]\]/.test(texte);
+
 /** Le même texte sans balisage : « {{a − b // c}} » devient « (a − b) / c ». */
 export function texteBrut(texte: string): string {
   const groupe = (s: string) => (/[ +−×·]/.test(s.trim()) ? `(${s.trim()})` : s.trim());
-  return texte
+  return sansMiseEnForme(texte)
     .replace(FRACTION, (_, h: string, b: string) => `${groupe(h)} / ${groupe(b)}`)
     .replaceAll(FLECHE, "")
     .replace(INDICE, "$1$2");
