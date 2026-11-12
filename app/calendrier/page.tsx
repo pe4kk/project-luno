@@ -213,9 +213,12 @@ export default function Calendrier() {
                             <span
                               key={d.id}
                               className="rounded-md text-center text-[13px] leading-[20px] sm:truncate sm:px-1.5 sm:py-0.5 sm:text-left sm:text-[12px] sm:font-semibold sm:leading-normal"
+                              title={`${m?.nom ?? ""} · ${d.titre}`}
                               style={{
                                 background: pastel(m?.couleur ?? "#888", 26),
                                 color: encre(m?.couleur ?? "#888", 55),
+                                // Trait de la couleur de la matière : se repère d'un coup d'œil.
+                                boxShadow: `inset 3px 0 0 ${m?.couleur ?? "#888"}`,
                               }}
                             >
                               <Emoji e={m?.emoji} />

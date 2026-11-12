@@ -171,7 +171,6 @@ export function LecteurCalcul({ calcul, quitter }: { calcul: Calcul; quitter: ()
         {verdict && <RetourAN verdict={verdict} version={version} />}
         <div className="mt-3 grid grid-cols-2 gap-2">
           <Bouton
-            disabled={!valeur.trim()}
             onClick={() => {
               const v = verifier(calcul, version, valeur, unite);
               if (!v) return setIllisible(true);

@@ -44,12 +44,13 @@ export default function Taches() {
       >
         <input
           aria-label="Nouvelle tâche"
+          required
           className={classeSaisie + " !bg-surface"}
           placeholder="Ex. Finir l'exercice 12 de maths"
           value={saisie}
           onChange={(e) => setSaisie(e.target.value)}
         />
-        <Bouton type="submit" className="shrink-0" disabled={!saisie.trim()}>
+        <Bouton type="submit" className="shrink-0">
           <Plus size={17} /> Ajouter
         </Bouton>
       </form>

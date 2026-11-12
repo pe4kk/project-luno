@@ -79,7 +79,8 @@ export function AvecBrouillon({
             : ""
         }
       >
-        <div className="min-w-0">{children}</div>
+        {/* En bas, de la place pour le bouton rond : il ne cache pas la dernière ligne. */}
+        <div className="min-w-0 pb-16 lg:pb-0">{children}</div>
         {ouvert && grand === true && (
           <motion.aside
             initial={{ opacity: 0, transform: "translate3d(24px, 0, 0)" }}

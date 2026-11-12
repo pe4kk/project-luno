@@ -98,7 +98,7 @@ export function VueChapitre({
         <ArrowLeft size={16} /> <Emoji e={matiere.emoji} /> {matiere.nom}
       </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
-        <h1 className="min-w-0 text-[32px] leading-tight sm:text-[40px]">
+        <h1 className="min-w-0 text-balance text-[25px] leading-tight sm:text-[40px]">
           {chapitre.titre}
         </h1>
         <div className="flex shrink-0">
@@ -289,6 +289,9 @@ function OngletCours({
   const mots = chapitre.cours.trim()
     ? chapitre.cours.trim().split(/\s+/).length
     : 0;
+  // Chapitre rédigé par Claude : le contenu existe déjà, les notes sont facultatives.
+  const publie = Boolean(chapitre.publieId);
+  const [notesOuvertes, setNotesOuvertes] = useState(!publie || mots > 0);
 
   const reperer = () => {
     const trouvees = repererDefinitions(chapitre.cours);
@@ -302,15 +305,31 @@ function OngletCours({
     );
   };
 
+  if (!notesOuvertes)
+    return (
+      <>
+        <Documents chapitre={chapitre} />
+        <Carte className="flex flex-wrap items-center justify-between gap-3">
+          <p className="min-w-0 flex-1 text-[14.5px] text-muted">
+            Flashcards, fiche, définitions et exercices sont déjà prêts. Tu peux ajouter tes
+            propres notes sur ce chapitre.
+          </p>
+          <Bouton variante="contour" onClick={() => setNotesOuvertes(true)}>
+            <Plus size={16} /> Ajouter mes notes
+          </Bouton>
+        </Carte>
+      </>
+    );
+
   return (
     <>
       <Documents chapitre={chapitre} />
       <Carte>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="min-w-0 flex-1 text-[14.5px] text-muted">
-            {chapitre.documents.length > 0 ? "Tes notes sur ce chapitre. " : ""}
-            Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une
-            photo, envoie-le directement à Claude dans votre conversation.
+            {publie
+              ? "Tes notes sur ce chapitre, en plus du contenu déjà prêt."
+              : "Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une photo, utilise le bouton « Envoyer à Claude » ci-dessous."}
           </p>
           <input
             ref={fichier}
@@ -340,6 +359,7 @@ function OngletCours({
           {pluriel(mots, "mot")} · enregistré automatiquement
         </p>
 
+        {!publie && (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl bg-accent-soft p-4">
             <p className="text-[15px] font-semibold">
@@ -348,7 +368,7 @@ function OngletCours({
             <p className="mt-0.5 text-[13.5px] text-ink/75">
               Claude les rédige à partir de ton cours et les ajoute au site.
             </p>
-            <Bouton className="mt-3" disabled={!mots} onClick={envoyer}>
+            <Bouton className="mt-3" onClick={envoyer}>
               <Send size={16} /> Envoyer à Claude
             </Bouton>
           </div>
@@ -361,13 +381,13 @@ function OngletCours({
             <Bouton
               variante="contour"
               className="mt-3"
-              disabled={!mots}
-              onClick={reperer}
+              onClick={() => (mots ? reperer() : setMessage("Écris ou colle d'abord ton cours dans le champ ci-dessus."))}
             >
               <Search size={16} /> Repérer les définitions
             </Bouton>
           </div>
         </div>
+        )}
         {message && (
           <p role="status" className="mt-3 text-[14px] text-ink">
             {message}
@@ -441,7 +461,9 @@ function OngletFlashcards({
               <div>
                 <p className="text-[17px] font-semibold">
                   {dues.length > 0
-                    ? `${pluriel(dues.length, "carte")} à revoir aujourd'hui`
+                    ? dues.every((c) => c.niveau === 0)
+                      ? `${pluriel(dues.length, "carte nouvelle", "cartes nouvelles")} à découvrir`
+                      : `${pluriel(dues.length, "carte")} à revoir`
                     : "Tout est à jour"}
                 </p>
                 <p className="mt-0.5 text-[14px] text-muted">
@@ -665,13 +687,14 @@ function OngletFiche({
 
       <article className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
         <div
-          className="px-6 py-5 sm:px-8"
+          className="px-6 py-3.5 sm:px-8 sm:py-5"
           style={{ background: pastel(matiere.couleur, 16) }}
         >
           <p className="surtitre" style={{ color: foncee }}>
             Fiche de révision · {TAILLES[taille - 1]}
           </p>
-          <h2 className="mt-1 text-[28px]" style={{ color: foncee }}>
+          {/* Le titre est déjà en haut de la page : répété seulement sur grand écran. */}
+          <h2 className="mt-1 hidden text-[28px] sm:block" style={{ color: foncee }}>
             {chapitre.titre}
           </h2>
         </div>

@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { prochainDstDe, trierParDst } from "@/lib/revision";
+import { compteARebours } from "@/lib/dates";
+import { BarreAction } from "./BarreAction";
 import { AvecBrouillon } from "@/components/Brouillon";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronLeft, ChevronRight, Clock, ScrollText, Send, X } from "lucide-react";
 import { formule } from "@/components/Formule";
 import { Emoji } from "@/components/Emoji";
 import { SaisieFormule } from "@/components/SaisieFormule";
-import { Bouton, BoutonIcone, Carte, EnvoyerAClaude, EtatVide } from "@/components/ui";
+import { Bouton, BoutonIcone, Carte, EnvoyerAClaude, EtatVide, pluriel } from "@/components/ui";
 import { Curseur } from "@/components/Curseur";
 import { ecrireAvecCs, remplir, tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
 import { bilans, useDemandes, type Demande } from "@/lib/demandes";
@@ -47,10 +50,13 @@ const peutInterroger = (c: Chapitre) => (c.definitions?.length ?? 0) + (c.calcul
  * sans chrono. L'élève note ses réponses de cours face au texte exact ; les calculs sont
  * corrigés tout seuls. Les erreurs peuvent partir dans « Mes erreurs ».
  */
-export function ModeInterro({ entete }: { entete: ReactNode }) {
-  const { matieres, chapitres, ajouterErreurs } = useLuno();
-  const possibles = chapitres.filter(peutInterroger);
-  const [choisis, setChoisis] = useState<string[]>([]);
+export function ModeInterro({ entete, initiaux = [] }: { entete: ReactNode; initiaux?: string[] }) {
+  const { matieres, chapitres, dsts, ajouterErreurs } = useLuno();
+  // Les chapitres des prochains DST en premier.
+  const possibles = trierParDst(chapitres.filter(peutInterroger), dsts);
+  // Venu de « Faire une interro blanche » (accueil) : les chapitres du DST sont cochés.
+  const [choisis, setChoisis] = useState<string[]>(() => initiaux.filter((id) => possibles.some((c) => c.id === id)));
+  const [aideChoix, setAideChoix] = useState(false);
   const [nbCours, setNbCours] = useState(6);
   const [nbCalculs, setNbCalculs] = useState(2);
   const [duree, setDuree] = useState(60);
@@ -69,6 +75,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
   const selection = possibles.filter((c) => choisis.includes(c.id));
   const totalDefs = selection.reduce((n, c) => n + (c.definitions?.length ?? 0), 0);
   const totalCalculs = selection.reduce((n, c) => n + (c.calculs?.length ?? 0), 0);
+  const pretACommencer = selection.length > 0 && Math.min(nbCours, totalDefs) + Math.min(nbCalculs, totalCalculs) > 0;
 
   // Chrono : une horloge qui avance chaque seconde, et la copie rendue à zéro.
   useEffect(() => {
@@ -162,7 +169,10 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
                   key={c.id}
                   role="checkbox"
                   aria-checked={actif}
-                  onClick={() => setChoisis(actif ? choisis.filter((x) => x !== c.id) : [...choisis, c.id])}
+                  onClick={() => {
+                    setChoisis(actif ? choisis.filter((x) => x !== c.id) : [...choisis, c.id]);
+                    setAideChoix(false);
+                  }}
                   className="flex items-start gap-3 rounded-2xl border-2 p-3.5 text-left shadow-card transition-colors duration-200"
                   style={{
                     borderColor: actif ? m?.couleur : "var(--line)",
@@ -178,8 +188,13 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
                     {actif && <Check size={13} strokeWidth={3} />}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[12.5px] font-semibold" style={{ color: encre(m?.couleur ?? "#888") }}>
-                      <Emoji e={m?.emoji} /> {m?.nom}
+                    <span className="flex flex-wrap items-center gap-x-2 text-[12.5px] font-semibold" style={{ color: encre(m?.couleur ?? "#888") }}>
+                      <span><Emoji e={m?.emoji} /> {m?.nom}</span>
+                      {prochainDstDe(c.id, dsts) && (
+                        <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-bold text-accent">
+                          DST {compteARebours(prochainDstDe(c.id, dsts)!.date)}
+                        </span>
+                      )}
                     </span>
                     <span className="block text-[15.5px] font-semibold leading-snug">{c.titre}</span>
                     <span className="text-[12.5px] text-muted">
@@ -213,16 +228,27 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
               </button>
             ))}
           </div>
-          <Bouton
-            className="mt-5 w-full"
-            disabled={selection.length === 0 || Math.min(nbCours, totalDefs) + Math.min(nbCalculs, totalCalculs) === 0}
-            onClick={commencer}
-          >
-            {selection.length ? "Commencer l'interro" : "Choisis au moins un chapitre"}
+          <Bouton className="mt-5 w-full" onClick={() => (pretACommencer ? commencer() : setAideChoix(true))}>
+            Commencer l&apos;interro
           </Bouton>
-          <p className="mt-2 text-[12.5px] text-muted">Pas de correction avant la fin, comme en vrai.</p>
+          <p className={`mt-2 text-[12.5px] ${aideChoix && !pretACommencer ? "text-accent" : "text-muted"}`} role="status">
+            {aideChoix && !pretACommencer
+              ? selection.length === 0
+                ? "Coche d'abord au moins un chapitre."
+                : "Mets au moins une question de cours ou un calcul."
+              : "Pas de correction avant la fin, comme en vrai."}
+          </p>
         </Carte>
       </div>
+      <BarreAction visible={pretACommencer}>
+        <span className="min-w-0 flex-1 text-[14px] font-semibold leading-tight">
+          {pluriel(selection.length, "chapitre")}
+          <span className="block text-[12.5px] font-normal text-muted">
+            {DUREES.find((d) => d.id === duree)?.label} · {Math.min(nbCours, totalDefs) + Math.min(nbCalculs, totalCalculs)} questions
+          </span>
+        </span>
+        <Bouton onClick={commencer}>Commencer</Bouton>
+      </BarreAction>
       {mesBilans.length > 0 && <ListeBilans liste={mesBilans} />}
       </div>
     );

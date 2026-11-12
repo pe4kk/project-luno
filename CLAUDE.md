@@ -225,6 +225,28 @@ fiches de révision ; le slider règle la longueur de la fiche.
     barre. Ordinateur (≥ 1024 px) : panneau collant à droite de la question.
     Un brouillon par question, en mémoire seulement, jamais noté ; une nouvelle
     séance repart d'une feuille blanche.
+  - **Suite de la critique de design du 2026-11-12** (« corrige » demandé) :
+    - Révision du jour avec quota (`lib/revision.ts`, `revisionDuJour()`) :
+      toutes les cartes déjà vues qui reviennent + 20 nouvelles au plus par jour
+      (`QUOTA_NOUVELLES`), chapitres des prochains DST d'abord ; compteur `jour`
+      (nouvelles vues, cartes revues) dans le store, persisté, par appareil.
+      Accueil, panneau du jour, badges des matières et des chapitres et
+      `/travail?r=tout` l'utilisent ; dans un chapitre, on peut tout revoir.
+    - Prochain DST (accueil) : liste des chapitres au programme, bouton « Faire
+      une interro blanche » (`/exercices?mode=interro&dst=<id>`, chapitres
+      cochés d'avance) et « Revoir ses N cartes » (`/travail?r=<id du DST>`).
+      Carte « DST cette semaine » au lieu du total.
+    - S'exercer : chapitres triés par prochain DST (`trierParDst()`, badge
+      « DST J-4 »), barre « Commencer » collée au-dessus de la barre d'onglets
+      sur téléphone (`components/exercices/BarreAction.tsx`) ; plus de bouton
+      désactivé : un message dit ce qui manque.
+    - Chapitre publié : onglet Cours replié derrière « Ajouter mes notes »,
+      sans « Envoyer à Claude » ni « Flashcards rapides ». Titre plus petit sur
+      téléphone, titre de la fiche masqué sur téléphone (déjà en haut).
+    - Accueil : matières sans chapitre repliées sous « N matières sans
+      chapitre ». Titres de chapitres sur deux lignes au lieu d'être coupés.
+    - Boutons d'ajout jamais grisés : champ `required`, le navigateur dit ce
+      qui manque. Tout au « tu ».
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

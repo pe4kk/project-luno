@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, BookOpen, CalendarDays, Check, GraduationCap, ListTodo, Target } from "lucide-react";
-import { encre, estDue, pastel, useLuno } from "@/lib/store";
+import { encre, pastel, useLuno } from "@/lib/store";
+import { QUOTA_NOUVELLES, revisionDuJour } from "@/lib/revision";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { Carte, pluriel } from "@/components/ui";
@@ -37,10 +38,18 @@ export default function Accueil() {
   const prochain = aVenir[0];
   const matiere = (id: string) => matieres.find((m) => m.id === id);
   const cartes = chapitres.flatMap((c) => c.flashcards);
-  const dues = cartes.filter(estDue).length;
+  const duJour = revisionDuJour(chapitres, dsts, s.jour);
+  const dues = duJour.cartes.length;
+  const revuesAujourdhui = s.jour.date === todayISO() ? s.jour.revues : 0;
+  const semaine = aVenir.filter((d) => joursAvant(d.date) <= 7);
+  const actives = matieres.filter((m) => chapitres.some((c) => c.matiereId === m.id));
+  const vides = matieres.filter((m) => !chapitres.some((c) => c.matiereId === m.id));
   const vide = matieres.length === 0 && dsts.length === 0 && s.taches.length === 0;
-  // Premier chapitre lié au prochain DST : c'est lui qu'on propose de réviser.
-  const aReviser = prochain && chapitres.find((c) => prochain.chapitreIds.includes(c.id));
+  // Le prochain DST se prépare sur tous ses chapitres : interro blanche si leurs
+  // définitions ou calculs le permettent, sinon leurs flashcards.
+  const auProgramme = prochain ? chapitres.filter((c) => prochain.chapitreIds.includes(c.id)) : [];
+  const interroPossible = auProgramme.some((c) => (c.definitions?.length ?? 0) + (c.calculs?.length ?? 0) > 0);
+  const cartesDst = auProgramme.reduce((n, c) => n + c.flashcards.length, 0);
 
   return (
     <div>
@@ -59,7 +68,7 @@ export default function Accueil() {
               tu vas gérer
             </span>
           )}
-          <div className="copper-bg absolute right-5 top-5 size-11 rounded-full shadow-[0_0_30px_rgb(201_139_107_/_0.4)] sm:hidden" />
+          <div className="copper-bg absolute right-5 top-5 size-7 rounded-full opacity-80 shadow-[0_0_24px_rgb(201_139_107_/_0.35)] sm:hidden" />
 
           <p className="surtitre relative text-accent">Prochain DST</p>
           {prochain ? (
@@ -83,10 +92,31 @@ export default function Accueil() {
                   .filter(Boolean)
                   .join(" · ")}
               </p>
-              {aReviser ? (
-                <Link href={lienTravail({ m: aReviser.matiereId, c: aReviser.id, o: "flashcards" })} className={classeLien}>
-                  Réviser {aReviser.titre} <ArrowRight size={16} />
-                </Link>
+              {auProgramme.length > 0 ? (
+                <>
+                  <p className="relative mt-3 text-[13.5px] text-muted">
+                    Au programme : {auProgramme.map((c) => c.titre).join(" · ")}
+                  </p>
+                  <div className="relative mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                    {interroPossible ? (
+                      <Link href={`/exercices?mode=interro&dst=${encodeURIComponent(prochain.id)}`} className={`${classeLien} !mt-0`}>
+                        Faire une interro blanche <ArrowRight size={16} />
+                      </Link>
+                    ) : null}
+                    {cartesDst > 0 && (
+                      <Link
+                        href={lienTravail({ r: prochain.id })}
+                        className={
+                          interroPossible
+                            ? "inline-flex min-h-11 items-center gap-1.5 text-[14.5px] font-semibold text-accent"
+                            : `${classeLien} !mt-0`
+                        }
+                      >
+                        Revoir ses {cartesDst} cartes <ArrowRight size={15} />
+                      </Link>
+                    )}
+                  </div>
+                </>
               ) : (
                 <Link href="/calendrier" className={classeLien}>
                   Ouvrir le calendrier <ArrowRight size={16} />
@@ -111,12 +141,26 @@ export default function Accueil() {
           <Carte className="flex min-w-0 flex-col !p-4 sm:!p-6">
             <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">À revoir aujourd&apos;hui</p>
             <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{dues}</p>
+            {revuesAujourdhui > 0 && (
+              <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
+                <div
+                  className="h-full rounded-full bg-accent"
+                  style={{ width: `${(100 * revuesAujourdhui) / (revuesAujourdhui + dues)}%` }}
+                />
+              </div>
+            )}
             <p className="mt-2 text-[13.5px] text-muted">
               {cartes.length === 0
                 ? "Pas encore de flashcards"
                 : dues === 0
-                  ? `Tout est à jour (${pluriel(cartes.length, "carte")})`
-                  : `sur ${pluriel(cartes.length, "carte")}`}
+                  ? revuesAujourdhui
+                    ? `Fini pour aujourd'hui : ${pluriel(revuesAujourdhui, "carte revue", "cartes revues")}`
+                    : "Tout est à jour"
+                  : revuesAujourdhui
+                    ? `${pluriel(revuesAujourdhui, "déjà revue", "déjà revues")} aujourd'hui`
+                    : duJour.plusTard
+                      ? `${duJour.plusTard} autres les jours suivants (${QUOTA_NOUVELLES} nouvelles par jour)`
+                      : pluriel(dues, "carte", "cartes")}
             </p>
             {dues > 0 && (
               <Link
@@ -128,10 +172,10 @@ export default function Accueil() {
             )}
           </Carte>
           <Carte className="min-w-0 !p-4 sm:!p-6">
-            <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">DST à venir</p>
-            <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{aVenir.length}</p>
+            <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">DST cette semaine</p>
+            <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{semaine.length}</p>
             <div className="mt-3 flex flex-col gap-1.5">
-              {aVenir.slice(1, 3).map((d) => (
+              {(semaine.length > 1 ? semaine.slice(1, 4) : aVenir.slice(1, 3)).map((d) => (
                 <div key={d.id} className="flex items-center gap-2 text-[13.5px]">
                   <span className="size-2 shrink-0 rounded-full" style={{ background: matiere(d.matiereId)?.couleur }} />
                   <span className="truncate">{matiere(d.matiereId)?.nom}</span>
@@ -213,9 +257,9 @@ export default function Accueil() {
           <>
             <h2 className="mb-4 mt-10 text-[22px]">Tes matières</h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {matieres.map((m) => {
+              {actives.map((m) => {
                 const chaps = chapitres.filter((c) => c.matiereId === m.id);
-                const aRevoir = chaps.reduce((n, c) => n + c.flashcards.filter(estDue).length, 0);
+                const aRevoir = chaps.reduce((n, c) => n + (duJour.parChapitre[c.id] ?? 0), 0);
                 return (
                   <Link
                     key={m.id}
@@ -239,6 +283,26 @@ export default function Accueil() {
                 );
               })}
             </div>
+            {vides.length > 0 && (
+              <details className="group mt-3">
+                <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1.5 text-[14px] font-semibold text-muted hover:text-ink">
+                  <ArrowRight size={14} className="transition-transform duration-200 group-open:rotate-90" />
+                  {pluriel(vides.length, "matière sans chapitre", "matières sans chapitre")}
+                </summary>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {vides.map((m) => (
+                    <Link
+                      key={m.id}
+                      href={lienTravail({ m: m.id })}
+                      className="inline-flex min-h-10 items-center gap-2 rounded-full px-3.5 text-[14px] font-semibold"
+                      style={{ background: pastel(m.couleur, 14), color: encre(m.couleur) }}
+                    >
+                      <Emoji e={m.emoji} /> {m.nom}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            )}
           </>
         )
       )}

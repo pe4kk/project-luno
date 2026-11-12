@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { Suspense, useState, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
+import { prochainDstDe, trierParDst } from "@/lib/revision";
+import { compteARebours } from "@/lib/dates";
+import { BarreAction } from "@/components/exercices/BarreAction";
 import { AvecBrouillon } from "@/components/Brouillon";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
@@ -47,7 +51,8 @@ import { ModeInterro } from "@/components/exercices/Interro";
 import { classePastille, usePastille } from "@/lib/pastille";
 
 function ModeSerie({ entete }: { entete: ReactNode }) {
-  const { matieres, chapitres, noterFlashcard } = useLuno();
+  const { matieres, chapitres, dsts, noterFlashcard } = useLuno();
+  const [aide, setAide] = useState(false);
   const [chapitreId, setChapitreId] = useState<string | null>(null);
   const [nombre, setNombre] = useState(5);
   const [questions, setQuestions] = useState<Exercice[] | null>(null);
@@ -55,7 +60,8 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
   const [resultat, setResultat] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
 
-  const disponibles = chapitres.filter(peutSExercer);
+  // Les chapitres des prochains DST en premier : c'est eux qu'on révise.
+  const disponibles = trierParDst(chapitres.filter(peutSExercer), dsts);
   const chapitre = disponibles.find((c) => c.id === chapitreId) ?? null;
   const max = chapitre ? maxQuestions(chapitre) : 10;
   const min = Math.min(3, max);
@@ -272,7 +278,10 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
                   animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -3 }}
-                  onClick={() => setChapitreId(c.id)}
+                  onClick={() => {
+                    setChapitreId(c.id);
+                    setAide(false);
+                  }}
                   className="rounded-2xl border-2 p-4 text-left shadow-card transition-colors"
                   style={{
                     borderColor: actif ? m?.couleur : "var(--line)",
@@ -281,11 +290,18 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
                       : "var(--surface)",
                   }}
                 >
-                  <span
-                    className="text-[13px] font-semibold"
-                    style={{ color: encre(m?.couleur ?? "#888") }}
-                  >
-                    <Emoji e={m?.emoji} /> {m?.nom}
+                  <span className="flex items-center justify-between gap-2">
+                    <span
+                      className="text-[13px] font-semibold"
+                      style={{ color: encre(m?.couleur ?? "#888") }}
+                    >
+                      <Emoji e={m?.emoji} /> {m?.nom}
+                    </span>
+                    {prochainDstDe(c.id, dsts) && (
+                      <span className="shrink-0 rounded-full bg-accent-soft px-2 py-0.5 text-[11.5px] font-bold text-accent">
+                        DST {compteARebours(prochainDstDe(c.id, dsts)!.date)}
+                      </span>
+                    )}
                   </span>
                   <span className="mt-1 block text-[17px] font-semibold">
                     {c.titre}
@@ -322,14 +338,26 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
             />
             <Bouton
               className="mt-6 w-full"
-              disabled={!chapitre}
-              onClick={lancer}
+              onClick={() => (chapitre ? lancer() : setAide(true))}
             >
-              {chapitre ? "Commencer" : "Choisis un chapitre"}
+              Commencer
             </Bouton>
+            {aide && !chapitre && (
+              <p className="mt-2 text-[13.5px] text-accent" role="status">
+                Choisis d&apos;abord un chapitre dans la liste.
+              </p>
+            )}
           </Carte>
         </div>
       )}
+      {/* Téléphone : le bouton suit le choix, sans descendre sous les 11 chapitres. */}
+      <BarreAction visible={Boolean(chapitre)}>
+        <span className="min-w-0 flex-1 truncate text-[14px] font-semibold">
+          {chapitre?.titre}
+          <span className="block text-[12.5px] font-normal text-muted">{pluriel(n, "question")}</span>
+        </span>
+        <Bouton onClick={lancer}>Commencer</Bouton>
+      </BarreAction>
     </div>
   );
 }
@@ -664,8 +692,22 @@ const MODES = [
 ] as const;
 type Mode = (typeof MODES)[number]["id"];
 
-export default function Exercices() {
-  const [mode, setMode] = useState<Mode>("serie");
+export default function Page() {
+  return (
+    <Suspense>
+      <Exercices />
+    </Suspense>
+  );
+}
+
+function Exercices() {
+  const params = useSearchParams();
+  const dsts = useLuno((x) => x.dsts);
+  // « Faire une interro blanche » depuis l'accueil : /exercices?mode=interro&dst=…
+  const [mode, setMode] = useState<Mode>(() =>
+    MODES.some((m) => m.id === params.get("mode")) ? (params.get("mode") as Mode) : "serie",
+  );
+  const initiaux = dsts.find((d) => d.id === params.get("dst"))?.chapitreIds ?? [];
   const { conteneur, pastille } = usePastille(mode);
   const entete = (
     <>
@@ -716,6 +758,6 @@ export default function Exercices() {
   ) : mode === "calculs" ? (
     <ModeCalculs entete={entete} />
   ) : (
-    <ModeInterro entete={entete} />
+    <ModeInterro entete={entete} initiaux={initiaux} />
   );
 }

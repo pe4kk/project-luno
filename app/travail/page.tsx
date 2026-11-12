@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { QUOTA_NOUVELLES, revisionDuJour as revisionDuJour2 } from "@/lib/revision";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -61,6 +62,9 @@ function Travail() {
       (c) => c.id === params.get("c") && c.matiereId === matiere?.id,
     ) ?? null;
   const revisionDuJour = params.get("r") === "tout";
+  // « Préparer » un DST depuis l'accueil : toutes les cartes de ses chapitres.
+  const dstRevise = s.dsts.find((d) => d.id === params.get("r"));
+  const duJour = revisionDuJour2(chapitres, s.dsts, s.jour);
   const ongletMatiere = params.get("o") === "erreurs" ? "erreurs" : "chapitres";
   const { conteneur: ongletsMatiereConteneur, pastille: ongletsMatierePastille } = usePastille(`${matiere?.id}-${ongletMatiere}`);
 
@@ -68,17 +72,30 @@ function Travail() {
   const [fenetre, setFenetre] = useState<Matiere | true | null>(null);
   const [titreChapitre, setTitreChapitre] = useState("");
 
-  if (revisionDuJour) {
-    const dues = chapitres.flatMap((c) =>
-      c.flashcards
-        .filter(estDue)
-        .map((f) => ({ chapitreId: c.id, carteId: f.id })),
+  if (revisionDuJour || dstRevise) {
+    const deDst = dstRevise
+      ? chapitres.filter((c) => dstRevise.chapitreIds.includes(c.id))
+      : [];
+    const duesDst = deDst.flatMap((c) =>
+      c.flashcards.filter(estDue).map((f) => ({ chapitreId: c.id, carteId: f.id })),
     );
+    // Rien de dû pour ce DST : on repasse quand même toutes ses cartes.
+    const dues = dstRevise
+      ? duesDst.length
+        ? duesDst
+        : deDst.flatMap((c) => c.flashcards.map((f) => ({ chapitreId: c.id, carteId: f.id })))
+      : duJour.cartes;
     return (
       <div>
         <EnTete
-          titre="Révision du jour"
-          sousTitre="Toutes tes cartes à revoir, toutes matières confondues."
+          titre={dstRevise ? `Préparer : ${dstRevise.titre}` : "Révision du jour"}
+          sousTitre={
+            dstRevise
+              ? `Les cartes de ${pluriel(deDst.length, "chapitre")} au programme.`
+              : duJour.plusTard
+                ? `Tes cartes à revoir, et ${QUOTA_NOUVELLES} nouvelles au plus par jour : ${pluriel(duJour.plusTard, "nouvelle carte", "nouvelles cartes")} t'attendent les jours suivants.`
+                : "Toutes tes cartes à revoir, toutes matières confondues."
+          }
         />
         {dues.length > 0 ? (
           <Revision cartes={dues} terminer={() => router.push("/")} />
@@ -214,6 +231,7 @@ function Travail() {
             >
               <input
                 aria-label="Titre du nouveau chapitre"
+                required
                 className={classeSaisie + " !bg-surface"}
                 placeholder="Titre du nouveau chapitre"
                 value={titreChapitre}
@@ -222,7 +240,6 @@ function Travail() {
               <Bouton
                 type="submit"
                 className="shrink-0"
-                disabled={!titreChapitre.trim()}
               >
                 <Plus size={17} /> Ajouter
               </Bouton>
@@ -232,7 +249,7 @@ function Travail() {
               {chapitres
                 .filter((c) => c.matiereId === matiere.id)
                 .map((c, i) => {
-                  const dues = c.flashcards.filter(estDue).length;
+                  const dues = duJour.parChapitre[c.id] ?? 0;
                   return (
                     <motion.div
                       key={c.id}
@@ -254,7 +271,7 @@ function Travail() {
                           {i + 1}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[17px] font-semibold">
+                          <span className="line-clamp-2 text-[16px] font-semibold leading-snug sm:text-[17px]">
                             {c.titre}
                           </span>
                           <span className="mt-0.5 flex flex-wrap gap-x-4 text-[13px] text-muted">

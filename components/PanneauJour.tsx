@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { revisionDuJour } from "@/lib/revision";
 import {
   ArrowRight,
   CalendarDays,
@@ -8,7 +9,7 @@ import {
   Layers,
   ListTodo,
 } from "lucide-react";
-import { encre, estDue, pastel, useLuno } from "@/lib/store";
+import { encre, pastel, useLuno } from "@/lib/store";
 import { compteARebours, dateLongue, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { pluriel } from "./ui";
@@ -26,7 +27,7 @@ export function PanneauJour() {
   const aFaire = s.taches
     .filter((t) => !t.fait)
     .sort((a, b) => (a.echeance || "9999").localeCompare(b.echeance || "9999"));
-  const dues = s.chapitres.flatMap((c) => c.flashcards).filter(estDue).length;
+  const dues = revisionDuJour(s.chapitres, s.dsts, s.jour).cartes.length;
 
   return (
     <aside className="sticky top-24 flex max-h-[calc(100dvh-7rem)] flex-col gap-4 overflow-y-auto pb-6">

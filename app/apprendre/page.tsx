@@ -144,7 +144,7 @@ function Apprendre() {
           <h2 className="text-[20px]">Demander une leçon</h2>
           <p className="mt-1 text-[14px] text-muted">
             Claude la rédige et l&apos;ajoute ici. Pour apprendre en discutant,
-            pose-lui directement tes questions dans votre conversation.
+            pose-lui directement tes questions dans ta conversation avec Claude.
           </p>
           <form
             className="mt-4 flex flex-col gap-3"
@@ -204,7 +204,7 @@ function Apprendre() {
               </span>
               <PiecesJointes fichiers={pieces} setFichiers={setPieces} />
             </div>
-            <Bouton type="submit" disabled={!sujet.trim()}>
+            <Bouton type="submit">
               <Send size={16} /> Envoyer à Claude
             </Bouton>
           </form>

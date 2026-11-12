@@ -89,6 +89,11 @@ export const estDue = (c: Flashcard) => c.echeance <= todayISO();
 type Etat = Donnees & {
   /** Versions des chapitres publiés déjà repris dans ce navigateur. */
   publies: Record<string, number>;
+  /**
+   * Révisions du jour sur cet appareil : nouvelles cartes découvertes (le quota en
+   * dépend) et cartes revues (pour la progression affichée).
+   */
+  jour: { date: string; nouvelles: number; revues: number };
   /** Matières choisies pour le calendrier du lycée, ou `null` s'il n'a pas été repris. */
   calendrier: string[] | null;
   importerCalendrier: (noms: string[], silencieux?: boolean) => void;
@@ -219,6 +224,7 @@ export const useLuno = create<Etat>()(
           taches: s.taches.filter((x) => !x.fait),
         })),
       publies: {},
+      jour: { date: "", nouvelles: 0, revues: 0 },
       calendrier: null,
       // Reprend le calendrier du lycée pour les matières choisies. Les DST repris portent
       // un identifiant « cal-… » : un nouvel import les remplace en gardant ce que
@@ -383,7 +389,11 @@ export const useLuno = create<Etat>()(
       // Répétition espacée simple : l'intervalle double à chaque bonne réponse
       // (1, 2, 4, 8… jours) et repart de zéro à la moindre erreur.
       noterFlashcard: (id, carteId, su) =>
-        set((s) => ({
+        set((s) => {
+          const carte = s.chapitres.find((c) => c.id === id)?.flashcards.find((f) => f.id === carteId);
+          const j = s.jour.date === todayISO() ? s.jour : { date: todayISO(), nouvelles: 0, revues: 0 };
+          return {
+          jour: { ...j, nouvelles: j.nouvelles + (carte?.niveau === 0 ? 1 : 0), revues: j.revues + 1 },
           chapitres: majChapitre(s.chapitres, id, (c) => ({
             ...c,
             flashcards: c.flashcards.map((f) => {
@@ -401,7 +411,8 @@ export const useLuno = create<Etat>()(
               };
             }),
           })),
-        })),
+          };
+        }),
 
       enregistrerDst: (d) =>
         set((s) => {
@@ -553,8 +564,9 @@ export const useLuno = create<Etat>()(
         erreurs: s.erreurs,
         publies: s.publies,
         calendrier: s.calendrier,
+        jour: s.jour,
       }),
-      migrate: (ancien) => normaliser(ancien as Partial<Donnees>),
+      migrate: (ancien) => ({ jour: { date: "", nouvelles: 0, revues: 0 }, ...normaliser(ancien as Partial<Donnees>) }),
     },
   ),
 );
