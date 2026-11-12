@@ -12,7 +12,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 4,
+  version: 5,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -92,9 +92,9 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
       {
         titre: "Le plan d'une réponse",
         points: [
-          { t: "1. Un titre souligné qui reformule ce qu'on cherche.", n: 1 },
+          { t: "==1. Un titre souligné qui reformule ce qu'on cherche.==", n: 1 },
           {
-            t: "2. Les données : système, valeurs de l'énoncé avec unités, bilan des forces.",
+            t: "==2. Les données : système, valeurs de l'énoncé avec unités, bilan des forces.==",
             n: 1,
           },
           {
@@ -113,7 +113,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Titres et données",
         points: [
           {
-            t: "Chaque question commence par un titre souligné : « a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical ».",
+            t: "==Chaque question commence par un titre souligné : « a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical ».==",
             n: 2,
           },
           {
@@ -138,7 +138,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Loi, projection et expression littérale",
         points: [
           {
-            t: "Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗ ».",
+            t: "==Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗ ».==",
             n: 2,
           },
           {
@@ -163,7 +163,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "L'application numérique",
         points: [
           {
-            t: "Écris « A.N. : », remplace les lettres par les valeurs, calcule, et souligne le résultat avec son unité.",
+            t: "==Écris « A.N. : », remplace les lettres par les valeurs, calcule, et souligne le résultat avec son unité.==",
             n: 1,
           },
           {
@@ -192,7 +192,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Conclure et justifier",
         points: [
           {
-            t: "Finis par une phrase qui répond à la question posée, avec le résultat.",
+            t: "==Finis par une phrase qui répond à la question posée, avec le résultat.==",
             n: 1,
           },
           {
@@ -213,7 +213,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Schémas",
         points: [
           {
-            t: "Trace un repère (O, x, y), place le système en point M(m) et chaque force par une flèche partant de M.",
+            t: "==Trace un repère (O, x, y), place le système en point M(m) et chaque force par une flèche partant de M.==",
             n: 2,
           },
           {
@@ -230,7 +230,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Ce qu'il faut savoir par cœur",
         points: [
           {
-            t: "Les définitions encadrées des cours (système, référentiel, trajectoire, vecteur déplacement…).",
+            t: "==Les définitions encadrées des cours (système, référentiel, trajectoire, vecteur déplacement…).==",
             n: 2,
           },
           {

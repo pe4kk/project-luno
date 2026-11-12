@@ -545,4 +545,6 @@ un PDF ou une photo directement dans le chat.
   qu'on **surligne l'essentiel** : entourer les phrases les plus importantes de
   `==…==` (surligneur jaune, jeton `--surligneur` dans `app/globals.css`), sans
   en abuser (une ou deux par section ou par étape). Valable pour tout nouveau
-  contenu, y compris les réponses de la tâche planifiée.
+  contenu, y compris les réponses de la tâche planifiée. Fait le 2026-11-12 pour toutes les
+  fiches publiées (74 points, le point de niveau le plus bas de chaque section,
+  deux si la section en a six ou plus ; versions augmentées).

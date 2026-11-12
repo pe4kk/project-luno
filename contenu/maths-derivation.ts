@@ -25,7 +25,7 @@ const matiere = { nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" };
 
 export const MATHS_DERIVATION: ChapitrePublie = {
   id: "maths-1re-derivation",
-  version: 2,
+  version: 3,
   definitions: DEF_MATHS_DERIVATION,
   matiere,
   titre: "Séquence 2 · Dérivation",
@@ -113,7 +113,7 @@ export const MATHS_DERIVATION: ChapitrePublie = {
         titre: "Taux de variation",
         points: [
           {
-            t: "Le taux de variation de f entre a et a + h (h ≠ 0) est t(h) = {{f(a + h) − f(a) // h}}.",
+            t: "==Le taux de variation de f entre a et a + h (h ≠ 0) est t(h) = {{f(a + h) − f(a) // h}}.==",
             n: 1,
           },
           {
@@ -135,7 +135,7 @@ export const MATHS_DERIVATION: ChapitrePublie = {
         titre: "Nombre dérivé",
         points: [
           {
-            t: "Si t(h) tend vers un réel quand h tend vers 0, f est dérivable en a, et ce réel est le nombre dérivé : f'(a) = lim (h → 0) {{f(a + h) − f(a) // h}}.",
+            t: "==Si t(h) tend vers un réel quand h tend vers 0, f est dérivable en a, et ce réel est le nombre dérivé : f'(a) = lim (h → 0) {{f(a + h) − f(a) // h}}.==",
             n: 1,
           },
           {
@@ -161,7 +161,7 @@ export const MATHS_DERIVATION: ChapitrePublie = {
             schema: TANGENTE_LIMITE,
           },
           {
-            t: "La tangente à la courbe au point A(a ; f(a)) a pour équation y = f(a) + f'(a)(x − a).",
+            t: "==La tangente à la courbe au point A(a ; f(a)) a pour équation y = f(a) + f'(a)(x − a).==",
             n: 1,
             schema: TANGENTE_EQUATION,
           },
@@ -190,8 +190,8 @@ export const MATHS_DERIVATION: ChapitrePublie = {
             t: "f est dérivable sur I si elle l'est en tout réel de I ; la fonction f' : x ↦ f'(x) est sa fonction dérivée.",
             n: 2,
           },
-          { t: "Constante k : 0. Affine ax + b : a. Identité x : 1.", n: 1 },
-          { t: "x² : 2x. xⁿ (n entier non nul) : nxⁿ⁻¹, sur ℝ si n > 0, sur ℝ* si n < 0.", n: 1 },
+          { t: "==Constante k : 0. Affine ax + b : a. Identité x : 1.==", n: 1 },
+          { t: "==x² : 2x. xⁿ (n entier non nul) : nxⁿ⁻¹, sur ℝ si n > 0, sur ℝ* si n < 0.==", n: 1 },
           { t: "{{1 // x}} : −{{1 // x²}} sur ℝ*. √x : {{1 // 2√x}} sur ]0 ; +∞[.", n: 1 },
           {
             t: "La racine carrée est définie en 0 mais pas dérivable en 0 : t(h) = {{1 // √h}} ne tend vers aucun réel.",
@@ -215,8 +215,8 @@ export const MATHS_DERIVATION: ChapitrePublie = {
       {
         titre: "Opérations sur les fonctions dérivables",
         points: [
-          { t: "(u + v)' = u' + v' et (ku)' = ku'.", n: 1 },
-          { t: "(uv)' = u'v + uv'. Attention : ce n'est pas u'v'.", n: 1 },
+          { t: "==(u + v)' = u' + v' et (ku)' = ku'.==", n: 1 },
+          { t: "==(uv)' = u'v + uv'. Attention : ce n'est pas u'v'.==", n: 1 },
           {
             t: "({{1 // v}})' = −{{v' // v²}} et ({{u // v}})' = {{u'v − uv' // v²}}, là où v ne s'annule pas.",
             n: 1,
@@ -244,7 +244,7 @@ export const MATHS_DERIVATION: ChapitrePublie = {
         titre: "Fonctions composées",
         points: [
           {
-            t: "Si g est dérivable sur I et ax + b est dans I, alors x ↦ g(ax + b) a pour dérivée a × g'(ax + b).",
+            t: "==Si g est dérivable sur I et ax + b est dans I, alors x ↦ g(ax + b) a pour dérivée a × g'(ax + b).==",
             n: 1,
           },
           { t: "À connaître aussi : (√u)' = {{u' // 2√u}} et (uⁿ)' = nu'uⁿ⁻¹.", n: 2 },
@@ -263,7 +263,7 @@ export const MATHS_DERIVATION: ChapitrePublie = {
         points: [
           { t: "|x| = x si x ≥ 0, et |x| = −x si x < 0. Exemple : |2 − √5| = √5 − 2.", n: 2 },
           {
-            t: "La valeur absolue est continue sur ℝ, dérivable sur ℝ* (−1 pour x < 0, 1 pour x > 0) et non dérivable en 0.",
+            t: "==La valeur absolue est continue sur ℝ, dérivable sur ℝ* (−1 pour x < 0, 1 pour x > 0) et non dérivable en 0.==",
             n: 1,
             schema: VALEUR_ABSOLUE,
           },
@@ -281,11 +281,11 @@ export const MATHS_DERIVATION: ChapitrePublie = {
         titre: "Rédiger comme ton prof l'attend",
         points: [
           {
-            t: "Commence par l'ensemble de dérivabilité, en le justifiant : « u et v sont dérivables sur ℝ en tant que fonctions polynômes », « x² + 1 ≠ 0 sur ℝ ».",
+            t: "==Commence par l'ensemble de dérivabilité, en le justifiant : « u et v sont dérivables sur ℝ en tant que fonctions polynômes », « x² + 1 ≠ 0 sur ℝ ».==",
             n: 1,
           },
           {
-            t: "Nomme les morceaux avant de dériver : « f est de la forme {{u // v}} avec u(x) = … et v(x) = … », puis écris u'(x) et v'(x).",
+            t: "==Nomme les morceaux avant de dériver : « f est de la forme {{u // v}} avec u(x) = … et v(x) = … », puis écris u'(x) et v'(x).==",
             n: 1,
           },
           {

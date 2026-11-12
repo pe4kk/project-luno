@@ -39,7 +39,7 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 5,
+    version: 6,
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
@@ -184,7 +184,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Système et point matériel",
           points: [
             {
-              t: "Pour décrire un mouvement, on choisit d'abord le système (l'objet étudié) et le référentiel.",
+              t: "==Pour décrire un mouvement, on choisit d'abord le système (l'objet étudié) et le référentiel.==",
               n: 1,
             },
             {
@@ -201,7 +201,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Référentiel",
           points: [
             {
-              t: "Référentiel : objet de référence supposé fixe, avec un repère d'espace (positions) et une horloge (instants, à partir de t = 0).",
+              t: "==Référentiel : objet de référence supposé fixe, avec un repère d'espace (positions) et une horloge (instants, à partir de t = 0).==",
               n: 1,
             },
             {
@@ -226,7 +226,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Trajectoire",
           points: [
             {
-              t: "La trajectoire est la courbe orientée formée par les positions successives du point.",
+              t: "==La trajectoire est la courbe orientée formée par les positions successives du point.==",
               n: 1,
             },
             {
@@ -247,11 +247,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Vecteur vitesse",
           points: [
             {
-              t: "Vitesse moyenne : v⃗ = {{MM'⃗ // Δt}}. Vitesse instantanée en Mᵢ : v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}.",
+              t: "==Vitesse moyenne : v⃗ = {{MM'⃗ // Δt}}. Vitesse instantanée en Mᵢ : v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}.==",
               n: 1, schema: VITESSE_MOYENNE,
             },
             {
-              t: "Le vecteur vitesse est toujours tangent à la trajectoire.",
+              t: "==Le vecteur vitesse est toujours tangent à la trajectoire.==",
               n: 1,
             },
             {
@@ -276,7 +276,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Caractériser un mouvement",
           points: [
             {
-              t: "Sur une trajectoire droite : vecteur vitesse constant, mouvement rectiligne uniforme ; vecteur vitesse qui varie, rectiligne non uniforme.",
+              t: "==Sur une trajectoire droite : vecteur vitesse constant, mouvement rectiligne uniforme ; vecteur vitesse qui varie, rectiligne non uniforme.==",
               n: 1,
             },
             {
@@ -293,11 +293,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Méthode d'Euler (fiche méthode)",
           points: [
             {
-              t: "La vitesse est le taux de variation, ou dérivée, de la position.",
+              t: "==La vitesse est le taux de variation, ou dérivée, de la position.==",
               n: 2,
             },
             {
-              t: "Par encadrement : v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}}, parallèle au segment [M₁M₃].",
+              t: "==Par encadrement : v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}}, parallèle au segment [M₁M₃].==",
               n: 2,
             },
             {
@@ -322,7 +322,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Capacités exigibles",
           points: [
             {
-              t: "Décrire un mouvement par celui d'un point matériel et expliquer l'influence du choix du référentiel.",
+              t: "==Décrire un mouvement par celui d'un point matériel et expliquer l'influence du choix du référentiel.==",
               n: 3,
             },
             {
@@ -517,7 +517,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 6,
+    version: 7,
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
@@ -667,7 +667,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Cinématique et référentiel galiléen",
           points: [
             {
-              t: "Référentiel galiléen : référentiel où le principe d'inertie est vérifié. Les lois de Newton ne valent que là.",
+              t: "==Référentiel galiléen : référentiel où le principe d'inertie est vérifié. Les lois de Newton ne valent que là.==",
               n: 1,
             },
             {
@@ -691,9 +691,9 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         {
           titre: "Variation de vitesse",
           points: [
-            { t: "Δv⃗ᵢ = v⃗ᵢ₊₁ − v⃗ᵢ₋₁.", n: 1 },
+            { t: "==Δv⃗ᵢ = v⃗ᵢ₊₁ − v⃗ᵢ₋₁.==", n: 1 },
             {
-              t: "Rectiligne uniforme : Δv⃗ = 0⃗. Accéléré : Δv⃗ dans le sens du mouvement. Ralenti : Δv⃗ dans le sens opposé.",
+              t: "==Rectiligne uniforme : Δv⃗ = 0⃗. Accéléré : Δv⃗ dans le sens du mouvement. Ralenti : Δv⃗ dans le sens opposé.==",
               n: 1, schema: VARIATION_RECTILIGNE,
             },
             {
@@ -715,7 +715,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Modéliser une action",
           points: [
             {
-              t: "Une action mécanique est modélisée par une force : origine au point du système, direction et sens de l'action, longueur proportionnelle à la valeur en newtons (N).",
+              t: "==Une action mécanique est modélisée par une force : origine au point du système, direction et sens de l'action, longueur proportionnelle à la valeur en newtons (N).==",
               n: 1,
             },
             {
@@ -731,8 +731,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         {
           titre: "2e loi de Newton",
           points: [
-            { t: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.", n: 1 },
-            { t: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.", n: 1, schema: DEUXIEME_LOI },
+            { t: "==Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.==", n: 1 },
+            { t: "==ΣF⃗ et Δv⃗ sont colinéaires et de même sens.==", n: 1, schema: DEUXIEME_LOI },
             {
               t: "Un système ne peut accélérer ou changer de direction que si des forces s'exercent sur lui.",
               n: 2,
@@ -755,7 +755,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "1re loi : principe d'inertie",
           points: [
             {
-              t: "Un système isolé ou pseudo-isolé reste au repos, ou garde un mouvement rectiligne uniforme.",
+              t: "==Un système isolé ou pseudo-isolé reste au repos, ou garde un mouvement rectiligne uniforme.==",
               n: 1,
             },
             {
@@ -777,7 +777,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "3e loi : actions réciproques",
           points: [
             {
-              t: "F⃗A→B = −F⃗B→A : même valeur, même direction, sens opposés.",
+              t: "==F⃗A→B = −F⃗B→A : même valeur, même direction, sens opposés.==",
               n: 1,
             },
             {
@@ -794,7 +794,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Capacités exigibles",
           points: [
             {
-              t: "Soustraire des vecteurs vitesse, construire et caractériser un vecteur variation de vitesse.",
+              t: "==Soustraire des vecteurs vitesse, construire et caractériser un vecteur variation de vitesse.==",
               n: 3,
             },
             {
@@ -1002,7 +1002,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 6,
+    version: 7,
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1094,7 +1094,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Forces de contact",
           points: [
             {
-              t: "Réaction normale R⃗N : exercée par un support ; verticale vers le haut pour un support horizontal.",
+              t: "==Réaction normale R⃗N : exercée par un support ; verticale vers le haut pour un support horizontal.==",
               n: 1, schema: REACTION,
             },
             {
@@ -1119,11 +1119,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Forces à distance",
           points: [
             {
-              t: "Poids : P = m · g, vertical, vers le bas (g = 9,81 N/kg sur Terre).",
+              t: "==Poids : P = m · g, vertical, vers le bas (g = 9,81 N/kg sur Terre).==",
               n: 1,
             },
             {
-              t: "Gravitation F⃗g : dirigée vers le corps attracteur ; on l'utilise loin de la surface, pour la Lune ou un satellite.",
+              t: "==Gravitation F⃗g : dirigée vers le corps attracteur ; on l'utilise loin de la surface, pour la Lune ou un satellite.==",
               n: 1, schema: GRAVITATION,
             },
             {
@@ -1151,7 +1151,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         {
           titre: "Situations types",
           points: [
-            { t: "Chute libre : seul le poids s'exerce.", n: 1 },
+            { t: "==Chute libre : seul le poids s'exerce.==", n: 1 },
             {
               t: "Chute avec frottements : poids et frottement ; quand ils se compensent, la vitesse atteint une valeur limite.",
               n: 2,
@@ -1170,7 +1170,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Point à vérifier avec ton prof",
           points: [
             {
-              t: "Ta fiche présente P⃗ = −R⃗N pour la bille comme une illustration de la 3e loi. Attention : ces deux forces s'exercent sur la même bille, et leur compensation découle du principe d'inertie (la bille est immobile). Le partenaire de R⃗N au sens de la 3e loi est la force exercée par la bille sur la table.",
+              t: "Ta fiche présente P⃗ = −R⃗N pour la bille comme une illustration de la 3e loi. Attention : ==ces deux forces s'exercent sur la même bille, et leur compensation découle du principe d'inertie== (la bille est immobile). Le partenaire de R⃗N au sens de la 3e loi est la force exercée par la bille sur la table.",
               n: 4,
             },
           ],
@@ -1323,7 +1323,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-exercices",
-    version: 2,
+    version: 3,
     matiere,
     titre: "Chap. 11 · Fiche d'exercices et DM",
     documents: [
@@ -1386,11 +1386,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           titre: "Le travail demandé par ton prof",
           points: [
             {
-              t: "Faire les exercices sans la correction d'abord, puis seulement les corriger avec le PDF.",
+              t: "==Faire les exercices sans la correction d'abord, puis seulement les corriger avec le PDF.==",
               n: 1,
             },
             {
-              t: "DM pour le lundi 16/11 : rédiger sur feuille les cas 2 et 3 de l'exercice 1, et l'exercice 4.",
+              t: "==DM pour le lundi 16/11 : rédiger sur feuille les cas 2 et 3 de l'exercice 1, et l'exercice 4.==",
               n: 1,
             },
             {
@@ -1435,7 +1435,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 2,
             },
             {
-              t: "Rédige chaque fois : système, référentiel, bilan des forces, loi utilisée, puis conclusion justifiée.",
+              t: "==Rédige chaque fois : système, référentiel, bilan des forces, loi utilisée, puis conclusion justifiée.==",
               n: 2,
             },
           ],

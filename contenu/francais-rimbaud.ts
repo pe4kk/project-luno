@@ -10,7 +10,7 @@ import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 3,
+  version: 4,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -167,7 +167,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         titre: "L'essentiel",
         points: [
           {
-            t: "L'œuvre : 22 poèmes écrits en 1870 par un Rimbaud de 15-16 ans, confiés à Paul Demeny à Douai ; il ne les a jamais publiés lui-même.",
+            t: "==L'œuvre : 22 poèmes écrits en 1870 par un Rimbaud de 15-16 ans, confiés à Paul Demeny à Douai ; il ne les a jamais publiés lui-même.==",
             n: 1,
           },
           {
@@ -188,7 +188,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         titre: "Rimbaud, entre vie et mythe",
         points: [
           {
-            t: "Rimbaud est devenu un mythe de son vivant, et ce mythe brouille encore la lecture de ses poèmes.",
+            t: "==Rimbaud est devenu un mythe de son vivant, et ce mythe brouille encore la lecture de ses poèmes.==",
             n: 1,
           },
           {
@@ -253,11 +253,11 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         titre: "Des poèmes difficiles à interpréter",
         points: [
           {
-            t: "Le piège : lire Rimbaud au premier degré. Ses poèmes sont polémiques, parodiques et surtout polysémiques.",
+            t: "==Le piège : lire Rimbaud au premier degré. Ses poèmes sont polémiques, parodiques et surtout polysémiques.==",
             n: 1,
           },
           {
-            t: "Deux clés : l'intertextualité externe (il réécrit Villon, Molière) et l'intertextualité interne (ses poèmes s'éclairent entre eux).",
+            t: "==Deux clés : l'intertextualité externe (il réécrit Villon, Molière) et l'intertextualité interne (ses poèmes s'éclairent entre eux).==",
             n: 1,
           },
           {
@@ -290,11 +290,11 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         titre: "Les poèmes étudiés",
         points: [
           {
-            t: "Même méthode à chaque fois : une première lecture simple, puis l'intertextualité révèle un second sens, souvent satirique.",
+            t: "==Même méthode à chaque fois : une première lecture simple, puis l'intertextualité révèle un second sens, souvent satirique.==",
             n: 1,
           },
           {
-            t: "« Le Bal des pendus » : Villon inversé, sans pitié pour les pendus ; poème politique contre la cour de Napoléon III.",
+            t: "==« Le Bal des pendus » : Villon inversé, sans pitié pour les pendus ; poème politique contre la cour de Napoléon III.==",
             n: 1,
           },
           {
@@ -351,11 +351,11 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         titre: "Pour la dissertation",
         points: [
           {
-            t: "Argument fort : l'émancipation de Rimbaud passe par le détournement des textes et des codes, pas seulement par la révolte affichée.",
+            t: "==Argument fort : l'émancipation de Rimbaud passe par le détournement des textes et des codes, pas seulement par la révolte affichée.==",
             n: 1,
           },
           {
-            t: "Trois axes : s'émanciper de son milieu, des pouvoirs, des modèles poétiques.",
+            t: "==Trois axes : s'émanciper de son milieu, des pouvoirs, des modèles poétiques.==",
             n: 1,
           },
           {

@@ -14,7 +14,7 @@ const matiere = { nom: "HGGSP", couleur: "#8a5a78", emoji: "🏛️" };
 export const HGGSP_THEME_4: ChapitrePublie[] = [
   {
     id: "hggsp-1re-t4-intro",
-    version: 3,
+    version: 4,
     definitions: DEF_HGGSP_INTRO,
     matiere,
     titre: "Thème 4 · Introduction : s'informer",
@@ -109,7 +109,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Problématique",
           points: [
             {
-              t: "Comment se construisent les conditions d'un accès libre et éclairé à une information fiable dans une « société de l'information » ?",
+              t: "==Comment se construisent les conditions d'un accès libre et éclairé à une information fiable dans une « société de l'information » ?==",
               n: 1,
             },
             {
@@ -126,11 +126,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Définitions",
           points: [
             {
-              t: "Information : nouvelle d'actualité vérifiée, hiérarchisée, mise en forme et portée à la connaissance du public.",
+              t: "==Information : nouvelle d'actualité vérifiée, hiérarchisée, mise en forme et portée à la connaissance du public.==",
               n: 1,
             },
             {
-              t: "Communication : message destiné à promouvoir un intérêt particulier (commercial, politique, institutionnel).",
+              t: "==Communication : message destiné à promouvoir un intérêt particulier (commercial, politique, institutionnel).==",
               n: 1,
             },
             {
@@ -155,7 +155,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "D'hier à aujourd'hui",
           points: [
             {
-              t: "Hier : info rare, lente, verticale. Aujourd'hui : info surabondante, immédiate, réticulaire (en réseau).",
+              t: "==Hier : info rare, lente, verticale. Aujourd'hui : info surabondante, immédiate, réticulaire (en réseau).==",
               n: 1,
             },
             {
@@ -176,7 +176,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Un enjeu démocratique",
           points: [
             {
-              t: "L'information est la matière première de la démocratie : sans bonne info, pas de choix éclairé.",
+              t: "==L'information est la matière première de la démocratie : sans bonne info, pas de choix éclairé.==",
               n: 1,
             },
             {
@@ -193,7 +193,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Les dérives de l'économie de l'attention",
           points: [
             {
-              t: "Pour capter l'attention, les médias privilégient l'émotionnel et le spectaculaire : sensationnalisme, porte ouverte à la désinformation.",
+              t: "==Pour capter l'attention, les médias privilégient l'émotionnel et le spectaculaire : sensationnalisme, porte ouverte à la désinformation.==",
               n: 1,
             },
             {
@@ -215,7 +215,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Une population connectée, des pratiques inégales",
           points: [
             {
-              t: "Fracture générationnelle : les plus âgés vont vers l'info (radio, télé) ; chez les jeunes, l'info vient à eux par les réseaux sociaux.",
+              t: "==Fracture générationnelle : les plus âgés vont vers l'info (radio, télé) ; chez les jeunes, l'info vient à eux par les réseaux sociaux.==",
               n: 2,
             },
             {
@@ -240,7 +240,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Défiance et réponses",
           points: [
             {
-              t: "Environ 2 Français sur 3 se méfient des médias (enquête de 2026).",
+              t: "==Environ 2 Français sur 3 se méfient des médias (enquête de 2026).==",
               n: 2,
             },
             {
@@ -420,7 +420,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe1",
-    version: 3,
+    version: 4,
     definitions: DEF_HGGSP_AXE1,
     matiere,
     titre: "Thème 4 · Axe 1 : les révolutions techniques de l'information",
@@ -554,7 +554,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Idée-force",
           points: [
             {
-              t: "Chaque révolution technique élargit le public touché et accélère l'information.",
+              t: "==Chaque révolution technique élargit le public touché et accélère l'information.==",
               n: 1,
             },
             {
@@ -571,11 +571,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Jalon 1 · L'information imprimée",
           points: [
             {
-              t: "Vers 1450 : imprimerie de Gutenberg, copies multipliées et coûts en chute, démocratisation de la lecture.",
+              t: "==Vers 1450 : imprimerie de Gutenberg, copies multipliées et coûts en chute, démocratisation de la lecture.==",
               n: 1,
             },
             {
-              t: "1631 : La Gazette de Renaudot, premier périodique français.",
+              t: "==1631 : La Gazette de Renaudot, premier périodique français.==",
               n: 1,
             },
             {
@@ -637,11 +637,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Jalon 2 · Le son et l'image",
           points: [
             {
-              t: "1921 : Radio Tour Eiffel, premier émetteur public en France.",
+              t: "==1921 : Radio Tour Eiffel, premier émetteur public en France.==",
               n: 1,
             },
             {
-              t: "1940 : Radio Londres, « les Français parlent aux Français », le son contre la censure.",
+              t: "==1940 : Radio Londres, « les Français parlent aux Français », le son contre la censure.==",
               n: 1,
             },
             {
@@ -690,11 +690,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Jalon 3 · Internet",
           points: [
             {
-              t: "1969 : Arpanet, né dans le contexte de la guerre froide, réseau distribué où les messages circulent par paquets.",
+              t: "==1969 : Arpanet, né dans le contexte de la guerre froide, réseau distribué où les messages circulent par paquets.==",
               n: 1,
             },
             {
-              t: "Internet n'est pas le web : internet est l'infrastructure (câbles, fibre, satellites), le web une application qui circule dessus.",
+              t: "==Internet n'est pas le web : internet est l'infrastructure (câbles, fibre, satellites), le web une application qui circule dessus.==",
               n: 1,
             },
             {
@@ -948,7 +948,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe2",
-    version: 4,
+    version: 5,
     // Problèmes à rédiger (méthode du prof, 2026-11-12) sur des documents de cet axe.
     problemes: [...PROBLEMES_ETUDE_CRITIQUE, ...PROBLEMES_DISSERTATION],
     definitions: DEF_HGGSP_AXE2,
@@ -1065,7 +1065,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Idée-force",
           points: [
             {
-              t: "Depuis l'imprimerie, tous les pouvoirs se méfient de l'information et cherchent à la contrôler.",
+              t: "==Depuis l'imprimerie, tous les pouvoirs se méfient de l'information et cherchent à la contrôler.==",
               n: 1,
             },
             {
@@ -1086,11 +1086,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Jalon 1 · L'affaire Dreyfus et la presse (1894-1906)",
           points: [
             {
-              t: "Alfred Dreyfus, capitaine juif alsacien, est accusé à tort d'espionnage pour l'Allemagne et condamné au bagne en 1894.",
+              t: "==Alfred Dreyfus, capitaine juif alsacien, est accusé à tort d'espionnage pour l'Allemagne et condamné au bagne en 1894.==",
               n: 1,
             },
             {
-              t: "13 janvier 1898 : « J'accuse… ! » de Zola dans L'Aurore, naissance de l'intellectuel engagé.",
+              t: "==13 janvier 1898 : « J'accuse… ! » de Zola dans L'Aurore, naissance de l'intellectuel engagé.==",
               n: 1,
             },
             {
@@ -1140,11 +1140,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Jalon 2 · Havas et l'AFP, entre le marché et l'État",
           points: [
             {
-              t: "Une agence de presse collecte, vérifie et vend l'information aux médias.",
+              t: "==Une agence de presse collecte, vérifie et vend l'information aux médias.==",
               n: 1,
             },
             {
-              t: "Havas : bureau de traduction (1832), puis agence de presse (1835) ; elle mêle information et publicité dès 1857.",
+              t: "==Havas : bureau de traduction (1832), puis agence de presse (1835) ; elle mêle information et publicité dès 1857.==",
               n: 1,
             },
             {
@@ -1197,7 +1197,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           titre: "Aujourd'hui",
           points: [
             {
-              t: "Droits voisins : les plateformes doivent rémunérer la presse dont elles utilisent les contenus (directive européenne et loi française du 24 juillet 2019).",
+              t: "==Droits voisins : les plateformes doivent rémunérer la presse dont elles utilisent les contenus (directive européenne et loi française du 24 juillet 2019).==",
               n: 1,
             },
             {
