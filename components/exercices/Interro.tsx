@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, ChevronLeft, ChevronRight, Clock, ScrollText, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Clock, ScrollText, Send, X } from "lucide-react";
 import { formule } from "@/components/Formule";
 import { Emoji } from "@/components/Emoji";
 import { SaisieFormule } from "@/components/SaisieFormule";
-import { Bouton, BoutonIcone, Carte, EtatVide } from "@/components/ui";
+import { Bouton, BoutonIcone, Carte, EnvoyerAClaude, EtatVide } from "@/components/ui";
 import { Curseur } from "@/components/Curseur";
-import { tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
+import { ecrireAvecCs, remplir, tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
+import { bilans, useDemandes, type Demande } from "@/lib/demandes";
 import { melanger } from "@/lib/contenu";
 import { estScientifique, versNotation } from "@/lib/saisie";
 import { encre, pastel, useLuno } from "@/lib/store";
@@ -60,6 +61,8 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
   const [fin, setFin] = useState<number | null>(null);
   const [maintenant, setMaintenant] = useState(() => Date.now());
   const [ajoute, setAjoute] = useState(false);
+  const [envoiBilan, setEnvoiBilan] = useState(false);
+  const mesBilans = bilans(useDemandes((x) => x.liste));
   const [debut, setDebut] = useState(0);
 
   const selection = possibles.filter((c) => choisis.includes(c.id));
@@ -219,6 +222,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
           <p className="mt-2 text-[12.5px] text-muted">Pas de correction avant la fin, comme en vrai.</p>
         </Carte>
       </div>
+      {mesBilans.length > 0 && <ListeBilans liste={mesBilans} />}
       </div>
     );
   }
@@ -269,8 +273,50 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
       }];
     });
 
+    const nomsMatieres = [...new Set(questions.map((q) => matieres.find((m) => m.id === q.matiereId)?.nom ?? ""))].filter(Boolean);
+    const chapitresVus = [...new Set(questions.map((q) => q.chapitre))];
+    const enteteBilan = [
+      `[Luno] Bilan d'interro blanche`,
+      `Matières : ${nomsMatieres.join(", ")}`,
+      `Chapitres : ${chapitresVus.join(" ; ")}`,
+      `Note : ${String(sur20).replace(".", ",")} / 20${enAttente ? ` (${enAttente} question${enAttente > 1 ? "s" : ""} de cours pas encore notée${enAttente > 1 ? "s" : ""})` : ""}${temps ? `, copie rendue en ${temps} min` : ""}${fin ? ` sur ${Math.round((fin - debut) / 60_000)} min` : " (sans chrono)"}`,
+    ].join("\n");
+    const texteBilan = [
+      enteteBilan,
+      ...questions.map((q, i) => {
+        const r = reponses[i];
+        const m = matieres.find((x) => x.id === q.matiereId)?.nom;
+        if (q.type === "cours") {
+          const note = notes[i] === null ? "pas notée" : notes[i] === 1 ? "juste" : notes[i] === 0.5 ? "à moitié" : "faux";
+          return [
+            `Question ${i + 1} (${m} · ${q.chapitre}, ${q.points} pts, auto-notée : ${note})`,
+            `Consigne : ${consigneCours(q.def)}`,
+            `Ma réponse : ${r.texte.trim() || "(rien)"}`,
+            `Dans le cours : ${q.def.texte}`,
+          ].join("\n");
+        }
+        const v = verdicts[i];
+        return [
+          `Question ${i + 1} (${m} · ${q.chapitre}, calcul, ${q.points} pts)`,
+          `Énoncé : ${remplir(q.calcul.enonce, q.version)} ${remplir(q.calcul.question, q.version)}`,
+          `Ma réponse : ${r.texte ? `${q.calcul.inconnue} = ${r.texte} ${r.unite}` : "(rien)"}`,
+          `Attendu : ${q.calcul.litterale} ; ${q.calcul.inconnue} = ${ecrireAvecCs(q.version.resultat, q.version.cs)} ${q.calcul.unite}`,
+          `Correction automatique : valeur ${v?.valeur ? "juste" : "fausse"}, unité ${v?.unite ? "juste" : "fausse"}, chiffres significatifs ${v?.cs ? "justes" : "faux"}`,
+        ].join("\n");
+      }),
+    ].join("\n\n");
+
     return (
       <div className="mx-auto max-w-[720px]">
+        <EnvoyerAClaude
+          ouverte={envoiBilan}
+          fermer={() => setEnvoiBilan(false)}
+          titre="Demander un bilan à Claude"
+          objet={`Bilan d'interro blanche : ${chapitresVus.join(", ")}`.slice(0, 120)}
+          texte={texteBilan}
+          resultat="un bilan de ton interro (points forts, ce qui reste à retravailler, conseils), avec tes erreurs dans « Mes erreurs »"
+          demande={{ type: "erreurs", meta: { bilan: true, matieres: nomsMatieres } }}
+        />
         <div className="rounded-[18px] border border-line bg-surface p-6 shadow-pop">
           <p className="surtitre text-accent">Interro blanche · copie rendue{temps ? ` en ${temps} min` : ""}</p>
           <p className="mt-1 font-display text-[54px] leading-none text-accent">
@@ -297,6 +343,9 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
                 {ajoute ? "Ajouté à Mes erreurs" : `Ajouter mes ${erreurs.length} erreurs à Mes erreurs`}
               </Bouton>
             )}
+            <Bouton variante="doux" onClick={() => setEnvoiBilan(true)}>
+              <Send size={16} /> Demander un bilan à Claude
+            </Bouton>
             <Bouton variante="contour" onClick={() => setQuestions(null)}>
               Nouvelle interro
             </Bouton>
@@ -483,3 +532,63 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
     </div>
   );
 }
+
+/** Les bilans demandés à Claude : en attente, ou rédigés (dépliables). */
+function ListeBilans({ liste }: { liste: Demande[] }) {
+  return (
+    <section className="mt-8">
+      <h2 className="text-[22px]">Tes bilans</h2>
+      <div className="mt-3 flex flex-col gap-2.5">
+        {liste.map((d) => {
+          const b = d.statut === "prete" ? (d.reponse as { bilan?: BilanClaude } | null)?.bilan : undefined;
+          const date = new Date(d.cree).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
+          return (
+            <details key={d.id} className="group rounded-[18px] border border-line bg-surface p-4 shadow-card">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-3">
+                <span className="min-w-0">
+                  <span className="block text-[15.5px] font-semibold leading-snug">{d.titre.replace(/^Bilan d'interro blanche : /, "")}</span>
+                  <span className="text-[13px] text-muted">{date}</span>
+                </span>
+                <span
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-[12px] font-semibold ${
+                    b ? "bg-accent-soft text-accent" : d.statut === "erreur" ? "bg-bad/10 text-bad" : "bg-ink/5 text-muted"
+                  }`}
+                >
+                  {b ? "Prêt" : d.statut === "erreur" ? "Problème" : "Claude passe bientôt"}
+                </span>
+              </summary>
+              {b ? (
+                <div className="mt-3 flex flex-col gap-3 text-[14.5px] leading-relaxed">
+                  <p>{formule(b.resume)}</p>
+                  {(
+                    [
+                      ["Tes points forts", b.pointsForts, "text-ok"],
+                      ["À retravailler", b.aRetravailler, "text-bad"],
+                      ["Conseils pour la prochaine fois", b.conseils, "text-accent"],
+                    ] as const
+                  ).map(([titre, l, ton]) => (
+                    <div key={titre}>
+                      <p className={`surtitre ${ton}`}>{titre}</p>
+                      <ul className="mt-1 flex list-disc flex-col gap-1 pl-5">
+                        {l.map((t, i) => (
+                          <li key={i}>{formule(t)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <p className="text-[13px] text-muted">Les erreurs relevées sont dans « Mes erreurs » de chaque matière.</p>
+                </div>
+              ) : (
+                <p className="mt-2 text-[14px] text-muted">
+                  {d.statut === "erreur" ? d.erreur : "Ta copie est envoyée : le bilan apparaîtra ici après le prochain passage de Claude."}
+                </p>
+              )}
+            </details>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+type BilanClaude = { resume: string; pointsForts: string[]; aRetravailler: string[]; conseils: string[] };

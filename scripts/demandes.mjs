@@ -51,6 +51,20 @@ function verifierLecon(l) {
     if (e.question) { texteOk(e.question.q, `etapes[${i}].question.q`); texteOk(e.question.r, `etapes[${i}].question.r`); }
   });
 }
+function verifierBilan(r) {
+  const b = r.bilan || {};
+  texteOk(b.resume, "bilan.resume");
+  for (const k of ["pointsForts", "aRetravailler", "conseils"]) {
+    exiger(Array.isArray(b[k]) && b[k].length > 0, `bilan.${k} : tableau non vide`);
+    (b[k] || []).forEach((t, i) => texteOk(t, `bilan.${k}[${i}]`));
+  }
+  exiger(Array.isArray(r.erreurs), "erreurs : tableau (vide si aucune erreur)");
+  (r.erreurs || []).forEach((e, i) => {
+    texteOk(e.titre, `erreurs[${i}].titre`);
+    texteOk(e.correction, `erreurs[${i}].correction`);
+    texteOk(e.matiere, `erreurs[${i}].matiere (nom exact d'une matière de l'interro)`);
+  });
+}
 function verifierErreurs(r) {
   exiger(Array.isArray(r.erreurs) && r.erreurs.length > 0, "erreurs : tableau non vide");
   (r.erreurs || []).forEach((e, i) => {
@@ -86,10 +100,11 @@ if (commande === "liste") {
   const lignes = requete("GET", "?statut=eq.en_attente&order=cree.asc&select=id,type,titre,texte,meta,cree");
   console.log(JSON.stringify(lignes, null, 2));
 } else if (commande === "repondre" && id && arg) {
-  const [ligne] = requete("GET", `?id=eq.${id}&select=id,type,statut`);
+  const [ligne] = requete("GET", `?id=eq.${id}&select=id,type,statut,meta`);
   if (!ligne) throw new Error(`Demande ${id} introuvable`);
   const reponse = JSON.parse(readFileSync(arg, "utf8"));
   if (ligne.type === "lecon") verifierLecon(reponse);
+  else if (ligne.type === "erreurs" && ligne.meta?.bilan) verifierBilan(reponse);
   else if (ligne.type === "erreurs") verifierErreurs(reponse);
   else verifierCours(reponse);
   if (erreurs.length) {

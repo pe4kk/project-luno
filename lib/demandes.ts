@@ -17,13 +17,19 @@ export type TypeDemande = "lecon" | "cours" | "erreurs";
 
 /** Réponse à une demande « erreurs » : les erreurs relevées sur l'évaluation envoyée. */
 export type ReponseErreurs = {
-  erreurs: Omit<ErreurNotee, "id" | "matiereId" | "date">[];
+  erreurs: (Omit<ErreurNotee, "id" | "matiereId" | "date"> & { matiere?: string })[];
+  /** Bilan d'une interro blanche (demande « erreurs » avec `meta.bilan`). */
+  bilan?: { resume: string; pointsForts: string[]; aRetravailler: string[]; conseils: string[] };
 };
 export type Demande = {
   id: string;
   type: TypeDemande;
   titre: string;
-  meta: { matiere?: string; chapitre?: string; images?: string[] };
+  /**
+   * `bilan` : bilan d'une interro blanche. La table n'accepte que trois types : il passe
+   * par le type « erreurs », ce qui évite de modifier la base.
+   */
+  meta: { matiere?: string; chapitre?: string; images?: string[]; bilan?: boolean; matieres?: string[] };
   statut: "en_attente" | "prete" | "erreur";
   reponse: (Lecon | ChapitrePublie | ReponseErreurs) | null;
   erreur: string | null;
@@ -134,6 +140,9 @@ export async function supprimerDemande(id: string) {
 /** Identifiant sous lequel une réponse est reprise dans les données de l'utilisateur. */
 export const idReponse = (d: Demande) => `dem-${d.id}`;
 
+/** Les bilans d'interro blanche demandés à Claude, du plus récent au plus ancien. */
+export const bilans = (liste: Demande[]) => liste.filter((d) => d.type === "erreurs" && d.meta.bilan);
+
 /** Les leçons rédigées pour cet utilisateur. */
 export function leconsPerso(liste: Demande[]): Lecon[] {
   return liste
@@ -153,9 +162,19 @@ function reprendreCours() {
       const id = idReponse(d);
       const s = useLuno.getState();
       if (s.publies[id]) continue;
-      const m = s.matieres.find((x) => x.nom === d.meta.matiere);
-      if (!m) continue;
-      s.ajouterErreurs(m.id, (d.reponse as ReponseErreurs).erreurs ?? [], d.titre);
+      const r = d.reponse as ReponseErreurs;
+      // Une erreur d'un bilan dit sa matière ; sinon, celle de la demande.
+      const parMatiere = new Map<string, ReponseErreurs["erreurs"]>();
+      for (const e of r.erreurs ?? []) {
+        const nom = e.matiere ?? d.meta.matiere ?? d.meta.matieres?.[0];
+        const m = s.matieres.find((x) => x.nom === nom);
+        if (!m) continue;
+        const { matiere: _ignore, ...reste } = e;
+        void _ignore;
+        parMatiere.set(m.id, [...(parMatiere.get(m.id) ?? []), reste]);
+      }
+      if (!d.meta.bilan && parMatiere.size === 0) continue;
+      for (const [mid, l] of parMatiere) s.ajouterErreurs(mid, l, d.titre);
       useLuno.setState((x) => ({ publies: { ...x.publies, [id]: 1 } }));
       continue;
     }

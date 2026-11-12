@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Accents } from "@/components/Accents";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import {
@@ -392,6 +393,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SynchroBibliotheque />
       <MoteurSynchro />
       <MiseAJour />
+      <Accents />
       <Annulation />
 
       {/* Barre du bas (téléphone) : fond translucide, pastille cuivrée qui glisse sous l'onglet actif */}

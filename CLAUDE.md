@@ -186,6 +186,22 @@ fiches de révision ; le slider règle la longueur de la fiche.
     contenu). Sans reconnaissance (Firefox, certaines apps de l'écran
     d'accueil), message : utiliser le micro du clavier. Pas encore essayé sur
     son vrai iPhone.
+  - **Lettres françaises sur ordinateur** (2026-11-12, clavier QWERTY) :
+    `components/Accents.tsx`, monté dans `AppShell`. Barre en bas de l'écran
+    dès qu'un champ de texte a le focus, seulement avec une souris
+    (`hover: hover` et `pointer: fine`) : é è ê ë à â ç ù û ü î ï ô œ æ « » ’ …,
+    touche Maj (ou Shift tenu). Insertion par `execCommand("insertText")`, qui
+    garde Ctrl+Z et passe par le `onChange` de React ; les touches ne prennent
+    jamais le focus (marche aussi dans les fenêtres).
+  - **Bilan d'interro blanche par Claude** (2026-11-12) : bouton « Demander un
+    bilan à Claude » sur la copie corrigée (`Interro.tsx`), texte complet
+    (questions, réponses, texte du cours, notes). La table n'accepte que trois
+    types : le bilan passe par le type `erreurs` avec `meta.bilan: true` et
+    `meta.matieres` (pas de SQL à lancer). Réponse `{ bilan: { resume,
+    pointsForts, aRetravailler, conseils }, erreurs: [{ …, matiere }] }`,
+    vérifiée par `verifierBilan()` dans `scripts/demandes.mjs` ; les erreurs
+    vont dans « Mes erreurs » de leur matière, le bilan s'affiche sous « Tes
+    bilans » dans l'onglet Interro blanche.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
