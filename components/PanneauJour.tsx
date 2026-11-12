@@ -36,7 +36,11 @@ export function PanneauJour() {
       {prochain && (
         <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
           <p className="text-[13px] font-semibold text-muted">Prochain DST</p>
-          <p className="mt-1 font-display text-[44px] leading-none">
+          <p
+            className={`mt-1 font-display leading-none ${
+              compteARebours(prochain.date).length <= 4 ? "text-[44px]" : "text-[34px]"
+            }`}
+          >
             {compteARebours(prochain.date)}
           </p>
           <p className="mt-2 text-[14.5px] font-semibold">

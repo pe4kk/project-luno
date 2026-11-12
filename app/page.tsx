@@ -73,7 +73,14 @@ export default function Accueil() {
           <p className="surtitre relative text-accent">Prochain DST</p>
           {prochain ? (
             <div className="relative sm:max-w-[62%]">
-              <p className="mt-4 font-display text-[72px] leading-none sm:text-[104px]">
+              <p
+                className={`mt-4 font-display leading-none ${
+                  // « J-4 » s'affiche en grand ; « Aujourd'hui » ou « Demain » doivent tenir.
+                  compteARebours(prochain.date).length <= 4
+                    ? "text-[72px] sm:text-[104px]"
+                    : "text-[clamp(34px,12vw,72px)] sm:text-[64px]"
+                }`}
+              >
                 {compteARebours(prochain.date)}
               </p>
               <p className="mt-4 text-[20px] font-light">
