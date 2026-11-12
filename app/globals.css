@@ -12,6 +12,8 @@
   --on-accent: #ffffff;
   --blush: #e6bfb5;
   --copper: #c98b6b;
+  /* Surligneur jaune des fiches (==…==) : l'essentiel à retenir. */
+  --surligneur: #f6dc7c;
   --copper-grad: linear-gradient(120deg, #a8674a, #e0a887 45%, #b9775a);
   --night: #2a2a2d;
   --ok: #2b7a67;
@@ -35,6 +37,7 @@
   --on-accent: #242426;
   --blush: #3d3d41;
   --copper: #dba283;
+  --surligneur: #8a6d22;
   --copper-grad: linear-gradient(120deg, #c98b6b, #f3cdb6 45%, #d19a7b);
   --night: #1c1c1e;
   --ok: #5fc0a8;
@@ -342,7 +345,10 @@ html.theme-glisse *::after {
   text-underline-offset: 3px;
 }
 mark.surligne {
-  background: color-mix(in srgb, var(--copper) 30%, transparent);
+  /* Bande de surligneur sur la hauteur des lettres, qui suit les retours à la ligne. */
+  background: linear-gradient(transparent 12%, color-mix(in srgb, var(--surligneur) 85%, transparent) 12% 88%, transparent 88%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   color: inherit;
   border-radius: 3px;
   padding: 0 0.15em;

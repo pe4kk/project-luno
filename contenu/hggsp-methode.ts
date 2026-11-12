@@ -308,7 +308,7 @@ export const LECON_ETUDE_CRITIQUE: Lecon = {
       titre: "1. Lire la consigne et cerner le sujet",
       texte: [
         "Repère les mots-clés de la consigne : ils indiquent la structure attendue et servent à bâtir le plan. Distingue ce qui est dans le sujet de ce qui est hors-sujet.",
-        "C'est la consigne, pas le document, qui commande le plan : le plus souvent 2 ou 3 parties, une par idée à traiter.",
+        "==C'est la consigne, pas le document, qui commande le plan== : le plus souvent 2 ou 3 parties, une par idée à traiter.",
       ],
       exemple:
         "Consigne : « Montrez que ce texte fait de la liberté d'expression un droit fondamental, puis qu'il en fixe déjà les limites. » → deux parties : I. un droit fondamental ; II. une liberté encadrée par la loi.",
@@ -319,7 +319,7 @@ export const LECON_ETUDE_CRITIQUE: Lecon = {
       texte: [
         "Lis et annote (surligneurs, couleurs) : arguments, points de vue, expressions à citer ou à discuter.",
         "Puis réponds à cinq questions. Quoi ? la nature précise (article, discours, carte, caricature…). Qui ? l'auteur, le commanditaire, le destinataire. Quand ? la date et le contexte. Où ? la source, à souligner. Thème ? le contenu résumé avec tes mots.",
-        "Termine toujours par les intentions de l'auteur : pourquoi ce document a-t-il été produit ?",
+        "==Termine toujours par les intentions de l'auteur== : pourquoi ce document a-t-il été produit ?",
       ],
       exemple:
         "Article 11 : un article d'une déclaration de droits (Quoi), adoptée par l'Assemblée nationale constituante (Qui) le 26 août 1789, au début de la Révolution (Quand), dans la __Déclaration des droits de l'homme et du citoyen__ (Où). Intention : rompre avec la censure de l'Ancien Régime tout en gardant un cadre légal.",
@@ -330,7 +330,7 @@ export const LECON_ETUDE_CRITIQUE: Lecon = {
       texte: [
         "Confronte le document à tes connaissances et au contexte : ses informations sont-elles exactes, partielles, orientées ? Que passe-t-il sous silence ?",
         "Boîte à outils : traite-t-il pleinement le sujet ? L'auteur est-il neutre, objectif ou subjectif ? Écrit-il avec du recul ou « à chaud » ? Dit-il vrai, et sinon pourquoi ?",
-        "Avec deux documents : sont-ils complémentaires ou opposés ? On les confronte, jamais une partie par document. Une critique peut aussi être positive : « l'auteur souligne justement… ».",
+        "Avec deux documents : sont-ils complémentaires ou opposés ? ==On les confronte, jamais une partie par document.== Une critique peut aussi être positive : « l'auteur souligne justement… ».",
       ],
       exemple:
         "L'article 11 est un texte de principe, écrit en pleine Révolution : il ne dit pas quels sont les « abus » punis par la loi, ni qui a vraiment accès à l'imprimé en 1789.",
@@ -350,7 +350,7 @@ export const LECON_ETUDE_CRITIQUE: Lecon = {
       titre: "5. Rédiger au propre",
       texte: [
         "Introduction (un paragraphe) : accroche et contexte, mots-clés définis, présentation complète du document et intentions de l'auteur, problématique, annonce du plan.",
-        "Développement (2 ou 3 parties, une idée par paragraphe) : pars du document (courte citation « … », l. X), éclaire-le avec des connaissances précises, puis critique-le. Soigne les transitions et saute des lignes.",
+        "Développement (2 ou 3 parties, une idée par paragraphe) : ==pars du document (courte citation « … », l. X), éclaire-le avec des connaissances précises, puis critique-le.== Soigne les transitions et saute des lignes.",
         "Conclusion (un paragraphe) : réponds directement à la problématique sans recopier le plan, fais le bilan des intérêts et limites du document, ouverture éventuelle. Garde 5 minutes pour relire.",
       ],
       question: { q: "Dans quel ordre se construit un paragraphe du développement ?", r: "Citation courte du document → connaissances du cours qui l'éclairent → critique (intérêt ou limite)." },
@@ -383,7 +383,7 @@ export const LECON_DISSERTATION: Lecon = {
     {
       titre: "Ce qu'est une dissertation",
       texte: [
-        "Une réponse organisée et argumentée à un sujet : une démonstration, ni récitation du cours ni catalogue de connaissances.",
+        "==Une réponse organisée et argumentée à un sujet : une démonstration==, ni récitation du cours ni catalogue de connaissances.",
         "Le correcteur attend que tu sélectionnes tes connaissances, que tu les organises pour le sujet posé, et que tu analyses (expliquer, relier, nuancer). Forme fixe : introduction, développement en parties, conclusion qui répond à la problématique.",
         "Depuis la session 2027, la langue compte dans la note : une copie défaillante sur l'ensemble ne peut pas avoir la moyenne. Garde 5 à 10 minutes pour relire.",
       ],
@@ -411,7 +411,7 @@ export const LECON_DISSERTATION: Lecon = {
     {
       titre: "Étape 2 · La problématique",
       texte: [
-        "C'est la question centrale à laquelle toute la copie répond. Une ou deux questions courtes, qui font apparaître la tension, auxquelles on ne peut pas répondre par oui ou non, et compréhensibles sans le sujet sous les yeux.",
+        "==C'est la question centrale à laquelle toute la copie répond.== Une ou deux questions courtes, qui font apparaître la tension, auxquelles on ne peut pas répondre par oui ou non, et compréhensibles sans le sujet sous les yeux.",
         "Quatre pistes : le paradoxe, l'évolution, le degré (« dans quelle mesure… ? »), les acteurs et les moyens. Écris-en trois ou quatre au brouillon et garde la plus féconde.",
       ],
       exemple:
@@ -423,7 +423,7 @@ export const LECON_DISSERTATION: Lecon = {
       texte: [
         "2 parties minimum, 3 au maximum, chacune en 2 ou 3 sous-parties : chaque partie est une étape du raisonnement.",
         "Chronologique si la période est longue avec des ruptures nettes (justifie les césures) ; thématique si le sujet se décompose en aspects ; dialectique si le sujet invite au débat, à utiliser rarement.",
-        "Chaque sous-partie : un argument (une phrase), un exemple précis (daté, localisé, avec des acteurs), une explication (« cela montre que… »).",
+        "==Chaque sous-partie : un argument (une phrase), un exemple précis (daté, localisé, avec des acteurs), une explication (« cela montre que… »).==",
       ],
       exemple:
         "Argument : sous la IIIe République, la presse libre devient un contre-pouvoir. Exemple : le 13 janvier 1898, Zola publie « J'accuse… ! » dans L'Aurore. Explication : cela montre que la loi de 1881 permet d'accuser l'armée et le gouvernement.",
@@ -450,7 +450,7 @@ export const LECON_DISSERTATION: Lecon = {
       titre: "Étape 5 · Le développement",
       texte: [
         "Chaque partie : une phrase d'introduction qui annonce l'idée directrice, 2 ou 3 sous-parties en paragraphes avec alinéa, puis une ou deux phrases de transition.",
-        "Pas de titres sur la copie (ni « I. », ni « A. »), des phrases complètes, pas de listes ni d'abréviations, des connecteurs logiques, le vocabulaire du cours. Un schéma peut appuyer une partie : valorisé, pas obligatoire.",
+        "==Pas de titres sur la copie (ni « I. », ni « A. »)==, des phrases complètes, pas de listes ni d'abréviations, des connecteurs logiques, le vocabulaire du cours. Un schéma peut appuyer une partie : valorisé, pas obligatoire.",
       ],
       question: { q: "Comment le correcteur voit-il ton plan, s'il n'y a pas de titres ?", r: "Grâce à la mise en page : alinéas, sauts de ligne entre les parties, phrases d'introduction et transitions." },
     },
@@ -458,7 +458,7 @@ export const LECON_DISSERTATION: Lecon = {
       titre: "Étape 6 · La conclusion",
       texte: [
         "Rédigée directement au propre, à la fin : garde-lui au moins 10 minutes. Deux paragraphes.",
-        "Le bilan : une phrase par partie et une réponse claire à la problématique, sans exemple nouveau. L'ouverture : une question proche, sous un angle spatial, chronologique ou thématique.",
+        "Le bilan : une phrase par partie et ==une réponse claire à la problématique, sans exemple nouveau==. L'ouverture : une question proche, sous un angle spatial, chronologique ou thématique.",
         "À éviter : recopier l'introduction, une ouverture vague (« l'avenir nous le dira »), oublier de répondre à la problématique.",
       ],
       exemple:

@@ -541,3 +541,8 @@ un PDF ou une photo directement dans le chat.
   l'onglet Apprendre sont construites sur ce principe.
 - Il veut des fiches qui reflètent **ce que son prof attend** (méthode de
   rédaction, encadrés, A.N.), pas seulement le contenu du cours.
+- (2026-11-12) **Fiches et leçons : les textes peuvent être longs**, et il veut
+  qu'on **surligne l'essentiel** : entourer les phrases les plus importantes de
+  `==…==` (surligneur jaune, jeton `--surligneur` dans `app/globals.css`), sans
+  en abuser (une ou deux par section ou par étape). Valable pour tout nouveau
+  contenu, y compris les réponses de la tâche planifiée.
