@@ -67,7 +67,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Six onglets : c'est le maximum qui tient dans la barre du bas sur
     téléphone. Une grille ou une rangée trop large sur téléphone fait dézoomer
   toute la page et coupe le bas des fenêtres : les tests doivent comparer
-  `innerWidth` à `visualViewport.width`. `recherche/` n'est pas un onglet : on y accède par la loupe
+  `innerWidth` à `visualViewport.width`. Tester aussi à 260–320 px : le zoom
+  « aA » de Safari ou le zoom d'affichage de l'iPhone rétrécissent la page
+  (le 2026-11-12, les cartes de l'accueil débordaient chez lui). `recherche/` n'est pas un onglet : on y accède par la loupe
     de la barre du haut.
   - `components/AppShell.tsx` : barre du haut (logo, onglets, « Mes données »,
     thème), barre du bas sur téléphone, transition entre pages. Sur grand

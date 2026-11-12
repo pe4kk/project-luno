@@ -138,7 +138,7 @@ function Logo() {
           />
         </span>
       </span>
-      <span className="text-[19px] font-medium uppercase tracking-[0.34em]">
+      <span className="text-[19px] font-medium uppercase tracking-[0.34em] max-[300px]:sr-only">
         Luno
       </span>
     </Link>
@@ -329,7 +329,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh">
       {/* Barre du haut */}
       <header className="sticky top-0 z-30 bg-bg/85 backdrop-blur-md">
-        <div className="mx-auto flex w-full max-w-[1180px] 2xl:max-w-[1920px] items-center justify-between gap-4 px-4 py-3.5 sm:px-8">
+        <div className="mx-auto flex w-full max-w-[1180px] 2xl:max-w-[1920px] items-center justify-between gap-2 px-4 py-3.5 min-[360px]:gap-4 sm:px-8">
           <Logo />
           <nav
             ref={navHautConteneur}
@@ -351,7 +351,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 min-[360px]:gap-2">
             <Link
               href="/recherche"
               aria-label="Rechercher"

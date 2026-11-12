@@ -106,11 +106,11 @@ export default function Accueil() {
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-1">
+        <div className="grid grid-cols-1 gap-3 min-[300px]:grid-cols-2 sm:gap-4 lg:grid-cols-1">
           {/* Révision du jour */}
-          <Carte className="flex flex-col">
-            <p className="text-[13px] font-semibold text-muted">À revoir aujourd&apos;hui</p>
-            <p className="mt-1 font-display text-[44px] leading-none">{dues}</p>
+          <Carte className="flex min-w-0 flex-col !p-4 sm:!p-6">
+            <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">À revoir aujourd&apos;hui</p>
+            <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{dues}</p>
             <p className="mt-2 text-[13.5px] text-muted">
               {cartes.length === 0
                 ? "Pas encore de flashcards"
@@ -127,9 +127,9 @@ export default function Accueil() {
               </Link>
             )}
           </Carte>
-          <Carte>
-            <p className="text-[13px] font-semibold text-muted">DST à venir</p>
-            <p className="mt-1 font-display text-[44px] leading-none">{aVenir.length}</p>
+          <Carte className="min-w-0 !p-4 sm:!p-6">
+            <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">DST à venir</p>
+            <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{aVenir.length}</p>
             <div className="mt-3 flex flex-col gap-1.5">
               {aVenir.slice(1, 3).map((d) => (
                 <div key={d.id} className="flex items-center gap-2 text-[13.5px]">
