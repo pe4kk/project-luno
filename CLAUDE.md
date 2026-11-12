@@ -173,6 +173,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `pi` → π, `rho` → ρ), barre de touches (Δ, Σ, flèche de vecteur, fraction,
     ², ⁻¹, ·, ×10^, √, ⇒) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
     en vraie fraction (`versNotation`), les unités comme m/s restent en ligne.
+    Seulement dans les matières scientifiques (`estScientifique()` dans
+    `lib/saisie.ts`, demandé le 2026-11-12) : ailleurs, texte simple. « del » et
+    « sig » ne sont remplacés qu'après la lettre suivante, si elle ne continue
+    pas un mot (« au-delà », « signe » restent intacts).
   - **Dictée vocale** (2026-11-12) : `components/Dictee.tsx` (`ZoneDictee`,
     zone de texte avec un bouton micro ; reconnaissance vocale du navigateur,
     `fr-FR`, gratuite, sans clé). Dans le cours d'un chapitre, « Ce qui te

@@ -11,8 +11,13 @@ const LETTRE = "A-Za-zÀ-ÿ";
 
 /** [motif, remplacement] appliqués à chaque frappe, dans cet ordre. */
 const RACCOURCIS: [RegExp, string][] = [
-  [new RegExp(`(^|[^${LETTRE}])del`, "gi"), "$1Δ"],
-  [new RegExp(`(^|[^${LETTRE}])sig`, "gi"), "$1Σ"],
+  // « delta » et « sigma » en entier, ou « del » / « sig » suivis d'un caractère qui ne
+  // continue pas un mot français (« delv » → Δv, mais « au-delà », « délai », « signe »
+  // restent intacts). Le remplacement attend donc la frappe suivante.
+  [new RegExp(`(^|[^${LETTRE}])delta(?![${LETTRE}])`, "gi"), "$1Δ"],
+  [new RegExp(`(^|[^${LETTRE}])sigma(?![${LETTRE}])`, "gi"), "$1Σ"],
+  [new RegExp(`(^|[^${LETTRE}-])del(?=[^aàâeéèêiîoôuûyl-])`, "gi"), "$1Δ"],
+  [new RegExp(`(^|[^${LETTRE}-])sig(?=[^nm])`, "gi"), "$1Σ"],
   [/<=>/g, "⟺"],
   [/=>/g, "⇒"],
   [/->/g, "→"],
@@ -38,7 +43,7 @@ export function raccourcis(texte: string): string {
 }
 
 /** Aide affichée sous un champ. */
-export const AIDE_RACCOURCIS = "del → Δ · sig → Σ · * → · · ^2 → ² · ^-1 → ⁻¹ · -> → → · a/b → fraction";
+export const AIDE_RACCOURCIS = "del → Δ · sig → Σ (avant une lettre ou un espace) · * → · · ^2 → ² · ^-1 → ⁻¹ · -> → → · a/b → fraction";
 
 const UNITES = new Set(["m", "km", "cm", "mm", "s", "h", "min", "kg", "g", "N", "L", "mL", "J", "W"]);
 
@@ -105,4 +110,17 @@ export function versNotation(texte: string): string {
     i = t.indexOf("/", debutNum + frac.length);
   }
   return t;
+}
+
+/**
+ * Matière où l'on écrit des formules (Δ, fractions, vecteurs) : maths, physique-chimie,
+ * SVT, SES, NSI, sciences de l'ingénieur… Ailleurs (histoire, français, langues), la
+ * saisie reste du texte simple : « del » doit rester « au-delà », « 1914/1918 » une date.
+ */
+export function estScientifique(nomMatiere?: string) {
+  const n = (nomMatiere ?? "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+  return /math|physique|chimie|\bpc\b|svt|science|scientifique|\bses\b|economi|\bnsi\b|informatique|\bsi\b|ingenieur|biolog|geolog|technolog/.test(n);
 }

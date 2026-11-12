@@ -7,7 +7,7 @@ import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { SaisieFormule } from "@/components/SaisieFormule";
 import { Bouton, BoutonIcone } from "@/components/ui";
-import { versNotation } from "@/lib/saisie";
+import { estScientifique, versNotation } from "@/lib/saisie";
 import { useLuno } from "@/lib/store";
 import type { Probleme } from "@/lib/types";
 
@@ -24,6 +24,7 @@ export function LecteurProbleme({
   quitter: () => void;
 }) {
   const ajouterErreurs = useLuno((s) => s.ajouterErreurs);
+  const scientifique = estScientifique(useLuno((s) => s.matieres.find((m) => m.id === matiereId)?.nom));
   const n = probleme.etapes.length;
   const [etape, setEtape] = useState(0);
   const [reponses, setReponses] = useState<string[]>(() => probleme.etapes.map(() => ""));
@@ -101,6 +102,7 @@ export function LecteurProbleme({
                   <p className="mt-1 text-[15.5px] font-semibold">{formule(e.consigne)}</p>
                   <div className="mt-3">
                     <SaisieFormule
+                      scientifique={scientifique}
                       label={`Ta réponse : ${e.titre}`}
                       valeur={reponses[etape]}
                       changer={(v) => setReponses(reponses.map((r, i) => (i === etape ? v : r)))}
@@ -225,7 +227,7 @@ export function LecteurProbleme({
                 <summary className="cursor-pointer font-semibold">Relire ta rédaction</summary>
                 <ol className="mt-2 flex list-decimal flex-col gap-1.5 pl-5 text-muted">
                   {reponses.map((r, i) => (
-                    <li key={i}>{r ? formule(versNotation(r)) : <em>(vide)</em>}</li>
+                    <li key={i}>{r ? (scientifique ? formule(versNotation(r)) : r) : <em>(vide)</em>}</li>
                   ))}
                 </ol>
               </details>

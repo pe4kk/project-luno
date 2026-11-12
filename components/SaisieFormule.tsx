@@ -31,6 +31,7 @@ export function SaisieFormule({
   placeholder,
   desactive = false,
   label,
+  scientifique = true,
 }: {
   valeur: string;
   changer: (v: string) => void;
@@ -38,6 +39,8 @@ export function SaisieFormule({
   placeholder?: string;
   desactive?: boolean;
   label: string;
+  /** Faux hors des matières scientifiques : texte simple, sans touches ni raccourcis. */
+  scientifique?: boolean;
 }) {
   const zone = useRef<HTMLTextAreaElement>(null);
 
@@ -72,6 +75,7 @@ export function SaisieFormule({
 
   return (
     <div>
+      {scientifique && (
       <div
         className="mb-1.5 flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none]"
         role="toolbar"
@@ -92,6 +96,7 @@ export function SaisieFormule({
           </button>
         ))}
       </div>
+      )}
       <textarea
         ref={zone}
         rows={lignes}
@@ -104,7 +109,7 @@ export function SaisieFormule({
         value={valeur}
         onChange={(e) => {
           const brut = e.target.value;
-          const converti = raccourcis(brut);
+          const converti = scientifique ? raccourcis(brut) : brut;
           changer(converti);
           if (converti !== brut) {
             const pos = (e.target.selectionStart ?? brut.length) - (brut.length - converti.length);
@@ -113,7 +118,7 @@ export function SaisieFormule({
         }}
         className="w-full rounded-xl border border-line bg-bg/60 px-3.5 py-2.5 text-[16px] leading-relaxed outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:bg-surface"
       />
-      {valeur.trim() && utile ? (
+      {!scientifique ? null : valeur.trim() && utile ? (
         <p className="mt-1.5 rounded-lg bg-ink/[0.04] px-3 py-1.5 text-[15px] leading-relaxed" aria-live="polite">
           <span className="mr-1.5 text-[11.5px] font-semibold uppercase tracking-wider text-muted">
             Aperçu

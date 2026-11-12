@@ -10,13 +10,13 @@ import { Bouton, BoutonIcone, Carte, EtatVide } from "@/components/ui";
 import { Curseur } from "@/components/Curseur";
 import { tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
 import { melanger } from "@/lib/contenu";
-import { versNotation } from "@/lib/saisie";
+import { estScientifique, versNotation } from "@/lib/saisie";
 import { encre, pastel, useLuno } from "@/lib/store";
 import type { Calcul, Chapitre, DefinitionCours } from "@/lib/types";
 import { ChampAN, RetourAN } from "./Calcul";
 
 type Question =
-  | { type: "cours"; matiereId: string; chapitre: string; def: DefinitionCours; points: number }
+  | { type: "cours"; matiereId: string; chapitre: string; def: DefinitionCours; points: number; scientifique: boolean }
   | { type: "calcul"; matiereId: string; chapitre: string; calcul: Calcul; version: Version; points: number };
 
 const DUREES = [
@@ -84,7 +84,14 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
       ),
     )
       .slice(0, nbCours)
-      .map(({ c, def }): Question => ({ type: "cours", matiereId: c.matiereId, chapitre: c.titre, def, points: 2 }));
+      .map(({ c, def }): Question => ({
+        type: "cours",
+        matiereId: c.matiereId,
+        chapitre: c.titre,
+        def,
+        points: 2,
+        scientifique: estScientifique(matieres.find((m) => m.id === c.matiereId)?.nom),
+      }));
     const calculs = melanger(selection.flatMap((c) => (c.calculs ?? []).map((calcul) => ({ c, calcul }))))
       .slice(0, nbCalculs)
       .map(({ c, calcul }): Question => ({
@@ -236,7 +243,11 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
           matiereId: q.matiereId,
           e: {
             titre: consigneCours(q.def),
-            erreur: reponses[i].texte.trim() ? versNotation(reponses[i].texte) : "Pas su le restituer.",
+            erreur: reponses[i].texte.trim()
+              ? q.scientifique
+                ? versNotation(reponses[i].texte)
+                : reponses[i].texte
+              : "Pas su le restituer.",
             correction: q.def.texte,
             chapitre: q.chapitre,
             source: "Interro blanche",
@@ -308,7 +319,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
                   <p className="mt-1 text-[15.5px] font-semibold">{formule(consigneCours(q.def))}</p>
                   <p className="mt-2 text-[12px] font-semibold uppercase tracking-wider text-muted">Ta réponse</p>
                   <p className="mt-0.5 whitespace-pre-line text-[15px] leading-relaxed">
-                    {reponses[i].texte.trim() ? formule(versNotation(reponses[i].texte)) : <em className="text-muted">Pas de réponse</em>}
+                    {reponses[i].texte.trim() ? (q.scientifique ? formule(versNotation(reponses[i].texte)) : reponses[i].texte) : <em className="text-muted">Pas de réponse</em>}
                   </p>
                   <div className="mt-3 rounded-xl bg-accent-soft p-3.5">
                     <p className="text-[12px] font-semibold uppercase tracking-wider text-accent">Dans le cours</p>
@@ -421,6 +432,7 @@ export function ModeInterro({ entete }: { entete: ReactNode }) {
               <p className="mt-1.5 text-[16px] font-semibold">{formule(consigneCours(q.def))}</p>
               <div className="mt-3">
                 <SaisieFormule
+                  scientifique={q.scientifique}
                   label="Ta réponse"
                   valeur={reponses[index].texte}
                   changer={(t) => changer({ texte: t, unite: "" })}
