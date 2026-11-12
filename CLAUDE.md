@@ -446,6 +446,7 @@ un PDF ou une photo directement dans le chat.
 | 2026-11-11 | Grand écran : contenu élargi et panneau « Aujourd'hui » aligné | Choisi par l'utilisateur parmi 6 maquettes (A, B, C, A+B, A+C, A+B aligné) |
 | 2026-11-11 | Fond du thème sombre uni, sans halo | Le halo terracotta en haut à droite le gênait |
 | 2026-11-11 | Synchro par comptes Supabase (adresse + mot de passe, sans mail de confirmation), toutes les données | Choix de l'utilisateur ; le mot de passe évite les mails (limités par Supabase) et marche dans l'app installée sur l'iPhone |
+| 2026-11-12 | Pas de style « Liquid Glass » (verre d'iOS 26) pour les onglets et curseurs | Maquettes A à D montrées, il n'a pas aimé |
 
 ## État d'avancement
 
