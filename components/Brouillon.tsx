@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Calculator, Eraser, Highlighter, MoveUpRight, NotebookPen, PenLine, Pencil, Trash2, Undo2, X } from "lucide-react";
 import { evaluer, ecrireAvecCs } from "@/lib/calcul";
 import { classePastille, usePastille } from "@/lib/pastille";
-import { formule } from "@/components/Formule";
+import { formule, IconeFraction } from "@/components/Formule";
 import { versNotation } from "@/lib/saisie";
 
 /**
@@ -527,7 +527,7 @@ function Notes({ cle }: { cle: string }) {
 const TOUCHES_CALC: { vu: string; mis: string; style?: "op" | "egal" | "fonc"; nom?: string }[] = [
   { vu: "(", mis: "(", style: "fonc" },
   { vu: ")", mis: ")", style: "fonc" },
-  { vu: "a⁄b", mis: "()÷()", style: "fonc", nom: "Fraction" },
+  { vu: "a/b", mis: "()÷()", style: "fonc", nom: "Fraction" },
   { vu: "x²", mis: "²", style: "fonc", nom: "Au carré" },
   { vu: "÷", mis: "÷", style: "op", nom: "Diviser" },
   { vu: "7", mis: "7" },
@@ -747,7 +747,7 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
                     : "border border-line bg-surface active:bg-accent-soft"
             }`}
           >
-            {t.vu}
+            {t.vu === "a/b" ? <IconeFraction /> : t.vu}
           </button>
         ))}
       </div>

@@ -132,3 +132,13 @@ export function texteBrut(texte: string): string {
     .replaceAll(FLECHE, "")
     .replace(INDICE, "$1$2");
 }
+
+/** Petite fraction a sur b pour les touches (au lieu du « ⁄ », coupé en deux à l'écran). */
+export function IconeFraction() {
+  return (
+    <span className="inline-flex flex-col items-center text-[12.5px] font-semibold leading-[1.05]" aria-hidden>
+      <span className="px-0.5">a</span>
+      <span className="w-full border-t-[1.5px] border-current px-0.5 pt-px">b</span>
+    </span>
+  );
+}

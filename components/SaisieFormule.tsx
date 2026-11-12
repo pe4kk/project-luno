@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { formule } from "@/components/Formule";
+import { formule, IconeFraction } from "@/components/Formule";
 import { AIDE_RACCOURCIS, raccourcis, versNotation } from "@/lib/saisie";
 
 const FLECHE = String.fromCharCode(0x20d7);
@@ -12,7 +12,7 @@ const TOUCHES: [string, string, string][] = [
   ["Δ", "Δ", "Delta"],
   ["Σ", "Σ", "Somme"],
   ["v⃗", FLECHE, "Flèche de vecteur sur la lettre précédente"],
-  ["a⁄b", "()/()", "Fraction"],
+  ["a/b", "()/()", "Fraction"],
   ["²", "²", "Au carré"],
   ["⁻¹", "⁻¹", "Puissance moins un"],
   ["·", "·", "Multiplié"],
@@ -163,7 +163,7 @@ export function SaisieFormule({
             onClick={() => inserer(mis)}
             className="min-h-9 min-w-10 shrink-0 rounded-lg border border-line bg-surface px-2 text-[15px] font-medium transition-colors active:bg-accent-soft disabled:opacity-40"
           >
-            {formule(vu)}
+            {vu === "a/b" ? <IconeFraction /> : formule(vu)}
           </button>
         ))}
       </div>
