@@ -225,6 +225,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     barre. Ordinateur (≥ 1024 px) : panneau collant à droite de la question.
     Un brouillon par question, en mémoire seulement, jamais noté ; une nouvelle
     séance repart d'une feuille blanche.
+    Les touches de la calculatrice écrivent au curseur (vu sur son iPhone le
+    2026-11-12 : elles écrivaient toujours à la fin) ; en-tête en icônes seules
+    sous 420 px.
   - **Suite de la critique de design du 2026-11-12** (« corrige » demandé) :
     - Révision du jour avec quota (`lib/revision.ts`, `revisionDuJour()`) :
       toutes les cartes déjà vues qui reviennent + 20 nouvelles au plus par jour

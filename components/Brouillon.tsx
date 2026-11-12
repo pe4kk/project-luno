@@ -134,7 +134,7 @@ export function AvecBrouillon({
               animate={{ transform: "translate3d(0, 0%, 0)" }}
               exit={{ transform: "translate3d(0, 100%, 0)" }}
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 bottom-0 z-[46] flex h-[72dvh] flex-col overflow-hidden rounded-t-[24px] bg-surface pb-[env(safe-area-inset-bottom)] shadow-pop"
+              className="fixed inset-x-0 bottom-0 z-[46] flex h-[72dvh] overflow-x-hidden flex-col overflow-hidden rounded-t-[24px] bg-surface pb-[env(safe-area-inset-bottom)] shadow-pop"
             >
               <button
                 type="button"
@@ -178,13 +178,13 @@ function Panneau({
   const { conteneur, pastille } = usePastille(onglet);
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center gap-2 px-4 pb-2.5 pt-1 lg:border-b lg:border-line lg:py-3">
-        <p className="font-display text-[20px] leading-none">Brouillon</p>
+      <div className="flex min-w-0 shrink-0 items-center gap-2 px-3 pb-2.5 pt-1 sm:px-4 lg:border-b lg:border-line lg:py-3">
+        <p className="shrink-0 font-display text-[18px] leading-none sm:text-[20px] max-[340px]:sr-only">Brouillon</p>
         <div
           ref={conteneur}
           role="tablist"
           aria-label="Outil du brouillon"
-          className="relative ml-auto flex rounded-full border border-line bg-bg/60 p-0.5"
+          className="relative ml-auto flex min-w-0 rounded-full border border-line bg-bg/60 p-0.5"
         >
           <span ref={pastille} className={`${classePastille} rounded-full bg-ink`} />
           {ONGLETS.map((o) => {
@@ -196,12 +196,13 @@ function Panneau({
                 aria-selected={actif}
                 data-actif={actif}
                 onClick={() => setOnglet(o.id)}
-                className={`relative z-10 flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold transition-colors duration-200 ${
+                className={`relative z-10 flex min-h-9 items-center gap-1.5 rounded-full px-2.5 text-[13px] font-semibold transition-colors duration-200 sm:px-3 ${
                   actif ? "text-bg" : "text-muted hover:text-ink"
                 }`}
               >
                 <o.icone size={14} />
-                <span className="max-[360px]:sr-only">{o.label}</span>
+                {/* Sur un écran étroit (ou un texte agrandi), les icônes seules. */}
+                <span className="max-[420px]:sr-only">{o.label}</span>
               </button>
             );
           })}
@@ -210,7 +211,7 @@ function Panneau({
           type="button"
           onClick={fermer}
           aria-label="Fermer le brouillon"
-          className="-mr-1.5 flex size-10 items-center justify-center rounded-full text-muted hover:bg-ink/5 hover:text-ink"
+          className="-mr-1 flex size-10 shrink-0 items-center justify-center rounded-full text-muted hover:bg-ink/5 hover:text-ink"
         >
           <X size={18} />
         </button>
@@ -600,6 +601,28 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
     }
   };
 
+  // Position du curseur dans le calcul : les touches écrivent là où on a touché le
+  // champ (par exemple pour ajouter une parenthèse au début), pas toujours à la fin.
+  const selection = useRef<[number, number] | null>(null);
+  const aPoser = useRef<number | null>(null);
+  const noterCurseur = () => {
+    const el = champ.current;
+    if (el && document.activeElement === el) selection.current = [el.selectionStart ?? el.value.length, el.selectionEnd ?? el.value.length];
+  };
+  useLayoutEffect(() => {
+    const el = champ.current;
+    if (aPoser.current === null || !el) return;
+    // Sans focus, on retient seulement la position (iOS ouvrirait le champ).
+    if (document.activeElement === el) el.setSelectionRange(aPoser.current, aPoser.current);
+    selection.current = [aPoser.current, aPoser.current];
+    aPoser.current = null;
+  });
+  const ecrire = (texte: string, debut: number, fin: number) => {
+    setSaisie(texte);
+    aPoser.current = Math.max(0, Math.min(texte.length, debut));
+    void fin;
+  };
+
   const toucher = (mis: string) => {
     setEnvoye(false);
     if (mis === "=") return calculer();
@@ -607,16 +630,25 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
       setSaisie("");
       setRes(null);
       setErreur(false);
+      selection.current = null;
       return;
     }
-    if (mis === "⌫") return setSaisie((s) => s.replace(/(Ans|×10\^|√\(|.)$/u, ""));
-    // Après un résultat, un opérateur continue le calcul à partir de lui.
-    if (res !== null && saisie && /^[+−×÷²]/.test(mis) && historique[0]?.expr === saisie) {
-      setSaisie(`Ans${mis}`);
+    const [debut, fin] = selection.current
+      ? [Math.min(selection.current[0], saisie.length), Math.min(selection.current[1], saisie.length)]
+      : [saisie.length, saisie.length];
+    const avant = saisie.slice(0, debut);
+    const apres = saisie.slice(fin);
+    if (mis === "⌫") {
+      if (fin > debut) return ecrire(avant + apres, debut, debut);
+      const raccourci = avant.replace(/(Ans|×10\^|√\(|.)$/u, "");
+      return ecrire(raccourci + apres, raccourci.length, raccourci.length);
+    }
+    // Après un résultat, un opérateur à la fin continue le calcul à partir de lui.
+    if (res !== null && !apres && saisie && /^[+−×÷²]/.test(mis) && historique[0]?.expr === saisie) {
       setRes(null);
-      return;
+      return ecrire(`Ans${mis}`, 3 + mis.length, 3 + mis.length);
     }
-    setSaisie((s) => s + mis);
+    ecrire(avant + mis + apres, debut + mis.length, debut + mis.length);
   };
 
   return (
@@ -630,12 +662,16 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
           onChange={(e) => {
             setSaisie(e.target.value);
             setEnvoye(false);
+            noterCurseur();
           }}
+          onSelect={noterCurseur}
+          onKeyUp={noterCurseur}
+          onPointerUp={noterCurseur}
           onKeyDown={(e) => {
             if (e.key === "Enter") calculer();
           }}
           placeholder="1,2×10^3×25÷4,0"
-          className="w-full bg-transparent text-right text-[15px] text-muted outline-none placeholder:text-muted/50"
+          className="w-full bg-transparent text-right text-[17px] text-ink caret-accent outline-none placeholder:text-muted/50"
         />
         <p className="mt-0.5 min-h-[44px] font-display text-[34px] leading-tight tabular-nums" aria-live="polite">
           {erreur ? <span className="text-[18px] text-bad">Calcul incomplet</span> : res === null ? "" : afficher(res)}
@@ -708,6 +744,7 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
                   setSaisie(h.expr);
                   setRes(h.res);
                   setErreur(false);
+                  selection.current = null;
                 }}
                 className="w-full truncate rounded-md px-1.5 py-1 text-right hover:bg-ink/5"
               >
