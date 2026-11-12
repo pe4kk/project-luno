@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { ZoneDictee } from "@/components/Dictee";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -326,14 +327,14 @@ function OngletCours({
             <Upload size={16} /> Importer (.txt, .md)
           </Bouton>
         </div>
-        <textarea
+        <ZoneDictee
           aria-label="Texte du cours"
           className={classeSaisie + " min-h-[320px] resize-y leading-relaxed"}
           placeholder={
             "Exemple :\n\nI. Nombre dérivé\nNombre dérivé : limite du taux de variation quand h tend vers 0.\n…"
           }
           value={chapitre.cours}
-          onChange={(e) => majCours(chapitre.id, e.target.value)}
+          changer={(v) => majCours(chapitre.id, v)}
         />
         <p className="mt-2 text-[13px] text-muted">
           {pluriel(mots, "mot")} · enregistré automatiquement

@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { ZoneDictee } from "@/components/Dictee";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -189,12 +190,12 @@ function Apprendre() {
               </div>
             </div>
             <Champ label="Ce qui te bloque (facultatif)">
-              <textarea
+              <ZoneDictee
                 rows={2}
                 className={classeSaisie}
                 placeholder="Ex. Je confonds raison et premier terme"
                 value={precision}
-                onChange={(e) => setPrecision(e.target.value)}
+                changer={setPrecision}
               />
             </Champ>
             <div>

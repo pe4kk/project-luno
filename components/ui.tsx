@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import { ZoneDictee } from "@/components/Dictee";
 import { Camera, Check, Clock, Copy, ExternalLink, FileText, Paperclip, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -213,7 +214,7 @@ export function EnvoyerAClaude({
   fermer,
   titre,
   objet,
-  texte,
+  texte: texteBase,
   resultat,
   demande,
   pieces,
@@ -234,6 +235,8 @@ export function EnvoyerAClaude({
   setPieces?: (f: File[]) => void;
 }) {
   const [copie, setCopie] = useState(false);
+  const [consignes, setConsignes] = useState("");
+  const texte = consignes.trim() ? `${texteBase}\n\nMes consignes : ${consignes.trim()}` : texteBase;
   const [etatEnvoi, setEtatEnvoi] = useState<"" | "envoi" | "ok" | "erreur">("");
   const [piecesInternes, setPiecesInternes] = useState<File[]>([]);
   const photos = pieces ?? piecesInternes;
@@ -277,6 +280,18 @@ export function EnvoyerAClaude({
       }}
       titre={titre}
     >
+      <div className="mb-4">
+        <span className="mb-1.5 block text-[13px] font-semibold text-muted">
+          Tes consignes pour Claude (facultatif) : écris-les ou dicte-les au micro
+        </span>
+        <ZoneDictee
+          rows={2}
+          className={classeSaisie}
+          placeholder="Ex. Fiche courte, surtout les formules ; exercices type DST avec A.N."
+          value={consignes}
+          changer={setConsignes}
+        />
+      </div>
       {direct && (
         <div className="mb-4 rounded-xl bg-accent-soft p-4">
           <p className="text-[15px] font-semibold">Envoyer depuis Luno</p>

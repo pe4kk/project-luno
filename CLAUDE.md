@@ -171,6 +171,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `pi` → π, `rho` → ρ), barre de touches (Δ, Σ, flèche de vecteur, fraction,
     ², ⁻¹, ·, ×10^, √, ⇒) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
     en vraie fraction (`versNotation`), les unités comme m/s restent en ligne.
+  - **Dictée vocale** (2026-11-12) : `components/Dictee.tsx` (`ZoneDictee`,
+    zone de texte avec un bouton micro ; reconnaissance vocale du navigateur,
+    `fr-FR`, gratuite, sans clé). Dans le cours d'un chapitre, « Ce qui te
+    bloque » (Apprendre), les notes de « Mes erreurs » et le champ « Tes
+    consignes pour Claude » de la fenêtre d'envoi, ajouté à la demande en
+    « Mes consignes : … » (la tâche planifiée les suit pour la forme du
+    contenu). Sans reconnaissance (Firefox, certaines apps de l'écran
+    d'accueil), message : utiliser le micro du clavier. Pas encore essayé sur
+    son vrai iPhone.
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le

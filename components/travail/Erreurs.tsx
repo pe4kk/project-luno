@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ZoneDictee } from "@/components/Dictee";
 import { AnimatePresence, motion } from "motion/react";
 import { AlertCircle, CheckCircle2, Clock, Pencil, Plus, Repeat2, Send, Trash2 } from "lucide-react";
 import { formule } from "@/components/Formule";
@@ -166,12 +167,12 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
           erreurs et comment les corriger, et les ajoute ici.
         </p>
         <Champ label="Ce que tu veux préciser (facultatif)">
-          <textarea
+          <ZoneDictee
             rows={3}
             className={classeSaisie + " mt-0"}
             placeholder="Ex. DST du 24/09, j'ai eu 11. Le prof m'a dit de mieux justifier."
             value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            changer={setNotes}
           />
         </Champ>
         <PiecesJointes fichiers={pieces} setFichiers={setPieces} className="mt-3" />

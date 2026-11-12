@@ -314,3 +314,15 @@ html.theme-glisse *::after {
   padding: 0.08em 0.2em 0;
   border-top: 0.07em solid currentColor;
 }
+
+/* Dictée vocale : onde qui s'élargit autour du micro (transform et opacité seulement). */
+.dictee-onde {
+  animation: dictee-onde 1.4s ease-out infinite;
+}
+@keyframes dictee-onde {
+  from { transform: scale(1); opacity: 0.45; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dictee-onde { animation: none; opacity: 0; }
+}
