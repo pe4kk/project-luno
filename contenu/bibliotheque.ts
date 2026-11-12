@@ -1,5 +1,6 @@
 import type { ChapitrePublie } from "@/lib/types";
 import { HGGSP_THEME_4 } from "./hggsp-theme4";
+import { HGGSP_METHODE } from "./hggsp-methode";
 import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
 import { PHYSIQUE_MOUVEMENT } from "./physique-mouvement";
 import { PHYSIQUE_METHODE } from "./physique-methode";
@@ -16,6 +17,7 @@ import { MATHS_DERIVATION } from "./maths-derivation";
  */
 export const BIBLIOTHEQUE: ChapitrePublie[] = [
   ...HGGSP_THEME_4,
+  ...HGGSP_METHODE,
   FRANCAIS_RIMBAUD,
   ...PHYSIQUE_MOUVEMENT,
   PHYSIQUE_METHODE,

@@ -350,7 +350,13 @@ un PDF ou une photo directement dans le chat.
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
   `physique-mouvement.ts`, `physique-methode.ts` (fiche « Rédiger comme ton
   prof l'attend » et leçon guidée du même nom), `maths-derivation.ts`
-  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`).
+  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`), `hggsp-methode.ts` (2026-11-12 : « Méthode · Étude critique de
+  document(s) » et « Méthode · Réussir la dissertation », d'après les deux fiches
+  du prof, PDF dans `public/documents/hggsp/` ; Déf mot pour mot, 16 flashcards,
+  fiche à cinq tailles, 18 et 19 exercices, et des problèmes à rédiger étape par
+  étape : étude critique de l'article 11 de 1789, confrontation 1789 / loi de
+  1881, dissertation « L'État face à la liberté de l'information, de 1881 à nos
+  jours », atelier de problématique ; exemples tirés du thème 4).
 - **Dates publiées** (`contenu/evenements.ts`) : chaque entrée crée un DST
   `pub-<id>` chez tous les utilisateurs, rattaché aux chapitres publiés
   indiqués par leur `id`. Une date supprimée par l'utilisateur ne revient
