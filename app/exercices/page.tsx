@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import { prochainDstDe, trierParDst } from "@/lib/revision";
 import { compteARebours } from "@/lib/dates";
@@ -50,7 +50,7 @@ import { ModeCalculs, ModeProblemes } from "@/components/exercices/Modes";
 import { ModeInterro } from "@/components/exercices/Interro";
 import { classePastille, usePastille } from "@/lib/pastille";
 
-function ModeSerie({ entete }: { entete: ReactNode }) {
+function ModeSerie({ entete, occupe }: { entete: ReactNode; occupe: (b: boolean) => void }) {
   const { matieres, chapitres, dsts, noterFlashcard } = useLuno();
   const [aide, setAide] = useState(false);
   const [chapitreId, setChapitreId] = useState<string | null>(null);
@@ -59,6 +59,8 @@ function ModeSerie({ entete }: { entete: ReactNode }) {
   const [index, setIndex] = useState(0);
   const [resultat, setResultat] = useState<boolean | null>(null);
   const [score, setScore] = useState(0);
+  // Pendant une série, l'en-tête de S'exercer (titre et onglets) se cache.
+  useEffect(() => occupe(questions !== null), [questions, occupe]);
 
   // Les chapitres des prochains DST en premier : c'est eux qu'on révise.
   const disponibles = trierParDst(chapitres.filter(peutSExercer), dsts);
@@ -709,18 +711,25 @@ function Exercices() {
   );
   const initiaux = dsts.find((d) => d.id === params.get("dst"))?.chapitreIds ?? [];
   const { conteneur, pastille } = usePastille(mode);
+  // L'en-tête et ses onglets restent montés d'un mode à l'autre : la pastille glisse
+  // depuis l'onglet quitté (avant, chaque mode recréait la barre et elle repartait de
+  // « Série »). Un mode en cours d'exercice le cache avec `occupe`.
+  const [occupe, setOccupe] = useState(false);
   const entete = (
     <>
       <EnTete
         titre="S'exercer"
         sousTitre={
+          // Même hauteur pour tous les modes : la barre d'onglets ne saute pas.
+          <span className="block min-h-[3em] sm:min-h-0">{
           mode === "serie"
             ? "Des exercices sur tes chapitres, corrigés tout de suite."
             : mode === "problemes"
               ? "Des situations réelles, rédigées comme ton prof l'attend."
               : mode === "calculs"
                 ? "Expression littérale, A.N., unité, chiffres significatifs."
-                : "Comme le jour J : pas de correction avant de rendre la copie."
+                : "Comme le jour J : rien n'est corrigé avant la remise."
+          }</span>
         }
       />
       <div
@@ -751,13 +760,18 @@ function Exercices() {
       </div>
     </>
   );
-  return mode === "serie" ? (
-    <ModeSerie entete={entete} />
-  ) : mode === "problemes" ? (
-    <ModeProblemes entete={entete} />
-  ) : mode === "calculs" ? (
-    <ModeCalculs entete={entete} />
-  ) : (
-    <ModeInterro entete={entete} initiaux={initiaux} />
+  return (
+    <>
+      {!occupe && entete}
+      {mode === "serie" ? (
+        <ModeSerie entete={null} occupe={setOccupe} />
+      ) : mode === "problemes" ? (
+        <ModeProblemes entete={null} occupe={setOccupe} />
+      ) : mode === "calculs" ? (
+        <ModeCalculs entete={null} occupe={setOccupe} />
+      ) : (
+        <ModeInterro entete={null} occupe={setOccupe} initiaux={initiaux} />
+      )}
+    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { Calculator, ChevronRight, PenLine } from "lucide-react";
 import { formule } from "@/components/Formule";
@@ -57,9 +57,10 @@ function ParChapitre<T extends { id: string; titre: string }>({
 }
 
 /** Mode A : problèmes rédigés étape par étape, avec le barème du prof. */
-export function ModeProblemes({ entete }: { entete: ReactNode }) {
+export function ModeProblemes({ entete, occupe }: { entete: ReactNode; occupe: (b: boolean) => void }) {
   const chapitres = useLuno((s) => s.chapitres);
   const [choix, setChoix] = useState<{ p: Probleme; c: Chapitre } | null>(null);
+  useEffect(() => occupe(choix !== null), [choix, occupe]);
   if (choix)
     return <LecteurProbleme key={choix.p.id} probleme={choix.p} matiereId={choix.c.matiereId} quitter={() => setChoix(null)} />;
   const liste = chapitres
@@ -88,9 +89,10 @@ export function ModeProblemes({ entete }: { entete: ReactNode }) {
 }
 
 /** Mode C : calculs à valeurs changeantes, vérifiés (valeur, unité, chiffres significatifs). */
-export function ModeCalculs({ entete }: { entete: ReactNode }) {
+export function ModeCalculs({ entete, occupe }: { entete: ReactNode; occupe: (b: boolean) => void }) {
   const chapitres = useLuno((s) => s.chapitres);
   const [choix, setChoix] = useState<Calcul | null>(null);
+  useEffect(() => occupe(choix !== null), [choix, occupe]);
   if (choix) return <LecteurCalcul key={choix.id} calcul={choix} quitter={() => setChoix(null)} />;
   const liste = chapitres
     .filter((c) => c.calculs?.length)

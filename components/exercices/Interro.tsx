@@ -50,7 +50,15 @@ const peutInterroger = (c: Chapitre) => (c.definitions?.length ?? 0) + (c.calcul
  * sans chrono. L'élève note ses réponses de cours face au texte exact ; les calculs sont
  * corrigés tout seuls. Les erreurs peuvent partir dans « Mes erreurs ».
  */
-export function ModeInterro({ entete, initiaux = [] }: { entete: ReactNode; initiaux?: string[] }) {
+export function ModeInterro({
+  entete,
+  occupe,
+  initiaux = [],
+}: {
+  entete: ReactNode;
+  occupe: (b: boolean) => void;
+  initiaux?: string[];
+}) {
   const { matieres, chapitres, dsts, ajouterErreurs } = useLuno();
   // Les chapitres des prochains DST en premier.
   const possibles = trierParDst(chapitres.filter(peutInterroger), dsts);
@@ -61,6 +69,7 @@ export function ModeInterro({ entete, initiaux = [] }: { entete: ReactNode; init
   const [nbCalculs, setNbCalculs] = useState(2);
   const [duree, setDuree] = useState(60);
   const [questions, setQuestions] = useState<Question[] | null>(null);
+  useEffect(() => occupe(questions !== null), [questions, occupe]);
   const [reponses, setReponses] = useState<{ texte: string; unite: string }[]>([]);
   const [index, setIndex] = useState(0);
   const [rendu, setRendu] = useState(false);
