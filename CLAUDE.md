@@ -227,7 +227,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     séance repart d'une feuille blanche.
     Les touches de la calculatrice écrivent au curseur (vu sur son iPhone le
     2026-11-12 : elles écrivaient toujours à la fin) ; en-tête en icônes seules
-    sous 420 px.
+    sous 420 px. Touche fraction a⁄b (insère « ()÷() », curseur dans le
+    numérateur ; une sélection devient le numérateur), aperçu dessiné de la
+    fraction au-dessus du résultat, C dans le coin de l'écran de calcul.
   - **Suite de la critique de design du 2026-11-12** (« corrige » demandé) :
     - Révision du jour avec quota (`lib/revision.ts`, `revisionDuJour()`) :
       toutes les cartes déjà vues qui reviennent + 20 nouvelles au plus par jour

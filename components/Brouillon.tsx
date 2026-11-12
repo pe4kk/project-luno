@@ -6,6 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { Calculator, Eraser, Highlighter, MoveUpRight, NotebookPen, PenLine, Pencil, Trash2, Undo2, X } from "lucide-react";
 import { evaluer, ecrireAvecCs } from "@/lib/calcul";
 import { classePastille, usePastille } from "@/lib/pastille";
+import { formule } from "@/components/Formule";
+import { versNotation } from "@/lib/saisie";
 
 /**
  * Brouillon pendant les exercices et les interros : une feuille à petits carreaux où
@@ -522,32 +524,32 @@ function Notes({ cle }: { cle: string }) {
 
 // ———————————————————— Calculatrice ————————————————————
 
-const TOUCHES_CALC: { vu: string; mis: string; style?: "op" | "egal" | "fonc" }[] = [
+const TOUCHES_CALC: { vu: string; mis: string; style?: "op" | "egal" | "fonc"; nom?: string }[] = [
   { vu: "(", mis: "(", style: "fonc" },
   { vu: ")", mis: ")", style: "fonc" },
-  { vu: "x²", mis: "²", style: "fonc" },
-  { vu: "√", mis: "√(", style: "fonc" },
-  { vu: "÷", mis: "÷", style: "op" },
+  { vu: "a⁄b", mis: "()÷()", style: "fonc", nom: "Fraction" },
+  { vu: "x²", mis: "²", style: "fonc", nom: "Au carré" },
+  { vu: "÷", mis: "÷", style: "op", nom: "Diviser" },
   { vu: "7", mis: "7" },
   { vu: "8", mis: "8" },
   { vu: "9", mis: "9" },
-  { vu: "×10ⁿ", mis: "×10^", style: "fonc" },
-  { vu: "×", mis: "×", style: "op" },
+  { vu: "×10ⁿ", mis: "×10^", style: "fonc", nom: "Puissance de dix" },
+  { vu: "×", mis: "×", style: "op", nom: "Multiplier" },
   { vu: "4", mis: "4" },
   { vu: "5", mis: "5" },
   { vu: "6", mis: "6" },
-  { vu: "Ans", mis: "Ans", style: "fonc" },
-  { vu: "−", mis: "−", style: "op" },
+  { vu: "√", mis: "√(", style: "fonc", nom: "Racine" },
+  { vu: "−", mis: "−", style: "op", nom: "Moins" },
   { vu: "1", mis: "1" },
   { vu: "2", mis: "2" },
   { vu: "3", mis: "3" },
-  { vu: "π", mis: "π", style: "fonc" },
-  { vu: "+", mis: "+", style: "op" },
+  { vu: "Ans", mis: "Ans", style: "fonc", nom: "Résultat précédent" },
+  { vu: "+", mis: "+", style: "op", nom: "Plus" },
   { vu: "0", mis: "0" },
   { vu: ",", mis: "," },
-  { vu: "⌫", mis: "⌫", style: "fonc" },
-  { vu: "C", mis: "C", style: "fonc" },
-  { vu: "=", mis: "=", style: "egal" },
+  { vu: "π", mis: "π", style: "fonc", nom: "Pi" },
+  { vu: "⌫", mis: "⌫", style: "fonc", nom: "Effacer" },
+  { vu: "=", mis: "=", style: "egal", nom: "Égal" },
 ];
 
 /** « 1,2×10^3×25÷4 » → « 1.2*10^3*25/4 », lisible par `evaluer()`. */
@@ -648,12 +650,29 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
       setRes(null);
       return ecrire(`Ans${mis}`, 3 + mis.length, 3 + mis.length);
     }
+    if (mis === "()÷()") {
+      // Fraction : (numérateur)÷(dénominateur), le curseur dans le numérateur ; une
+      // sélection devient le numérateur.
+      const choisi = saisie.slice(debut, fin);
+      const texte = `(${choisi})÷()`;
+      const curseur = choisi ? debut + texte.length - 1 : debut + 1;
+      return ecrire(avant + texte + apres, curseur, curseur);
+    }
     ecrire(avant + mis + apres, debut + mis.length, debut + mis.length);
   };
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3 lg:p-4">
-      <div className="rounded-[14px] bg-bg px-3.5 py-2.5 text-right">
+      <div className="relative rounded-[14px] bg-bg px-3.5 py-2.5 text-right">
+        <button
+          type="button"
+          onPointerDown={(e) => e.preventDefault()}
+          onClick={() => toucher("C")}
+          aria-label="Tout effacer"
+          className="absolute left-2 top-2 rounded-full border border-line bg-surface px-2.5 py-0.5 text-[12.5px] font-semibold text-muted hover:text-ink"
+        >
+          C
+        </button>
         <input
           ref={champ}
           aria-label="Calcul"
@@ -671,8 +690,17 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
             if (e.key === "Enter") calculer();
           }}
           placeholder="1,2×10^3×25÷4,0"
-          className="w-full bg-transparent text-right text-[17px] text-ink caret-accent outline-none placeholder:text-muted/50"
+          className="w-full bg-transparent pl-9 text-right text-[17px] text-ink caret-accent outline-none placeholder:text-muted/50"
         />
+        {/(÷|\/)/.test(saisie) && (
+          <p className="mt-1 text-[17px] leading-relaxed" aria-hidden>
+            {formule(
+              versNotation(saisie.replace(/÷/g, "/")).replace(/\^(-?\d+)/g, (_, e: string) =>
+                e.replace("-", "⁻").replace(/\d/g, (c) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(c)]),
+              ),
+            )}
+          </p>
+        )}
         <p className="mt-0.5 min-h-[44px] font-display text-[34px] leading-tight tabular-nums" aria-live="polite">
           {erreur ? <span className="text-[18px] text-bad">Calcul incomplet</span> : res === null ? "" : afficher(res)}
         </p>
@@ -708,6 +736,7 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
             type="button"
             onPointerDown={(e) => e.preventDefault()}
             onClick={() => toucher(t.mis)}
+            aria-label={t.nom}
             className={`flex h-11 items-center justify-center rounded-[10px] text-[16px] transition-colors duration-100 lg:h-10 ${
               t.style === "egal"
                 ? "bg-ink font-semibold text-bg active:bg-accent"
