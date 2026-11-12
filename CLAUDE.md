@@ -106,10 +106,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     publiable (`sb_publishable_…`) sont dans `lib/synchro.ts` : pas secrètes.
     Ne jamais écrire la clé secrète (`sb_secret_…`) nulle part. L'environnement
     `project-luno` autorise ce serveur, ce qui permet de tester pour de vrai
-    (testé le 2026-11-11 : fusion, envoi, hors connexion, direct). Son vrai
-    compte : `56a44891-…` ; `e67f107c-…` est un compte de test créé par Claude
-    le 2026-11-11 (tâches « Test direct (tel) »…), à supprimer avec son accord
-    (demandé le 2026-11-12 : « il devrait y avoir qu'un seul compte »).
+    (testé le 2026-11-11 : fusion, envoi, hors connexion, direct). Un seul compte,
+    le sien (`56a44891-…`) : le compte de test créé par Claude le 2026-11-11 a
+    été supprimé le 2026-11-12 avec son accord. Pour tester, utiliser le faux
+    serveur local, pas un vrai compte.
   - **Demandes traitées automatiquement** (demandé le 2026-11-11) : depuis la
     fenêtre « Envoyer à Claude » (leçon dans Apprendre, cours d'un chapitre),
     un compte connecté écrit une ligne dans la table `demandes`
