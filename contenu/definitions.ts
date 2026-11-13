@@ -215,9 +215,23 @@ export const DEF_PC_FORCES: DefinitionCours[] = [
 export const DEF_PC_METHODE: DefinitionCours[] = [
   {
     type: "methode",
-    terme: "Le plan d'une réponse",
+    terme: "La méthode générale",
     texte:
-      "1. Un titre souligné qui dit ce que l'on cherche.\n2. Les données : système, point matériel, valeurs avec unités, bilan des forces.\n3. La loi utilisée, annoncée (« D'après la 2e loi de Newton… »), puis la projection sur un axe.\n4. L'expression littérale de l'inconnue, encadrée.\n5. L'A.N., avec le résultat souligné, son unité et ses chiffres significatifs.\n6. Une phrase de conclusion qui répond à la question.",
+      "1. Un titre souligné qui rappelle la question.\n2. « Par définition de … » : la formule littérale, encadrée.\n3. « avec » : les données, converties dans les bonnes unités.\n4. « A.N. : » les valeurs remplacées, le calcul.\n5. Le résultat final souligné, avec unité et chiffres significatifs.",
+    precision: "Valable dans tous les chapitres. Selon le type d'exercice, une méthode propre s'y ajoute (lois de Newton, méthode descendante, demi-équations).",
+  },
+  {
+    type: "methode",
+    terme: "Lois de Newton (chap. 9 et 11)",
+    texte:
+      "Les données : système, point matériel, référentiel, valeurs avec unités, bilan des forces. La loi annoncée (« D'après la 2e loi de Newton… »), puis la projection sur l'axe du mouvement, puis l'expression littérale de l'inconnue, encadrée.",
+  },
+  {
+    type: "methode",
+    terme: "La méthode descendante (dilutions, dosages)",
+    texte:
+      "On part de la formule de base de ce qu'on cherche, puis on exprime chaque inconnue à son tour (relations encadrées et numérotées (1), (2), (3)), jusqu'à n'avoir plus que des données. On insère (3) dans (2), puis (2) dans (1) : une seule expression littérale complète, encadrée, puis une seule A.N.",
+    precision: "Dilution : « au cours d'une dilution, la masse de soluté se conserve », donc C_m,mère × V_mère = C_m,fille × V_fille.",
   },
   {
     type: "methode",

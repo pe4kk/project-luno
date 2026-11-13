@@ -629,9 +629,15 @@ un PDF ou une photo directement dans le chat.
   commun n°1 de physique (05/11, 15/20, macaron et E124) : 6 erreurs déposées par
   une demande `erreurs` prête dans son compte (chiffres significatifs des valeurs
   intermédiaires, justifier une dilution, puissances de dix, norme « par kg »,
-  répondre à toute la question, lecture de graphique). La fiche méthode
-  (`physique-methode.ts`, version 6) a reçu une section « Problème en plusieurs
-  étapes » tirée de la correction du prof.
+  répondre à toute la question, lecture de graphique). - (2026-11-13) **Physique : une méthode générale fixe, plus une méthode par type
+  d'exercice.** Générale (ne change jamais) : titre souligné ; « Par définition de
+  … » et la formule encadrée ; « avec » et les données ; « A.N. : » ; résultat final
+  souligné. En plus, selon le chapitre : lois de Newton (système, bilan des forces,
+  projection) ; **méthode descendante** pour les dilutions et dosages (partir de la
+  formule de base, exprimer chaque inconnue, une seule expression littérale complète
+  à la fin, une seule A.N.) ; demi-équations pour l'oxydoréduction (chap. 4). Ne
+  jamais fondre une méthode de chapitre dans la méthode générale : chacune a sa
+  section nommée dans `physique-methode.ts` (version 7), ou reste dans son chapitre.
 - (2026-11-12) **Fiches et leçons : les textes peuvent être longs**, et il veut
   qu'on **fasse ressortir l'essentiel** : entourer les phrases les plus importantes de
   `==…==`, dessiné en **gras simple** (choisi le 2026-11-13 parmi 8 styles : il

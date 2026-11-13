@@ -7,7 +7,11 @@ import { HOMME_CANON } from "./schemas-physique";
  * correction des exercices du chap. 11 et dans ses cours (encadrés, formules
  * surlignées). Les exemples rédigés reprennent un exercice déjà corrigé par le prof
  * (l'homme-canon) ou des exercices parallèles, jamais le DM.
- * Version 6 (2026-11-13) : complétée avec la correction du DST commun n°1 (contrôle de
+ * Version 7 (2026-11-13, demandé) : la méthode générale (titre, « par définition »,
+ * formule encadrée, « avec » et données, A.N., résultat souligné) ne change pas ; les
+ * méthodes propres à un type d'exercice sont des sections à part, nommées (lois de
+ * Newton, méthode descendante des dilutions ; l'oxydoréduction reste dans le chap. 4).
+ * Version 6 : complétée avec la correction du DST commun n°1 (contrôle de
  * qualité d'un macaron, dosage par étalonnage) : consignes du sujet, démarche en
  * plusieurs étapes, dilution, chiffres significatifs des valeurs intermédiaires,
  * produit en croix, écart relatif.
@@ -16,23 +20,33 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 6,
+  version: 7,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
   flashcards: [
+    {
+      recto: "La méthode générale",
+      verso:
+        "Un titre souligné ; « Par définition de … » et la formule encadrée ; « avec » et les données converties ; « A.N. : » ; le résultat final souligné, avec unité et chiffres significatifs.",
+    },
+    {
+      recto: "Reconnaître la méthode à utiliser",
+      verso:
+        "La méthode générale vaut partout. En plus : lois de Newton pour le mouvement (système, bilan des forces, projection), méthode descendante pour les dilutions et dosages, demi-équations pour l'oxydoréduction.",
+    },
     {
       recto: "Titre d'une réponse",
       verso:
         "Reformuler ce qu'on cherche, souligné : « b) Calcul de la durée d'ascension du système ».",
     },
     {
-      recto: "Bloc « Données »",
+      recto: "Bloc « Données » (lois de Newton)",
       verso:
         "Système = {…} considéré comme un point matériel de masse m ; les valeurs de l'énoncé avec leurs unités ; le bilan des forces.",
     },
     {
-      recto: "Bilan des forces", schema: HOMME_CANON,
+      recto: "Bilan des forces (lois de Newton)", schema: HOMME_CANON,
       verso:
         "Chaque force avec son nom, sa direction et son sens : « P⃗ = m·g⃗, vertical, vers le bas ».",
     },
@@ -91,9 +105,9 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Un titre souligné qui rappelle la question ; les formules littérales encadrées ; le bon nombre de chiffres significatifs à chaque A.N. ; de la rigueur et une copie propre.",
     },
     {
-      recto: "Problème en plusieurs étapes",
+      recto: "La méthode descendante (dilutions, dosages)",
       verso:
-        "Partir de la définition de ce qu'on cherche, puis « on cherche donc … » : exprimer chaque inconnue, numéroter les relations (1), (2), (3), et quand il n'y a plus d'inconnue, remplacer (3) dans (2) puis (2) dans (1). Une seule expression finale encadrée, puis l'A.N.",
+        "Partir de la formule de base de ce qu'on cherche, puis « on cherche donc … » : exprimer chaque inconnue, numéroter les relations (1), (2), (3). Quand il n'y a plus d'inconnue, remplacer (3) dans (2) puis (2) dans (1) : une seule expression littérale complète, encadrée, puis une seule A.N.",
     },
     {
       recto: "Justifier une dilution",
@@ -129,27 +143,27 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
   fiche: {
     sections: [
       {
-        titre: "Le plan d'une réponse",
+        titre: "La méthode générale (tous les chapitres)",
         points: [
-          { t: "==1. Un titre souligné qui reformule ce qu'on cherche.==", n: 1 },
-          {
-            t: "==2. Les données : système, valeurs de l'énoncé avec unités, bilan des forces.==",
-            n: 1,
-          },
-          {
-            t: "3. La loi citée, puis la projection sur l'axe du mouvement.",
-            n: 1,
-          },
-          { t: "4. L'expression littérale de l'inconnue, encadrée.", n: 1 },
-          {
-            t: "5. L'A.N., avec le résultat souligné, son unité et ses chiffres significatifs.",
-            n: 1,
-          },
-          { t: "6. Une phrase de conclusion qui répond à la question.", n: 1 },
+          { t: "==1. Un titre souligné qui rappelle la question posée.==", n: 1 },
+          { t: "==2. « Par définition de … » (ou « D'après la loi de … »), puis la formule littérale, encadrée.==", n: 1 },
+          { t: "3. « avec » : les données une par une, converties dans les bonnes unités avant le calcul (km → m, h → s…).", n: 1 },
+          { t: "4. « A.N. : » on remplace les lettres par les valeurs, on calcule.", n: 1 },
+          { t: "5. Le résultat final souligné, avec son unité et le bon nombre de chiffres significatifs.", n: 1 },
+          { t: "Si la question demande de conclure ou de justifier : une phrase qui répond, avec le résultat.", n: 2 },
         ],
       },
       {
-        titre: "Titres et données",
+        titre: "Chaque type d'exercice a sa méthode",
+        points: [
+          { t: "==La méthode générale ne change pas. Mais selon le chapitre, le prof attend en plus une méthode propre au type d'exercice : il faut reconnaître lequel on fait.==", n: 1 },
+          { t: "Mouvement et forces (chap. 9 et 11) : système, référentiel, bilan des forces, loi de Newton, projection. Voir « Lois de Newton » ci-dessous.", n: 2 },
+          { t: "Dilutions et dosages : la méthode descendante, qui finit par une seule expression littérale complète. Voir « La méthode descendante » ci-dessous.", n: 2 },
+          { t: "Oxydoréduction (chap. 4) : les demi-équations en quatre étapes, puis leur combinaison. Cette méthode est dans le chapitre 4, onglet Déf.", n: 2 },
+        ],
+      },
+      {
+        titre: "Lois de Newton (chap. 9 et 11) · Données et bilan des forces",
         points: [
           {
             t: "==Chaque question commence par un titre souligné : « a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical ».==",
@@ -174,7 +188,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         ],
       },
       {
-        titre: "Loi, projection et expression littérale",
+        titre: "Lois de Newton (chap. 9 et 11) · Loi, projection, expression",
         points: [
           {
             t: "==Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗ ».==",
@@ -249,18 +263,22 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         ],
       },
       {
-        titre: "Problème en plusieurs étapes (DST commun n°1)",
+        titre: "Dilutions et dosages · la méthode descendante",
         points: [
           {
             t: "==Les consignes du sujet coûtent des points : titre souligné qui rappelle la question, formules littérales encadrées, bon nombre de chiffres significatifs à chaque A.N., rigueur et propreté.==",
             n: 1,
           },
           {
-            t: "==Pars de la définition de ce qu'on cherche, puis remonte : « On cherche donc m(E124) », « on doit donc calculer C_m,mère, la seule inconnue ici ».==",
+            t: "==On part de la formule de base de ce qu'on cherche (« Par définition du pourcentage massique : … »), puis on descend : chaque grandeur inconnue de la formule est exprimée à son tour, jusqu'à n'avoir plus que des données.==",
             n: 1,
           },
           {
-            t: "Numérote chaque relation encadrée (1), (2), (3). Quand il n'y a plus d'inconnue : « on insère (3) dans (2), puis (2) dans (1) », pour obtenir une seule expression littérale finale, encadrée, avant l'A.N.",
+            t: "À chaque étape : « On cherche donc m(E124) », « on doit donc calculer C_m,mère, la seule inconnue ici ». Chaque relation est encadrée et numérotée (1), (2), (3).",
+            n: 2,
+          },
+          {
+            t: "==Quand il n'y a plus d'inconnue, on insère (3) dans (2), puis (2) dans (1) : on obtient une seule formule complète, l'expression littérale finale, encadrée. Une seule A.N. à la fin, sur cette formule.==",
             n: 2,
           },
           {
@@ -334,14 +352,14 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     ],
     aRetenir: [
       "Titre souligné",
-      "Données",
-      "Bilan des forces",
-      "Loi citée",
-      "Projection",
-      "Expression encadrée",
+      "Par définition",
+      "Formule encadrée",
+      "avec : données converties",
       "A.N.",
+      "Résultat souligné",
       "c.s",
-      "Conclusion",
+      "Newton : bilan des forces, projection",
+      "Méthode descendante",
     ],
   },
   exercices: [
@@ -487,7 +505,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
 export const LECON_REDACTION: Lecon = {
   id: "pc-redaction",
   methode: true,
-  titre: "Rédiger une réponse de physique comme ton prof l'attend",
+  titre: "Rédiger une réponse de physique comme ton prof l'attend : l'exemple des lois de Newton",
   matiere: "Physique-Chimie",
   niveau: "Première",
   duree: "12 min",
