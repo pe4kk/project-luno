@@ -7,12 +7,16 @@ import { HOMME_CANON } from "./schemas-physique";
  * correction des exercices du chap. 11 et dans ses cours (encadrés, formules
  * surlignées). Les exemples rédigés reprennent un exercice déjà corrigé par le prof
  * (l'homme-canon) ou des exercices parallèles, jamais le DM.
+ * Version 6 (2026-11-13) : complétée avec la correction du DST commun n°1 (contrôle de
+ * qualité d'un macaron, dosage par étalonnage) : consignes du sujet, démarche en
+ * plusieurs étapes, dilution, chiffres significatifs des valeurs intermédiaires,
+ * produit en croix, écart relatif.
  */
 const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 5,
+  version: 6,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -82,6 +86,41 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Un repère (O, x, y), le système en point M(m), les forces en flèches ; préciser l'échelle si elle est demandée, sinon écrire « sans souci d'échelle ».",
     },
     {
+      recto: "Les 4 consignes du sujet (points enlevés sinon)",
+      verso:
+        "Un titre souligné qui rappelle la question ; les formules littérales encadrées ; le bon nombre de chiffres significatifs à chaque A.N. ; de la rigueur et une copie propre.",
+    },
+    {
+      recto: "Problème en plusieurs étapes",
+      verso:
+        "Partir de la définition de ce qu'on cherche, puis « on cherche donc … » : exprimer chaque inconnue, numéroter les relations (1), (2), (3), et quand il n'y a plus d'inconnue, remplacer (3) dans (2) puis (2) dans (1). Une seule expression finale encadrée, puis l'A.N.",
+    },
+    {
+      recto: "Justifier une dilution",
+      verso:
+        "« Au cours d'une dilution, la masse de soluté se conserve : m_mère = m_fille, or m = C_m × V, d'où C_m,mère × V_mère = C_m,fille × V_fille. » Ne jamais écrire « ×5 » sans cette justification.",
+    },
+    {
+      recto: "Valeurs intermédiaires",
+      verso:
+        "Ne pas les arrondir : garder au moins un chiffre de plus (k = 3,11 × 10⁻² L·g⁻¹, pas 3,0 × 10⁻²). On n'arrondit que le résultat final, au nombre de chiffres significatifs des données.",
+    },
+    {
+      recto: "Une norme donnée « par kg »",
+      verso:
+        "La ramener à l'objet étudié par un produit en croix : 50 mg pour 1 kg, donc m pour 15,0 × 10⁻³ kg. Puis calculer ce qu'on demande (pourcentage, masse) pour cet objet.",
+    },
+    {
+      recto: "Écart relatif",
+      verso:
+        "écart relatif = {{|valeur exp − valeur de référence| // valeur de référence}} × 100, en %. On le compare à l'écart toléré (souvent 10 %) pour conclure.",
+    },
+    {
+      recto: "Convertir des unités",
+      verso:
+        "Convertir chaque unité dans les données, avant le calcul : 90 km/h = {{90 × 10³ m // 3600 s}} = 25 m·s⁻¹. Pas de coefficient appris par cœur (« ÷ 3,6 »).",
+    },
+    {
       recto: "Ce qu'il faut savoir par cœur",
       verso:
         "Les définitions encadrées et les formules surlignées en vert dans les cours du prof.",
@@ -129,7 +168,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
             n: 3,
           },
           {
-            t: "Convertis tout de suite en unités du système international : 1,2 t = 1200 kg ; 7,7 kN = 7700 N ; 100 km/h ≈ 27,8 m·s⁻¹.",
+            t: "Convertis tout de suite en unités du système international : 1,2 t = 1200 kg ; 7,7 kN = 7700 N ; 100 km/h = {{100 × 10³ m // 3600 s}} ≈ 27,8 m·s⁻¹. On convertit chaque unité (km → m, h → s), pas de « ÷ 3,6 » appris par cœur.",
             n: 3,
           },
         ],
@@ -206,6 +245,55 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
           {
             t: "Une comparaison se conclut aussi : « ⇒ ΠA > P : la montgolfière s'élève », souligné.",
             n: 3,
+          },
+        ],
+      },
+      {
+        titre: "Problème en plusieurs étapes (DST commun n°1)",
+        points: [
+          {
+            t: "==Les consignes du sujet coûtent des points : titre souligné qui rappelle la question, formules littérales encadrées, bon nombre de chiffres significatifs à chaque A.N., rigueur et propreté.==",
+            n: 1,
+          },
+          {
+            t: "==Pars de la définition de ce qu'on cherche, puis remonte : « On cherche donc m(E124) », « on doit donc calculer C_m,mère, la seule inconnue ici ».==",
+            n: 1,
+          },
+          {
+            t: "Numérote chaque relation encadrée (1), (2), (3). Quand il n'y a plus d'inconnue : « on insère (3) dans (2), puis (2) dans (1) », pour obtenir une seule expression littérale finale, encadrée, avant l'A.N.",
+            n: 2,
+          },
+          {
+            t: "Commence par un schéma du protocole : solution mère (V_mère prélevé), solution fille (V_fille = V_fiole), et un tableau mère | fille avec un « ? » sur ce que l'on cherche.",
+            n: 2,
+          },
+          {
+            t: "==Justifie toujours une dilution : « au cours d'une dilution, la masse de soluté se conserve », donc C_m,mère × V_mère = C_m,fille × V_fille.== Un facteur « F = 5 » sans explication perd des points.",
+            n: 2,
+          },
+          {
+            t: "Coefficient directeur d'une droite d'étalonnage : deux points éloignés de la droite, k = {{A_B − A_A // C_m(B) − C_m(A)}}, avec son unité (L·g⁻¹). Garde trois chiffres significatifs : k = 3,11 × 10⁻² L·g⁻¹.",
+            n: 3,
+          },
+          {
+            t: "Ne pas arrondir les valeurs intermédiaires : arrondir k à 3,0 × 10⁻² donnait 5,0 % au lieu de 4,80 %. Seul le résultat final s'arrondit, au nombre de chiffres significatifs des données (ici 3 : 15,0 g ; 25,0 mL ; 50,0 mL).",
+            n: 3,
+          },
+          {
+            t: "Une norme donnée « par kg d'aliment » se ramène à l'objet étudié par un produit en croix : 50 mg pour 1 kg, donc 0,75 mg pour 15,0 g. Puis le pourcentage : {{0,75 × 10⁻³ // 15,0}} × 100 = 5,0 × 10⁻³ %.",
+            n: 3,
+          },
+          {
+            t: "Réponds à toute la question : « à quelle longueur d'onde et pourquoi » demande la valeur (λ_max = 510 nm) et la raison (c'est là que la solution absorbe le plus, ce qui minimise les incertitudes sur A).",
+            n: 3,
+          },
+          {
+            t: "Pour conclure sur une mesure : écart relatif = {{|valeur exp − valeur de référence| // valeur de référence}} × 100, comparé à l'écart toléré (10 %), puis une phrase qui répond : « le fabricant n'a pas respecté la réglementation ».",
+            n: 4,
+          },
+          {
+            t: "Contrôle l'ordre de grandeur de chaque résultat avant de t'en servir : une erreur de puissance de dix à une question se reporte sur toutes les suivantes.",
+            n: 4,
           },
         ],
       },

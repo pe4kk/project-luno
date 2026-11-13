@@ -421,7 +421,12 @@ un PDF ou une photo directement dans le chat.
   (1792-1794) », 2026-11-13, d'une vidéo du PDF du prof : 18 définitions, 16 dates,
   18 flashcards, 19 exercices, carte du manuel et 4 gravures ; précisions signalées :
   calendrier républicain décrété le 5 octobre 1793, esclavage rétabli le 20 mai
-  1802, Directoire en octobre 1795 seulement). **Méthodes** (demandé le 2026-11-12 : dans Apprendre, pas dans Travail) :
+  1802, Directoire en octobre 1795 seulement), `physique-oxydoreduction.ts`
+  (Physique-Chimie, « Chap. 4 · Les réactions d'oxydoréduction », 2026-11-13, de 3
+  photos du polycopié : 10 définitions et méthodes, 16 flashcards, fiche, 18
+  exercices, 2 problèmes et 1 calcul sur d'autres couples que ceux du cours, 2
+  schémas `SCHEMA_COUPLE` et `SCHEMA_TRANSFERT` ; formules chimiques en Unicode,
+  Cr₂O₇²⁻, jamais `_`). **Méthodes** (demandé le 2026-11-12 : dans Apprendre, pas dans Travail) :
   leçons avec `methode: true`, rangées sous « Méthodes » dans Apprendre, avec
   `documents` (PDF du prof, affichés au début) et `entrainement` (lien de fin vers
   S'exercer). `hggsp-methode.ts` : « L'étude critique de document(s) » et
@@ -613,6 +618,20 @@ un PDF ou une photo directement dans le chat.
   l'onglet Apprendre sont construites sur ce principe.
 - Il veut des fiches qui reflètent **ce que son prof attend** (méthode de
   rédaction, encadrés, A.N.), pas seulement le contenu du cours.
+- (2026-11-13) **Raisonner comme en classe, pas avec des raccourcis** : pour une
+  conversion, on convertit chaque unité dans les données avant le calcul (90 km/h =
+  90 × 10³ m / 3600 s), jamais « × 3,6 » ou « ÷ 3,6 » appris par cœur. Il l'a
+  relevé dans la leçon sur la vitesse ; c'est général : toute méthode doit suivre
+  celle du prof. Corrigé partout le 2026-11-13 (versions augmentées).
+- (2026-11-13) **« Mes erreurs » : généraliser**. Pour une copie corrigée, ne pas
+  décrire l'erreur ponctuelle seulement : en tirer la règle qui servira ailleurs
+  (titre général, ce qui a été fait, la règle juste, une astuce). Fait pour le DST
+  commun n°1 de physique (05/11, 15/20, macaron et E124) : 6 erreurs déposées par
+  une demande `erreurs` prête dans son compte (chiffres significatifs des valeurs
+  intermédiaires, justifier une dilution, puissances de dix, norme « par kg »,
+  répondre à toute la question, lecture de graphique). La fiche méthode
+  (`physique-methode.ts`, version 6) a reçu une section « Problème en plusieurs
+  étapes » tirée de la correction du prof.
 - (2026-11-12) **Fiches et leçons : les textes peuvent être longs**, et il veut
   qu'on **fasse ressortir l'essentiel** : entourer les phrases les plus importantes de
   `==…==`, dessiné en **gras simple** (choisi le 2026-11-13 parmi 8 styles : il

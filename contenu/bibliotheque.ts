@@ -5,6 +5,7 @@ import { PHYSIQUE_MOUVEMENT } from "./physique-mouvement";
 import { PHYSIQUE_METHODE } from "./physique-methode";
 import { MATHS_DERIVATION } from "./maths-derivation";
 import { HISTOIRE_TERREUR } from "./histoire-terreur";
+import { PHYSIQUE_OXYDOREDUCTION } from "./physique-oxydoreduction";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -22,6 +23,7 @@ export const BIBLIOTHEQUE: ChapitrePublie[] = [
   PHYSIQUE_METHODE,
   MATHS_DERIVATION,
   HISTOIRE_TERREUR,
+  PHYSIQUE_OXYDOREDUCTION,
 ];
 
 /**

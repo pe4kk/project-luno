@@ -39,7 +39,7 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 6,
+    version: 7,
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
@@ -141,7 +141,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Unité de la vitesse",
         verso:
-          "Le mètre par seconde (m/s). Pour passer en km/h, on multiplie par 3,6.",
+          "Le mètre par seconde (m/s, ou m·s⁻¹). Pour changer d'unité, on convertit séparément la distance et la durée : 1 km = 10³ m et 1 h = 3600 s.",
       },
       {
         recto: "Mouvement rectiligne uniforme",
@@ -267,7 +267,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 3,
             },
             {
-              t: "La vitesse s'exprime en m/s ; on multiplie par 3,6 pour passer en km/h.",
+              t: "La vitesse s'exprime en m/s. Pour la donner en km/h, on convertit la distance et la durée : 10 m/s = {{10 × 10⁻³ km // (1/3600) h}} = 36 km/h.",
               n: 3,
             },
           ],
@@ -434,7 +434,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         type: "vraiFaux",
         affirmation: "Une vitesse de 10 m/s correspond à 36 km/h.",
         vrai: true,
-        explication: "10 × 3,6 = 36 km/h.",
+        explication: "On convertit les mètres et les secondes : 10 m en 1 s = 10 × 10⁻³ km en {{1 // 3600}} h, soit 10 × 10⁻³ × 3600 = 36 km/h.",
       },
       {
         type: "vraiFaux",
@@ -517,7 +517,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 7,
+    version: 8,
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
@@ -1002,7 +1002,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 7,
+    version: 8,
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1323,7 +1323,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-exercices",
-    version: 3,
+    version: 4,
     matiere,
     titre: "Chap. 11 · Fiche d'exercices et DM",
     documents: [
@@ -1377,7 +1377,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       },
       {
         recto: "Convertir des km/h en m/s",
-        verso: "On divise par 3,6. Exemple : 100 km/h ≈ 27,8 m/s.",
+        verso: "On convertit la distance et la durée séparément : 100 km/h = {{100 × 10³ m // 3600 s}} ≈ 27,8 m·s⁻¹.",
       },
     ],
     fiche: {
@@ -1530,7 +1530,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Ex. 2 : une voiture roule à 100 km/h et freine jusqu'à l'arrêt. Quelle est la norme de Δv⃗ ?",
         choix: ["100 m·s⁻¹", "27,8 m·s⁻¹", "360 m·s⁻¹", "3,6 m·s⁻¹"],
         bonneReponse: 1,
-        explication: "Δv = |0 − v| = {{100 // 3,6}} ≈ 27,8 m·s⁻¹.",
+        explication: "Δv = |0 − v| avec v = 100 km/h = {{100 × 10³ m // 3600 s}} ≈ 27,8 m·s⁻¹.",
       },
       {
         question:

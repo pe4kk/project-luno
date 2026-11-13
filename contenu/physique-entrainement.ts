@@ -55,8 +55,8 @@ export const PROBLEMES_CHAP11: Probleme[] = [
       {
         titre: "Données",
         consigne: "Écris les données utiles, dans les unités du Système international.",
-        attendu: "v_i = 90 km/h = {{90 // 3,6}} = 25 m·s⁻¹ ; v_f = 0 m·s⁻¹ (arrêt) ; Δt = 4,0 s.",
-        criteres: ["Vitesse convertie en m·s⁻¹ (÷ 3,6)", "v_f = 0 : la voiture s'arrête"],
+        attendu: "v_i = 90 km/h = {{90 × 10³ m // 3600 s}} = 25 m·s⁻¹ ; v_f = 0 m·s⁻¹ (arrêt) ; Δt = 4,0 s.",
+        criteres: ["Vitesse convertie en m·s⁻¹ en convertissant les km en m et les h en s", "v_f = 0 : la voiture s'arrête"],
       },
       {
         titre: "Bilan des forces",
@@ -225,12 +225,12 @@ export const CALCULS_CHAP11: Calcul[] = [
       { nom: "dt", min: 3.0, max: 8.0, pas: 0.5 },
     ],
     litterale: "f = {{m·v_i // Δt}}",
-    formule: "m * 1000 * (v / 3.6) / dt",
+    formule: "m * 1000 * (v * 1000 / 3600) / dt",
     inconnue: "f",
     unite: "N",
     unitesProposees: ["N", "kg", "m·s⁻²", "N·s", "J"],
     methode:
-      "2e loi de Newton projetée sur l'axe du mouvement : −f = m·(0 − v_i)/Δt, donc f = m·v_i/Δt.\nConversions : m = {m} × 10³ kg ; v_i = {v}/3,6 m·s⁻¹.\nA.N. : f = {resultat} N (autant de chiffres significatifs que la donnée la moins précise).",
+      "2e loi de Newton projetée sur l'axe du mouvement : −f = m·(0 − v_i)/Δt, donc f = m·v_i/Δt.\nConversions : m = {m} × 10³ kg ; v_i = {v} km/h = {v} × 10³ m / 3600 s (on convertit les km en m et les h en s).\nA.N. : f = {resultat} N (autant de chiffres significatifs que la donnée la moins précise).",
   },
   {
     id: "calc-cycliste",
