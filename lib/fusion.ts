@@ -152,6 +152,15 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
         salle: dsts[i].salle || x.salle,
         notes: dsts[i].notes || x.notes,
         chapitreIds: [...new Set([...dsts[i].chapitreIds, ...x.chapitreIds])],
+        // Programme de révision : le type du premier appareil, les étapes faites des deux.
+        ...(dsts[i].preparation || x.preparation
+          ? {
+              preparation: {
+                type: (dsts[i].preparation ?? x.preparation)!.type,
+                faits: [...new Set([...(dsts[i].preparation?.faits ?? []), ...(x.preparation?.faits ?? [])])],
+              },
+            }
+          : {}),
       };
   }
 

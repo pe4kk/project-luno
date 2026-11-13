@@ -247,6 +247,18 @@ export type Dst = {
   notes: string;
   /** Chapitres à réviser pour ce devoir. */
   chapitreIds: string[];
+  /** Programme de révision choisi sur la page « Préparer une éval ». */
+  preparation?: PreparationDst;
+};
+
+/**
+ * Programme de révision d'une évaluation : « cours » = le cours à connaître (fiche,
+ * définitions, dates, cartes) ; « exos » = le cours et des exercices.
+ */
+export type PreparationDst = {
+  type: "cours" | "exos";
+  /** Identifiants des étapes cochées (voir `lib/preparation.ts`). */
+  faits: string[];
 };
 
 /** Chapitre rédigé par Claude et publié dans le dépôt pour tous les utilisateurs. */

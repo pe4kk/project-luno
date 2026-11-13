@@ -544,6 +544,14 @@ function CarteDst({ d, modifier }: { d: Dst; modifier: () => void }) {
             </span>
           )}
         </button>
+        {j >= 0 && (
+          <Link
+            href={`/preparer?d=${encodeURIComponent(d.id)}`}
+            className="mt-2.5 inline-flex min-h-9 items-center gap-1.5 rounded-full bg-ink px-3 text-[13px] font-semibold text-bg transition-colors hover:bg-accent hover:text-on-accent"
+          >
+            {d.preparation ? "Continuer mon programme" : "Préparer cette éval"}
+          </Link>
+        )}
         {lies.length > 0 && (
           <div className="mt-2.5 flex flex-wrap gap-2">
             {lies.map((c) => (

@@ -187,6 +187,18 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.
+  - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
+    éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
+    (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par
+    la carte « Prochain DST » de l'accueil, « Autre éval », et chaque DST du
+    calendrier). Sans `?d=` : liste des évals à venir. Avec `?d=<dst>` : 1. chapitres
+    au programme (cases, enregistrées dans `chapitreIds`), 2. « Éval de cours » ou
+    « Éval avec exercices », 3. programme réparti d'aujourd'hui à la veille (cinq
+    jours au plus), étapes à cocher qui ouvrent les écrans existants. Logique sans
+    IA dans `lib/preparation.ts` : `etapes()` (fiche, définitions, dates, flashcards ;
+    pour « exos » série, calculs, problèmes ; la veille mes erreurs et interro
+    blanche) et `repartir()`. Choix et étapes cochées dans `preparation` du DST
+    (`majDst`, synchronisé, fusion par union).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au

@@ -148,6 +148,8 @@ type Etat = Donnees & {
 
   enregistrerDst: (d: Omit<Dst, "id"> & { id?: string }) => void;
   supprimerDst: (id: string) => void;
+  /** Modifie un DST sans le remplacer (chapitres au programme, programme de révision). */
+  majDst: (id: string, d: Partial<Pick<Dst, "chapitreIds" | "preparation">>) => void;
 
   importerPublie: (p: ChapitrePublie, prefixe?: string) => string;
   importerEvenement: (e: EvenementPublie) => void;
@@ -463,6 +465,7 @@ export const useLuno = create<Etat>()(
           }
           return { dsts: [...s.dsts, { ...d, id: uid() }] };
         }),
+      majDst: (id, d) => set((s) => ({ dsts: s.dsts.map((x) => (x.id === id ? { ...x, ...d } : x)) })),
       supprimerDst: (id) =>
         set((s) => ({
           annulation: { message: "DST supprimé", avant: photo(s) },

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, CalendarDays, Check, GraduationCap, ListTodo, Target } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, Check, GraduationCap, ListTodo, Target, ClipboardCheck } from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
 import { QUOTA_NOUVELLES, revisionDuJour } from "@/lib/revision";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
@@ -16,6 +16,7 @@ const RACCOURCIS = [
   { href: "/travail", titre: "Travail", texte: "Cours, flashcards et fiches", icone: BookOpen, couleur: "#55555c" },
   { href: "/apprendre", titre: "Apprendre", texte: "Des leçons pas à pas", icone: GraduationCap, couleur: "#c98b6b" },
   { href: "/exercices", titre: "S'exercer", texte: "Des exercices corrigés", icone: Target, couleur: "#8a5a78" },
+  { href: "/preparer", titre: "Préparer une éval", texte: "Ton programme jour par jour", icone: ClipboardCheck, couleur: "#6f8fae" },
 ];
 
 function salutation() {
@@ -105,28 +106,33 @@ export default function Accueil() {
                     Au programme : {auProgramme.map((c) => c.titre).join(" · ")}
                   </p>
                   <div className="relative mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <Link href={`/preparer?d=${encodeURIComponent(prochain.id)}`} className={`${classeLien} !mt-0`}>
+                      {prochain.preparation ? "Continuer mon programme" : "Préparer cette éval"} <ArrowRight size={16} />
+                    </Link>
                     {interroPossible ? (
-                      <Link href={`/exercices?mode=interro&dst=${encodeURIComponent(prochain.id)}`} className={`${classeLien} !mt-0`}>
-                        Faire une interro blanche <ArrowRight size={16} />
+                      <Link
+                        href={`/exercices?mode=interro&dst=${encodeURIComponent(prochain.id)}`}
+                        className="inline-flex min-h-11 items-center gap-1.5 text-[14.5px] font-semibold text-accent"
+                      >
+                        Interro blanche <ArrowRight size={15} />
                       </Link>
                     ) : null}
                     {cartesDst > 0 && (
                       <Link
                         href={lienTravail({ r: prochain.id })}
-                        className={
-                          interroPossible
-                            ? "inline-flex min-h-11 items-center gap-1.5 text-[14.5px] font-semibold text-accent"
-                            : `${classeLien} !mt-0`
-                        }
+                        className="inline-flex min-h-11 items-center gap-1.5 text-[14.5px] font-semibold text-accent"
                       >
-                        Revoir ses {cartesDst} cartes <ArrowRight size={15} />
+                        {cartesDst} cartes <ArrowRight size={15} />
                       </Link>
                     )}
+                    <Link href="/preparer" className="inline-flex min-h-11 items-center gap-1.5 text-[14.5px] font-semibold text-muted hover:text-ink">
+                      Autre éval
+                    </Link>
                   </div>
                 </>
               ) : (
-                <Link href="/calendrier" className={classeLien}>
-                  Ouvrir le calendrier <ArrowRight size={16} />
+                <Link href={`/preparer?d=${encodeURIComponent(prochain.id)}`} className={classeLien}>
+                  Préparer cette éval <ArrowRight size={16} />
                 </Link>
               )}
             </div>
@@ -233,7 +239,7 @@ export default function Accueil() {
       {vide ? (
         <>
           <h2 className="mb-4 mt-10 text-[22px]">Par où commencer</h2>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">
             {RACCOURCIS.map(({ href, titre, texte, icone: Icone, couleur }, i) => (
               <motion.div
                 key={href}
