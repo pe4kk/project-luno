@@ -14,6 +14,7 @@ import {
   ScrollText,
   Search,
   X,
+  CalendarClock,
 } from "lucide-react";
 import { useLuno } from "@/lib/store";
 import { simplifier } from "@/lib/contenu";
@@ -120,6 +121,16 @@ export default function Recherche() {
           href: lienTravail({ m: c.matiereId, c: c.id, o: "defs" }),
         })),
     );
+    const gDates: Resultat[] = chapitres.flatMap((c) =>
+      (c.dates ?? [])
+        .filter((d) => trouve(d.date, d.evenement, d.precision ?? ""))
+        .map((d, i) => ({
+          cle: `${c.id}-date-${i}`,
+          titre: `${d.date} · ${d.evenement}`,
+          detail: d.precision ?? c.titre,
+          href: lienTravail({ m: c.matiereId, c: c.id, o: "dates" }),
+        })),
+    );
     const gDocs: Resultat[] = chapitres.flatMap((c) =>
       c.documents
         .filter((d) => trouve(d.titre, c.titre))
@@ -176,6 +187,7 @@ export default function Recherche() {
       { nom: "Matières et chapitres", icone: BookOpen, resultats: gChapitres },
       { nom: "Flashcards", icone: Layers, resultats: gCartes },
       { nom: "Définitions", icone: BookMarked, resultats: gDefs },
+      { nom: "Dates", icone: CalendarClock, resultats: gDates },
       { nom: "Fiches", icone: ScrollText, resultats: gFiches },
       { nom: "Documents du prof", icone: FileDown, resultats: gDocs },
       { nom: "Cours", icone: BookOpen, resultats: gCours },

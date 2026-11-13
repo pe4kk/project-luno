@@ -557,6 +557,7 @@ export const useLuno = create<Etat>()(
           ],
           fiche: p.fiche ?? base.fiche,
           definitions: p.definitions?.length ? p.definitions : (base.definitions ?? []),
+          dates: p.dates?.length ? p.dates : (base.dates ?? []),
           problemes: p.problemes?.length ? p.problemes : (base.problemes ?? []),
           calculs: p.calculs?.length ? p.calculs : (base.calculs ?? []),
           exercices: p.exercices.length ? p.exercices : base.exercices,
@@ -639,6 +640,7 @@ export function normaliser(
       documents: c.documents ?? [],
       exercices: c.exercices ?? [],
       definitions: c.definitions ?? [],
+      dates: c.dates ?? [],
       problemes: c.problemes ?? [],
       calculs: c.calculs ?? [],
       // Les fiches de l'ancien format (une seule taille) ne sont pas reprises.

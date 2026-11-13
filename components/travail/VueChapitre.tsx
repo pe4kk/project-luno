@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
   BookMarked,
+  CalendarClock,
   FileDown,
   FileText,
   Layers,
@@ -41,12 +42,15 @@ import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { Curseur } from "@/components/Curseur";
 import { OngletDefinitions } from "./Definitions";
+import { OngletDates } from "./Dates";
+import { Illustration } from "@/components/Illustration";
 import { classePastille, usePastille } from "@/lib/pastille";
 import { Emoji } from "@/components/Emoji";
 
 const ONGLETS = [
   { id: "cours", label: "Cours", icone: FileText },
   { id: "defs", label: "Déf", icone: BookMarked },
+  { id: "dates", label: "Dates", icone: CalendarClock },
   { id: "flashcards", label: "Flashcards", icone: Layers },
   { id: "fiche", label: "Fiche", icone: ScrollText },
 ] as const;
@@ -66,7 +70,12 @@ export function VueChapitre({
   const s = useLuno();
   const router = useRouter();
   // Pas de définitions dans ce chapitre : pas d'onglet Déf (demandé le 2026-11-12).
-  const onglets = ONGLETS.filter((o) => o.id !== "defs" || (chapitre.definitions?.length ?? 0) > 0);
+  // Onglet Dates : seulement si le chapitre en a (matières non scientifiques).
+  const onglets = ONGLETS.filter(
+    (o) =>
+      (o.id !== "defs" || (chapitre.definitions?.length ?? 0) > 0) &&
+      (o.id !== "dates" || (chapitre.dates?.length ?? 0) > 0),
+  );
   const onglet: Onglet = onglets.some((o) => o.id === ongletDemande)
     ? (ongletDemande as Onglet)
     : "cours";
@@ -184,6 +193,7 @@ export function VueChapitre({
               envoyer={() => setEnvoi(true)}
             />
           )}
+          {onglet === "dates" && <OngletDates chapitre={chapitre} matiere={matiere} />}
           {onglet === "flashcards" && (
             <OngletFlashcards
               chapitre={chapitre}
@@ -737,6 +747,7 @@ function OngletFiche({
                             className="mb-2 mt-3 max-w-[520px]"
                           />
                         )}
+                        {p.image && <Illustration image={p.image} className="mb-2 mt-3 max-w-[640px]" />}
                       </span>
                       </div>
                     </li>

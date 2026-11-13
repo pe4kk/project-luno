@@ -55,7 +55,33 @@ export type Schema = { l: number; h: number; elements: ElementSchema[]; legende?
  * Un point de fiche. `n` est la plus petite taille (1 à 5) à laquelle il apparaît.
  * Un `schema` s'affiche sous le texte du point.
  */
-export type PointFiche = { t: string; n: number; schema?: Schema };
+export type PointFiche = { t: string; n: number; schema?: Schema; image?: ImageCours };
+
+/** Image d'un cours (carte, gravure…), rangée dans `public/documents/`. */
+export type ImageCours = {
+  /** Chemin depuis `public/` : `documents/…/carte.jpg`. */
+  fichier: string;
+  /** Description pour les lecteurs d'écran. */
+  alt: string;
+  legende?: string;
+  /** Largeur / hauteur, pour réserver la place avant le chargement. */
+  ratio?: number;
+};
+
+/**
+ * Une date clé d'un chapitre (onglet « Dates » des matières non scientifiques).
+ * `tri` sert à l'ordre chronologique : AAAA-MM-JJ, AAAA-MM ou AAAA.
+ */
+export type DateCle = {
+  /** Telle qu'à apprendre : « 21 septembre 1792 », « 1793-1796 ». */
+  date: string;
+  tri: string;
+  evenement: string;
+  /** Explication courte : pourquoi cette date compte. */
+  precision?: string;
+  /** 1 = indispensable, 2 = utile. */
+  importance: 1 | 2;
+};
 
 /**
  * Une définition ou une propriété du cours, recopiée telle que le prof l'a écrite
@@ -198,6 +224,8 @@ export type Chapitre = {
   documents: Document[];
   /** Définitions et propriétés du cours, telles qu'écrites (onglet « Déf »). */
   definitions?: DefinitionCours[];
+  /** Dates clés (onglet « Dates »). */
+  dates?: DateCle[];
   /** Problèmes rédigés et calculs à valeurs changeantes (S'exercer). */
   problemes?: Probleme[];
   calculs?: Calcul[];
@@ -232,6 +260,7 @@ export type ChapitrePublie = {
   documents?: Document[];
   /** Définitions et propriétés telles qu'elles sont écrites dans le cours. */
   definitions?: DefinitionCours[];
+  dates?: DateCle[];
   problemes?: Probleme[];
   calculs?: Calcul[];
   flashcards: { recto: string; verso: string; schema?: Schema }[];

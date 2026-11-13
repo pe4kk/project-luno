@@ -152,6 +152,20 @@ fiches de révision ; le slider règle la longueur de la fiche.
     gagne). Carte « Faire taper une feuille » : demande de type `cours` avec
     `meta.note: true`, réponse `{ note: { titre, texte } }` (vérifiée par
     `verifierNote()`), reprise en note avec l'id `dem-<id>` (matière créée si absente).
+  - **Dates clés** (2026-11-13, demandé pour l'histoire : « une partie dates entre
+    Déf et Flashcards » pour les matières non scientifiques, avec un mode
+    chronologique) : `dates` d'un chapitre (`DateCle` : `date` affichée, `tri`
+    AAAA-MM-JJ / AAAA-MM / AAAA, `evenement`, `precision`, `importance` 1
+    essentielle ou 2 utile), onglet « Dates » (`components/travail/Dates.tsx`,
+    `?o=dates`) affiché seulement si le chapitre en a : frise par année, filtre
+    « Seulement les essentielles », « Remettre dans l'ordre » (5 dates tirées) et
+    « Quelle date ? » (cartes, une date ratée revient une fois). Cherchable dans
+    Recherche. Ne garder que les dates utiles à un élève de Première.
+  - **Images de cours** (2026-11-13) : `image` sur un point de fiche (`ImageCours` :
+    `fichier` dans `public/documents/<matière>/`, `alt`, `legende`, `ratio`),
+    dessinée par `components/Illustration.tsx` (agrandie au toucher ; une image en
+    hauteur est limitée en largeur). Images découpées d'une vidéo avec ffmpeg
+    (`fps=4`, puis rognage PIL).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au
@@ -369,7 +383,12 @@ un PDF ou une photo directement dans le chat.
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
   `physique-mouvement.ts`, `physique-methode.ts` (fiche « Rédiger comme ton
   prof l'attend » et leçon guidée du même nom), `maths-derivation.ts`
-  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`). **Méthodes** (demandé le 2026-11-12 : dans Apprendre, pas dans Travail) :
+  (chapitre et leçon guidée ; schémas calculés dans `schemas-maths.ts`),
+  `histoire-terreur.ts` (Histoire-Géo, « La Convention et la Terreur
+  (1792-1794) », 2026-11-13, d'une vidéo du PDF du prof : 18 définitions, 16 dates,
+  18 flashcards, 19 exercices, carte du manuel et 4 gravures ; précisions signalées :
+  calendrier républicain décrété le 5 octobre 1793, esclavage rétabli le 20 mai
+  1802, Directoire en octobre 1795 seulement). **Méthodes** (demandé le 2026-11-12 : dans Apprendre, pas dans Travail) :
   leçons avec `methode: true`, rangées sous « Méthodes » dans Apprendre, avec
   `documents` (PDF du prof, affichés au début) et `entrainement` (lien de fin vers
   S'exercer). `hggsp-methode.ts` : « L'étude critique de document(s) » et

@@ -4,6 +4,7 @@ import { FRANCAIS_RIMBAUD } from "./francais-rimbaud";
 import { PHYSIQUE_MOUVEMENT } from "./physique-mouvement";
 import { PHYSIQUE_METHODE } from "./physique-methode";
 import { MATHS_DERIVATION } from "./maths-derivation";
+import { HISTOIRE_TERREUR } from "./histoire-terreur";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -20,6 +21,7 @@ export const BIBLIOTHEQUE: ChapitrePublie[] = [
   ...PHYSIQUE_MOUVEMENT,
   PHYSIQUE_METHODE,
   MATHS_DERIVATION,
+  HISTOIRE_TERREUR,
 ];
 
 /**
