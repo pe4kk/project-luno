@@ -352,6 +352,12 @@ export type ErreurNotee = {
   date: string;
   /** Combien de fois elle a été refaite (affichée en priorité si > 0). */
   repetee?: number;
+  /** Vue « L'essentiel » : la règle à retenir, en une ligne. */
+  regle?: string;
+  /** Vue « L'essentiel » : un rappel très court sous la règle (exemple, chiffre). */
+  rappel?: string;
+  /** Étiquette : « C.S. », « rédaction », « calcul », « méthode », « lecture »… */
+  theme?: string;
 };
 
 /** Un document joint à une note : photo ou PDF rangé dans le stockage privé du compte. */

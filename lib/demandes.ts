@@ -17,6 +17,8 @@ export type TypeDemande = "lecon" | "cours" | "erreurs";
 
 /** Réponse à une demande « erreurs » : les erreurs relevées sur l'évaluation envoyée. */
 export type ReponseErreurs = {
+  /** Une version plus haute met à jour les erreurs déjà reprises (mêmes titres). */
+  version?: number;
   erreurs: (Omit<ErreurNotee, "id" | "matiereId" | "date"> & { matiere?: string })[];
   /** Bilan d'une interro blanche (demande « erreurs » avec `meta.bilan`). */
   bilan?: { resume: string; pointsForts: string[]; aRetravailler: string[]; conseils: string[] };
@@ -205,8 +207,25 @@ function reprendreCours() {
     if (d.type === "erreurs" && d.statut === "prete" && d.reponse) {
       const id = idReponse(d);
       const s = useLuno.getState();
-      if (s.publies[id]) continue;
       const r = d.reponse as ReponseErreurs;
+      const version = r.version ?? 1;
+      if (s.publies[id] && s.publies[id] >= version) continue;
+      if (s.publies[id]) {
+        // Déjà reprises : on met à jour celles qui portent le même titre (corrections,
+        // règle en une ligne), sans toucher à « refaite ».
+        const parTitre = new Map((r.erreurs ?? []).map((e) => [e.titre.trim().toLowerCase(), e]));
+        useLuno.setState((x) => ({
+          erreurs: x.erreurs.map((e) => {
+            const n = parTitre.get(e.titre.trim().toLowerCase());
+            if (!n) return e;
+            const { matiere: _m, ...reste } = n;
+            void _m;
+            return { ...e, ...reste };
+          }),
+          publies: { ...x.publies, [id]: version },
+        }));
+        continue;
+      }
       // Une erreur d'un bilan dit sa matière ; sinon, celle de la demande.
       const parMatiere = new Map<string, ReponseErreurs["erreurs"]>();
       for (const e of r.erreurs ?? []) {
@@ -219,7 +238,7 @@ function reprendreCours() {
       }
       if (!d.meta.bilan && parMatiere.size === 0) continue;
       for (const [mid, l] of parMatiere) s.ajouterErreurs(mid, l, d.titre);
-      useLuno.setState((x) => ({ publies: { ...x.publies, [id]: 1 } }));
+      useLuno.setState((x) => ({ publies: { ...x.publies, [id]: version } }));
       continue;
     }
     if (d.type === "cours" && d.meta.note) {

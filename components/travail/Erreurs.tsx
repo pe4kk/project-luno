@@ -22,8 +22,99 @@ import { prochainPassage, useDemandes } from "@/lib/demandes";
 import { encre, pastel, useLuno } from "@/lib/store";
 import type { ErreurNotee, Matiere } from "@/lib/types";
 
-type Brouillon = Pick<ErreurNotee, "titre" | "erreur" | "correction" | "conseil" | "source" | "chapitre">;
-const VIDE: Brouillon = { titre: "", erreur: "", correction: "", conseil: "", source: "", chapitre: "" };
+type Brouillon = Pick<ErreurNotee, "titre" | "erreur" | "correction" | "conseil" | "source" | "chapitre" | "regle">;
+const VIDE: Brouillon = { titre: "", erreur: "", correction: "", conseil: "", source: "", chapitre: "", regle: "" };
+
+const CLE_VUE = "luno-erreurs-vue";
+const lireVue = (): "essentiel" | "detail" => {
+  try {
+    return localStorage.getItem(CLE_VUE) === "detail" ? "detail" : "essentiel";
+  } catch {
+    return "essentiel";
+  }
+};
+
+/**
+ * Vue « L'essentiel » : une ligne par erreur (la règle à retenir), pour relire toute la
+ * liste en une minute avant l'évaluation. Toucher une ligne ouvre le détail.
+ */
+function Essentiel({
+  erreurs,
+  couleur,
+  modifier,
+}: {
+  erreurs: ErreurNotee[];
+  couleur: string;
+  modifier: (e: ErreurNotee) => void;
+}) {
+  const [ouverte, setOuverte] = useState<string | null>(null);
+  const foncee = encre(couleur);
+  return (
+    <ol className="rounded-[18px] border border-line bg-surface px-4 py-1 shadow-card sm:px-5">
+      {erreurs.map((e, i) => {
+        const ouv = ouverte === e.id;
+        return (
+          <li key={e.id} className="border-t border-line first:border-t-0">
+            <button
+              onClick={() => setOuverte(ouv ? null : e.id)}
+              aria-expanded={ouv}
+              className="flex w-full items-start gap-3 py-3 text-left"
+            >
+              <span
+                className="mt-px flex size-6 shrink-0 items-center justify-center rounded-lg text-[12.5px] font-semibold"
+                style={{ background: pastel(couleur, 16), color: foncee }}
+              >
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="text-[15px] font-semibold leading-snug">{formule(e.regle || e.titre)}</span>
+                {e.theme && (
+                  <span className="ml-1.5 inline-block rounded-full bg-accent-soft px-2 py-px align-[1px] text-[11px] font-semibold text-accent">
+                    {e.theme}
+                  </span>
+                )}
+                {(e.rappel || (!e.regle && e.conseil)) && (
+                  <span className="mt-0.5 block text-[13px] leading-snug text-muted">{formule(e.rappel || e.conseil || "")}</span>
+                )}
+              </span>
+              {(e.repetee ?? 0) > 0 && (
+                <span className="shrink-0 rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent">
+                  {e.repetee}×
+                </span>
+              )}
+            </button>
+            <div className="repli" data-ouvert={ouv} aria-hidden={!ouv || undefined}>
+              <div>
+                <div className="pb-3.5 pl-9 text-[14px] leading-relaxed">
+                  {e.erreur && (
+                    <p className="flex gap-2">
+                      <AlertCircle size={15} className="mt-[3px] shrink-0 text-bad" />
+                      <span className="min-w-0">{formule(e.erreur)}</span>
+                    </p>
+                  )}
+                  <p className="mt-1.5 flex gap-2">
+                    <CheckCircle2 size={15} className="mt-[3px] shrink-0 text-ok" />
+                    <span className="min-w-0">{formule(e.correction)}</span>
+                  </p>
+                  <p className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[12.5px] text-muted">
+                    {[e.chapitre, e.source].filter(Boolean).join(" · ")}
+                    <button
+                      tabIndex={ouv ? 0 : -1}
+                      onClick={() => modifier(e)}
+                      className="font-semibold text-accent underline-offset-2 hover:underline"
+                    >
+                      Modifier
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
 /**
  * Onglet « Mes erreurs » d'une matière : ce qui a coûté des points dans les anciennes
@@ -44,6 +135,13 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
   const [notes, setNotes] = useState("");
   const [envoi, setEnvoi] = useState(false);
   const [pieces, setPieces] = useState<File[]>([]);
+  const [vue, setVue] = useState<"essentiel" | "detail">(lireVue);
+  const changerVue = (v: "essentiel" | "detail") => {
+    setVue(v);
+    try {
+      localStorage.setItem(CLE_VUE, v);
+    } catch {}
+  };
   const foncee = encre(matiere.couleur);
 
   const ouvrir = (e: ErreurNotee | "nouvelle") => {
@@ -85,7 +183,37 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
           </p>
         ))}
 
-        {erreurs.length === 0 ? (
+        {erreurs.length > 0 && (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div role="tablist" aria-label="Affichage des erreurs" className="inline-flex rounded-full border border-line bg-surface p-0.5 shadow-card">
+              {[
+                { id: "essentiel" as const, label: "L'essentiel" },
+                { id: "detail" as const, label: "Détaillé" },
+              ].map((o) => (
+                <button
+                  key={o.id}
+                  role="tab"
+                  aria-selected={vue === o.id}
+                  onClick={() => changerVue(o.id)}
+                  className={`min-h-9 rounded-full px-3.5 text-[13.5px] font-semibold transition-colors duration-200 ${
+                    vue === o.id ? "bg-ink text-bg" : "text-muted hover:text-ink"
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            {vue === "essentiel" && (
+              <span className="text-[12.5px] text-muted">
+                {erreurs.length <= 8 ? "1 min de lecture" : `${Math.ceil(erreurs.length / 8)} min de lecture`}
+              </span>
+            )}
+          </div>
+        )}
+
+        {erreurs.length > 0 && vue === "essentiel" ? (
+          <Essentiel erreurs={erreurs} couleur={matiere.couleur} modifier={ouvrir} />
+        ) : erreurs.length === 0 ? (
           <EtatVide
             icone={<AlertCircle size={26} />}
             titre="Pas encore d'erreur notée"
@@ -239,6 +367,14 @@ export function VueErreurs({ matiere }: { matiere: Matiere }) {
               className={classeSaisie}
               value={brouillon.correction}
               onChange={(e) => setBrouillon({ ...brouillon, correction: e.target.value })}
+            />
+          </Champ>
+          <Champ label="La règle en une ligne, pour « L'essentiel » (facultatif)">
+            <input
+              className={classeSaisie}
+              placeholder="Ex. Ne jamais arrondir un résultat intermédiaire"
+              value={brouillon.regle ?? ""}
+              onChange={(e) => setBrouillon({ ...brouillon, regle: e.target.value })}
             />
           </Champ>
           <Champ label="Astuce pour ne plus la refaire (facultatif)">

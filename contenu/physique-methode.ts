@@ -20,7 +20,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 7,
+  version: 8,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -117,7 +117,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     {
       recto: "Valeurs intermédiaires",
       verso:
-        "Ne pas les arrondir : garder au moins un chiffre de plus (k = 3,11 × 10⁻² L·g⁻¹, pas 3,0 × 10⁻²). On n'arrondit que le résultat final, au nombre de chiffres significatifs des données.",
+        "Les écrire avec leurs chiffres significatifs (k = {{1,40 // 45,0}} = 3,11 × 10⁻² L·g⁻¹, 3 c.s., pas 3,0 × 10⁻²) et garder la valeur complète dans la calculatrice. On n'arrondit que le résultat final, au nombre de chiffres significatifs des données.",
     },
     {
       recto: "Une norme donnée « par kg »",
@@ -290,7 +290,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
             n: 2,
           },
           {
-            t: "Coefficient directeur d'une droite d'étalonnage : deux points éloignés de la droite, k = {{A_B − A_A // C_m(B) − C_m(A)}}, avec son unité (L·g⁻¹). Garde trois chiffres significatifs : k = 3,11 × 10⁻² L·g⁻¹.",
+            t: "Coefficient directeur d'une droite d'étalonnage : deux points éloignés de la droite, k = {{A_B − A_A // C_m(B) − C_m(A)}}, avec son unité (L·g⁻¹). k = {{1,56 − 0,16 // 50,0 − 5,0}} = {{1,40 // 45,0}} = 3,11 × 10⁻² L·g⁻¹ : 3 c.s., car une soustraction garde le nombre de décimales (1,40 et 45,0 ont chacun 3 c.s.), puis une division garde le plus petit nombre de c.s.",
             n: 3,
           },
           {
@@ -365,7 +365,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
   exercices: [
     {
       type: "ordre",
-      consigne: "Remets dans l'ordre les étapes d'une réponse rédigée.",
+      consigne: "Lois de Newton : remets dans l'ordre les étapes d'une réponse rédigée.",
       elements: [
         "Titre souligné qui reformule ce qu'on cherche",
         "Données : système, valeurs, bilan des forces",
@@ -374,7 +374,19 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "A.N. avec unité et chiffres significatifs",
         "Phrase de conclusion",
       ],
-      explication: "C'est le plan suivi dans toute la correction de ton prof.",
+      explication: "C'est le plan suivi par ton prof dans la correction des exercices du chap. 11 : la méthode générale, avec en plus le bilan des forces et la projection.",
+    },
+    {
+      type: "ordre",
+      consigne: "Méthode générale (tous les chapitres) : remets les étapes dans l'ordre.",
+      elements: [
+        "Titre souligné qui rappelle la question",
+        "« Par définition de … » et la formule littérale encadrée",
+        "« avec » : les données, converties dans les bonnes unités",
+        "« A.N. : » les valeurs remplacées",
+        "Le résultat final souligné, avec unité et chiffres significatifs",
+      ],
+      explication: "Cette méthode ne change pas ; selon le chapitre, une méthode propre s'y ajoute (lois de Newton, méthode descendante, demi-équations).",
     },
     {
       type: "vraiFaux",
@@ -494,9 +506,9 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     {
       type: "ouverte",
       question:
-        "Quelles sont les six parties d'une réponse rédigée, dans l'ordre ?",
+        "Quelle méthode utiliser pour un exercice de dilution, et en quoi diffère-t-elle d'un exercice sur les lois de Newton ?",
       corrige:
-        "Le titre souligné ; les données (système, valeurs, bilan des forces) ; la loi citée et la projection ; l'expression littérale encadrée ; l'A.N. avec unité et chiffres significatifs ; la phrase de conclusion.",
+        "Les deux suivent la méthode générale (titre, « par définition », formule encadrée, « avec », A.N., résultat souligné). Pour une dilution, on utilise en plus la méthode descendante : on part de la formule de ce qu'on cherche, on exprime chaque inconnue (relations numérotées), puis une seule expression littérale complète et une seule A.N. Pour les lois de Newton, on ajoute le système, le référentiel, le bilan des forces, la loi et la projection sur l'axe.",
     },
   ],
 };
@@ -581,7 +593,7 @@ export const LECON_REDACTION: Lecon = {
       titre: "Conclure, puis à toi",
       texte: [
         "On finit par une phrase qui répond à la question : « ⇒ l'homme-canon met 3,6 s pour atteindre son altitude maximale, où sa vitesse s'annule, avant de redescendre. »",
-        "À toi maintenant, sur un exercice parallèle. Rédige-le en entier sur une feuille, avec les six parties, avant de regarder la réponse.",
+        "À toi maintenant, sur un exercice parallèle. Rédige-le en entier sur une feuille, avec toutes les étapes vues dans cette leçon, avant de regarder la réponse.",
       ],
       question: {
         q: "Une balle de 0,20 kg est lancée verticalement vers le haut à 12 m·s⁻¹ ; seul son poids agit. Rédige le calcul de la durée de sa montée.",

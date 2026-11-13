@@ -15,7 +15,8 @@ import { Fragment, type ReactNode } from "react";
  * Pour un texte brut (recherche, aria-label, comparaison), utiliser `texteBrut()`.
  */
 const FLECHE = String.fromCharCode(0x20d7);
-const MORCEAU_INDICE = "[A-Za-z0-9À-ÿ→/]+(?:\\.[A-Za-z0-9À-ÿ→/]+)*";
+// Un indice peut contenir « . » ou « , » suivis d'une lettre : C_m,mère (sans espace).
+const MORCEAU_INDICE = "[A-Za-z0-9À-ÿ→/]+(?:[.,][A-Za-z0-9À-ÿ→/]+)*";
 const VECTEUR = new RegExp(
   `([ΔΣ−]?)([A-Za-z0-9'ᵢₓᵧ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
   "g",

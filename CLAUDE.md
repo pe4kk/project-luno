@@ -629,7 +629,21 @@ un PDF ou une photo directement dans le chat.
   commun n°1 de physique (05/11, 15/20, macaron et E124) : 6 erreurs déposées par
   une demande `erreurs` prête dans son compte (chiffres significatifs des valeurs
   intermédiaires, justifier une dilution, puissances de dix, norme « par kg »,
-  répondre à toute la question, lecture de graphique). - (2026-11-13) **Physique : une méthode générale fixe, plus une méthode par type
+  répondre à toute la question, lecture de graphique), avec `regle`, `rappel` et
+  `theme` pour la vue « L'essentiel » (version 2 de la réponse, qui met à jour les
+  erreurs déjà reprises de même titre).
+- (2026-11-13) **« Mes erreurs » : deux vues, demandé** : « L'essentiel » (une ligne
+  par erreur, la règle, un rappel et une étiquette, à relire en une minute avant
+  l'éval ; toucher une ligne ouvre le détail) et « Détaillé » (la vue complète).
+  Bascule dans `components/travail/Erreurs.tsx`, choix gardé dans `localStorage`
+  (`luno-erreurs-vue`). Champs `regle`, `rappel`, `theme` d'`ErreurNotee` ; la tâche
+  planifiée les remplit. Choisi parmi 4 maquettes (A).
+- (2026-11-13) **Vérifier chaque exercice de physique** : il l'a demandé (« les IA
+  font des erreurs »). Le 2026-11-13, les 111 exercices, 5 problèmes et 5 calculs de
+  physique-chimie ont été refaits un par un : aucun résultat faux, quelques
+  formulations corrigées. Chiffres significatifs d'une pente : une soustraction
+  garde le nombre de décimales, une division le plus petit nombre de c.s. (k =
+  1,40 / 45,0 = 3,11 × 10⁻², 3 c.s.). - (2026-11-13) **Physique : une méthode générale fixe, plus une méthode par type
   d'exercice.** Générale (ne change jamais) : titre souligné ; « Par définition de
   … » et la formule encadrée ; « avec » et les données ; « A.N. : » ; résultat final
   souligné. En plus, selon le chapitre : lois de Newton (système, bilan des forces,

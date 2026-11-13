@@ -107,7 +107,7 @@ export const PROBLEMES_CHAP11: Probleme[] = [
         titre: "Conclusion",
         consigne: "Conclus par une phrase, et vérifie que le résultat est vraisemblable.",
         attendu:
-          "La force de freinage vaut 7,5 × 10³ N. C'est cohérent : elle est un peu plus faible que le poids de la voiture (P = m·g ≈ 1,2 × 10⁴ N).",
+          "La force de freinage vaut 7,5 × 10³ N. C'est cohérent : elle est du même ordre de grandeur que le poids de la voiture, mais plus faible (P = m·g ≈ 1,2 × 10⁴ N).",
         criteres: ["Phrase de réponse à la question", "Regard critique sur la valeur"],
         points: 0.5,
       },

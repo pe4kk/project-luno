@@ -39,7 +39,7 @@ const dossier = "documents/physique-chimie";
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 7,
+    version: 8,
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
@@ -371,7 +371,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         ],
         bonneReponse: 0,
         explication:
-          "Pour un mouvement sur Terre, court devant une rotation de la Terre, le référentiel terrestre convient.",
+          "Pour un mouvement sur Terre, de courte durée par rapport à la rotation de la Terre, le référentiel terrestre convient.",
       },
       {
         question:
@@ -517,7 +517,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 8,
+    version: 9,
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
@@ -1002,7 +1002,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 8,
+    version: 9,
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1323,7 +1323,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-exercices",
-    version: 4,
+    version: 5,
     matiere,
     titre: "Chap. 11 · Fiche d'exercices et DM",
     documents: [
@@ -1538,7 +1538,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         choix: ["0,23 s", "4,3 s", "43 s", "16 s"],
         bonneReponse: 1,
         explication:
-          "D'après la 2e loi : Δt = {{m·Δv // F}} = {{1200 × 27,8 // 7700}} ≈ 4,3 s. Attention aux conversions : 1,2 t = 1200 kg et 7,7 kN = 7700 N.",
+          "D'après la 2e loi : Δt = {{m·Δv // F}}, avec m = 1,2 t = 1,2 × 10³ kg, Δv = {{100 × 10³ m // 3600 s}} et F = 7,7 kN = 7,7 × 10³ N. A.N. : Δt = {{1,2 × 10³ × 100 × 10³ / 3600 // 7,7 × 10³}} = 4,3 s (2 c.s).",
       },
       {
         question:
