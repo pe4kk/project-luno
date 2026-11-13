@@ -166,6 +166,27 @@ fiches de révision ; le slider règle la longueur de la fiche.
     dessinée par `components/Illustration.tsx` (agrandie au toucher ; une image en
     hauteur est limitée en largeur). Images découpées d'une vidéo avec ffmpeg
     (`fps=4`, puis rognage PIL).
+  - **Bac de français** (2026-11-13, maquettes validées) : quatrième onglet « Bac »
+    de la matière nommée « Français » seulement (`components/travail/Bac.tsx`,
+    `?o=bac&t=<texte>&v=fiche|recite`). Descriptif par genre (4 objets d'étude × 4
+    textes = 16, rappel des modalités de l'oral 2027 dans `ORAL_BAC`), puis par texte
+    trois vues : « Texte annoté » (passages surlignés et numérotés ; sur ordinateur
+    les remarques du prof dans la marge, sur téléphone la remarque du passage touché
+    s'ouvre sous la strophe ; bouton pour cacher les annotations), « Fiche »
+    (lecture, introduction, problématique, plan, mouvements, citations et procédés,
+    conclusion, grammaire) et « Je récite » (explication cachée, dite à voix haute,
+    puis cases à cocher et bilan ; rien n'est enregistré). **Le code couleur change
+    selon le genre** (demandé) : `GENRES_BAC` dans `lib/bac.ts`, quatre catégories et
+    quatre teintes par genre ; un texte peut renommer une catégorie (`categories`).
+    Contenu dans `contenu/bac-francais.ts` (publié pour tous, pas dans les données
+    de l'utilisateur) : les `extrait` des annotations reprennent les mots du texte à
+    l'identique (apostrophes « ’ »), sans chevauchement dans une même strophe ; ne
+    garder que l'essentiel de l'explication du prof. Prêt : « À la Musique »
+    (Rimbaud, 32 remarques). Attendus : deux autres textes des Cahiers de Douai,
+    « Femme noire » de Senghor (parcours), puis théâtre, roman, littérature d'idées.
+    Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
+    viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
+    pas joignable depuis la session). Idée non construite : oral blanc chronométré.
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au

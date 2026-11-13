@@ -33,6 +33,7 @@ import {
 import { VueChapitre } from "@/components/travail/VueChapitre";
 import { Revision } from "@/components/travail/Revision";
 import { VueNotes } from "@/components/travail/Notes";
+import { VueBac } from "@/components/travail/Bac";
 import { VueErreurs } from "@/components/travail/Erreurs";
 import { Emoji } from "@/components/Emoji";
 
@@ -66,8 +67,11 @@ function Travail() {
   // « Préparer » un DST depuis l'accueil : toutes les cartes de ses chapitres.
   const dstRevise = s.dsts.find((d) => d.id === params.get("r"));
   const duJour = revisionDuJour2(chapitres, s.dsts, s.jour);
+  // L'onglet « Bac » (épreuve anticipée) n'existe que dans la matière Français.
+  const avecBac = matiere?.nom === "Français";
+  const o = params.get("o");
   const ongletMatiere =
-    params.get("o") === "erreurs" ? "erreurs" : params.get("o") === "notes" ? "notes" : "chapitres";
+    o === "erreurs" ? "erreurs" : o === "notes" ? "notes" : o === "bac" && avecBac ? "bac" : "chapitres";
   const { conteneur: ongletsMatiereConteneur, pastille: ongletsMatierePastille } = usePastille(`${matiere?.id}-${ongletMatiere}`);
 
   // Fenêtre de matière : `true` pour une création, la matière pour une modification.
@@ -181,7 +185,7 @@ function Travail() {
               role="tablist"
               aria-label="Contenu de la matière"
               ref={ongletsMatiereConteneur}
-              className="relative mb-5 inline-flex rounded-full border border-line bg-surface p-1 shadow-card"
+              className="relative mb-5 inline-flex max-w-full overflow-x-auto rounded-full border border-line bg-surface p-1 shadow-card [scrollbar-width:none]"
             >
               <span ref={ongletsMatierePastille} className={`${classePastille} rounded-full bg-ink`} />
               {[
@@ -202,6 +206,7 @@ function Travail() {
                       : ""
                   }`,
                 },
+                ...(avecBac ? [{ id: "bac", label: "Bac" }] : []),
               ].map((o) => {
                 const actif = ongletMatiere === o.id;
                 return (
@@ -216,7 +221,7 @@ function Travail() {
                         { scroll: false },
                       )
                     }
-                    className={`relative min-h-10 rounded-full px-4 text-[14.5px] font-semibold transition-colors duration-300 ${
+                    className={`relative min-h-10 shrink-0 whitespace-nowrap rounded-full px-3.5 text-[14.5px] sm:px-4 font-semibold transition-colors duration-300 ${
                       actif ? "text-bg" : "text-muted hover:text-ink"
                     }`}
                   >
@@ -230,6 +235,8 @@ function Travail() {
               <VueErreurs matiere={matiere} />
             ) : ongletMatiere === "notes" ? (
               <VueNotes matiere={matiere} noteId={params.get("n")} />
+            ) : ongletMatiere === "bac" ? (
+              <VueBac matiere={matiere} texteId={params.get("t")} vue={params.get("v")} />
             ) : (
             <>
             <form

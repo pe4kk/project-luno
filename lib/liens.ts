@@ -1,6 +1,6 @@
 /** Adresse d'un écran de l'onglet Travail (matière, chapitre, sous-onglet, révision du jour). */
 export function lienTravail(
-  p: { m?: string; c?: string; o?: string; r?: string; n?: string } = {},
+  p: { m?: string; c?: string; o?: string; r?: string; n?: string; t?: string; v?: string } = {},
 ): string {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(p)) if (v) q.set(k, v);
