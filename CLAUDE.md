@@ -265,7 +265,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     bilans » dans l'onglet Interro blanche.
   - **Encadrer, souligner, surligner** (2026-11-12, idées 1 et 3 choisies sur
     maquettes) : notation `[[encadré]]`, `__souligné__` (exactement deux « _ »,
-    pour ne pas toucher aux trous « ___ »), `==surligné==`, dessinée par
+    pour ne pas toucher aux trous « ___ »), `==essentiel==` (gras simple depuis le 2026-11-13), dessinée par
     `formule()` partout (classes `encadre`, `souligne`, `surligne`), retirée
     par `sansMiseEnForme()`. Dans `SaisieFormule`, une sélection fait
     apparaître une bulle « Encadrer / Souligner / Surligner » sous le champ
@@ -614,8 +614,10 @@ un PDF ou une photo directement dans le chat.
 - Il veut des fiches qui reflètent **ce que son prof attend** (méthode de
   rédaction, encadrés, A.N.), pas seulement le contenu du cours.
 - (2026-11-12) **Fiches et leçons : les textes peuvent être longs**, et il veut
-  qu'on **surligne l'essentiel** : entourer les phrases les plus importantes de
-  `==…==` (surligneur jaune, jeton `--surligneur` dans `app/globals.css`), sans
+  qu'on **fasse ressortir l'essentiel** : entourer les phrases les plus importantes de
+  `==…==`, dessiné en **gras simple** (choisi le 2026-11-13 parmi 8 styles : il
+  n'aimait pas le surligneur jaune ; classe `mark.surligne` dans `app/globals.css`,
+  bouton « Gras » dans la bulle de `SaisieFormule`), sans
   en abuser (une ou deux par section ou par étape). Valable pour tout nouveau
   contenu, y compris les réponses de la tâche planifiée. Fait le 2026-11-12 pour toutes les
   fiches publiées (74 points, le point de niveau le plus bas de chaque section,

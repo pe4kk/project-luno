@@ -62,7 +62,7 @@ export function basculerMarque(texte: string, debut: number, fin: number, marque
 const BOUTONS_MARQUE: { m: Marque; vu: React.ReactNode; nom: string }[] = [
   { m: "encadrer", vu: <span className="rounded-[3px] border-[1.5px] border-current px-1 text-[11px] leading-[14px]">a</span>, nom: "Encadrer" },
   { m: "souligner", vu: <span className="underline decoration-2 underline-offset-2">U</span>, nom: "Souligner" },
-  { m: "surligner", vu: <span className="rounded-[3px] bg-copper/45 px-1 text-ink">A</span>, nom: "Surligner" },
+  { m: "surligner", vu: <span className="font-bold">G</span>, nom: "Gras" },
 ];
 
 /**

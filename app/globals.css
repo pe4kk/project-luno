@@ -345,13 +345,10 @@ html.theme-glisse *::after {
   text-underline-offset: 3px;
 }
 mark.surligne {
-  /* Bande de surligneur sur la hauteur des lettres, qui suit les retours à la ligne. */
-  background: linear-gradient(transparent 12%, color-mix(in srgb, var(--surligneur) 85%, transparent) 12% 88%, transparent 88%);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+  /* L'essentiel en gras simple, sans fond ni couleur (choisi le 2026-11-13, option D). */
+  background: none;
   color: inherit;
-  border-radius: 3px;
-  padding: 0 0.15em;
+  font-weight: 650;
 }
 
 /* Brouillon : papier à petits carreaux (dessin) et à lignes (notes). */
