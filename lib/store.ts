@@ -578,7 +578,7 @@ export const useLuno = create<Etat>()(
               const k = p.flashcards.find(
                 (x) => x.recto.toLowerCase() === f.recto.toLowerCase(),
               );
-              return k ? { ...f, verso: k.verso, schema: k.schema } : f;
+              return k ? { ...f, verso: k.verso, schema: k.schema, horsQuiz: k.horsQuiz } : f;
             }),
             ...p.flashcards
               .filter((k) => !deja.has(k.recto.toLowerCase()))

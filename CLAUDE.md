@@ -475,6 +475,13 @@ un PDF ou une photo directement dans le chat.
   le palier « Compléter ». Pas de carte sur ce qui ne tombe pas en éval (logiciels de
   TP comme Aviméca, Regressi : carte retirée le 2026-11-14, « typiquement inutile »). Éviter quand même qu'un verso redise son
   recto (« … : c'est la vitesse limite »).
+- **Quiz : seulement ce qui est pertinent** (demandé le 2026-11-14) : avant de poser une
+  carte en quiz (mode Apprendre), se demander « le prof peut-il le demander en interro
+  de cours ? ». Dans le quiz : définitions, lois, formules, propriétés. Hors quiz
+  (restent en flashcards) : méthodes de rédaction, astuces d'exercices, applications,
+  reformulations d'une carte déjà posée, détails hors DST. Liste dans
+  `contenu/hors-quiz.ts` (`CHAPITRES_HORS_QUIZ`, `CARTES_HORS_QUIZ`) ou `horsQuiz: true`
+  sur la carte (format des réponses de la tâche planifiée).
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,

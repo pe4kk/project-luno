@@ -1,6 +1,7 @@
 import { peutSExercer } from "./contenu";
 import { dansJours, joursAvant } from "./dates";
 import { lienTravail } from "./liens";
+import { dansLeQuiz } from "./apprendre";
 import type { Chapitre, Dst, ErreurNotee } from "./types";
 
 /**
@@ -73,13 +74,14 @@ export function etapes(
       });
   }
   const nbCartes = auProgramme.reduce((n, c) => n + c.flashcards.length, 0);
-  if (nbCartes)
+  const nbNotions = auProgramme.reduce((n, c) => n + c.flashcards.filter((f) => dansLeQuiz(c, f)).length, 0);
+  if (nbNotions)
     liste.push({
       id: "apprendre",
-      titre: `Apprendre les ${nbCartes} notions`,
+      titre: `Apprendre les ${nbNotions} notions`,
       detail: "Les reconnaître, les compléter, puis les écrire de tête, par manches de 7.",
       href: exos("apprendre"),
-      minutes: Math.min(40, 10 + Math.round(nbCartes / 2)),
+      minutes: Math.min(40, 10 + Math.round(nbNotions / 2)),
     });
   if (nbCartes)
     liste.push({

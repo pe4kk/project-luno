@@ -1,6 +1,7 @@
 import { melanger, simplifier } from "./contenu";
 import { sansMiseEnForme } from "@/components/Formule";
 import type { Chapitre, Flashcard } from "./types";
+import { CARTES_HORS_QUIZ, CHAPITRES_HORS_QUIZ } from "@/contenu/hors-quiz";
 
 /**
  * Mode « Apprendre » (S'exercer) : chaque notion (une flashcard) monte par paliers
@@ -178,11 +179,15 @@ export function preparerNotion(
  * Les notions d'une manche : d'abord celles déjà commencées (les plus avancées en
  * premier, pour les finir), puis des nouvelles, mélangées.
  */
-/** Les cartes des chapitres, une seule fois chacune (une carte peut être dans deux chapitres). */
+/** Une carte que le quiz pose : ni méthode, ni astuce, ni détail hors DST (contenu/hors-quiz.ts). */
+export const dansLeQuiz = (c: Chapitre, f: Flashcard) =>
+  !f.horsQuiz && !(c.publieId && CHAPITRES_HORS_QUIZ.has(c.publieId)) && !CARTES_HORS_QUIZ.has(f.recto.trim().toLowerCase());
+
+/** Les cartes du quiz, une seule fois chacune (une carte peut être dans deux chapitres). */
 function sansDoublons(chapitres: Chapitre[]) {
   const vues = new Set<string>();
   return chapitres.flatMap((c) =>
-    c.flashcards.flatMap((carte) => {
+    c.flashcards.filter((f) => dansLeQuiz(c, f)).flatMap((carte) => {
       const cle = `${carte.recto.trim().toLowerCase()}|${carte.verso.trim().toLowerCase()}`;
       if (vues.has(cle)) return [];
       vues.add(cle);

@@ -21,6 +21,8 @@ export type Flashcard = {
   schema?: Schema;
   /** Mode « Apprendre » : palier atteint (0 à 3, 3 = maîtrisée). */
   apprendre?: number;
+  /** Pas posée dans le quiz du mode Apprendre (méthode, astuce, détail hors DST). */
+  horsQuiz?: boolean;
 };
 
 /** Coordonnées dans un schéma : x vers la droite, y vers le bas. */
@@ -279,7 +281,7 @@ export type ChapitrePublie = {
   dates?: DateCle[];
   problemes?: Probleme[];
   calculs?: Calcul[];
-  flashcards: { recto: string; verso: string; schema?: Schema }[];
+  flashcards: { recto: string; verso: string; schema?: Schema; horsQuiz?: boolean }[];
   fiche: Fiche | null;
   exercices: Exercice[];
 };

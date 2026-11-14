@@ -21,6 +21,7 @@ import {
   apresReussite,
   comparer,
   composerManche,
+  dansLeQuiz,
   estQuestion,
   preparerNotion,
   repartition,
@@ -37,7 +38,7 @@ const CONSIGNES = {
 
 type Resultat = { carteId: string; recto: string; palier: 1 | 2 | 3; reussi: boolean; maitrisee: boolean };
 
-const aDesCartes = (c: Chapitre) => c.flashcards.length > 0;
+const aDesCartes = (c: Chapitre) => c.flashcards.some((f) => dansLeQuiz(c, f));
 
 /**
  * Mode « Apprendre » : les notions des chapitres choisis montent par paliers
