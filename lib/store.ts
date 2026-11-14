@@ -16,6 +16,7 @@ import type {
   Tache,
 } from "./types";
 import { dansJours, todayISO } from "./dates";
+import { reconnaitreDate } from "./echeance";
 import {
   CALENDRIER_EVENEMENTS,
   CALENDRIER_MATIERES,
@@ -236,7 +237,8 @@ export const useLuno = create<Etat>()(
         })),
       ajouterTaches: (liste) => {
         const neuves: Tache[] = liste
-          .map((t) => (typeof t === "string" ? { texte: t, echeance: "" } : t))
+          // Une tâche écrite sans date reçoit celle qu'elle mentionne (« pour vendredi »).
+          .map((t) => (typeof t === "string" ? { texte: t, echeance: reconnaitreDate(t)?.iso ?? "" } : t))
           .map((t) => ({ texte: t.texte.trim(), echeance: t.echeance }))
           .filter((t) => t.texte)
           .map((t) => ({

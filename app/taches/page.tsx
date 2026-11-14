@@ -7,6 +7,67 @@ import { useLuno } from "@/lib/store";
 import { lireListe } from "@/lib/contenu";
 import type { Tache } from "@/lib/types";
 import { compteARebours, dateLongue, joursAvant } from "@/lib/dates";
+import { reconnaitreDate } from "@/lib/echeance";
+
+const fmtCourt = new Intl.DateTimeFormat("fr-FR", { weekday: "short", day: "numeric", month: "numeric" });
+const dateCourte = (iso: string) => {
+  const [a, m, j] = iso.split("-").map(Number);
+  return fmtCourt.format(new Date(a, m - 1, j));
+};
+/** « Dans 2 jours », « Demain », « Aujourd'hui ». */
+const dans = (iso: string) => {
+  const j = joursAvant(iso);
+  return j === 0 ? "aujourd'hui" : j === 1 ? "demain" : `dans ${j} jours`;
+};
+/** « Lundi 16 » : le titre d'un groupe. */
+const titreJour = (iso: string) => {
+  const j = joursAvant(iso);
+  if (j === 0) return "Aujourd'hui";
+  if (j === 1) return "Demain";
+  return dateLongue(iso).replace(/ (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)$/, "");
+};
+
+type Groupe = { cle: string; titre: string; detail?: string; retard?: boolean; taches: Tache[] };
+
+/** En retard, puis un groupe par jour (du plus proche au plus loin), puis « Sans date ». */
+function grouper(taches: Tache[]): Groupe[] {
+  const retard = taches.filter((t) => t.echeance && joursAvant(t.echeance) < 0);
+  const datees = taches.filter((t) => t.echeance && joursAvant(t.echeance) >= 0);
+  const sans = taches.filter((t) => !t.echeance);
+  const groupes: Groupe[] = [];
+  if (retard.length)
+    groupes.push({
+      cle: "retard",
+      titre: "En retard",
+      retard: true,
+      taches: retard.sort((a, b) => a.echeance.localeCompare(b.echeance)),
+    });
+  const jours = [...new Set(datees.map((t) => t.echeance))].sort();
+  for (const iso of jours) {
+    const l = datees.filter((t) => t.echeance === iso);
+    groupes.push({
+      cle: iso,
+      titre: titreJour(iso),
+      detail: [joursAvant(iso) > 1 ? dans(iso) : "", l.length > 1 ? pluriel(l.length, "tâche") : ""].filter(Boolean).join(" · "),
+      taches: l,
+    });
+  }
+  if (sans.length) groupes.push({ cle: "sans", titre: "Sans date", taches: sans });
+  return groupes;
+}
+
+/** Le texte de la tâche, avec le mot qui donne la date souligné en cuivre. */
+function TexteSouligne({ texte, fait }: { texte: string; fait?: boolean }) {
+  const r = fait ? null : reconnaitreDate(texte);
+  if (!r) return <>{texte}</>;
+  return (
+    <>
+      {texte.slice(0, r.debut)}
+      <span className="underline decoration-copper decoration-2 underline-offset-4">{texte.slice(r.debut, r.fin)}</span>
+      {texte.slice(r.fin)}
+    </>
+  );
+}
 import { Bouton, Champ, EnTete, EtatVide, Fenetre, classeSaisie, pluriel } from "@/components/ui";
 
 export default function Taches() {
@@ -16,10 +77,9 @@ export default function Taches() {
   const [edition, setEdition] = useState<Tache | null>(null);
   const [voirFaites, setVoirFaites] = useState(false);
 
-  // Les tâches datées d'abord, par échéance ; les autres dans l'ordre d'ajout.
-  const aFaire = taches
-    .filter((t) => !t.fait)
-    .sort((a, b) => (a.echeance || "9999").localeCompare(b.echeance || "9999"));
+  const aFaire = taches.filter((t) => !t.fait);
+  const groupes = grouper(aFaire);
+  const reconnue = saisie.trim() ? reconnaitreDate(saisie) : null;
   const faites = taches.filter((t) => t.fait);
   const lignes = collage ? lireListe(collage) : [];
 
@@ -36,7 +96,7 @@ export default function Taches() {
       />
 
       <form
-        className="mb-6 flex gap-2"
+        className="flex gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           if (ajouterTaches([saisie])) setSaisie("");
@@ -46,7 +106,7 @@ export default function Taches() {
           aria-label="Nouvelle tâche"
           required
           className={classeSaisie + " !bg-surface"}
-          placeholder="Ex. Finir l'exercice 12 de maths"
+          placeholder="Ex. Exercice 12 de maths pour jeudi"
           value={saisie}
           onChange={(e) => setSaisie(e.target.value)}
         />
@@ -54,6 +114,17 @@ export default function Taches() {
           <Plus size={17} /> Ajouter
         </Bouton>
       </form>
+      <p className="mb-5 mt-1.5 min-h-5 px-1 text-[12.5px] text-muted" aria-live="polite">
+        {reconnue ? (
+          <>
+            Échéance reconnue :{" "}
+            <span className="rounded-full bg-accent-soft px-2 py-px font-semibold text-accent">{dateCourte(reconnue.iso)}</span>
+            {" · "}tu pourras la changer en touchant la tâche
+          </>
+        ) : (
+          "Écris le jour dans la tâche (« pour vendredi », « demain », « 20/11 ») : elle se range toute seule."
+        )}
+      </p>
 
       {taches.length === 0 ? (
         <EtatVide
@@ -68,13 +139,28 @@ export default function Taches() {
               <strong>Tout est fait.</strong> Rien ne reste en attente.
             </p>
           )}
-          <ul className="flex flex-col gap-2">
-            <AnimatePresence initial={false}>
-              {aFaire.map((t) => (
-                <Ligne key={t.id} t={t} basculer={() => modifierTache(t.id, { fait: true })} ouvrir={() => setEdition(t)} />
-              ))}
-            </AnimatePresence>
-          </ul>
+          {groupes.map((g) => (
+            <section key={g.cle} className="mb-4">
+              <div className="mb-1.5 flex items-baseline justify-between gap-3 px-1">
+                <h2 className={`font-display text-[19px] ${g.retard ? "text-bad" : ""}`}>{g.titre}</h2>
+                {g.detail && <span className="text-[12.5px] text-muted">{g.detail}</span>}
+              </div>
+              <ul className="flex flex-col gap-2">
+                <AnimatePresence initial={false}>
+                  {g.taches.map((t) => (
+                    <Ligne
+                      key={t.id}
+                      t={t}
+                      groupe
+                      basculer={() => modifierTache(t.id, { fait: true })}
+                      ouvrir={() => setEdition(t)}
+                      dater={(iso) => modifierTache(t.id, { echeance: iso })}
+                    />
+                  ))}
+                </AnimatePresence>
+              </ul>
+            </section>
+          ))}
 
           {faites.length > 0 && (
             <div className="mt-8">
@@ -150,8 +236,23 @@ export default function Taches() {
   );
 }
 
-function Ligne({ t, basculer, ouvrir }: { t: Tache; basculer: () => void; ouvrir: () => void }) {
+function Ligne({
+  t,
+  basculer,
+  ouvrir,
+  groupe = false,
+  dater,
+}: {
+  t: Tache;
+  basculer: () => void;
+  ouvrir: () => void;
+  /** Dans un groupe par jour : la date est déjà dans le titre du groupe. */
+  groupe?: boolean;
+  /** Pour une tâche sans date qui en mentionne une : la lui donner d'un toucher. */
+  dater?: (iso: string) => void;
+}) {
   const retard = !t.fait && t.echeance && joursAvant(t.echeance) < 0;
+  const suggestion = !t.fait && !t.echeance && dater ? reconnaitreDate(t.texte) : null;
   return (
     <motion.li
       initial={{ opacity: 0, transform: "translate3d(0, 8px, 0)" }}
@@ -176,8 +277,10 @@ function Ligne({ t, basculer, ouvrir }: { t: Tache; basculer: () => void; ouvrir
         </span>
       </button>
       <button onClick={ouvrir} className="min-w-0 flex-1 py-3 pr-4 text-left" aria-label={`Modifier : ${t.texte}`}>
-        <span className={`block text-[15.5px] leading-snug ${t.fait ? "text-muted line-through" : ""}`}>{t.texte}</span>
-        {t.echeance && (
+        <span className={`block text-[15.5px] leading-snug ${t.fait ? "text-muted line-through" : ""}`}>
+          <TexteSouligne texte={t.texte} fait={t.fait} />
+        </span>
+        {t.echeance && (!groupe || retard) && (
           <span
             className={`mt-1 inline-flex items-center gap-1 text-[12.5px] font-semibold ${
               retard ? "text-bad" : "text-muted"
@@ -188,6 +291,14 @@ function Ligne({ t, basculer, ouvrir }: { t: Tache; basculer: () => void; ouvrir
           </span>
         )}
       </button>
+      {suggestion && (
+        <button
+          onClick={() => dater!(suggestion.iso)}
+          className="mr-2 self-center whitespace-nowrap rounded-full bg-accent-soft px-2.5 py-1.5 text-[12px] font-semibold text-accent transition-colors hover:bg-accent hover:text-on-accent"
+        >
+          Mettre au {dateCourte(suggestion.iso)}
+        </button>
+      )}
     </motion.li>
   );
 }

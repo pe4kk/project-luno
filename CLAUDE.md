@@ -454,7 +454,14 @@ un PDF ou une photo directement dans le chat.
   répondre par une liste propre (une tâche par ligne, dans un bloc de code)
   qu'il colle dans l'onglet avec « Coller une liste ». Une date entre
   parenthèses en fin de ligne, « (13/11) » ou « (ven. 13/11) », devient
-  l'échéance.
+  l'échéance. Depuis le 2026-11-14 (maquette A choisie), l'échéance est aussi
+  reconnue dans le texte (`lib/echeance.ts`, `reconnaitreDate()` : jours entiers ou
+  abrégés avec point ou numéro, « demain », « après-demain », « 20/11 » ; un jour =
+  le prochain de ce nom, aujourd'hui exclu sauf « ce samedi » ; la mention la plus
+  à droite l'emporte) : la page groupe par jour (En retard, Demain, « Lundi 16 »…,
+  Sans date), souligne le mot reconnu en cuivre, montre l'échéance reconnue sous le
+  champ, et propose « Mettre au jeu. 19/11 » pour les anciennes tâches sans date
+  (pas d'attribution automatique : on ne sait pas quand elles ont été écrites).
 - **Calendrier du lycée** : `contenu/calendrier.ts` contient les DST de
   Première 2026-2027 relevés sur une photo du document du lycée (sans les
   heures). Relevé revérifié le 2026-11-10 sur la photo agrandie, ligne par

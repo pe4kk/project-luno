@@ -5,6 +5,7 @@
  * outils déterministes.
  */
 import type { Chapitre, Exercice } from "./types";
+import { reconnaitreDate } from "./echeance";
 
 export const DEPOT = "pe4kk/project-luno";
 
@@ -228,6 +229,8 @@ export function lireListe(texte: string, aujourdhui = new Date()): { texte: stri
           t = t.slice(0, m.index).trim();
         }
       }
+      // Sans date entre parenthèses : celle que la tâche mentionne (« pour vendredi »).
+      if (!echeance) echeance = reconnaitreDate(t, aujourdhui)?.iso ?? "";
       return { texte: t, echeance };
     })
     .filter((x) => x.texte);
