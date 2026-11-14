@@ -501,7 +501,11 @@ function Question({
                 </div>
                 <div className="rounded-xl bg-ink/5 p-3.5">
                   <p className="surtitre">Le cours</p>
-                  <p className="mt-1 text-[14.5px] leading-relaxed">{surligner(carte.verso, resultat.presents)}</p>
+                  <p className="mt-1 text-[14.5px] leading-relaxed">{surligner(
+                      carte.verso,
+                      resultat.presents,
+                      resultat.formules.length > 0 && resultat.formules.every((f) => f.trouvee),
+                    )}</p>
                   {carte.schema && (
                     <div className="mt-3">
                       <DessinSchema schema={carte.schema} hauteurMax={160} className="max-w-[400px]" />
@@ -590,7 +594,7 @@ function Question({
 }
 
 /** Le verso, avec les mots clés retrouvés en vert et les manquants soulignés. */
-function surligner(verso: string, presents: Set<string>) {
+function surligner(verso: string, presents: Set<string>, formuleJuste = false) {
   const texte = sansMiseEnForme(verso);
   const cles = comparer("", verso).cles.sort((a, b) => b.length - a.length);
   if (!cles.length) return formule(texte);
@@ -603,7 +607,13 @@ function surligner(verso: string, presents: Set<string>) {
           i % 2 ? (
             <span
               key={`${b}-${i}`}
-              className={presents.has(m) ? "font-semibold text-ok" : "font-semibold text-bad underline decoration-dashed underline-offset-4"}
+              className={
+                presents.has(m)
+                  ? "font-semibold text-ok"
+                  : formuleJuste
+                    ? "font-semibold"
+                    : "font-semibold text-bad underline decoration-dashed underline-offset-4"
+              }
             >
               {m}
             </span>
