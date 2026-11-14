@@ -244,7 +244,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     aussi étape « Apprendre les N notions » de Préparer une éval. Chaque flashcard monte
     par paliers : 1 Reconnaître (QCM, verso + 3 versos voisins), 2 Compléter (un des mots
     clés les plus longs du verso caché, vérifié par `reponseJuste`), 3 De tête (réponse
-    comparée aux mots clés du verso, vert/rouge, puis l'élève valide). Notion courte
+    comparée aux mots clés du verso, vert/rouge, puis l'élève valide ; les formules et
+    équations du verso comptent aussi, `formulesDe()` : « Δv⃗ = 0⃗ » tapé tel quel, une
+    fraction écrite a/b, des indices tapés vxi ou des états (aq) omis sont reconnus ;
+    formule juste = « Formule juste », les mots manquants deviennent un complément). Notion courte
     (≤ 4 mots clés) : pas de palier 2. Palier gardé dans `apprendre` de la carte (0–3,
     synchronisé, la fusion garde le plus haut) ; le palier 3 alimente aussi la répétition
     espacée (`noterFlashcard`). Manches de 7 (notions commencées d'abord), une notion ratée

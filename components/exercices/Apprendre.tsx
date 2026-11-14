@@ -12,7 +12,7 @@ import { SaisieFormule } from "@/components/SaisieFormule";
 import { DessinSchema } from "@/components/Schema";
 import { Bouton, BoutonIcone, Carte, EtatVide, pluriel } from "@/components/ui";
 import { reponseJuste } from "@/lib/contenu";
-import { estScientifique } from "@/lib/saisie";
+import { estScientifique, versNotation } from "@/lib/saisie";
 import { encre, pastel, useLuno } from "@/lib/store";
 import {
   MAITRISEE,
@@ -497,7 +497,7 @@ function Question({
               <div className="grid gap-3">
                 <div className="rounded-xl border border-line p-3.5">
                   <p className="surtitre">Ta réponse</p>
-                  <p className="mt-1 whitespace-pre-line text-[14.5px]">{saisie}</p>
+                  <p className="mt-1 whitespace-pre-line text-[14.5px]">{formule(scientifique ? versNotation(saisie) : saisie)}</p>
                 </div>
                 <div className="rounded-xl bg-ink/5 p-3.5">
                   <p className="surtitre">Le cours</p>
@@ -508,16 +508,43 @@ function Question({
                     </div>
                   )}
                 </div>
-                {resultat.cles.length > 0 && (
+                {resultat.formules.length > 0 && (
                   <p className="text-[13.5px] text-muted">
-                    Mots clés retrouvés : {resultat.presents.size} / {resultat.cles.length}
-                    {resultat.manquants.length > 0 && (
+                    {resultat.formules.every((f) => f.trouvee) ? (
+                      <span className="font-semibold text-ok">
+                        <Check size={14} className="mr-1 inline" />
+                        Formule juste
+                      </span>
+                    ) : (
                       <>
-                        {" "}· il manque <span className="font-semibold text-bad">{resultat.manquants.slice(0, 6).join(", ")}</span>
+                        Formule à retrouver :{" "}
+                        <span className="font-semibold text-bad">
+                          {resultat.formules.filter((f) => !f.trouvee).map((f, i) => (
+                            <span key={i} className="mr-2 inline-block">{formule(f.f)}</span>
+                          ))}
+                        </span>
                       </>
                     )}
                   </p>
                 )}
+                {resultat.cles.length > 0 &&
+                  (resultat.formules.length > 0 && resultat.formules.every((f) => f.trouvee) ? (
+                    // La formule est l'essentiel : les mots qui l'expliquent sont un plus.
+                    resultat.manquants.length > 0 && (
+                      <p className="text-[13px] text-muted">
+                        Pour l&apos;expliquer en mots : {resultat.manquants.slice(0, 6).join(", ")}
+                      </p>
+                    )
+                  ) : (
+                    <p className="text-[13.5px] text-muted">
+                      Mots clés retrouvés : {resultat.presents.size} / {resultat.cles.length}
+                      {resultat.manquants.length > 0 && (
+                        <>
+                          {" "}· il manque <span className="font-semibold text-bad">{resultat.manquants.slice(0, 6).join(", ")}</span>
+                        </>
+                      )}
+                    </p>
+                  ))}
                 {verdict === null && (
                   <div className="flex flex-wrap gap-2">
                     <Bouton onClick={() => decider(true)}>

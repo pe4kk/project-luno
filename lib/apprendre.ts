@@ -226,6 +226,39 @@ export function repartition(chapitres: Chapitre[]) {
  * Compare une réponse écrite de tête au verso : chaque mot clé du verso est-il présent
  * (sans accents ni majuscules, en tolérant une faute de frappe) ?
  */
+/** Une formule ramenée à l'essentiel : sans espaces, flèches, parenthèses ni « · ». */
+// Indices et exposants écrits en petit (vₓᵢ, MnO₄⁻) ou tapés normalement (vxi, MnO4-).
+const PETITS: Record<string, string> = Object.fromEntries(
+  [..."₀₁₂₃₄₅₆₇₈₉₊₋⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ᵢₓᵧₙₘ"].map((c, i) => [c, "0123456789+-0123456789+-ixynm"[i]]),
+);
+const normFormule = (t: string) =>
+  t
+    .replace(/[₀-₉₊₋⁰¹²³⁴-⁹⁺⁻ᵢₓᵧₙₘ]/g, (c) => PETITS[c] ?? c)
+    .replace(/\((aq|l|s|g)\)/g, "")
+    .replace(/⇄|↔|<->|->|⟶/g, "→")
+    .replace(/\{\{(.+?)\s*\/\/\s*(.+?)\}\}/g, "($1)/($2)")
+    .replace(/\u20d7/g, "")
+    .replace(/[\s()·*×]/g, "")
+    .replace(/−/g, "-")
+    .replace(/_/g, "");
+
+/** Les formules d'un verso (« Δv⃗ = 0⃗ », « ΣF⃗ = {{m·Δv⃗ // Δt}} »), telles qu'écrites. */
+export function formulesDe(verso: string): string[] {
+  const t = sansMiseEnForme(verso)
+    .replace(/\{\{(.+?) \/\/ (.+?)\}\}/g, (m) => m.replace(/\s+/g, "\u00a0"))
+    .replace(/\s*([=⟺⇄→+\-−×·/])\s*/g, "$1");
+  // Équation de chimie (« MnO₄⁻ + 8 H⁺ + 5 e⁻ ⇄ Mn²⁺ + 4 H₂O ») : toute la proposition.
+  const chimie = sansMiseEnForme(verso)
+    .split(/[:;]|\.\s|\.$/)
+    .map((x) => x.trim())
+    .filter((x) => /⇄|→/.test(x) && /[A-Z]/.test(x) && /\+/.test(x));
+  if (chimie.length) return chimie;
+  return t
+    .split(/[\s:;,]+|(?:\.\s)/)
+    .map((x) => x.replace(/\u00a0/g, " ").replace(/[.]$/, "").replace(/\{\{(.+?)\/\/(.+?)\}\}/g, "{{$1 // $2}}"))
+    .filter((x) => /=|⟺/.test(x) && x.length >= 3);
+}
+
 export function comparer(reponse: string, verso: string) {
   const dits = new Set(
     simplifier(reponse)
@@ -247,5 +280,14 @@ export function comparer(reponse: string, verso: string) {
       return [...dits].some((d) => proche(d, s) || (s.length >= 6 && (d.startsWith(s.slice(0, -1)) || s.startsWith(d.slice(0, -1)))));
     }),
   );
-  return { cles, presents, manquants: cles.filter((m) => !presents.has(m)), part: cles.length ? presents.size / cles.length : 1 };
+  // Les formules comptent aussi : « Δv⃗ = 0⃗ » écrit tel quel, c'est l'essentiel de la réponse.
+  const rep = normFormule(reponse);
+  const formules = formulesDe(verso).map((f) => ({ f, trouvee: rep.includes(normFormule(f)) }));
+  return {
+    cles,
+    presents,
+    manquants: cles.filter((m) => !presents.has(m)),
+    part: cles.length ? presents.size / cles.length : 1,
+    formules,
+  };
 }
