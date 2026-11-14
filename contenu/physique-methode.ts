@@ -20,7 +20,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 9,
+  version: 10,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -31,76 +31,76 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Un titre souligné ; « Par définition de … » et la formule encadrée ; « avec » et les données converties ; « A.N. : » ; le résultat final souligné, avec unité et chiffres significatifs.",
     },
     {
-      recto: "Reconnaître la méthode à utiliser",
+      recto: "Comment reconnaître la méthode à utiliser dans un exercice ?",
       verso:
         "La méthode générale vaut partout. En plus : lois de Newton pour le mouvement (système, bilan des forces, projection), méthode descendante pour les dilutions et dosages, demi-équations pour l'oxydoréduction.",
     },
     {
-      recto: "Titre d'une réponse",
+      recto: "Comment écrire le titre d'une réponse ?",
       verso:
         "Reformuler ce qu'on cherche, souligné : « b) Calcul de la durée d'ascension du système ».",
     },
     {
-      recto: "Bloc « Données » (lois de Newton)",
+      recto: "Que mettre dans le bloc « Données » d'un exercice sur les lois de Newton ?",
       verso:
         "Système = {…} considéré comme un point matériel de masse m ; les valeurs de l'énoncé avec leurs unités ; le bilan des forces.",
     },
     {
-      recto: "Bilan des forces (lois de Newton)", schema: HOMME_CANON,
+      recto: "Comment faire le bilan des forces dans un exercice sur les lois de Newton ?", schema: HOMME_CANON,
       verso:
         "Chaque force avec son nom, sa direction et son sens : « P⃗ = m·g⃗, vertical, vers le bas ».",
     },
     {
-      recto: "Citer la loi",
+      recto: "Comment citer la loi qu'on utilise ?",
       verso:
         "Toujours l'annoncer : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} », puis « or … » pour remplacer ΣF⃗.",
     },
     {
-      recto: "Projection sur un axe",
+      recto: "Comment projeter une relation vectorielle sur un axe ?",
       verso:
         "« En projection suivant (Oy), puisque le mouvement est suivant (Oy) » : après projection, on écrit les grandeurs sans flèche.",
     },
     {
-      recto: "Expression littérale",
+      recto: "Comment écrire l'expression littérale d'un résultat ?",
       verso:
         "Isoler l'inconnue avec des lettres, avant tout nombre, et l'encadrer : Δt = {{Δv // g}}.",
     },
     {
-      recto: "Définir les lettres",
+      recto: "Pourquoi et comment définir les lettres d'une formule ?",
       verso:
         "Après l'expression : « avec Δv = |v_f − vᵢ| où v_f est la vitesse à l'état final et vᵢ la vitesse à l'état initial ».",
     },
     {
-      recto: "A.N.",
+      recto: "Comment écrire l'application numérique (A.N.) ?",
       verso:
         "Application numérique : on remplace les lettres par les valeurs, on calcule, et on souligne le résultat avec son unité.",
     },
     {
-      recto: "Chiffres significatifs",
+      recto: "Combien de chiffres significatifs garder dans un résultat ?",
       verso:
         "Le résultat a autant de chiffres significatifs que la donnée la moins précise. Le prof l'indique : « 3,6 s (2 c.s) ».",
     },
     {
-      recto: "Valeur de g chez ton prof",
+      recto: "Quelle valeur de g ton prof utilise-t-il ?",
       verso: "g = 9,81 m·s⁻², accélération de la pesanteur terrestre.",
     },
     {
-      recto: "Phrase de conclusion",
+      recto: "Comment écrire la phrase de conclusion d'un exercice ?",
       verso:
         "Répondre à la question par une phrase : « ⇒ l'homme-canon met 3,6 s pour atteindre son altitude maximale ».",
     },
     {
-      recto: "Répondre à un vrai ou faux",
+      recto: "Comment répondre à une question « vrai ou faux » ?",
       verso:
         "Citer la propriété du cours, dire si elle est respectée « ici », puis encadrer le verdict : « ce qui n'est pas le cas ici. FAUX ».",
     },
     {
-      recto: "Schéma de la situation",
+      recto: "Que doit contenir le schéma de la situation ?",
       verso:
         "Un repère (O, x, y), le système en point M(m), les forces en flèches ; préciser l'échelle si elle est demandée, sinon écrire « sans souci d'échelle ».",
     },
     {
-      recto: "Les 4 consignes du sujet (points enlevés sinon)",
+      recto: "Quelles sont les 4 consignes du sujet qui font perdre des points si on les oublie ?",
       verso:
         "Un titre souligné qui rappelle la question ; les formules littérales encadrées ; le bon nombre de chiffres significatifs à chaque A.N. ; de la rigueur et une copie propre.",
     },
@@ -110,32 +110,32 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "Partir de la formule de base de ce qu'on cherche, puis « on cherche donc … » : exprimer chaque inconnue, numéroter les relations (1), (2), (3). Quand il n'y a plus d'inconnue, remplacer (3) dans (2) puis (2) dans (1) : une seule expression littérale complète, encadrée, puis une seule A.N.",
     },
     {
-      recto: "Justifier une dilution",
+      recto: "Comment justifier une dilution ?",
       verso:
         "« Au cours d'une dilution, la masse de soluté se conserve : m_mère = m_fille, or m = C_m × V, d'où C_m,mère × V_mère = C_m,fille × V_fille. » Ne jamais écrire « ×5 » sans cette justification.",
     },
     {
-      recto: "Valeurs intermédiaires",
+      recto: "Que faire des valeurs intermédiaires d'un calcul ?",
       verso:
         "Les écrire avec leurs chiffres significatifs (k = {{1,40 // 45,0}} = 3,11 × 10⁻² L·g⁻¹, 3 c.s., pas 3,0 × 10⁻²) et garder la valeur complète dans la calculatrice. On n'arrondit que le résultat final, au nombre de chiffres significatifs des données.",
     },
     {
-      recto: "Une norme donnée « par kg »",
+      recto: "Comment utiliser une norme donnée « par kg » ?",
       verso:
         "La ramener à l'objet étudié par un produit en croix : 50 mg pour 1 kg, donc m pour 15,0 × 10⁻³ kg. Puis calculer ce qu'on demande (pourcentage, masse) pour cet objet.",
     },
     {
-      recto: "Écart relatif",
+      recto: "Comment calculer un écart relatif ?",
       verso:
         "écart relatif = {{|valeur exp − valeur de référence| // valeur de référence}} × 100, en %. On le compare à l'écart toléré (souvent 10 %) pour conclure.",
     },
     {
-      recto: "Convertir des unités",
+      recto: "Comment convertir des unités dans un calcul ?",
       verso:
         "Convertir chaque unité dans les données, avant le calcul : 90 km/h = {{90 × 10³ m // 3600 s}} = 25 m·s⁻¹. Pas de coefficient appris par cœur (« ÷ 3,6 »).",
     },
     {
-      recto: "Ce qu'il faut savoir par cœur",
+      recto: "Que faut-il savoir par cœur pour rédiger comme le prof l'attend ?",
       verso:
         "Les définitions encadrées et les formules surlignées en vert dans les cours du prof.",
     },

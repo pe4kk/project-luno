@@ -52,7 +52,7 @@ const CARTE_REFERENTIEL = {
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 9,
+    version: 10,
     cartesRetirees: ["Point matériel"],
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
@@ -73,13 +73,13 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
     flashcards: [
       CARTE_SYSTEME,
       {
-        recto: "Limite du modèle du point matériel",
+        recto: "Quelle est la limite du modèle du point matériel ?",
         verso:
           "On perd des informations sur le mouvement : par exemple la rotation d'un marteau qui tourne sur lui-même.",
       },
       CARTE_REFERENTIEL,
       {
-        recto: "Repère d'espace et horloge",
+        recto: "À quoi servent le repère d'espace et l'horloge d'un référentiel ?",
         verso:
           "Le repère d'espace (par exemple cartésien) sert à décrire les positions ; l'horloge mesure les instants t à partir d'une origine t = 0.",
       },
@@ -114,7 +114,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Courbe orientée formée par l'ensemble des positions successives du point au cours du mouvement ; elle indique le sens et la direction du mouvement.",
       },
       {
-        recto: "Les trois types de trajectoires", schema: TRAJECTOIRES,
+        recto: "Quels sont les trois types de trajectoires ?", schema: TRAJECTOIRES,
         verso:
           "Rectiligne (une droite), circulaire (un cercle), curviligne (une courbe quelconque).",
       },
@@ -134,31 +134,31 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}, avec la durée en s et le déplacement en m.",
       },
       {
-        recto: "Les caractéristiques du vecteur vitesse en Mᵢ",
+        recto: "Quelles sont les caractéristiques du vecteur vitesse en Mᵢ ?",
         verso:
           "Origine : le point Mᵢ. Direction : celle du segment [MᵢMᵢ₊₁], tangente à la trajectoire. Sens : celui du mouvement. Longueur : proportionnelle à la vitesse, selon l'échelle.",
       },
       {
-        recto: "Direction du vecteur vitesse",
+        recto: "Quelle est la direction du vecteur vitesse ?",
         verso:
           "Le vecteur vitesse est toujours tangent à la trajectoire au point considéré.",
       },
       {
-        recto: "Unité de la vitesse",
+        recto: "Quelle est l'unité de la vitesse ?",
         verso:
           "Le mètre par seconde (m/s, ou m·s⁻¹). Pour changer d'unité, on convertit séparément la distance et la durée : 1 km = 10³ m et 1 h = 3600 s.",
       },
       {
-        recto: "Mouvement rectiligne uniforme",
+        recto: "Qu'est-ce qu'un mouvement rectiligne uniforme ?",
         verso: "Trajectoire droite et vecteur vitesse qui ne varie pas.",
       },
       {
-        recto: "Mouvement rectiligne non uniforme", schema: CARACTERISER,
+        recto: "Qu'est-ce qu'un mouvement rectiligne non uniforme ?", schema: CARACTERISER,
         verso:
           "Trajectoire droite et vecteur vitesse qui varie : accéléré si la vitesse augmente (v₃ > v₁), décéléré si elle diminue (v₃ < v₁).",
       },
       {
-        recto: "Lien entre vitesse et position",
+        recto: "Quel est le lien entre la vitesse et la position ?",
         verso:
           "La vitesse est le taux de variation de la position ; en mathématiques, on parle de dérivée de la position.",
       },
@@ -173,12 +173,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "vₓᵢ = {{xᵢ₊₁ − xᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} et vᵧᵢ = {{yᵢ₊₁ − yᵢ₋₁ // tᵢ₊₁ − tᵢ₋₁}} : on calcule les coordonnées des vecteurs vitesse à partir des positions.",
       },
       {
-        recto: "Relation de Chasles dans la méthode d'Euler",
+        recto: "À quoi sert la relation de Chasles dans la méthode d'Euler ?",
         verso:
           "M₁M₃⃗ = M₁O⃗ + OM₃⃗ = OM₃⃗ − OM₁⃗ : on passe des vecteurs position aux coordonnées.",
       },
       {
-        recto: "Aviméca, Regressi, Python",
+        recto: "À quoi servent Aviméca, Regressi et Python pour étudier un mouvement ?",
         verso:
           "Aviméca sert à pointer les positions sur une vidéo ; Regressi calcule numériquement les vitesses ; Python permet de tracer positions et vecteurs vitesse.",
       },
@@ -522,7 +522,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 10,
+    version: 11,
     cartesRetirees: ["Système ponctuel"],
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
@@ -579,26 +579,26 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Δv⃗ᵢ = v⃗ᵢ₊₁ − v⃗ᵢ₋₁ : la différence entre le vecteur vitesse au point suivant et au point précédent.",
       },
       {
-        recto: "Δv⃗ dans un mouvement rectiligne uniforme",
+        recto: "Que vaut Δv⃗ dans un mouvement rectiligne uniforme ?",
         verso: "Δv⃗ = 0⃗ : le vecteur vitesse ne change pas.",
       },
       {
-        recto: "Δv⃗ dans un mouvement rectiligne accéléré ou ralenti", schema: VARIATION_RECTILIGNE,
+        recto: "Comment est orienté Δv⃗ dans un mouvement rectiligne accéléré ou ralenti ?", schema: VARIATION_RECTILIGNE,
         verso:
           "Accéléré : Δv⃗ dans le sens du mouvement. Ralenti : Δv⃗ dans le sens opposé.",
       },
       {
-        recto: "Δv⃗ dans un mouvement circulaire uniforme",
+        recto: "Comment est orienté Δv⃗ dans un mouvement circulaire uniforme ?",
         verso:
           "Δv⃗ est dirigé vers le centre de la trajectoire : la valeur de la vitesse ne change pas, mais sa direction change.",
       },
       {
-        recto: "Modéliser une action mécanique",
+        recto: "Comment modélise-t-on une action mécanique ?",
         verso:
           "Par une force, représentée par un vecteur : origine au point du système, direction et sens de l'action, longueur proportionnelle à la valeur en newtons (N).",
       },
       {
-        recto: "Résultante des forces", schema: SKIEUR,
+        recto: "Qu'est-ce que la résultante des forces ?", schema: SKIEUR,
         verso:
           "La somme vectorielle ΣF⃗ de toutes les forces qui s'exercent sur le système.",
       },
@@ -607,16 +607,16 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso: "Dans un référentiel galiléen : ΣF⃗ = {{m·Δv⃗ // Δt}}.",
       },
       {
-        recto: "Conséquence de la 2e loi sur les directions", schema: DEUXIEME_LOI,
+        recto: "D'après la 2e loi de Newton, comment sont orientés ΣF⃗ et Δv⃗ l'un par rapport à l'autre ?", schema: DEUXIEME_LOI,
         verso: "ΣF⃗ et Δv⃗ sont colinéaires et de même sens.",
       },
       {
-        recto: "Ce que signifie la 2e loi",
+        recto: "Que signifie concrètement la 2e loi de Newton ?",
         verso:
           "Un système ne peut accélérer ou changer de direction que si des forces lui sont appliquées.",
       },
       {
-        recto: "Variation de vitesse, masse et forces",
+        recto: "D'après la 2e loi de Newton, de quoi dépend la variation de vitesse Δv pendant une même durée ?",
         verso:
           "Pendant une même durée, Δv est proportionnelle à la somme des forces et inversement proportionnelle à la masse.",
       },
@@ -626,12 +626,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Un système isolé ou pseudo-isolé reste au repos s'il était immobile, ou est en mouvement rectiligne uniforme s'il était en mouvement.",
       },
       {
-        recto: "Isolé ou pseudo-isolé",
+        recto: "Quelle différence entre un système isolé et un système pseudo-isolé ?",
         verso:
           "Isolé : aucune force extérieure. Pseudo-isolé : les forces extérieures se compensent (ΣF⃗ = 0⃗).",
       },
       {
-        recto: "Le principe d'inertie en une ligne",
+        recto: "Comment écrire le principe d'inertie en une ligne ?",
         verso: "v⃗ = 0⃗ ou v⃗ constant ⟺ Δv⃗ = 0⃗ ⟺ ΣF⃗ = 0⃗.",
       },
       {
@@ -649,17 +649,17 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "À toute action d'un système A sur un système B correspond une réaction égale et opposée de B sur A : F⃗A→B = −F⃗B→A.",
       },
       {
-        recto: "Propulsion d'une fusée", schema: FUSEE,
+        recto: "Comment la 3e loi de Newton explique-t-elle la propulsion d'une fusée ?", schema: FUSEE,
         verso:
           "La fusée expulse des gaz vers le bas ; d'après la 3e loi, les gaz exercent sur la fusée une force vers le haut, F⃗gaz/fusée, qui la fait décoller.",
       },
       {
-        recto: "Tracer Δv⃗₃ (fiche méthode)", schema: CONSTRUCTION_DELTA_V,
+        recto: "Comment tracer le vecteur variation de vitesse Δv⃗₃ ?", schema: CONSTRUCTION_DELTA_V,
         verso:
           "Tracer v⃗₂ en M₂ et v⃗₄ en M₄ ; reporter v⃗₄ à partir de M₃ ; ajouter −v⃗₂ au bout ; relier M₃ à l'extrémité obtenue : c'est Δv⃗₃.",
       },
       {
-        recto: "La Lune et la 2e loi",
+        recto: "Pourquoi le mouvement de la Lune autour de la Terre vérifie-t-il la 2e loi de Newton ?",
         verso:
           "Δv⃗₃ pointe vers le centre de la Terre, comme F⃗g, la seule force qui s'exerce sur la Lune : ΣF⃗ et Δv⃗ sont bien colinéaires et de même sens.",
       },
@@ -1005,7 +1005,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 9,
+    version: 10,
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1019,18 +1019,18 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
     ],
     flashcards: [
       {
-        recto: "Les deux familles de forces",
+        recto: "Quelles sont les deux familles de forces ?",
         verso:
           "Les forces de contact (réaction, tension, frottement, ressort) et les forces à distance (gravitation, poids, poussée d'Archimède, force électrostatique).",
       },
-      { recto: "Unité de force", verso: "Le newton (N)." },
+      { recto: "Quelle est l'unité d'une force ?", verso: "Le newton (N)." },
       {
         recto: "Réaction normale R⃗N d'un support", schema: REACTION,
         verso:
           "Force exercée par le support sur l'objet ; pour un support horizontal, verticale vers le haut.",
       },
       {
-        recto: "Bille immobile sur une table",
+        recto: "Une bille est immobile sur une table : que dire de son poids P⃗ et de la réaction R⃗N ?",
         verso: "P⃗ + R⃗N = 0⃗, donc R⃗N = −P⃗ : les deux forces se compensent.",
       },
       {
@@ -1043,11 +1043,11 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Force exercée par un fluide (air, eau) sur un objet en mouvement, opposée au mouvement : dans une chute, f⃗ est vers le haut.",
       },
       {
-        recto: "Chute libre",
+        recto: "Qu'est-ce qu'une chute libre ?",
         verso: "Chute où seul le poids s'exerce sur l'objet.",
       },
       {
-        recto: "Vitesse limite",
+        recto: "Qu'est-ce que la vitesse limite d'une chute ?",
         verso:
           "Dans une chute avec frottements, quand le frottement compense le poids, la vitesse devient constante : c'est la vitesse limite.",
       },
@@ -1067,7 +1067,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "P = m · g, vertical, vers le bas. À la surface d'une planète, le poids est assimilé à la force de gravitation.",
       },
       {
-        recto: "Valeur de g sur Terre",
+        recto: "Quelle est la valeur de g sur Terre ?",
         verso: "g = 9,81 N/kg (ou m·s⁻²), la valeur qu'utilise ton prof.",
       },
       {
@@ -1086,7 +1086,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Deux charges de signes opposés s'attirent ; deux charges de même signe se repoussent.",
       },
       {
-        recto: "Coulomb et 3e loi de Newton",
+        recto: "Quel lien entre la force de Coulomb et la 3e loi de Newton ?",
         verso:
           "F⃗e(q₁ sur q₂) = −F⃗e(q₂ sur q₁) : les deux charges exercent l'une sur l'autre des forces opposées.",
       },
@@ -1344,7 +1344,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
     ],
     flashcards: [
       {
-        recto: "Les étapes d'une rédaction en dynamique",
+        recto: "Quelles sont les étapes d'une rédaction en dynamique ?",
         verso:
           "Définir le système (point matériel de masse m) et le référentiel ; faire le bilan des forces ; écrire la 2e loi de Newton ; projeter sur un axe ; isoler l'inconnue ; faire l'application numérique avec l'unité et les chiffres significatifs.",
       },
@@ -1354,17 +1354,17 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Seul le poids agit : {{m·Δv⃗ // Δt}} = m · g⃗, donc {{Δv // Δt}} = g = 9,81 m·s⁻², quelle que soit la masse.",
       },
       {
-        recto: "Durée d'une variation de vitesse",
+        recto: "D'après la 2e loi de Newton, comment calculer la durée Δt d'une variation de vitesse ?",
         verso:
           "D'après la 2e loi : Δt = {{m·Δv // ΣF}} (en projection sur l'axe du mouvement).",
       },
       {
-        recto: "Δv à l'arrêt complet",
+        recto: "Que vaut Δv quand un système s'arrête complètement ?",
         verso:
           "Δv = |v_f − vᵢ| avec v_f = 0 : la norme de la variation de vitesse est égale à la vitesse initiale.",
       },
       {
-        recto: "Reconnaître la vitesse limite sur une chronophotographie",
+        recto: "Comment reconnaître la vitesse limite sur une chronophotographie ?",
         verso:
           "À partir d'une position, les points sont également espacés : la vitesse est constante, Δv⃗ = 0⃗, donc les forces se compensent (P⃗ + f⃗ = 0⃗).",
       },
@@ -1374,12 +1374,12 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "Oui si la poussée d'Archimède est plus grande que le poids : ΠA > P, la somme des forces et Δv⃗ sont alors vers le haut.",
       },
       {
-        recto: "Valeur trop grande dans un calcul de vitesse",
+        recto: "Pourquoi trouve-t-on parfois une vitesse calculée plus grande que la vitesse réelle ?",
         verso:
           "Souvent parce qu'on a négligé une force, en général le frottement de l'air, qui freine le système.",
       },
       {
-        recto: "Convertir des km/h en m/s",
+        recto: "Comment convertir des km/h en m/s ?",
         verso: "On convertit la distance et la durée séparément : 100 km/h = {{100 × 10³ m // 3600 s}} ≈ 27,8 m·s⁻¹.",
       },
     ],

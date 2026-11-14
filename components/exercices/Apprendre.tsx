@@ -36,6 +36,9 @@ const CONSIGNES = {
 
 type Resultat = { carteId: string; recto: string; palier: 1 | 2 | 3; reussi: boolean; maitrisee: boolean };
 
+/** Un recto rédigé en question (« Quelle est… ? ») plutôt qu'un simple mot à définir. */
+const estQuestion = (recto: string) => /\?\s*$/.test(recto.trim());
+
 const aDesCartes = (c: Chapitre) => c.flashcards.length > 0;
 
 /**
@@ -263,8 +266,12 @@ export function ModeApprendre({
       { carteId: carte.id, recto: carte.recto, palier: q.palier, reussi, maitrisee: reussi && nouveau >= MAITRISEE },
     ]);
     if (!reussi && !revenues.includes(carte.id)) {
-      const pool = (chapitre?.flashcards ?? []).concat(selection.flatMap((c) => (c.id === q.chapitreId ? [] : c.flashcards)));
-      const retour = preparerNotion(q.chapitreId, { ...carte, apprendre: nouveau }, pool);
+      const retour = preparerNotion(
+        q.chapitreId,
+        { ...carte, apprendre: nouveau },
+        chapitre?.flashcards ?? [],
+        selection.flatMap((c) => (c.id === q.chapitreId ? [] : c.flashcards)),
+      );
       setFile((f) => {
         if (!f) return f;
         const copie = [...f];
@@ -303,6 +310,7 @@ export function ModeApprendre({
             q={q}
             scientifique={scientifique}
             matiere={matiere ? `${matiere.nom}` : ""}
+            chapitre={chapitre?.titre ?? ""}
             emoji={matiere?.emoji}
             couleur={matiere?.couleur ?? "#888"}
             repondre={repondre}
@@ -318,6 +326,7 @@ function Question({
   q,
   scientifique,
   matiere,
+  chapitre,
   emoji,
   couleur,
   repondre,
@@ -326,6 +335,7 @@ function Question({
   q: NotionManche;
   scientifique: boolean;
   matiere: string;
+  chapitre: string;
   emoji?: string;
   couleur: string;
   repondre: (reussi: boolean) => void;
@@ -365,8 +375,11 @@ function Question({
         </span>
         <Paliers palier={q.palier} />
       </div>
-      <p className="mt-1 text-[13px] text-muted">{CONSIGNES[q.palier]}</p>
-      <p className="mt-3 font-display text-[21px] leading-snug sm:text-[23px]">{formule(carte.recto)}</p>
+      <p className="mt-0.5 text-[12.5px] text-muted">{chapitre}</p>
+      <p className="mt-3 text-[13px] font-semibold text-muted">
+        {q.palier === 1 && !estQuestion(carte.recto) ? "Choisis ce qui correspond à :" : CONSIGNES[q.palier]}
+      </p>
+      <p className="mt-1 font-display text-[21px] leading-snug sm:text-[23px]">{formule(carte.recto)}</p>
 
       {q.palier === 1 && q.choix && (
         <div className="mt-4 grid gap-2" role="radiogroup" aria-label="Propositions">

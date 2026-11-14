@@ -1,5 +1,6 @@
 "use client";
 
+import { rectoAJour } from "@/contenu/renommages";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
@@ -560,6 +561,8 @@ export const useLuno = create<Etat>()(
           tailleFiche: 3,
           exercices: [],
         };
+        // Cartes reformulées : l'ancien recto prend le nouveau, la progression reste.
+        base.flashcards = base.flashcards.map((f) => ({ ...f, recto: rectoAJour(f.recto) }));
         const deja = new Set(base.flashcards.map((f) => f.recto.toLowerCase()));
         // Cartes retirées de la publication (fusionnées dans une autre, par exemple).
         const retirees = new Set((p.cartesRetirees ?? []).map((r) => r.toLowerCase()));

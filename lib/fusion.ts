@@ -1,3 +1,4 @@
+import { rectoAJour } from "@/contenu/renommages";
 import type { Chapitre, ChapitrePublie, Donnees, Flashcard, Matiere } from "./types";
 
 /** Ce qui est synchronisé entre les appareils d'un même compte. */
@@ -58,7 +59,9 @@ export function regonfler(
         calculs: c.calculs?.length ? c.calculs : (p.calculs ?? []),
         exercices: c.exercices.length ? c.exercices : p.exercices,
         documents: c.documents.length ? c.documents : (p.documents ?? []),
-        flashcards: c.flashcards.map((f) => {
+        flashcards: c.flashcards.map((carte) => {
+          // Une carte reformulée depuis (contenu/renommages.ts) prend son nouveau recto.
+          const f = { ...carte, recto: rectoAJour(carte.recto) };
           const s = schemas.get(f.recto.toLowerCase());
           return s && !f.schema ? { ...f, schema: s } : f;
         }),
@@ -117,9 +120,9 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     }
     const x = chapitres[i];
     idChapitre.set(c.id, x.id);
-    const cartes = new Map(x.flashcards.map((f) => [f.recto.trim().toLowerCase(), f]));
+    const cartes = new Map(x.flashcards.map((f) => [rectoAJour(f.recto).trim().toLowerCase(), f]));
     for (const f of c.flashcards) {
-      const k = f.recto.trim().toLowerCase();
+      const k = rectoAJour(f.recto).trim().toLowerCase();
       const deja = cartes.get(k);
       cartes.set(k, deja ? { ...meilleureCarte(deja, f), id: deja.id } : f);
     }

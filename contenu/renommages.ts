@@ -1,0 +1,83 @@
+/**
+ * Rectos de flashcards reformulés en vraies questions (2026-11-14 : dans le mode
+ * Apprendre, « Ce que signifie la 2e loi » ne disait pas de quoi on parlait). La
+ * reprise d'un chapitre et la synchro renomment les cartes déjà reprises, en gardant
+ * leur progression. Clé : l'ancien recto en minuscules ; valeur : le nouveau recto.
+ * Ajouter ici toute carte renommée, et augmenter la `version` du chapitre.
+ */
+export const RECTOS_RENOMMES: Record<string, string> = {
+  // physique-mouvement
+  "limite du modèle du point matériel": "Quelle est la limite du modèle du point matériel ?",
+  "repère d'espace et horloge": "À quoi servent le repère d'espace et l'horloge d'un référentiel ?",
+  "les trois types de trajectoires": "Quels sont les trois types de trajectoires ?",
+  "les caractéristiques du vecteur vitesse en mᵢ": "Quelles sont les caractéristiques du vecteur vitesse en Mᵢ ?",
+  "direction du vecteur vitesse": "Quelle est la direction du vecteur vitesse ?",
+  "unité de la vitesse": "Quelle est l'unité de la vitesse ?",
+  "mouvement rectiligne uniforme": "Qu'est-ce qu'un mouvement rectiligne uniforme ?",
+  "mouvement rectiligne non uniforme": "Qu'est-ce qu'un mouvement rectiligne non uniforme ?",
+  "lien entre vitesse et position": "Quel est le lien entre la vitesse et la position ?",
+  "relation de chasles dans la méthode d'euler": "À quoi sert la relation de Chasles dans la méthode d'Euler ?",
+  "aviméca, regressi, python": "À quoi servent Aviméca, Regressi et Python pour étudier un mouvement ?",
+  "δv⃗ dans un mouvement rectiligne uniforme": "Que vaut Δv⃗ dans un mouvement rectiligne uniforme ?",
+  "δv⃗ dans un mouvement rectiligne accéléré ou ralenti": "Comment est orienté Δv⃗ dans un mouvement rectiligne accéléré ou ralenti ?",
+  "δv⃗ dans un mouvement circulaire uniforme": "Comment est orienté Δv⃗ dans un mouvement circulaire uniforme ?",
+  "modéliser une action mécanique": "Comment modélise-t-on une action mécanique ?",
+  "résultante des forces": "Qu'est-ce que la résultante des forces ?",
+  "conséquence de la 2e loi sur les directions": "D'après la 2e loi de Newton, comment sont orientés ΣF⃗ et Δv⃗ l'un par rapport à l'autre ?",
+  "ce que signifie la 2e loi": "Que signifie concrètement la 2e loi de Newton ?",
+  "variation de vitesse, masse et forces": "D'après la 2e loi de Newton, de quoi dépend la variation de vitesse Δv pendant une même durée ?",
+  "isolé ou pseudo-isolé": "Quelle différence entre un système isolé et un système pseudo-isolé ?",
+  "le principe d'inertie en une ligne": "Comment écrire le principe d'inertie en une ligne ?",
+  "propulsion d'une fusée": "Comment la 3e loi de Newton explique-t-elle la propulsion d'une fusée ?",
+  "tracer δv⃗₃ (fiche méthode)": "Comment tracer le vecteur variation de vitesse Δv⃗₃ ?",
+  "la lune et la 2e loi": "Pourquoi le mouvement de la Lune autour de la Terre vérifie-t-il la 2e loi de Newton ?",
+  "les deux familles de forces": "Quelles sont les deux familles de forces ?",
+  "unité de force": "Quelle est l'unité d'une force ?",
+  "bille immobile sur une table": "Une bille est immobile sur une table : que dire de son poids P⃗ et de la réaction R⃗N ?",
+  "chute libre": "Qu'est-ce qu'une chute libre ?",
+  "vitesse limite": "Qu'est-ce que la vitesse limite d'une chute ?",
+  "valeur de g sur terre": "Quelle est la valeur de g sur Terre ?",
+  "coulomb et 3e loi de newton": "Quel lien entre la force de Coulomb et la 3e loi de Newton ?",
+  "les étapes d'une rédaction en dynamique": "Quelles sont les étapes d'une rédaction en dynamique ?",
+  "durée d'une variation de vitesse": "D'après la 2e loi de Newton, comment calculer la durée Δt d'une variation de vitesse ?",
+  "δv à l'arrêt complet": "Que vaut Δv quand un système s'arrête complètement ?",
+  "reconnaître la vitesse limite sur une chronophotographie": "Comment reconnaître la vitesse limite sur une chronophotographie ?",
+  "valeur trop grande dans un calcul de vitesse": "Pourquoi trouve-t-on parfois une vitesse calculée plus grande que la vitesse réelle ?",
+  "convertir des km/h en m/s": "Comment convertir des km/h en m/s ?",
+  // physique-methode
+  "reconnaître la méthode à utiliser": "Comment reconnaître la méthode à utiliser dans un exercice ?",
+  "titre d'une réponse": "Comment écrire le titre d'une réponse ?",
+  "bloc « données » (lois de newton)": "Que mettre dans le bloc « Données » d'un exercice sur les lois de Newton ?",
+  "bilan des forces (lois de newton)": "Comment faire le bilan des forces dans un exercice sur les lois de Newton ?",
+  "citer la loi": "Comment citer la loi qu'on utilise ?",
+  "projection sur un axe": "Comment projeter une relation vectorielle sur un axe ?",
+  "expression littérale": "Comment écrire l'expression littérale d'un résultat ?",
+  "définir les lettres": "Pourquoi et comment définir les lettres d'une formule ?",
+  "a.n.": "Comment écrire l'application numérique (A.N.) ?",
+  "chiffres significatifs": "Combien de chiffres significatifs garder dans un résultat ?",
+  "valeur de g chez ton prof": "Quelle valeur de g ton prof utilise-t-il ?",
+  "phrase de conclusion": "Comment écrire la phrase de conclusion d'un exercice ?",
+  "répondre à un vrai ou faux": "Comment répondre à une question « vrai ou faux » ?",
+  "schéma de la situation": "Que doit contenir le schéma de la situation ?",
+  "les 4 consignes du sujet (points enlevés sinon)": "Quelles sont les 4 consignes du sujet qui font perdre des points si on les oublie ?",
+  "justifier une dilution": "Comment justifier une dilution ?",
+  "valeurs intermédiaires": "Que faire des valeurs intermédiaires d'un calcul ?",
+  "une norme donnée « par kg »": "Comment utiliser une norme donnée « par kg » ?",
+  "écart relatif": "Comment calculer un écart relatif ?",
+  "convertir des unités": "Comment convertir des unités dans un calcul ?",
+  "ce qu'il faut savoir par cœur": "Que faut-il savoir par cœur pour rédiger comme le prof l'attend ?",
+  // physique-oxydoreduction
+  "qui est oxydé, qui est réduit ?": "Dans une réaction d'oxydoréduction, qui est oxydé et qui est réduit ?",
+  "les 4 étapes d'une demi-équation": "Quelles sont les 4 étapes pour écrire une demi-équation ?",
+  "demi-équation du couple cr₂o₇²⁻/cr³⁺": "Quelle est la demi-équation du couple Cr₂O₇²⁻/Cr³⁺ ?",
+  "demi-équation du couple mno₄⁻/mn²⁺": "Quelle est la demi-équation du couple MnO₄⁻/Mn²⁺ ?",
+  "demi-équation du couple i₂/i⁻": "Quelle est la demi-équation du couple I₂/I⁻ ?",
+  "les 3 étapes d'une équation d'oxydoréduction": "Quelles sont les 3 étapes pour écrire une équation d'oxydoréduction ?",
+  "combiner deux demi-équations": "Comment combiner deux demi-équations ?",
+  "équation i⁻ + mno₄⁻": "Quelle est l'équation de la réaction entre les ions I⁻ et MnO₄⁻ ?",
+  "simplifier une équation-bilan": "Comment simplifier une équation-bilan ?",
+  "demi-équation ou équation-bilan ?": "Où apparaissent les électrons : dans une demi-équation ou dans une équation-bilan ?",
+};
+
+/** Le recto à jour d'une carte (le même s'il n'a pas été renommé). */
+export const rectoAJour = (recto: string) => RECTOS_RENOMMES[recto.trim().toLowerCase()] ?? recto;

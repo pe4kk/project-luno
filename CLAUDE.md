@@ -457,6 +457,16 @@ un PDF ou une photo directement dans le chat.
     publiée, `cartesRetirees` du chapitre (rectos) et augmenter `version`.
   - Son prof tolère sans doute de légers changements de formulation si le sens est
     gardé (à confirmer après l'interro du 16/11).
+- **Rectos des flashcards : compréhensibles seuls** (demandé le 2026-11-14 : en QCM,
+  « Ce que signifie la 2e loi » ne disait pas de quoi on parlait). Un recto est soit
+  un terme à définir (« Système », « Référentiel galiléen »), soit une vraie question
+  qui nomme son sujet (« Que signifie concrètement la 2e loi de Newton ? », « Quelle
+  est l'unité d'une force ? »), jamais un titre elliptique (« Unité de force », « La
+  Lune et la 2e loi »). Éviter deux cartes qui disent presque la même chose. Pour
+  reformuler une carte publiée sans perdre la progression : l'ajouter à
+  `contenu/renommages.ts` (ancien recto → nouveau) et augmenter `version`. Le QCM du
+  mode Apprendre prend ses mauvaises réponses dans le même chapitre d'abord, de
+  longueur proche, et écarte les versos trop proches de la bonne réponse.
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,

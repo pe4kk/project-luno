@@ -60,9 +60,32 @@ export type NotionManche = {
   trou?: string;
 };
 
-/** Les quatre propositions d'un QCM : le verso et trois versos voisins. */
-function choixPour(carte: Flashcard, pool: Flashcard[]) {
-  const autres = melanger(pool.filter((f) => f.id !== carte.id && f.verso !== carte.verso)).slice(0, 3);
+/** Part des mots clés de `b` déjà présents dans `a` (0 à 1). */
+function recouvrement(a: string, b: string) {
+  const ma = new Set(motsCles(a).map(simplifier));
+  const mb = motsCles(b).map(simplifier);
+  return mb.length ? mb.filter((m) => ma.has(m)).length / mb.length : 0;
+}
+
+/**
+ * Les quatre propositions d'un QCM : le verso et trois versos du même chapitre d'abord,
+ * de longueur proche (sinon la bonne réponse se devine à sa forme). Une carte qui dit
+ * presque la même chose que la bonne réponse est écartée : il n'y aurait pas une seule
+ * bonne réponse (« Principe d'inertie » et « Le principe d'inertie en une ligne »).
+ */
+function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashcard[]) {
+  const valable = (f: Flashcard) =>
+    f.id !== carte.id &&
+    f.verso !== carte.verso &&
+    recouvrement(f.verso, carte.verso) < 0.35 &&
+    recouvrement(carte.verso, f.verso) < 0.35;
+  const proches = (l: Flashcard[]) =>
+    melanger(l.filter(valable))
+      .sort((a, b) => Math.abs(a.verso.length - carte.verso.length) - Math.abs(b.verso.length - carte.verso.length))
+      .slice(0, 6);
+  // Parmi les plus proches en longueur, un tirage : le QCM change d'une fois à l'autre.
+  const candidats = [...melanger(proches(memeChapitre)), ...melanger(proches(ailleurs))];
+  const autres = candidats.slice(0, 3);
   return melanger([carte.verso, ...autres.map((f) => f.verso)]);
 }
 
@@ -72,15 +95,24 @@ function trouPour(carte: Flashcard) {
   return mots[Math.floor(Math.random() * mots.length)];
 }
 
-export function preparerNotion(chapitreId: string, carte: Flashcard, pool: Flashcard[]): NotionManche {
+export function preparerNotion(
+  chapitreId: string,
+  carte: Flashcard,
+  memeChapitre: Flashcard[],
+  ailleurs: Flashcard[] = [],
+): NotionManche {
   let palier = palierSuivant(carte);
+  let choix = palier === 1 ? choixPour(carte, memeChapitre, ailleurs) : undefined;
   // Pas assez d'autres cartes pour un QCM : on passe au palier suivant.
-  if (palier === 1 && pool.length < 4) palier = estCourte(carte) ? 3 : 2;
+  if (choix && choix.length < 4) {
+    palier = estCourte(carte) ? 3 : 2;
+    choix = undefined;
+  }
   return {
     chapitreId,
     carte,
     palier,
-    choix: palier === 1 ? choixPour(carte, pool) : undefined,
+    choix,
     trou: palier === 2 ? trouPour(carte) : undefined,
   };
 }
@@ -104,12 +136,14 @@ function sansDoublons(chapitres: Chapitre[]) {
 
 export function composerManche(chapitres: Chapitre[], taille = TAILLE_MANCHE): NotionManche[] {
   const toutes = sansDoublons(chapitres);
-  const pool = toutes.map((x) => x.carte);
   const enCours = melanger(toutes.filter((x) => (x.carte.apprendre ?? 0) > 0 && (x.carte.apprendre ?? 0) < MAITRISEE)).sort(
     (a, b) => (b.carte.apprendre ?? 0) - (a.carte.apprendre ?? 0),
   );
   const nouvelles = melanger(toutes.filter((x) => !x.carte.apprendre));
-  return melanger([...enCours, ...nouvelles].slice(0, taille)).map((x) => preparerNotion(x.chapitreId, x.carte, pool));
+  return melanger([...enCours, ...nouvelles].slice(0, taille)).map((x) => {
+    const du = (meme: boolean) => toutes.filter((y) => (y.chapitreId === x.chapitreId) === meme).map((y) => y.carte);
+    return preparerNotion(x.chapitreId, x.carte, du(true), du(false));
+  });
 }
 
 /** Combien de notions à chaque palier. */
