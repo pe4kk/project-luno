@@ -266,6 +266,8 @@ export type PreparationDst = {
 /** Chapitre rédigé par Claude et publié dans le dépôt pour tous les utilisateurs. */
 export type ChapitrePublie = {
   id: string;
+  /** Rectos de cartes retirées de cette publication : effacées chez ceux qui les avaient. */
+  cartesRetirees?: string[];
   /** À augmenter quand le contenu change, pour que les navigateurs le reprennent. */
   version: number;
   matiere: { nom: string; couleur: string; emoji: string };

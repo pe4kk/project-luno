@@ -98,9 +98,18 @@ export function ModeInterro({
   }, [questions, rendu, fin]);
 
   const commencer = () => {
+    // Une notion commune à deux chapitres (« Référentiel ») n'est posée qu'une fois ;
+    // les méthodes sont dans la fiche, pas en question de cours.
+    const vues = new Set<string>();
     const cours = melanger(
       selection.flatMap((c) =>
-        (c.definitions ?? []).map((def) => ({ c, def })),
+        (c.definitions ?? [])
+          .filter((def) => {
+            if (def.type === "methode" || vues.has(def.terme)) return false;
+            vues.add(def.terme);
+            return true;
+          })
+          .map((def) => ({ c, def })),
       ),
     )
       .slice(0, nbCours)

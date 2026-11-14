@@ -160,6 +160,25 @@ type Etat = Donnees & {
   remplacerTout: (d: Donnees) => void;
 };
 
+/**
+ * Une même carte peut être publiée dans deux chapitres (« Référentiel » en chap. 9 et
+ * 11) : même recto et même verso. Sa progression avance alors dans les deux.
+ */
+export const cleCarte = (f: { recto: string; verso: string }) =>
+  `${f.recto.trim().toLowerCase()}|${f.verso.trim().toLowerCase()}`;
+
+/** Applique `f` à la carte `carteId` du chapitre `id` et à ses jumelles des autres chapitres. */
+const majCarte = (liste: Chapitre[], id: string, carteId: string, f: (c: Flashcard) => Flashcard) => {
+  const carte = liste.find((c) => c.id === id)?.flashcards.find((x) => x.id === carteId);
+  if (!carte) return liste;
+  const cle = cleCarte(carte);
+  return liste.map((c) =>
+    c.flashcards.some((x) => x.id === carteId || cleCarte(x) === cle)
+      ? { ...c, flashcards: c.flashcards.map((x) => (x.id === carteId || cleCarte(x) === cle ? f(x) : x)) }
+      : c,
+  );
+};
+
 const majChapitre = (
   liste: Chapitre[],
   id: string,
@@ -433,22 +452,14 @@ export const useLuno = create<Etat>()(
       // Répétition espacée simple : l'intervalle double à chaque bonne réponse
       // (1, 2, 4, 8… jours) et repart de zéro à la moindre erreur.
       majPalier: (id, carteId, palier) =>
-        set((s) => ({
-          chapitres: majChapitre(s.chapitres, id, (c) => ({
-            ...c,
-            flashcards: c.flashcards.map((f) => (f.id === carteId ? { ...f, apprendre: palier } : f)),
-          })),
-        })),
+        set((s) => ({ chapitres: majCarte(s.chapitres, id, carteId, (f) => ({ ...f, apprendre: palier })) })),
       noterFlashcard: (id, carteId, su) =>
         set((s) => {
           const carte = s.chapitres.find((c) => c.id === id)?.flashcards.find((f) => f.id === carteId);
           const j = s.jour.date === todayISO() ? s.jour : { date: todayISO(), nouvelles: 0, revues: 0 };
           return {
           jour: { ...j, nouvelles: j.nouvelles + (carte?.niveau === 0 ? 1 : 0), revues: j.revues + 1 },
-          chapitres: majChapitre(s.chapitres, id, (c) => ({
-            ...c,
-            flashcards: c.flashcards.map((f) => {
-              if (f.id !== carteId) return f;
+          chapitres: majCarte(s.chapitres, id, carteId, (f) => {
               if (!su)
                 return { ...f, niveau: 1, intervalle: 0, echeance: todayISO() };
               const intervalle = f.intervalle
@@ -461,7 +472,6 @@ export const useLuno = create<Etat>()(
                 echeance: dansJours(intervalle),
               };
             }),
-          })),
           };
         }),
 
@@ -551,6 +561,8 @@ export const useLuno = create<Etat>()(
           exercices: [],
         };
         const deja = new Set(base.flashcards.map((f) => f.recto.toLowerCase()));
+        // Cartes retirées de la publication (fusionnées dans une autre, par exemple).
+        const retirees = new Set((p.cartesRetirees ?? []).map((r) => r.toLowerCase()));
         const chapitre: Chapitre = {
           ...base,
           publieId: p.id,
@@ -559,7 +571,7 @@ export const useLuno = create<Etat>()(
           // Une carte déjà reprise garde sa progression ; son verso suit la publication
           // (corrections, notation des formules).
           flashcards: [
-            ...base.flashcards.map((f) => {
+            ...base.flashcards.filter((f) => !retirees.has(f.recto.toLowerCase())).map((f) => {
               const k = p.flashcards.find(
                 (x) => x.recto.toLowerCase() === f.recto.toLowerCase(),
               );
@@ -570,7 +582,8 @@ export const useLuno = create<Etat>()(
               .map(nouvelleCarte),
           ],
           fiche: p.fiche ?? base.fiche,
-          definitions: p.definitions?.length ? p.definitions : (base.definitions ?? []),
+          // Une publication peut vider Déf (méthodes passées dans la fiche) : on la suit.
+          definitions: p.definitions ?? base.definitions ?? [],
           dates: p.dates?.length ? p.dates : (base.dates ?? []),
           problemes: p.problemes?.length ? p.problemes : (base.problemes ?? []),
           calculs: p.calculs?.length ? p.calculs : (base.calculs ?? []),

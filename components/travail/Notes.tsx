@@ -1,5 +1,6 @@
 "use client";
 
+import { ouvrirPdf } from "@/components/LecteurPdf";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
@@ -491,6 +492,13 @@ function Documents({ note, couleur }: { note: NoteMatiere; couleur: string }) {
                 rel="noreferrer"
                 aria-label={`Ouvrir ${d.nom}`}
                 className="block size-full"
+                onClick={(e) => {
+                  // Un PDF s'ouvre dans le lecteur de Luno (on peut toujours en sortir).
+                  const u = liens[d.chemin];
+                  if (d.type === "image" || !u || e.metaKey || e.ctrlKey) return;
+                  e.preventDefault();
+                  ouvrirPdf(u, d.nom);
+                }}
               >
                 {d.type === "image" && liens[d.chemin] ? (
                   // eslint-disable-next-line @next/next/no-img-element

@@ -35,14 +35,7 @@ export function Illustration({ image, className = "" }: { image: ImageCours; cla
       <Fenetre ouverte={grand} fermer={() => setGrand(false)} titre={image.legende ?? image.alt}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={image.alt} className="w-full rounded-xl" />
-        <a
-          href={src}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-3 inline-flex min-h-10 items-center gap-1.5 text-[14px] font-semibold text-accent"
-        >
-          Ouvrir en plein écran pour zoomer
-        </a>
+        <p className="mt-2 text-[13px] text-muted">Écarte deux doigts sur l&apos;image pour zoomer.</p>
       </Fenetre>
     </figure>
   );

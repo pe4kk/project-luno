@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, RotateCcw, X } from "lucide-react";
-import { encre, pastel, useLuno } from "@/lib/store";
+import { cleCarte, encre, pastel, useLuno } from "@/lib/store";
 import { Bouton, BoutonIcone, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
@@ -31,7 +31,20 @@ export function Revision({
   const { chapitres, matieres, noterFlashcard } = useLuno();
   // Le paquet est mélangé, puis figé, au début de chaque séance (demandé le 2026-11-14) :
   // les cartes ne reviennent jamais dans le même ordre.
-  const [paquet] = useState(() => melanger(cartes));
+  // Une carte publiée dans deux chapitres (« Référentiel ») ne passe qu'une fois.
+  const [paquet] = useState(() => {
+    const vues = new Set<string>();
+    return melanger(
+      cartes.filter((x) => {
+        const f = chapitres.find((c) => c.id === x.chapitreId)?.flashcards.find((k) => k.id === x.carteId);
+        if (!f) return true;
+        const cle = cleCarte(f);
+        if (vues.has(cle)) return false;
+        vues.add(cle);
+        return true;
+      }),
+    );
+  });
   const [index, setIndex] = useState(0);
   const [retournee, setRetournee] = useState(false);
   const [sues, setSues] = useState(0);

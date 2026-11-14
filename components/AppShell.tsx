@@ -26,6 +26,7 @@ import { Annulation, BoutonDonnees, SynchroBibliotheque } from "./Donnees";
 import { PanneauJour } from "./PanneauJour";
 import { MoteurSynchro } from "./Synchro";
 import { MiseAJour } from "./MiseAJour";
+import { LecteurPdf } from "./LecteurPdf";
 import { classePastille, usePastille } from "@/lib/pastille";
 
 const ONGLETS = [
@@ -393,6 +394,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SynchroBibliotheque />
       <MoteurSynchro />
       <MiseAJour />
+      <LecteurPdf />
       <Accents />
       <Annulation />
 

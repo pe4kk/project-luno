@@ -199,6 +199,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
     pour « exos » série, calculs, problèmes ; la veille mes erreurs et interro
     blanche) et `repartir()`. Choix et étapes cochées dans `preparation` du DST
     (`majDst`, synchronisé, fusion par union).
+  - **Lecteur de PDF intégré** (2026-11-14, `components/LecteurPdf.tsx`, pdf.js
+    `pdfjs-dist` 5.4, version « legacy » ; le worker est copié dans `public/` par
+    `next.config.ts` à chaque build, non versionné). Dans l'app installée sur
+    l'iPhone, un lien vers un PDF du site (dans le `scope` du manifeste) s'ouvrait
+    dans la fenêtre de l'app, sans bouton retour : impossible d'en sortir. Tout lien
+    de PDF passe par `<LienPdf href titre>` ou `ouvrirPdf(url, titre)` : lecteur
+    plein écran, bouton Fermer, zoom 100–300 %, le geste retour le ferme
+    (`history.pushState`), « Enregistrer ou partager » dans l'app installée. Ne
+    jamais remettre un lien `target="_blank"` vers un fichier de `public/` (les
+    images de cours se zooment avec deux doigts dans leur fenêtre).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au
@@ -392,10 +402,9 @@ un PDF ou une photo directement dans le chat.
 - **Cours** : ajouter une entrée à `contenu/bibliotheque.ts` au format de
   `contenu/physique-mouvement.ts` : `id` stable, `version: 1`, matière (reprendre
   exactement le nom indiqué, la reprise compare les noms), titre du chapitre,
-  `definitions` (onglet « Déf », entre Cours et Flashcards : toutes les
-  définitions, propriétés, théorèmes, lois, formules et méthodes du cours,
-  recopiées mot pour mot dans l'ordre du cours, format `DefinitionCours`,
-  modèles dans `contenu/definitions.ts`), 10 à 20 flashcards, fiche dont chaque
+  `definitions` (onglet « Déf », entre Cours et Flashcards, recopiées mot pour
+  mot dans l'ordre du cours, format `DefinitionCours`, modèles dans
+  `contenu/definitions.ts` ; voir la **règle de Déf** ci-dessous), 10 à 20 flashcards, fiche dont chaque
   point porte `n` de 1 (essentiel) à 5 (détail), et 15 à 20 exercices variés (types dans `lib/types.ts`) : QCM à
   quatre choix, `vraiFaux`, `trou` (texte avec « ___ », réponses acceptées),
   `ordre` (éléments donnés dans le bon ordre, idéal pour les chronologies),
@@ -425,6 +434,29 @@ un PDF ou une photo directement dans le chat.
   ils sont publics (le dépôt l'est). Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
   augmenter `version`.
+- **Règle de Déf** (tirée de ses réponses sur des exemples du chap. 9 et 11, le
+  2026-11-14) :
+  - Dans Déf, en `definition` : les **termes qu'un prof peut demander de définir**
+    (système, référentiel, chronophotographie, vecteur déplacement, force…).
+  - Une notion qui n'est qu'un **cas ou une précision d'une autre** se fond dans sa
+    définition (« point matériel » fait partie de « système » ; « système ponctuel »
+    aussi).
+  - **Formules, lois et constructions qui s'écrivent en formule** (vitesse moyenne,
+    2e loi de Newton, méthode d'Euler) : type `formule` ou `loi`, triées à part
+    (filtre « Formules et lois »). Propriétés et théorèmes : filtre « Propriétés ».
+  - **Flashcard seulement, pas dans Déf** : les mots-catégories (« cinématique ») et
+    les classements ou listes de cas (« caractérisation du mouvement »).
+  - **Méthodes** (Euler comme démarche, méthode générale de rédaction, méthode
+    descendante…) : dans la **fiche**, jamais dans Déf (`DEF_PC_METHODE` est vide).
+  - Une **notion commune à deux chapitres** = une seule entrée, la même constante
+    mise dans les deux (`SYSTEME`, `REFERENTIEL`, `TRAJECTOIRE` dans
+    `definitions.ts`), et une seule carte identique (même recto, même verso :
+    `CARTE_SYSTEME`, `CARTE_REFERENTIEL`). Deux cartes identiques avancent ensemble
+    (`majCarte` dans `lib/store.ts`) et ne passent qu'une fois quand on révise
+    plusieurs chapitres (révision, Apprendre, interro blanche). Pour retirer une carte
+    publiée, `cartesRetirees` du chapitre (rectos) et augmenter `version`.
+  - Son prof tolère sans doute de légers changements de formulation si le sens est
+    gardé (à confirmer après l'interro du 16/11).
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,

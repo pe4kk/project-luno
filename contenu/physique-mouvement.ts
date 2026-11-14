@@ -36,10 +36,24 @@ import {
 const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 const dossier = "documents/physique-chimie";
 
+// Cartes communes aux chap. 9 et 11 : identiques, elles avancent ensemble et ne passent
+// qu'une fois quand on révise les deux chapitres.
+const CARTE_SYSTEME = {
+  recto: "Système",
+  verso:
+    "L'objet dont on étudie le mouvement. On le modélise par un point matériel : un seul point, en général son centre de gravité, auquel on associe toute la masse m. Il est ponctuel si ses dimensions sont petites devant la région où il évolue.",
+};
+const CARTE_REFERENTIEL = {
+  recto: "Référentiel",
+  verso:
+    "Objet de référence, supposé fixe, par rapport auquel on étudie le mouvement. On lui associe un repère d'espace et une horloge.",
+};
+
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 8,
+    version: 9,
+    cartesRetirees: ["Point matériel"],
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
@@ -57,22 +71,13 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       },
     ],
     flashcards: [
-      { recto: "Système", verso: "L'objet dont on étudie le mouvement." },
-      {
-        recto: "Point matériel",
-        verso:
-          "Modèle du système réduit à un seul point, en général son centre de gravité, auquel on associe toute la masse m du système.",
-      },
+      CARTE_SYSTEME,
       {
         recto: "Limite du modèle du point matériel",
         verso:
           "On perd des informations sur le mouvement : par exemple la rotation d'un marteau qui tourne sur lui-même.",
       },
-      {
-        recto: "Référentiel",
-        verso:
-          "Objet de référence, supposé fixe, par rapport auquel on étudie le mouvement. On lui associe un repère d'espace et une horloge.",
-      },
+      CARTE_REFERENTIEL,
       {
         recto: "Repère d'espace et horloge",
         verso:
@@ -517,7 +522,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 9,
+    version: 10,
+    cartesRetirees: ["Système ponctuel"],
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
@@ -541,11 +547,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso:
           "Étude des mouvements indépendamment de leurs causes, c'est-à-dire des forces.",
       },
-      {
-        recto: "Système ponctuel",
-        verso:
-          "Système dont les dimensions sont petites devant la région où il évolue ; on le représente par un point matériel de même masse, placé en son centre de gravité.",
-      },
+      CARTE_SYSTEME,
+      CARTE_REFERENTIEL,
       {
         recto: "Référentiel galiléen",
         verso:

@@ -29,18 +29,35 @@ const p = (terme: string, texte: string, precision?: string): DefinitionCours =>
 
 // ————————————————————————————— Physique-Chimie —————————————————————————————
 
+/**
+ * Notions communes aux chap. 9 et 11 : une seule entrée, mise dans les deux chapitres
+ * (demandé le 2026-11-14 : « une seule, que tu mets dans les deux »). « Point matériel »
+ * fait partie de la définition du système.
+ */
+export const SYSTEME = d(
+  "Système",
+  "Le système est l'objet dont on étudie le mouvement. Pour simplifier l'étude, on modélise le système mobile par un seul point particulier, appelé « point matériel », en général le centre de gravité du système, auquel on associe toute la masse m du système.",
+  "Si ses dimensions sont petites devant la taille de la région de l'espace où il évolue, on dit que le système est ponctuel (chap. 11). La modélisation par un point matériel peut toutefois faire perdre des informations sur le mouvement (exemple : la rotation d'un marteau qui tourne sur lui-même).",
+);
+
+export const REFERENTIEL = d(
+  "Référentiel",
+  "Le référentiel est l'objet de référence, supposé fixe, par rapport auquel on étudie le mouvement du système. On lui associe toujours :\n• un repère d'espace pour décrire les positions du système (exemple : le repère cartésien (O, i⃗, j⃗, k⃗)) ;\n• une horloge (repère temporel) pour mesurer, à partir d'une origine t = 0, les instants t correspondant aux positions du système.",
+  "Terrestre : mouvements à la surface de la Terre, de durée inférieure à la durée de rotation de la Terre. Géocentrique : à l'échelle de la planète (Lune, satellites). Héliocentrique : à l'échelle du système solaire.",
+);
+
+export const TRAJECTOIRE: DefinitionCours = {
+  type: "definition",
+  terme: "Trajectoire",
+  texte:
+    "La trajectoire d'un point matériel en mouvement est une courbe orientée qui indique le sens et la direction du mouvement. Cette courbe traduit l'ensemble des positions successives occupées par ce point au cours de son mouvement.",
+  precision: "Trajectoire rectiligne : une droite. Circulaire : un cercle. Curviligne : une courbe.",
+  schema: TRAJECTOIRES,
+};
+
 export const DEF_PC_CHAP9: DefinitionCours[] = [
-  d("Système", "Le système est l'objet dont on étudie le mouvement."),
-  d(
-    "Point matériel",
-    "Pour simplifier l'étude, on modélise le système mobile par un seul point particulier, appelé « point matériel », en général le centre de gravité du système, auquel on associe toute la masse m du système.",
-    "La modélisation d'un système par un point matériel peut toutefois faire perdre des informations sur le mouvement (exemple : la rotation d'un marteau qui tourne sur lui-même).",
-  ),
-  d(
-    "Référentiel",
-    "Le référentiel est l'objet de référence, supposé fixe, par rapport auquel on étudie le mouvement du système. On lui associe toujours :\n• un repère d'espace pour décrire les positions du système (exemple : le repère cartésien) ;\n• une horloge (repère temporel) pour mesurer, à partir d'une origine t = 0, les instants t correspondant aux positions du système.",
-    "Terrestre : mouvements à la surface de la Terre, de durée inférieure à la durée de rotation de la Terre. Géocentrique : à l'échelle de la planète (Lune, satellites). Héliocentrique : à l'échelle du système solaire.",
-  ),
+  SYSTEME,
+  REFERENTIEL,
   p("Relativité du mouvement", "Le mouvement d'un système dépend du référentiel."),
   d(
     "Position d'un point matériel",
@@ -50,14 +67,7 @@ export const DEF_PC_CHAP9: DefinitionCours[] = [
     "Chronophotographie",
     "Une chronophotographie est une succession de photographies prises à intervalles de temps égaux, permettant de décomposer un mouvement.",
   ),
-  {
-    type: "definition",
-    terme: "Trajectoire d'un point matériel",
-    texte:
-      "La trajectoire d'un point matériel en mouvement est une courbe orientée qui indique le sens et la direction du mouvement. Cette courbe traduit l'ensemble des positions successives occupées par ce point au cours de son mouvement.",
-    precision: "Trajectoire rectiligne : une droite. Circulaire : un cercle. Curviligne : une courbe.",
-    schema: TRAJECTOIRES,
-  },
+  TRAJECTOIRE,
   d(
     "Vecteur déplacement",
     "2 positions successives voisines M et M' prises par un point du système définissent le vecteur MM'⃗ appelé « vecteur déplacement ». Il se représente par un segment orienté (flèche dans le sens du mouvement) qui relie le point de départ et le point d'arrivée.",
@@ -81,10 +91,6 @@ export const DEF_PC_CHAP9: DefinitionCours[] = [
     "Caractéristiques du vecteur vitesse en Mᵢ",
     "• Sa direction : celle du vecteur MᵢMᵢ₊₁⃗ (donc celle du segment [MᵢMᵢ₊₁]) ;\n• son sens : celui du mouvement ;\n• sa norme : proportionnelle, selon l'échelle choisie pour représenter les vitesses, à la valeur de la vitesse instantanée vᵢ. Une vitesse s'exprime en m/s.",
   ),
-  p(
-    "Caractérisation du mouvement",
-    "La variation du vecteur vitesse permet de caractériser un mouvement : dans le cas d'une trajectoire rectiligne,\n• si le vecteur vitesse ne varie pas : le mouvement est rectiligne uniforme ;\n• si le vecteur vitesse varie : le mouvement est rectiligne non uniforme.",
-  ),
   d(
     "Vitesse (fiche méthode Euler)",
     "La vitesse est le taux de variation de la position (en mathématiques, on parle de dérivée de la position). Une dérivée (ou un taux de variation) indique comment varie la position le long de la trajectoire.",
@@ -101,28 +107,14 @@ export const DEF_PC_CHAP9: DefinitionCours[] = [
 ];
 
 export const DEF_PC_CHAP11: DefinitionCours[] = [
-  d(
-    "Cinématique",
-    "La cinématique (du grec kinêma = le mouvement) est l'étude des mouvements indépendamment des causes (= les forces) qui les produisent.",
-  ),
-  d(
-    "Système ponctuel",
-    "Le corps qu'on étudie en physique est appelé : système. Si ses dimensions sont petites devant la taille de la région de l'espace où il évolue, on dit que le système est ponctuel. Il peut alors être représenté comme un point matériel M de même masse m que le système et situé en son centre de gravité.",
-  ),
-  d(
-    "Référentiel",
-    "Un référentiel est le solide de référence associé à un repère d'espace pour repérer les positions et à une horloge pour repérer le temps.",
-    "Un des repères les plus commodes est le repère cartésien (O, i⃗, j⃗, k⃗), où i⃗, j⃗, k⃗ sont les 3 vecteurs unitaires qui définissent les 3 directions de l'espace.",
-  ),
+  SYSTEME,
+  REFERENTIEL,
   d(
     "Référentiel galiléen",
     "Un référentiel galiléen est un référentiel dans lequel le principe d'inertie est vérifié. C'est donc un référentiel en translation rectiligne uniforme par rapport à un autre référentiel galiléen.",
     "Les 3 lois de Newton ne sont valides que dans un référentiel galiléen. Le référentiel héliocentrique est galiléen ; les référentiels géocentrique et terrestre ne le sont que sur des temps courts (de l'ordre d'une expérience en laboratoire).",
   ),
-  d(
-    "Trajectoire",
-    "La trajectoire est l'ensemble des positions prises par le point matériel M au cours du temps. C'est une courbe orientée dans le même sens de parcours que celui du système. Le vecteur vitesse est toujours tangent à la trajectoire.",
-  ),
+  TRAJECTOIRE,
   {
     type: "formule",
     terme: "Vecteur vitesse par encadrement",
@@ -212,39 +204,9 @@ export const DEF_PC_FORCES: DefinitionCours[] = [
   ),
 ];
 
-export const DEF_PC_METHODE: DefinitionCours[] = [
-  {
-    type: "methode",
-    terme: "La méthode générale",
-    texte:
-      "1. Un titre souligné qui rappelle la question.\n2. « Par définition de … » : la formule littérale, encadrée.\n3. « avec » : les données, converties dans les bonnes unités.\n4. « A.N. : » les valeurs remplacées, le calcul.\n5. Le résultat final souligné, avec unité et chiffres significatifs.",
-    precision: "Valable dans tous les chapitres. Selon le type d'exercice, une méthode propre s'y ajoute (lois de Newton, méthode descendante, demi-équations).",
-  },
-  {
-    type: "methode",
-    terme: "Lois de Newton (chap. 9 et 11)",
-    texte:
-      "Les données : système, point matériel, référentiel, valeurs avec unités, bilan des forces. La loi annoncée (« D'après la 2e loi de Newton… »), puis la projection sur l'axe du mouvement, puis l'expression littérale de l'inconnue, encadrée.",
-  },
-  {
-    type: "methode",
-    terme: "La méthode descendante (dilutions, dosages)",
-    texte:
-      "On part de la formule de base de ce qu'on cherche, puis on exprime chaque inconnue à son tour (relations encadrées et numérotées (1), (2), (3)), jusqu'à n'avoir plus que des données. On insère (3) dans (2), puis (2) dans (1) : une seule expression littérale complète, encadrée, puis une seule A.N.",
-    precision: "Dilution : « au cours d'une dilution, la masse de soluté se conserve », donc C_m,mère × V_mère = C_m,fille × V_fille.",
-  },
-  {
-    type: "methode",
-    terme: "Expression littérale",
-    texte: "On isole l'inconnue avec des lettres, avant tout nombre, et on l'encadre : Δt = {{Δv // g}}. Puis on définit chaque lettre.",
-  },
-  {
-    type: "methode",
-    terme: "A.N. et chiffres significatifs",
-    texte:
-      "On écrit « A.N. : », on remplace les lettres par les valeurs et on souligne le résultat avec son unité. Le résultat garde autant de chiffres significatifs que la donnée la moins précise, noté « (2 c.s) ».",
-  },
-];
+// Les méthodes ne vont pas dans Déf (demandé le 2026-11-14) : elles sont dans la fiche
+// « Rédiger comme ton prof l'attend » (physique-methode.ts).
+export const DEF_PC_METHODE: DefinitionCours[] = [];
 
 // ——————————————————————————————— Mathématiques ———————————————————————————————
 

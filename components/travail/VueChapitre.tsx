@@ -26,6 +26,7 @@ import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { demandeCours, repererDefinitions } from "@/lib/contenu";
 import { joursAvant } from "@/lib/dates";
 import { lienFichier, lienTravail } from "@/lib/liens";
+import { LienPdf } from "@/components/LecteurPdf";
 import {
   Bouton,
   BoutonIcone,
@@ -262,10 +263,9 @@ function Documents({ chapitre }: { chapitre: Chapitre }) {
       <ul className="grid gap-2 sm:grid-cols-2">
         {chapitre.documents.map((d) => (
           <li key={d.fichier}>
-            <a
+            <LienPdf
               href={lienFichier(d.fichier)}
-              target="_blank"
-              rel="noreferrer"
+              titre={d.titre}
               className="group flex min-h-14 items-center gap-3 rounded-xl border border-line bg-bg/50 px-3 py-2.5 transition-colors hover:border-ink/30"
             >
               <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent">
@@ -279,7 +279,7 @@ function Documents({ chapitre }: { chapitre: Chapitre }) {
                   {d.detail ?? "PDF"}
                 </span>
               </span>
-            </a>
+            </LienPdf>
           </li>
         ))}
       </ul>

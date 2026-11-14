@@ -1,5 +1,6 @@
 "use client";
 
+import { LienPdf } from "@/components/LecteurPdf";
 import { Suspense, useState } from "react";
 import { ZoneDictee } from "@/components/Dictee";
 import Link from "next/link";
@@ -316,10 +317,9 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
               <ul className="mb-5 flex flex-col gap-2" aria-label="Fiches du prof">
                 {lecon.documents.map((d) => (
                   <li key={d.fichier}>
-                    <a
+                    <LienPdf
                       href={lienFichier(d.fichier)}
-                      target="_blank"
-                      rel="noreferrer"
+                      titre={d.titre}
                       className="flex min-h-14 items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-card transition-colors hover:border-ink/25"
                     >
                       <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent">
@@ -329,7 +329,7 @@ function Lecteur({ lecon }: { lecon: Lecon }) {
                         <span className="block text-[15px] font-semibold leading-snug">{d.titre}</span>
                         {d.detail && <span className="block text-[13px] text-muted">{d.detail}</span>}
                       </span>
-                    </a>
+                    </LienPdf>
                   </li>
                 ))}
               </ul>

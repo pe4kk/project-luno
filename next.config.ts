@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import { execSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { copyFileSync, writeFileSync } from "node:fs";
 
 // Sur GitHub Pages, le site est servi sous /project-luno.
 const pages = process.env.GITHUB_PAGES === "true";
@@ -16,6 +16,9 @@ const version = (() => {
   }
 })();
 writeFileSync("public/version.json", JSON.stringify({ version }));
+
+// Le « worker » de pdf.js (lecteur de PDF intégré, LecteurPdf.tsx), servi tel quel.
+copyFileSync("node_modules/pdfjs-dist/legacy/build/pdf.worker.min.mjs", "public/pdf.worker.min.mjs");
 
 const nextConfig: NextConfig = {
   output: "export",

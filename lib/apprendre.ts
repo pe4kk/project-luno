@@ -89,8 +89,21 @@ export function preparerNotion(chapitreId: string, carte: Flashcard, pool: Flash
  * Les notions d'une manche : d'abord celles déjà commencées (les plus avancées en
  * premier, pour les finir), puis des nouvelles, mélangées.
  */
+/** Les cartes des chapitres, une seule fois chacune (une carte peut être dans deux chapitres). */
+function sansDoublons(chapitres: Chapitre[]) {
+  const vues = new Set<string>();
+  return chapitres.flatMap((c) =>
+    c.flashcards.flatMap((carte) => {
+      const cle = `${carte.recto.trim().toLowerCase()}|${carte.verso.trim().toLowerCase()}`;
+      if (vues.has(cle)) return [];
+      vues.add(cle);
+      return [{ chapitreId: c.id, carte }];
+    }),
+  );
+}
+
 export function composerManche(chapitres: Chapitre[], taille = TAILLE_MANCHE): NotionManche[] {
-  const toutes = chapitres.flatMap((c) => c.flashcards.map((carte) => ({ chapitreId: c.id, carte })));
+  const toutes = sansDoublons(chapitres);
   const pool = toutes.map((x) => x.carte);
   const enCours = melanger(toutes.filter((x) => (x.carte.apprendre ?? 0) > 0 && (x.carte.apprendre ?? 0) < MAITRISEE)).sort(
     (a, b) => (b.carte.apprendre ?? 0) - (a.carte.apprendre ?? 0),
@@ -102,8 +115,7 @@ export function composerManche(chapitres: Chapitre[], taille = TAILLE_MANCHE): N
 /** Combien de notions à chaque palier. */
 export function repartition(chapitres: Chapitre[]) {
   const r = { maitrisees: 0, aEcrire: 0, aCompleter: 0, nouvelles: 0, total: 0 };
-  for (const c of chapitres)
-    for (const f of c.flashcards) {
+  for (const { carte: f } of sansDoublons(chapitres)) {
       r.total++;
       const a = f.apprendre ?? 0;
       if (a >= MAITRISEE) r.maitrisees++;

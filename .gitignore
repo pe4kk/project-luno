@@ -42,3 +42,6 @@ next-env.d.ts
 
 # écrit à chaque build par next.config.ts
 /public/version.json
+
+# copié depuis pdfjs-dist à chaque build (next.config.ts)
+/public/pdf.worker.min.mjs

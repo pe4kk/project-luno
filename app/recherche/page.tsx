@@ -1,5 +1,6 @@
 "use client";
 
+import { LienPdf } from "@/components/LecteurPdf";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -273,14 +274,9 @@ export default function Recherche() {
                     >
                       {/* Un PDF est un fichier : lien simple, car Link ajouterait le préfixe du site une seconde fois. */}
                       {r.externe ? (
-                        <a
-                          href={r.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={classeResultat}
-                        >
+                        <LienPdf href={r.href} titre={r.titre} className={classeResultat}>
                           <ContenuResultat r={r} />
-                        </a>
+                        </LienPdf>
                       ) : (
                         <Link href={r.href} className={classeResultat}>
                           <ContenuResultat r={r} />
