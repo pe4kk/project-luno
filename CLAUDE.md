@@ -470,7 +470,10 @@ un PDF ou une photo directement dans le chat.
   carte de vocabulaire (recto qui n'est pas une question), le QCM est **inversé** si
   le verso redit le mot (sinon une fois sur trois) : la définition, mots du recto
   cachés par « … », et quatre notions au choix, les voisines d'abord. Le mot caché du
-  texte à trous n'est jamais un mot du recto. Éviter quand même qu'un verso redise son
+  texte à trous est un mot du vocabulaire du chapitre (mots des rectos), jamais un mot
+  du recto de la carte, un adverbe ou un mot banal ; s'il n'y en a pas, la carte saute
+  le palier « Compléter ». Pas de carte sur ce qui ne tombe pas en éval (logiciels de
+  TP comme Aviméca, Regressi : carte retirée le 2026-11-14, « typiquement inutile »). Éviter quand même qu'un verso redise son
   recto (« … : c'est la vitesse limite »).
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).

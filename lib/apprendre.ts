@@ -15,7 +15,7 @@ export const MAITRISEE = 3;
 export const TAILLE_MANCHE = 7;
 
 const VIDES = new Set(
-  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme auquel lequel laquelle lesquels duquel chaque autre autres celles ceux".split(
+  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux".split(
     " ",
   ),
 );
@@ -129,12 +129,21 @@ function inversePour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flas
   return { enonce: cacherRecto(carte), choix: melanger([carte.recto, ...autres.map((f) => f.recto)]) };
 }
 
-/** Le mot caché au palier 2 : un des mots clés les plus longs du verso, absent du recto. */
-function trouPour(carte: Flashcard) {
+/**
+ * Le mot caché au palier 2 : un mot du vocabulaire du chapitre (les mots des rectos et
+ * des définitions : « tangente », « référentiel », « colinéaires »…), absent du recto de
+ * la carte. Jamais un adverbe (« numériquement ») ni un mot banal.
+ */
+function trouPour(carte: Flashcard, vocabulaire: Set<string>) {
   const recto = [...motsDuRecto(carte)];
-  const tous = motsCles(carte.verso).sort((a, b) => b.length - a.length);
-  const sansRecto = tous.filter((m) => !recto.some((r) => memeMot(simplifier(m), r)));
-  const mots = (sansRecto.length ? sansRecto : tous).slice(0, 3);
+  const tous = motsCles(carte.verso)
+    .filter((m) => !/ment$/i.test(m) && !recto.some((r) => memeMot(simplifier(m), r)))
+    .sort((a, b) => b.length - a.length);
+  const duCours = tous.filter((m) => [...vocabulaire].some((v) => memeMot(simplifier(m), v)));
+  // Aucun mot du cours dans la réponse : pas de texte à trous (un mot pris au hasard,
+  // « lointaines » ou « numériquement », n'apprend rien), on passera à « De tête ».
+  const mots = duCours.slice(0, 3);
+  if (!mots.length) return undefined;
   return mots[Math.floor(Math.random() * mots.length)];
 }
 
@@ -156,13 +165,13 @@ export function preparerNotion(
     palier = estCourte(carte) ? 3 : 2;
     choix = undefined;
   }
-  return {
-    chapitreId,
-    carte,
-    palier,
-    choix,
-    trou: palier === 2 ? trouPour(carte) : undefined,
-  };
+  const vocabulaire = new Set(
+    memeChapitre.flatMap((f) => [...motsDuRecto(f)]).filter((m) => m.length >= 5 && !/ment$/.test(m)),
+  );
+  const trou = palier === 2 ? trouPour(carte, vocabulaire) : undefined;
+  // Aucun mot intéressant à cacher : on passe à « De tête ».
+  if (palier === 2 && !trou) palier = 3;
+  return { chapitreId, carte, palier, choix, trou };
 }
 
 /**

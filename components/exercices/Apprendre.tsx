@@ -542,7 +542,7 @@ function Question({
                 : "Bien vu, palier suivant."
               : "Pas encore : elle revient un peu plus loin."}
           </p>
-          {(q.inverse || (!verdict && q.palier === 2)) && (
+          {q.inverse && (
             <div className="mt-2 rounded-xl bg-ink/5 p-3.5 text-[14.5px] leading-relaxed">
               {formule(carte.verso)}
               {carte.schema && (

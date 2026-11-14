@@ -52,8 +52,13 @@ const CARTE_REFERENTIEL = {
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 10,
-    cartesRetirees: ["Point matériel"],
+    version: 11,
+    // Retirées : « Point matériel » (fondu dans « Système ») ; les logiciels de TP (inutile à l'éval).
+    cartesRetirees: [
+      "Point matériel",
+      "Aviméca, Regressi, Python",
+      "À quoi servent Aviméca, Regressi et Python pour étudier un mouvement ?",
+    ],
     calculs: CALCULS_CHAP9,
     definitions: DEF_PC_CHAP9,
     matiere,
@@ -176,11 +181,6 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         recto: "À quoi sert la relation de Chasles dans la méthode d'Euler ?",
         verso:
           "M₁M₃⃗ = M₁O⃗ + OM₃⃗ = OM₃⃗ − OM₁⃗ : on passe des vecteurs position aux coordonnées.",
-      },
-      {
-        recto: "À quoi servent Aviméca, Regressi et Python pour étudier un mouvement ?",
-        verso:
-          "Aviméca sert à pointer les positions sur une vidéo ; Regressi calcule numériquement les vitesses ; Python permet de tracer positions et vecteurs vitesse.",
       },
     ],
     fiche: {
