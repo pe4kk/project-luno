@@ -1005,7 +1005,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 10,
+    version: 11,
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1049,7 +1049,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Qu'est-ce que la vitesse limite d'une chute ?",
         verso:
-          "Dans une chute avec frottements, quand le frottement compense le poids, la vitesse devient constante : c'est la vitesse limite.",
+          "Dans une chute avec frottements, c'est la vitesse atteinte quand le frottement compense le poids : à partir de là, elle reste constante.",
       },
       {
         recto: "Force de rappel d'un ressort", schema: RESSORT,

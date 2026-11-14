@@ -54,8 +54,13 @@ export type NotionManche = {
   chapitreId: string;
   carte: Flashcard;
   palier: Palier;
-  /** Palier 1 : quatre propositions, dont le verso. */
+  /** Palier 1 : quatre propositions, dont le verso (ou le recto si `inverse`). */
   choix?: string[];
+  /**
+   * Palier 1 inversé, pour une carte de vocabulaire : on montre la définition (le mot
+   * lui-même caché par « … » s'il y figure) et on choisit la notion parmi quatre rectos.
+   */
+  inverse?: string;
   /** Palier 2 : le mot caché dans le verso. */
   trou?: string;
 };
@@ -89,9 +94,47 @@ function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashc
   return melanger([carte.verso, ...autres.map((f) => f.verso)]);
 }
 
-/** Le mot caché au palier 2 : un des mots clés les plus longs du verso. */
+/** Un recto rédigé en question (« Quelle est… ? ») plutôt qu'un mot à définir. */
+export const estQuestion = (recto: string) => /\?\s*$/.test(recto.trim());
+
+/** Les mots clés du recto (sans accents), pour ne pas les cacher ni les montrer. */
+const motsDuRecto = (f: Flashcard) => new Set(motsCles(f.recto.replace(/\(.*?\)/g, "")).map(simplifier));
+const memeMot = (a: string, b: string) => a === b || a.replace(/s$/, "") === b.replace(/s$/, "");
+
+/** La définition, avec les mots du recto remplacés par « … » (le QCM inversé ne se devine pas). */
+function cacherRecto(carte: Flashcard) {
+  const mots = [...motsDuRecto(carte)];
+  return sansMiseEnForme(carte.verso).replace(/[A-Za-zÀ-ÿ]+/g, (m) =>
+    mots.some((r) => memeMot(simplifier(m), r)) ? "…" : m,
+  ).replace(/(…\s*)+…/g, "…");
+}
+
+/** Le verso redit-il les mots du recto (« … : c'est la vitesse limite ») ? */
+const versoRepeteRecto = (f: Flashcard) => {
+  const mots = [...motsDuRecto(f)];
+  const verso = new Set(motsCles(f.verso).map(simplifier));
+  return mots.length > 0 && mots.every((r) => [...verso].some((v) => memeMot(v, r)));
+};
+
+/** QCM inversé : la bonne notion parmi quatre rectos de vocabulaire (même chapitre d'abord). */
+function inversePour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashcard[]) {
+  const valable = (f: Flashcard) => f.id !== carte.id && !estQuestion(f.recto) && f.recto !== carte.recto;
+  // Les notions voisines d'abord (« Référentiel terrestre » pour « Référentiel héliocentrique ») :
+  // il faut vraiment savoir, pas éliminer.
+  const mots = motsDuRecto(carte);
+  const voisine = (f: Flashcard) => [...motsDuRecto(f)].some((m) => mots.has(m));
+  const trier = (l: Flashcard[]) => melanger(l.filter(valable)).sort((a, b) => Number(voisine(b)) - Number(voisine(a)));
+  const autres = [...trier(memeChapitre), ...trier(ailleurs)].slice(0, 3);
+  if (autres.length < 3) return null;
+  return { enonce: cacherRecto(carte), choix: melanger([carte.recto, ...autres.map((f) => f.recto)]) };
+}
+
+/** Le mot caché au palier 2 : un des mots clés les plus longs du verso, absent du recto. */
 function trouPour(carte: Flashcard) {
-  const mots = motsCles(carte.verso).sort((a, b) => b.length - a.length).slice(0, 3);
+  const recto = [...motsDuRecto(carte)];
+  const tous = motsCles(carte.verso).sort((a, b) => b.length - a.length);
+  const sansRecto = tous.filter((m) => !recto.some((r) => memeMot(simplifier(m), r)));
+  const mots = (sansRecto.length ? sansRecto : tous).slice(0, 3);
   return mots[Math.floor(Math.random() * mots.length)];
 }
 
@@ -102,6 +145,11 @@ export function preparerNotion(
   ailleurs: Flashcard[] = [],
 ): NotionManche {
   let palier = palierSuivant(carte);
+  // Carte de vocabulaire : QCM inversé si le verso redit le mot, sinon une fois sur trois.
+  if (palier === 1 && !estQuestion(carte.recto) && (versoRepeteRecto(carte) || Math.random() < 1 / 3)) {
+    const inv = inversePour(carte, memeChapitre, ailleurs);
+    if (inv) return { chapitreId, carte, palier, choix: inv.choix, inverse: inv.enonce };
+  }
   let choix = palier === 1 ? choixPour(carte, memeChapitre, ailleurs) : undefined;
   // Pas assez d'autres cartes pour un QCM : on passe au palier suivant.
   if (choix && choix.length < 4) {

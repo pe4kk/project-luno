@@ -21,6 +21,7 @@ import {
   apresReussite,
   comparer,
   composerManche,
+  estQuestion,
   preparerNotion,
   repartition,
   type NotionManche,
@@ -35,9 +36,6 @@ const CONSIGNES = {
 } as const;
 
 type Resultat = { carteId: string; recto: string; palier: 1 | 2 | 3; reussi: boolean; maitrisee: boolean };
-
-/** Un recto rédigé en question (« Quelle est… ? ») plutôt qu'un simple mot à définir. */
-const estQuestion = (recto: string) => /\?\s*$/.test(recto.trim());
 
 const aDesCartes = (c: Chapitre) => c.flashcards.length > 0;
 
@@ -377,14 +375,24 @@ function Question({
       </div>
       <p className="mt-0.5 text-[12.5px] text-muted">{chapitre}</p>
       <p className="mt-3 text-[13px] font-semibold text-muted">
-        {q.palier === 1 && !estQuestion(carte.recto) ? "Choisis ce qui correspond à :" : CONSIGNES[q.palier]}
+        {q.inverse
+          ? "Quelle notion correspond à cette définition ?"
+          : q.palier === 1 && !estQuestion(carte.recto)
+            ? "Choisis ce qui correspond à :"
+            : CONSIGNES[q.palier]}
       </p>
-      <p className="mt-1 font-display text-[21px] leading-snug sm:text-[23px]">{formule(carte.recto)}</p>
+      {q.inverse ? (
+        <p className="mt-2 rounded-xl border-l-4 border-accent bg-ink/5 px-4 py-3 text-[16px] leading-relaxed">
+          {formule(q.inverse)}
+        </p>
+      ) : (
+        <p className="mt-1 font-display text-[21px] leading-snug sm:text-[23px]">{formule(carte.recto)}</p>
+      )}
 
       {q.palier === 1 && q.choix && (
         <div className="mt-4 grid gap-2" role="radiogroup" aria-label="Propositions">
           {q.choix.map((c, i) => {
-            const bon = c === carte.verso;
+            const bon = c === (q.inverse ? carte.recto : carte.verso);
             const montre = verdict !== null;
             return (
               <button
@@ -534,7 +542,7 @@ function Question({
                 : "Bien vu, palier suivant."
               : "Pas encore : elle revient un peu plus loin."}
           </p>
-          {!verdict && q.palier === 2 && (
+          {(q.inverse || (!verdict && q.palier === 2)) && (
             <div className="mt-2 rounded-xl bg-ink/5 p-3.5 text-[14.5px] leading-relaxed">
               {formule(carte.verso)}
               {carte.schema && (

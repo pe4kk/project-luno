@@ -466,7 +466,12 @@ un PDF ou une photo directement dans le chat.
   reformuler une carte publiée sans perdre la progression : l'ajouter à
   `contenu/renommages.ts` (ancien recto → nouveau) et augmenter `version`. Le QCM du
   mode Apprendre prend ses mauvaises réponses dans le même chapitre d'abord, de
-  longueur proche, et écarte les versos trop proches de la bonne réponse.
+  longueur proche, et écarte les versos trop proches de la bonne réponse. Pour une
+  carte de vocabulaire (recto qui n'est pas une question), le QCM est **inversé** si
+  le verso redit le mot (sinon une fois sur trois) : la définition, mots du recto
+  cachés par « … », et quatre notions au choix, les voisines d'abord. Le mot caché du
+  texte à trous n'est jamais un mot du recto. Éviter quand même qu'un verso redise son
+  recto (« … : c'est la vitesse limite »).
 - **Leçon** : ajouter une entrée à `contenu/lecons.ts` (étapes courtes, un
   exemple, une question « Vérifie-toi » par étape).
 - Contenus publiés : `hggsp-theme4.ts`, `francais-rimbaud.ts`,
