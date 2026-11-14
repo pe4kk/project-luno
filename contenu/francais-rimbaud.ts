@@ -10,7 +10,7 @@ import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 4,
+  version: 5,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -26,22 +26,22 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         "S'émanciper, c'est se libérer d'une tutelle (mère, école, morale bourgeoise, Empire, modèles poétiques). « Créatrice » : cette libération produit une poésie neuve.",
     },
     {
-      recto: "Fil rouge du cours sur Rimbaud",
+      recto: "Quel est le fil rouge du cours sur Rimbaud ?",
       verso:
         "Derrière le mythe (génie précoce, révolté, voyant) se cachent des poèmes faussement simples, pleins de jeu, de parodie et de doubles sens.",
     },
     {
-      recto: "Étiemble, Le Mythe de Rimbaud (1952)",
+      recto: "Que montre Étiemble dans Le Mythe de Rimbaud (1952) ?",
       verso:
         "Il étudie les commentateurs plutôt que l'œuvre : chacun fabrique son Rimbaud, ce qui nous éloigne du vrai. Il rappelle aussi que Rimbaud imite et pastiche.",
     },
     {
-      recto: "Claudel sur Rimbaud (préface de 1912)",
+      recto: "Que dit Claudel de Rimbaud dans sa préface de 1912 ?",
       verso:
         "« Arthur Rimbaud fut un mystique à l'état sauvage » : exemple de récupération, ici catholique, qui déforme le poète.",
     },
     {
-      recto: "Les quatre raisons du mythe Rimbaud",
+      recto: "Quelles sont les quatre raisons du mythe Rimbaud ?",
       verso:
         "Précocité (il écrit de 15 à 20 ans), révolte, originalité, silence (plus de poésie après 1875).",
     },
@@ -75,7 +75,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
       verso: "Textes laissés à Verlaine, publiés en 1886.",
     },
     {
-      recto: "10 juillet 1873",
+      recto: "Que se passe-t-il le 10 juillet 1873 à Bruxelles ?",
       verso:
         "À Bruxelles, Verlaine tire sur Rimbaud et le blesse au poignet ; il fait deux ans de prison.",
     },
@@ -111,52 +111,52 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
         "Texte écrit par-dessus un texte ancien, qui reste lisible dessous.",
     },
     {
-      recto: "Pastiche et parodie",
+      recto: "Quelle différence entre un pastiche et une parodie ?",
       verso:
         "Le pastiche est une imitation ; la parodie, une imitation moqueuse. Chez Rimbaud, le pastiche tourne souvent à la parodie.",
     },
     {
-      recto: "« Les Effarés »",
+      recto: "Que raconte le poème « Les Effarés » ?",
       verso:
         "Cinq petits pauvres regardent cuire le pain devant le soupirail du boulanger. Lecture pathétique en apparence, détournée par le registre bas (« Leurs culs en rond ») et une critique indirecte de la religion.",
     },
     {
-      recto: "« Le Bal des pendus »",
+      recto: "Quel texte « Le Bal des pendus » réécrit-il, et comment ?",
       verso:
         "Réécriture inversée de « La Ballade des pendus » de Villon : pas de pitié pour ces « paladins ». Poème politique contre la cour de Napoléon III.",
     },
     {
-      recto: "« Le Châtiment de Tartufe »",
+      recto: "Quelles lectures peut-on faire du « Châtiment de Tartufe » ?",
       verso:
         "Double lecture : anticléricale (le dévot cache ses désirs) et politique (Tartufe désigne Napoléon III). Intertextes : Molière et Les Châtiments de Hugo.",
     },
     {
-      recto: "Acrostiche du « Châtiment de Tartufe »",
+      recto: "Quel acrostiche cache « Le Châtiment de Tartufe » ?",
       verso:
         "Les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) » : le César, c'est Napoléon III.",
     },
     {
-      recto: "« Les Reparties de Nina »",
+      recto: "Comment est construit le poème « Les Reparties de Nina » ?",
       verso:
         "« Lui » tient un long discours amoureux ; « Elle » répond d'un vers : « — Et mon bureau ? ». Rimbaud se moque des deux et critique la poésie romantique.",
     },
     {
-      recto: "« Ma Bohème » et « Sensation » : la différence",
+      recto: "Quelle différence entre « Ma Bohème » et « Sensation » ?",
       verso:
         "« Sensation » est au futur (un rêve d'évasion) ; « Ma Bohème » à l'imparfait (une expérience vécue).",
     },
     {
-      recto: "« Mon paletot aussi devenait idéal »",
+      recto: "Que signifie le vers « Mon paletot aussi devenait idéal » ?",
       verso:
         "Syllepse : usé au point de n'être plus qu'une idée, et parfait. La pauvreté est transfigurée en poésie.",
     },
     {
-      recto: "Trois axes pour la dissertation sur Rimbaud",
+      recto: "Quels trois axes proposer pour une dissertation sur Rimbaud ?",
       verso:
         "S'émanciper de son milieu ; s'émanciper des pouvoirs (Empire, religion, morale bourgeoise) ; s'émanciper des modèles poétiques.",
     },
     {
-      recto: "Nuance attendue en dissertation",
+      recto: "Quelle nuance est attendue dans une dissertation sur Rimbaud ?",
       verso:
         "Rimbaud reste dans une tradition : il écrit des sonnets, imite ses modèles, et c'est de l'intérieur qu'il les fait exploser.",
     },

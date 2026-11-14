@@ -14,6 +14,16 @@ ouverte sur ce dépôt. Il sert de mémoire entre les conversations.
 - Ne jamais y écrire de secret (clé d'API, mot de passe, jeton) : le dépôt est
   public.
 - Parler français avec l'utilisateur.
+- **Généraliser chaque remarque** (demandé le 2026-11-14 : « essaie de généraliser tout
+  ce qu'on se dit ») : quand il corrige un contenu ou un écran, en tirer la règle
+  générale, l'écrire dans « Principes des contenus et des quiz » ci-dessous, l'appliquer
+  à **tout** le contenu existant (toutes les matières, pas seulement l'exemple), et la
+  reporter dans la consigne de la tâche planifiée.
+- **Début de session : lire le journal du quiz** : `node scripts/demandes.mjs journal
+  <date de la dernière lecture>` (signalements « pas claire / inutile / trop facile /
+  corrigé faux », cartes souvent ratées, réponses fausses). Corriger les cartes visées
+  (reformuler, `renommages.ts`, `hors-quiz.ts`, verso), en tirer une règle si le défaut
+  se répète, puis noter ici la date de lecture. Dernière lecture : 2026-11-14 (vide).
 
 ## Objectif du projet
 
@@ -238,6 +248,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
     tirée, `{resultat}` = résultat ; `formule` en syntaxe simple (`m * v / dt`,
     conversions écrites en nombres dans la formule) ; éviter les bornes qui
     changent le nombre de c.s (« 0,8 », « 100 »).
+  - **Journal du quiz et « Signaler »** (2026-11-14, demandé : « récupère mes actions et
+    réponses pour améliorer les quiz ») : chaque réponse du mode Apprendre va dans
+    `journal` des données (`EntreeQuiz` : chapitre, recto, palier, forme qcm / inverse /
+    trou / tete, réponse, attendu, juste, `signal`, `remarque` ; 400 dernières,
+    synchronisé, fusion par id). Bouton « Signaler » après chaque réponse (Pas claire,
+    Inutile, Trop facile, Corrigé faux, Autre + un mot). Lecture :
+    `node scripts/demandes.mjs journal [AAAA-MM-JJ]` (table `donnees`, clé injectée par
+    le proxy). La tâche planifiée ne peut pas pousser sur le dépôt (clone public sans
+    droits) : les corrections de contenu publié se font dans une conversation.
   - **Mode « Apprendre » de S'exercer** (2026-11-14, idée tirée des concurrents, testée
     sur l'éval de cours de physique du 16/11) : premier onglet de S'exercer
     (`components/exercices/Apprendre.tsx`, `lib/apprendre.ts`, `?mode=apprendre&dst=`),
@@ -393,6 +412,33 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - `html` et `body` ont `overflow-x: clip` : le glissement d'entrée d'une page
     (24 px) faisait dézoomer le téléphone.
   Interface entièrement en français, noms de code en français.
+
+## Principes des contenus et des quiz (tirés de nos échanges, valables partout)
+
+1. **Penser comme le prof** : sa méthode, ses notations, ses conversions (chaque unité
+   convertie, jamais « × 3,6 ») ; une méthode générale fixe, plus une méthode par type
+   d'exercice, jamais fondues.
+2. **Pertinence d'abord** : ne garder que ce qu'un prof peut demander. Pas de carte sur
+   les logiciels de TP, les anecdotes, les chiffres de sondage ; méthodes dans la fiche,
+   pas en Déf ni en quiz (`hors-quiz.ts`).
+3. **Une question se comprend seule** : un terme à définir ou une vraie question qui
+   nomme son sujet (« Que signifie concrètement la 2e loi de Newton ? »), jamais un
+   titre elliptique ni une date nue.
+4. **La réponse ne se devine pas** : le verso ne redit pas le recto ; les mauvaises
+   réponses d'un QCM viennent du même chapitre, sont de forme proche et jamais des
+   paraphrases de la bonne ; le mot caché est un mot du cours.
+5. **Une notion, une seule fois** : notion commune à deux chapitres = même entrée de Déf
+   et même carte ; pas deux cartes qui disent la même chose.
+6. **Juger le fond, pas la forme** : une formule juste (Δv⃗ = 0⃗, a/b, indices tapés)
+   vaut une bonne réponse ; une reformulation qui garde le sens est acceptée ; l'élève
+   valide lui-même.
+7. **Faire ressortir l'essentiel** : `==…==` (gras), une ou deux fois par section ;
+   textes longs acceptés.
+8. **Généraliser les erreurs** : « Mes erreurs » donne la règle réutilisable, pas
+   seulement la faute.
+9. **Vérifier** : refaire chaque calcul et chaque bonne réponse (« les IA font des
+   erreurs »), signaler les coquilles du prof sans les recopier.
+10. **Ne jamais faire un devoir noté à sa place** : méthode et exemples parallèles.
 
 ## Ajouter du contenu (cours envoyés par l'utilisateur)
 

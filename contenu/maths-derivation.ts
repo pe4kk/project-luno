@@ -25,7 +25,7 @@ const matiere = { nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" };
 
 export const MATHS_DERIVATION: ChapitrePublie = {
   id: "maths-1re-derivation",
-  version: 3,
+  version: 4,
   definitions: DEF_MATHS_DERIVATION,
   matiere,
   titre: "Séquence 2 · Dérivation",
@@ -35,13 +35,13 @@ export const MATHS_DERIVATION: ChapitrePublie = {
       verso: "t(h) = {{f(a + h) − f(a) // h}}, avec h réel non nul et a + h dans I.",
     },
     {
-      recto: "Interprétation géométrique du taux de variation",
+      recto: "Que représente graphiquement le taux de variation de f entre a et a + h ?",
       verso:
         "C'est la pente (le coefficient directeur) de la sécante (AM), où A et M sont les points de la courbe d'abscisses a et a + h : t(h) = {{y_M − y_A // x_M − x_A}}.",
       schema: SECANTE,
     },
     {
-      recto: "f est dérivable en a",
+      recto: "Quand dit-on qu'une fonction f est dérivable en a ?",
       verso:
         "Quand h tend vers 0, le taux de variation t(h) tend vers un nombre réel. Ce nombre est le nombre dérivé f'(a).",
     },
@@ -50,18 +50,18 @@ export const MATHS_DERIVATION: ChapitrePublie = {
       verso: "f'(a) = lim (h → 0) {{f(a + h) − f(a) // h}}",
     },
     {
-      recto: "Interprétation géométrique de f'(a)",
+      recto: "Que représente graphiquement le nombre dérivé f'(a) ?",
       verso:
         "C'est la pente de la tangente à la courbe au point A(a ; f(a)) : la limite des pentes des sécantes (AM) quand M se rapproche de A.",
       schema: TANGENTE_LIMITE,
     },
     {
-      recto: "Équation de la tangente en a",
+      recto: "Quelle est l'équation de la tangente à la courbe de f au point d'abscisse a ?",
       verso: "y = f(a) + f'(a)(x − a). Elle passe par A(a ; f(a)) et a pour pente f'(a).",
       schema: TANGENTE_EQUATION,
     },
     {
-      recto: "Dérivable sur un intervalle I",
+      recto: "Quand dit-on qu'une fonction f est dérivable sur un intervalle I ?",
       verso:
         "f est dérivable en tout réel a de I. La fonction f' : x ↦ f'(x) est la fonction dérivée de f.",
     },
@@ -79,12 +79,12 @@ export const MATHS_DERIVATION: ChapitrePublie = {
       schema: RACINE,
     },
     {
-      recto: "Pourquoi √x n'est pas dérivable en 0",
+      recto: "Pourquoi la fonction racine carrée n'est-elle pas dérivable en 0 ?",
       verso:
         "En 0, t(h) = {{√h // h}} = {{1 // √h}} : quand h tend vers 0, t(h) devient de plus en plus grand et ne tend vers aucun nombre réel.",
     },
     {
-      recto: "Dérivabilité de |x|",
+      recto: "Où la fonction valeur absolue est-elle dérivable ?",
       verso:
         "Continue sur ℝ, dérivable sur ℝ* (f'(x) = −1 si x < 0, 1 si x > 0), non dérivable en 0.",
       schema: VALEUR_ABSOLUE,

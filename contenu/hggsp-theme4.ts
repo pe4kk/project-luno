@@ -14,7 +14,7 @@ const matiere = { nom: "HGGSP", couleur: "#8a5a78", emoji: "🏛️" };
 export const HGGSP_THEME_4: ChapitrePublie[] = [
   {
     id: "hggsp-1re-t4-intro",
-    version: 4,
+    version: 5,
     definitions: DEF_HGGSP_INTRO,
     matiere,
     titre: "Thème 4 · Introduction : s'informer",
@@ -58,12 +58,12 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Possibilité de s'informer auprès de sources diverses, dans toutes les directions.",
       },
       {
-        recto: "Problématique du thème 4",
+        recto: "Quelle est la problématique du thème 4 d'HGGSP (s'informer) ?",
         verso:
           "Comment se construisent les conditions d'un accès libre et éclairé à une information fiable dans une « société de l'information » ?",
       },
       {
-        recto: "L'information hier et aujourd'hui",
+        recto: "Comment l'information a-t-elle changé entre hier et aujourd'hui ?",
         verso:
           "Hier : rare, lente, verticale (des producteurs vers le public). Aujourd'hui : surabondante, immédiate, réticulaire (en réseau).",
       },
@@ -74,7 +74,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Parce que la démocratie repose sur le choix (le vote) : sans bonnes informations, pas de choix éclairé.",
       },
       {
-        recto: "Économie de l'attention : quelle dérive ?",
+        recto: "Quelle est la dérive de l'économie de l'attention ?",
         verso:
           "Pour capter l'attention, les médias privilégient des contenus émotionnels, spectaculaires, voire clivants : c'est une racine du sensationnalisme, qui ouvre la porte à la désinformation.",
       },
@@ -84,7 +84,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Tout passe désormais par le téléphone ; publicité, information et divertissement s'y mélangent.",
       },
       {
-        recto: "Les quatre fractures dans l'accès à l'information",
+        recto: "Quelles sont les quatre fractures dans l'accès à l'information ?",
         verso:
           "Générationnelle, de genre, sociale et culturelle, territoriale (zones rurales sans fibre).",
       },
@@ -94,11 +94,11 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Les plus âgés privilégient la radio et la télé (on va vers l'info) ; les jeunes passent par les réseaux sociaux (l'info vient à nous).",
       },
       {
-        recto: "Part des Français qui se méfient des médias",
+        recto: "Quelle part des Français se méfie des médias ?",
         verso: "Environ 2 sur 3, selon une enquête de 2026.",
       },
       {
-        recto: "Réponse publique à la désinformation",
+        recto: "Comment les pouvoirs publics répondent-ils à la désinformation ?",
         verso:
           "La France et l'UE légifèrent et cherchent un socle de faits partagés, en respectant la liberté d'expression garantie par la Constitution.",
       },
@@ -420,13 +420,13 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe1",
-    version: 4,
+    version: 5,
     definitions: DEF_HGGSP_AXE1,
     matiere,
     titre: "Thème 4 · Axe 1 : les révolutions techniques de l'information",
     flashcards: [
       {
-        recto: "Vers 1450",
+        recto: "Que se passe-t-il vers 1450 dans l'histoire de l'information ?",
         verso:
           "Invention de l'imprimerie par Gutenberg : on multiplie les copies en baissant fortement les coûts, la lecture se démocratise.",
       },
@@ -436,12 +436,12 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Feuilles qui racontent prodiges et nouvelles : ancêtres du journal, déjà tournés vers le sensationnel.",
       },
       {
-        recto: "1631",
+        recto: "Que se passe-t-il en 1631 dans l'histoire de la presse ?",
         verso:
           "La Gazette de Théophraste Renaudot, premier périodique en France.",
       },
       {
-        recto: "1777",
+        recto: "Que se passe-t-il en 1777 dans l'histoire de la presse ?",
         verso:
           "Le Journal de Paris, premier quotidien français : les publications quotidiennes apparaissent au XVIIIe siècle.",
       },
@@ -460,7 +460,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Machine du XIXe siècle qui imprime très vite : elle rend possible la presse à grand tirage.",
       },
       {
-        recto: "Facteurs de la presse à grand tirage au XIXe siècle",
+        recto: "Quels facteurs expliquent la presse à grand tirage au XIXe siècle ?",
         verso:
           "Alphabétisation, industrialisation, urbanisation, progrès des transports.",
       },
@@ -479,7 +479,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "La presse comme contre-pouvoir, après le législatif, l'exécutif et le judiciaire : elle exerce une veille démocratique.",
       },
       {
-        recto: "1921",
+        recto: "Que se passe-t-il en 1921 dans l'histoire de la radio ?",
         verso: "Radio Tour Eiffel, premier émetteur public en France.",
       },
       {
@@ -492,14 +492,14 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
         verso:
           "Poste de radio portatif : l'écoute devient mobile et individuelle.",
       },
-      { recto: "1949", verso: "Premier journal télévisé en France." },
+      { recto: "Que se passe-t-il en 1949 dans l'histoire de la télévision ?", verso: "Premier journal télévisé en France." },
       {
         recto: "ORTF",
         verso:
           "Office de radiodiffusion-télévision française, créé par la loi du 27 juin 1964 et démantelé en 1974 : la télévision est alors un monopole d'État.",
       },
       {
-        recto: "1982",
+        recto: "Que se passe-t-il en 1982 dans l'audiovisuel français ?",
         verso:
           "Loi qui met fin au monopole d'État sur l'audiovisuel, sous François Mitterrand : apparition des chaînes privées.",
       },
@@ -519,7 +519,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Réseau lancé par l'agence américaine ARPA dans le contexte de la guerre froide : réseau distribué, non hiérarchisé, communication par paquets.",
       },
       {
-        recto: "Différence entre internet et le web",
+        recto: "Quelle est la différence entre internet et le web ?",
         verso:
           "Internet est l'infrastructure (câbles, fibre optique, satellites). Le web est une application qui circule dessus et permet de naviguer de page en page grâce aux liens.",
       },
@@ -529,7 +529,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Inventé par des Européens, Tim Berners-Lee au CERN, en 1989. Gratuit et public.",
       },
       {
-        recto: "1998",
+        recto: "Que se passe-t-il en 1998 dans l'histoire d'internet ?",
         verso: "Fondation de Google : accès facile à la connaissance.",
       },
       {
@@ -948,7 +948,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
   },
   {
     id: "hggsp-1re-t4-axe2",
-    version: 5,
+    version: 6,
     // Problèmes à rédiger (méthode du prof, 2026-11-12) sur des documents de cet axe.
     problemes: [...PROBLEMES_ETUDE_CRITIQUE, ...PROBLEMES_DISSERTATION],
     definitions: DEF_HGGSP_AXE2,
@@ -956,12 +956,12 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
     titre: "Thème 4 · Axe 2 : liberté ou contrôle de l'information",
     flashcards: [
       {
-        recto: "Idée-force de l'axe 2",
+        recto: "Quelle est l'idée-force de l'axe 2 (liberté ou contrôle de l'information) ?",
         verso:
           "Depuis l'imprimerie, tous les pouvoirs se méfient de l'information et cherchent à la contrôler ; avec la démocratie, elle se libère et devient un contre-pouvoir.",
       },
       {
-        recto: "1791",
+        recto: "Que se passe-t-il en 1791 pour la liberté d'expression ?",
         verso:
           "La liberté d'expression est inscrite dans la Constitution française.",
       },
@@ -976,7 +976,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Capitaine français, juif et alsacien, accusé à tort d'avoir livré des documents militaires aux Allemands ; condamné en 1894 et envoyé au bagne (île du Diable) ; réhabilité en 1906.",
       },
       {
-        recto: "13 janvier 1898",
+        recto: "Que se passe-t-il le 13 janvier 1898 pendant l'affaire Dreyfus ?",
         verso:
           "Émile Zola publie « J'accuse… ! » dans L'Aurore, le journal de Clemenceau : il exige que Dreyfus soit rejugé.",
       },
@@ -986,12 +986,12 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Camp hostile à Dreyfus : souvent catholiques, antisémites, ils refusent de remettre en cause le jugement de l'armée.",
       },
       {
-        recto: "La Croix pendant l'affaire Dreyfus",
+        recto: "Quelle position prend le journal La Croix pendant l'affaire Dreyfus ?",
         verso:
           "Quotidien catholique des assomptionnistes, antidreyfusard, qui se proclame en 1890 « le journal le plus antijuif de France ».",
       },
       {
-        recto: "Le Figaro pendant l'affaire Dreyfus",
+        recto: "Quelle position prend Le Figaro pendant l'affaire Dreyfus ?",
         verso:
           "D'abord favorable à la révision du procès, il recule pour ne pas perdre ses lecteurs : le lectorat influence la presse.",
       },
@@ -1001,7 +1001,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Figure née avec l'affaire Dreyfus : la presse permet à des intellectuels, comme Zola, de s'engager publiquement pour une cause.",
       },
       {
-        recto: "Les trois formes d'antisémitisme",
+        recto: "Quelles sont les trois formes d'antisémitisme ?",
         verso: "Religieux, social, racial.",
       },
       {
@@ -1010,12 +1010,12 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Entreprise qui collecte l'information, la vérifie et la vend aux autres médias : un média qui fournit les médias.",
       },
       {
-        recto: "Havas : 1832 et 1835",
+        recto: "Que fait Charles-Louis Havas en 1832 et en 1835 ?",
         verso:
           "1832 : Charles-Louis Havas crée un bureau de traduction de la presse étrangère. 1835 : il le transforme en agence de presse.",
       },
       {
-        recto: "Havas et la publicité (1857)",
+        recto: "Que change l'alliance d'Havas avec une agence de publicité en 1857 ?",
         verso:
           "Alliance avec une agence de publicité : les journaux deviennent dépendants d'Havas, et les industriels disposent de moyens de pression.",
       },
@@ -1044,7 +1044,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
         verso: "Article écrit du plus important au plus accessoire.",
       },
       {
-        recto: "1957 (AFP)",
+        recto: "Que change le statut de l'AFP en 1957 ?",
         verso:
           "Statut d'indépendance : les médias clients participent à sa gouvernance. Elle reste pourtant contrôlée, voire censurée, par exemple pendant la guerre d'Algérie.",
       },

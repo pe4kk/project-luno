@@ -30,5 +30,12 @@ export const CARTES_HORS_QUIZ = new Set(
     "Force de rappel d'un ressort", // « très marginal en Première, pas en DST »
     // Chap. 4
     "Comment simplifier une équation-bilan ?",
+    // Maths : anecdote historique
+    "Qui a inventé le calcul différentiel ?",
+    // HGGSP : chiffre de sondage, pas une notion du cours
+    "Quelle part des Français se méfie des médias ?",
+    // Français : méthode de dissertation (dans la fiche, pas en quiz)
+    "Quels trois axes proposer pour une dissertation sur Rimbaud ?",
+    "Quelle nuance est attendue dans une dissertation sur Rimbaud ?",
   ].map((r) => r.toLowerCase()),
 );
