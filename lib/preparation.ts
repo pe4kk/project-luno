@@ -75,6 +75,14 @@ export function etapes(
   const nbCartes = auProgramme.reduce((n, c) => n + c.flashcards.length, 0);
   if (nbCartes)
     liste.push({
+      id: "apprendre",
+      titre: `Apprendre les ${nbCartes} notions`,
+      detail: "Les reconnaître, les compléter, puis les écrire de tête, par manches de 7.",
+      href: exos("apprendre"),
+      minutes: Math.min(40, 10 + Math.round(nbCartes / 2)),
+    });
+  if (nbCartes)
+    liste.push({
       id: "cartes",
       titre: `Réviser les ${nbCartes} flashcards`,
       detail: "Toutes les cartes des chapitres au programme.",

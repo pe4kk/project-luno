@@ -213,7 +213,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     (`lib/pastille.ts`) : mesure FLIP puis `element.animate`, l'onglet actif
     porte `data-actif`. Pas de `backdrop-filter` plein écran (fenêtres) ; la
     barre du bas garde un flou léger (`backdrop-blur-md`).
-  - **S'exercer, quatre modes** (2026-11-12, choisis parmi 4 maquettes : A, C,
+  - **S'exercer, quatre modes, plus « Apprendre » depuis le 2026-11-14** (2026-11-12, choisis parmi 4 maquettes : A, C,
     D) : « Série » (exercices rapides), « Problèmes » (A : situation réelle
     rédigée étape par étape, l'élève compare à `attendu` et coche le barème
     `criteres`, `components/exercices/Probleme.tsx`), « Calculs » (C : valeurs
@@ -228,6 +228,17 @@ fiches de révision ; le slider règle la longueur de la fiche.
     tirée, `{resultat}` = résultat ; `formule` en syntaxe simple (`m * v / dt`,
     conversions écrites en nombres dans la formule) ; éviter les bornes qui
     changent le nombre de c.s (« 0,8 », « 100 »).
+  - **Mode « Apprendre » de S'exercer** (2026-11-14, idée tirée des concurrents, testée
+    sur l'éval de cours de physique du 16/11) : premier onglet de S'exercer
+    (`components/exercices/Apprendre.tsx`, `lib/apprendre.ts`, `?mode=apprendre&dst=`),
+    aussi étape « Apprendre les N notions » de Préparer une éval. Chaque flashcard monte
+    par paliers : 1 Reconnaître (QCM, verso + 3 versos voisins), 2 Compléter (un des mots
+    clés les plus longs du verso caché, vérifié par `reponseJuste`), 3 De tête (réponse
+    comparée aux mots clés du verso, vert/rouge, puis l'élève valide). Notion courte
+    (≤ 4 mots clés) : pas de palier 2. Palier gardé dans `apprendre` de la carte (0–3,
+    synchronisé, la fusion garde le plus haut) ; le palier 3 alimente aussi la répétition
+    espacée (`noterFlashcard`). Manches de 7 (notions commencées d'abord), une notion ratée
+    revient 3 questions plus loin une fois, bilan de fin de manche.
   - **Saisie de formules au téléphone** (`components/SaisieFormule.tsx`,
     `lib/saisie.ts`) : raccourcis tapés (`del` → Δ, `sig` → Σ, `*` → ·, `^2` →
     ², `^-1` → ⁻¹, `=>` → ⇒, `->` → →, `<=` → ≤, `!=` → ≠, `~=` → ≈, `sqrt` → √,

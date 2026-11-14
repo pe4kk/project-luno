@@ -69,8 +69,10 @@ export function regonfler(
 
 /** De deux versions d'une même carte, garde celle qui a le plus progressé. */
 function meilleureCarte(a: Flashcard, b: Flashcard) {
-  if (b.intervalle !== a.intervalle) return b.intervalle > a.intervalle ? b : a;
-  return b.echeance > a.echeance ? b : a;
+  const c = b.intervalle !== a.intervalle ? (b.intervalle > a.intervalle ? b : a) : b.echeance > a.echeance ? b : a;
+  // Le palier du mode Apprendre : le plus avancé des deux appareils.
+  const apprendre = Math.max(a.apprendre ?? 0, b.apprendre ?? 0);
+  return apprendre ? { ...c, apprendre } : c;
 }
 
 /**

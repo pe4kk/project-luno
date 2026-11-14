@@ -127,6 +127,8 @@ type Etat = Donnees & {
   ) => void;
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
   noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
+  /** Mode Apprendre : enregistre le palier atteint par une carte. */
+  majPalier: (chapitreId: string, carteId: string, palier: number) => void;
 
   ajouterTaches: (
     taches: (string | { texte: string; echeance: string })[],
@@ -430,6 +432,13 @@ export const useLuno = create<Etat>()(
         })),
       // Répétition espacée simple : l'intervalle double à chaque bonne réponse
       // (1, 2, 4, 8… jours) et repart de zéro à la moindre erreur.
+      majPalier: (id, carteId, palier) =>
+        set((s) => ({
+          chapitres: majChapitre(s.chapitres, id, (c) => ({
+            ...c,
+            flashcards: c.flashcards.map((f) => (f.id === carteId ? { ...f, apprendre: palier } : f)),
+          })),
+        })),
       noterFlashcard: (id, carteId, su) =>
         set((s) => {
           const carte = s.chapitres.find((c) => c.id === id)?.flashcards.find((f) => f.id === carteId);

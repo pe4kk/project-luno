@@ -19,6 +19,8 @@ export type Flashcard = {
   echeance: string;
   /** Schéma affiché avec la réponse. */
   schema?: Schema;
+  /** Mode « Apprendre » : palier atteint (0 à 3, 3 = maîtrisée). */
+  apprendre?: number;
 };
 
 /** Coordonnées dans un schéma : x vers la droite, y vers le bas. */

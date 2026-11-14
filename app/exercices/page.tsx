@@ -48,6 +48,7 @@ import { Curseur } from "@/components/Curseur";
 import { Emoji } from "@/components/Emoji";
 import { ModeCalculs, ModeProblemes } from "@/components/exercices/Modes";
 import { ModeInterro } from "@/components/exercices/Interro";
+import { ModeApprendre } from "@/components/exercices/Apprendre";
 import { classePastille, usePastille } from "@/lib/pastille";
 
 function ModeSerie({ entete, occupe }: { entete: ReactNode; occupe: (b: boolean) => void }) {
@@ -687,8 +688,9 @@ function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
 }
 
 const MODES = [
+  { id: "apprendre", label: "Apprendre", court: "Apprendre" },
   { id: "serie", label: "Série", court: "Série" },
-  { id: "problemes", label: "Problèmes", court: "Problèmes" },
+  { id: "problemes", label: "Problèmes", court: "Probl." },
   { id: "calculs", label: "Calculs", court: "Calculs" },
   { id: "interro", label: "Interro blanche", court: "Interro" },
 ] as const;
@@ -722,7 +724,9 @@ function Exercices() {
         sousTitre={
           // Même hauteur pour tous les modes : la barre d'onglets ne saute pas.
           <span className="block min-h-[3em] sm:min-h-0">{
-          mode === "serie"
+          mode === "apprendre"
+            ? "Chaque notion, de la reconnaître à l'écrire de tête."
+            : mode === "serie"
             ? "Des exercices sur tes chapitres, corrigés tout de suite."
             : mode === "problemes"
               ? "Des situations réelles, rédigées comme ton prof l'attend."
@@ -763,7 +767,9 @@ function Exercices() {
   return (
     <>
       {!occupe && entete}
-      {mode === "serie" ? (
+      {mode === "apprendre" ? (
+        <ModeApprendre entete={null} occupe={setOccupe} initiaux={initiaux} />
+      ) : mode === "serie" ? (
         <ModeSerie entete={null} occupe={setOccupe} />
       ) : mode === "problemes" ? (
         <ModeProblemes entete={null} occupe={setOccupe} />
