@@ -8,6 +8,7 @@ import type {
   ChapitrePublie,
   Donnees,
   Dst,
+  EntreeQuiz,
   ErreurNotee,
   EvenementPublie,
   Flashcard,
@@ -128,6 +129,9 @@ type Etat = Donnees & {
   ) => void;
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
   noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
+  /** Mode Apprendre : garde une réponse dans le journal (lu par Claude pour améliorer les quiz). */
+  noterQuiz: (e: EntreeQuiz) => void;
+  signalerQuiz: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
   /** Mode Apprendre : enregistre le palier atteint par une carte. */
   majPalier: (chapitreId: string, carteId: string, palier: number) => void;
 
@@ -180,6 +184,9 @@ const majCarte = (liste: Chapitre[], id: string, carteId: string, f: (c: Flashca
   );
 };
 
+/** Nombre de réponses au quiz gardées dans le journal. */
+export const JOURNAL_MAX = 400;
+
 const majChapitre = (
   liste: Chapitre[],
   id: string,
@@ -193,6 +200,7 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   taches: s.taches,
   erreurs: s.erreurs,
   notes: s.notes,
+  journal: s.journal,
   calendrier: s.calendrier,
 });
 
@@ -205,6 +213,12 @@ export const useLuno = create<Etat>()(
       taches: [],
       erreurs: [],
       notes: [],
+      journal: [],
+      noterQuiz: (e) => set((s) => ({ journal: [...(s.journal ?? []), e].slice(-JOURNAL_MAX) })),
+      signalerQuiz: (id, signal, remarque) =>
+        set((s) => ({
+          journal: (s.journal ?? []).map((e) => (e.id === id ? { ...e, signal, ...(remarque ? { remarque } : {}) } : e)),
+        })),
       ajouterNote: (matiereId, n = {}) => {
         const id = n.id ?? uid();
         set((s) => ({
@@ -614,6 +628,7 @@ export const useLuno = create<Etat>()(
           taches: [],
           erreurs: [],
           notes: [],
+          journal: [],
           publies: {},
           calendrier: null,
         })),
@@ -633,6 +648,7 @@ export const useLuno = create<Etat>()(
         taches: s.taches,
         erreurs: s.erreurs,
         notes: s.notes,
+        journal: s.journal,
         publies: s.publies,
         calendrier: s.calendrier,
         jour: s.jour,
@@ -691,6 +707,7 @@ export function normaliser(
     taches: (d.taches ?? []).map((x) => ({ ...x, echeance: x.echeance ?? "" })),
     erreurs: d.erreurs ?? [],
     notes: (d.notes ?? []).map((n) => ({ ...n, documents: n.documents ?? [], modifie: n.modifie ?? 0 })),
+    journal: (d.journal ?? []).slice(-JOURNAL_MAX),
     publies,
     calendrier: d.calendrier ?? null,
   };

@@ -392,6 +392,29 @@ export type NoteMatiere = {
   modifie: number;
 };
 
+/**
+ * Une réponse au quiz du mode Apprendre, gardée pour que Claude améliore les quiz lors
+ * de ses passages (demandé le 2026-11-14). Synchronisé ; les 400 dernières seulement.
+ */
+export type EntreeQuiz = {
+  id: string;
+  /** Date et heure (ISO). */
+  date: string;
+  chapitre: string;
+  publieId?: string;
+  recto: string;
+  palier: 1 | 2 | 3;
+  forme: "qcm" | "inverse" | "trou" | "tete";
+  /** Ce que l'élève a choisi ou écrit (vide : « Je ne sais pas »). */
+  reponse: string;
+  /** Pour un texte à trous : le mot caché. */
+  attendu?: string;
+  juste: boolean;
+  /** Signalement de l'élève sur la question. */
+  signal?: "pas-claire" | "inutile" | "trop-facile" | "corrige-faux" | "autre";
+  remarque?: string;
+};
+
 export type Donnees = {
   matieres: Matiere[];
   chapitres: Chapitre[];
@@ -399,4 +422,6 @@ export type Donnees = {
   taches: Tache[];
   erreurs: ErreurNotee[];
   notes: NoteMatiere[];
+  /** Journal des réponses au quiz (mode Apprendre). */
+  journal?: EntreeQuiz[];
 };

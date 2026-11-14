@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, GraduationCap, X } from "lucide-react";
+import { Check, Flag, GraduationCap, X } from "lucide-react";
 import { prochainDstDe, trierParDst } from "@/lib/revision";
 import { compteARebours } from "@/lib/dates";
 import { BarreAction } from "./BarreAction";
@@ -27,7 +27,7 @@ import {
   repartition,
   type NotionManche,
 } from "@/lib/apprendre";
-import type { Chapitre } from "@/lib/types";
+import type { Chapitre, EntreeQuiz } from "@/lib/types";
 
 const NOMS_PALIERS = { 1: "Reconnaître", 2: "Compléter", 3: "De tête" } as const;
 const CONSIGNES = {
@@ -54,7 +54,7 @@ export function ModeApprendre({
   occupe: (b: boolean) => void;
   initiaux?: string[];
 }) {
-  const { matieres, chapitres, dsts, majPalier, noterFlashcard } = useLuno();
+  const { matieres, chapitres, dsts, majPalier, noterFlashcard, noterQuiz, signalerQuiz } = useLuno();
   const possibles = trierParDst(chapitres.filter(aDesCartes), dsts);
   const [choisis, setChoisis] = useState<string[]>(() => {
     const venus = initiaux.filter((id) => possibles.some((c) => c.id === id));
@@ -254,8 +254,22 @@ export function ModeApprendre({
   const matiere = matieres.find((m) => m.id === chapitre?.matiereId);
   const scientifique = estScientifique(matiere?.nom);
 
-  const repondre = (reussi: boolean) => {
+  /** Garde la réponse dans le journal (lu par Claude) ; renvoie son identifiant. */
+  const repondre = (reussi: boolean, reponse: string): string => {
     const carte = q.carte;
+    const idJournal = `${Date.now().toString(36)}-${carte.id.slice(0, 8)}`;
+    noterQuiz({
+      id: idJournal,
+      date: new Date().toISOString(),
+      chapitre: chapitre?.titre ?? "",
+      ...(chapitre?.publieId ? { publieId: chapitre.publieId } : {}),
+      recto: carte.recto,
+      palier: q.palier,
+      forme: q.inverse ? "inverse" : q.palier === 1 ? "qcm" : q.palier === 2 ? "trou" : "tete",
+      reponse: reponse.slice(0, 500),
+      ...(q.trou ? { attendu: q.trou } : {}),
+      juste: reussi,
+    });
     const nouveau = reussi ? apresReussite(carte, q.palier) : apresEchec(carte, q.palier);
     majPalier(q.chapitreId, carte.id, nouveau);
     // Écrire de tête, c'est savoir : la carte entre dans la répétition espacée.
@@ -279,6 +293,7 @@ export function ModeApprendre({
       });
       setRevenues((x) => [...x, carte.id]);
     }
+    return idJournal;
   };
 
   return (
@@ -313,6 +328,7 @@ export function ModeApprendre({
             emoji={matiere?.emoji}
             couleur={matiere?.couleur ?? "#888"}
             repondre={repondre}
+            signaler={signalerQuiz}
             suivant={() => setIndex((i) => i + 1)}
           />
         </motion.div>
@@ -330,6 +346,7 @@ function Question({
   couleur,
   repondre,
   suivant,
+  signaler,
 }: {
   q: NotionManche;
   scientifique: boolean;
@@ -337,7 +354,8 @@ function Question({
   chapitre: string;
   emoji?: string;
   couleur: string;
-  repondre: (reussi: boolean) => void;
+  repondre: (reussi: boolean, reponse: string) => string;
+  signaler: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
   suivant: () => void;
 }) {
   const [choix, setChoix] = useState<string | null>(null);
@@ -351,10 +369,11 @@ function Question({
     if (q.palier === 2) champ.current?.focus({ preventScroll: true });
   }, [q.palier]);
 
-  const decider = (reussi: boolean) => {
+  const [idJournal, setIdJournal] = useState<string | null>(null);
+  const decider = (reussi: boolean, reponse = saisie) => {
     if (verdict !== null) return;
     setVerdict(reussi);
-    repondre(reussi);
+    setIdJournal(repondre(reussi, reponse));
   };
 
   // Palier 2 : le verso, le mot caché remplacé par un champ.
@@ -403,7 +422,7 @@ function Question({
                 disabled={montre}
                 onClick={() => {
                   setChoix(c);
-                  decider(bon);
+                  decider(bon, c);
                 }}
                 className={`rounded-xl border-2 p-3 text-left text-[14.5px] leading-snug transition-colors duration-200 ${
                   montre && bon
@@ -584,12 +603,94 @@ function Question({
               )}
             </div>
           )}
-          <Bouton className="mt-3" onClick={suivant} autoFocus>
-            Continuer
-          </Bouton>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <Bouton onClick={suivant} autoFocus>
+              Continuer
+            </Bouton>
+            {idJournal && <Signaler id={idJournal} signaler={signaler} />}
+          </div>
         </div>
       )}
     </Carte>
+  );
+}
+
+const SIGNAUX: { id: NonNullable<EntreeQuiz["signal"]>; label: string }[] = [
+  { id: "pas-claire", label: "Pas claire" },
+  { id: "inutile", label: "Inutile" },
+  { id: "trop-facile", label: "Trop facile" },
+  { id: "corrige-faux", label: "Corrigé faux" },
+  { id: "autre", label: "Autre" },
+];
+
+/**
+ * « Signaler » : l'élève dit ce qui ne va pas dans la question. Le signalement part dans
+ * le journal synchronisé ; Claude le lit à son prochain passage pour corriger la carte.
+ */
+function Signaler({
+  id,
+  signaler,
+}: {
+  id: string;
+  signaler: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
+}) {
+  const [ouvert, setOuvert] = useState(false);
+  const [choisi, setChoisi] = useState<NonNullable<EntreeQuiz["signal"]> | null>(null);
+  const [remarque, setRemarque] = useState("");
+  const [envoye, setEnvoye] = useState(false);
+  if (envoye)
+    return (
+      <span className="text-[13px] text-muted" role="status">
+        Merci : Claude regardera cette question.
+      </span>
+    );
+  if (!ouvert)
+    return (
+      <Bouton variante="fantome" onClick={() => setOuvert(true)} className="text-[13.5px]">
+        <Flag size={15} /> Signaler
+      </Bouton>
+    );
+  return (
+    <div className="mt-1 w-full rounded-xl border border-line p-3">
+      <p className="text-[13.5px] font-semibold">Qu&apos;est-ce qui ne va pas ?</p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="radiogroup" aria-label="Problème">
+        {SIGNAUX.map((s) => (
+          <button
+            key={s.id}
+            role="radio"
+            aria-checked={choisi === s.id}
+            onClick={() => setChoisi(s.id)}
+            className={`min-h-9 rounded-full px-3 text-[13px] font-semibold transition-colors duration-200 ${
+              choisi === s.id ? "bg-ink text-bg" : "bg-ink/5 text-muted hover:text-ink"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <input
+        value={remarque}
+        onChange={(e) => setRemarque(e.target.value)}
+        placeholder="Un mot de plus (facultatif)"
+        aria-label="Remarque"
+        className="mt-2 w-full rounded-lg border border-line bg-surface px-3 py-2 text-[14px] outline-none focus:border-ink/30"
+        style={{ fontSize: 16 }}
+      />
+      <div className="mt-2 flex gap-2">
+        <Bouton
+          onClick={() => {
+            if (!choisi) return setChoisi("autre");
+            signaler(id, choisi, remarque.trim() || undefined);
+            setEnvoye(true);
+          }}
+        >
+          Envoyer
+        </Bouton>
+        <Bouton variante="fantome" onClick={() => setOuvert(false)}>
+          Annuler
+        </Bouton>
+      </div>
+    </div>
   );
 }
 

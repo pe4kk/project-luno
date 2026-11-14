@@ -6,6 +6,9 @@
 //   node scripts/demandes.mjs erreur <id> "<message>"   marque la demande en erreur
 //   node scripts/demandes.mjs images <id>               télécharge les photos jointes et
 //                                                       affiche leurs chemins (à ouvrir avec Read)
+//   node scripts/demandes.mjs journal [AAAA-MM-JJ]      réponses au quiz (mode Apprendre) depuis
+//                                                       cette date : signalements, cartes souvent
+//                                                       ratées, réponses fausses (pour améliorer les quiz)
 //
 // La clé secrète Supabase n'est jamais dans le dépôt : dans l'environnement cloud
 // « project-luno », le proxy réseau l'ajoute lui-même à l'en-tête `apikey` des requêtes
@@ -17,8 +20,8 @@ const PROJET = "https://jexdghinuyirmyebfxvp.supabase.co";
 const URL = `${PROJET}/rest/v1/demandes`;
 const CLE = process.env.SUPABASE_CLE_SECRETE || "remplacee-par-le-proxy";
 
-function requete(methode, chemin, corps) {
-  const args = ["-sS", "-X", methode, `${URL}${chemin}`, "-H", `apikey: ${CLE}`,
+function requete(methode, chemin, corps, base = URL) {
+  const args = ["-sS", "-X", methode, `${base}${chemin}`, "-H", `apikey: ${CLE}`,
     "-H", "Content-Type: application/json", "-H", "Prefer: return=representation",
     "-w", "\n%{http_code}"];
   if (corps !== undefined) args.push("--data-binary", JSON.stringify(corps));
@@ -131,10 +134,41 @@ if (commande === "liste") {
     console.log(fichier);
   }
   if (!chemins.length) console.log("(aucune photo)");
+} else if (commande === "journal") {
+  // Le journal vit dans les données synchronisées de chaque compte (table donnees).
+  const depuis = id || "";
+  const lignes = requete("GET", "?select=user_id,journal:contenu->journal", undefined, `${PROJET}/rest/v1/donnees`);
+  for (const l of lignes) {
+    const journal = (l.journal || []).filter((e) => e.date >= depuis);
+    if (!journal.length) continue;
+    const parCarte = new Map();
+    for (const e of journal) {
+      const k = `${e.chapitre} | ${e.recto}`;
+      const c = parCarte.get(k) || { carte: k, publieId: e.publieId, essais: 0, rates: 0, formes: new Set() };
+      c.essais++;
+      if (!e.juste) c.rates++;
+      c.formes.add(e.forme);
+      parCarte.set(k, c);
+    }
+    const stats = [...parCarte.values()]
+      .filter((c) => c.rates > 0)
+      .sort((a, b) => b.rates / b.essais - a.rates / a.essais || b.rates - a.rates)
+      .map((c) => ({ ...c, formes: [...c.formes].join(",") }));
+    console.log(JSON.stringify({
+      compte: l.user_id.slice(0, 8),
+      reponses: journal.length,
+      justes: journal.filter((e) => e.juste).length,
+      signalements: journal.filter((e) => e.signal).map(({ chapitre, recto, forme, reponse, attendu, signal, remarque, date }) =>
+        ({ chapitre, recto, forme, reponse, attendu, signal, remarque, date })),
+      cartesRatees: stats.slice(0, 30),
+      reponsesFausses: journal.filter((e) => !e.juste && e.reponse).slice(-40).map(({ chapitre, recto, forme, reponse, attendu }) =>
+        ({ chapitre, recto, forme, reponse, attendu })),
+    }, null, 2));
+  }
 } else if (commande === "erreur" && id && arg) {
   requete("PATCH", `?id=eq.${id}`, { statut: "erreur", erreur: arg, traite: new Date().toISOString() });
   console.log(`Demande ${id} : marquée en erreur.`);
 } else {
-  console.error("Usage : liste | repondre <id> <fichier.json> | erreur <id> \"<message>\"");
+  console.error("Usage : liste | repondre <id> <fichier.json> | erreur <id> \"<message>\" | images <id> | journal [AAAA-MM-JJ]");
   process.exit(2);
 }

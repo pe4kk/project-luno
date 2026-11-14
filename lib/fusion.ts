@@ -201,6 +201,14 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     else if ((x.modifie ?? 0) > (notes[i].modifie ?? 0)) notes[i] = x;
   }
 
+  // Journal du quiz : union par identifiant (un signalement fait sur un appareil reste),
+  // dans l'ordre des dates, les plus récentes seulement.
+  const journal = new Map((a.journal ?? []).map((e) => [e.id, e]));
+  for (const e of b.journal ?? []) {
+    const deja = journal.get(e.id);
+    journal.set(e.id, deja ? { ...e, ...deja, signal: deja.signal ?? e.signal, remarque: deja.remarque ?? e.remarque } : e);
+  }
+
   const publies = { ...b.publies };
   for (const [k, v] of Object.entries(a.publies)) publies[k] = Math.max(v, publies[k] ?? 0);
 
@@ -211,6 +219,7 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     taches,
     erreurs,
     notes,
+    journal: [...journal.values()].sort((x, y) => x.date.localeCompare(y.date)).slice(-400),
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };
