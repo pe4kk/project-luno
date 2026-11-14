@@ -9,6 +9,16 @@ import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { Emoji } from "@/components/Emoji";
 
+/** Mélange de Fisher-Yates : chaque ordre a la même chance. */
+function melanger<T>(liste: T[]): T[] {
+  const l = [...liste];
+  for (let i = l.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [l[i], l[j]] = [l[j], l[i]];
+  }
+  return l;
+}
+
 export type CarteARevoir = { chapitreId: string; carteId: string };
 
 export function Revision({
@@ -19,8 +29,9 @@ export function Revision({
   terminer: () => void;
 }) {
   const { chapitres, matieres, noterFlashcard } = useLuno();
-  // Le paquet est figé au début de la séance.
-  const [paquet] = useState(cartes);
+  // Le paquet est mélangé, puis figé, au début de chaque séance (demandé le 2026-11-14) :
+  // les cartes ne reviennent jamais dans le même ordre.
+  const [paquet] = useState(() => melanger(cartes));
   const [index, setIndex] = useState(0);
   const [retournee, setRetournee] = useState(false);
   const [sues, setSues] = useState(0);

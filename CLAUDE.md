@@ -335,6 +335,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
   erreur, y compris une erreur à un QCM tiré de cette carte ; un point de
   fiche porte `n`, la plus petite taille (1 à 5) à laquelle il apparaît, ce
   qui rend le curseur instantané.
+  Les flashcards sont mélangées à chaque séance (`melanger()` dans
+  `components/travail/Revision.tsx`, demandé le 2026-11-14), quelle que soit
+  l'entrée (chapitre, révision du jour, préparer un DST).
 - Design : deux thèmes définis par des variables CSS dans `app/globals.css`
   (`:root` = clair M5, `:root[data-theme="dark"]` = sombre M4), exposées à
   Tailwind (`bg-bg`, `bg-surface`, `text-ink`, `text-muted`, `bg-accent`,
