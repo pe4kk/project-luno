@@ -205,7 +205,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     au programme (cases, enregistrées dans `chapitreIds`), 2. « Éval de cours » ou
     « Éval avec exercices », 3. programme réparti d'aujourd'hui à la veille (cinq
     jours au plus), étapes à cocher qui ouvrent les écrans existants. Logique sans
-    IA dans `lib/preparation.ts` : `etapes()` (fiche, définitions, dates, flashcards ;
+    IA dans `lib/preparation.ts` (depuis le 2026-11-15 : révisions de tête `recurrente`
+    posées chaque jour, ids `apprendre@<date>` ; fiche à « fermer et redire de tête » ;
+    dissertation ou étude critique hors sciences ; conseil de priorité au-delà de 3 h) :
+    `etapes()` (fiche, définitions, dates, flashcards ;
     pour « exos » série, calculs, problèmes ; la veille mes erreurs et interro
     blanche) et `repartir()`. Choix et étapes cochées dans `preparation` du DST
     (`majDst`, synchronisé, fusion par union).
@@ -241,7 +244,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `Calcul.tsx`, `lib/calcul.ts`), « Interro blanche » (D : questions de cours
     tirées de l'onglet Déf + calculs, chrono 30 min / 1 h ou sans, correction
     seulement à la remise, auto-notation des questions de cours, note sur 20,
-    erreurs envoyées dans « Mes erreurs », `Interro.tsx`). Types `Probleme` et
+    erreurs envoyées dans « Mes erreurs », `Interro.tsx` ; 14 questions par défaut pour 1 h,
+    mots clés retrouvés affichés et confirmation pour « Juste » sous la moitié ; chaque erreur
+    envoyée a une règle « Terme : ne pas oublier « … » » avec les mots les plus distinctifs oubliés). Types `Probleme` et
     `Calcul` dans `lib/types.ts`, champs `problemes` et `calculs` d'un
     chapitre ; contenu de physique dans `contenu/physique-entrainement.ts`
     (3 problèmes, 6 calculs ; rien du DM). Dans un `Calcul`, `{nom}` = valeur
@@ -274,6 +279,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
     synchronisé, la fusion garde le plus haut) ; le palier 3 alimente aussi la répétition
     espacée (`noterFlashcard`). Manches de 7 (notions commencées d'abord), une notion ratée
     revient 3 questions plus loin une fois, bilan de fin de manche.
+    Depuis le 2026-11-15 (élève testeur) : « Maîtrisée » seulement après une réussite de tête
+    un **autre jour** (`apprendreJour`), une notion ratée puis rattrapée dans la manche ne
+    monte pas ; les cartes-questions sautent le QCM sauf si elles ont des `leurres` écrits à
+    la main ; intrus de QCM de même forme (formule, consigne, phrase) et, pour le
+    vocabulaire, notions voisines (« terrestre », « héliocentrique ») ; correction De tête
+    sans les exemples, avec synonymes (`SYNONYMES` de `lib/apprendre.ts`), flèches de vecteur
+    et parenthésage exigés ; « C'était juste » demande une confirmation sous la moitié des
+    mots clés ; « J'avais juste » (texte à trous) refusé si le mot écrit est un autre terme
+    du cours ou déjà dans la phrase.
   - **Saisie de formules au téléphone** (`components/SaisieFormule.tsx`,
     `lib/saisie.ts`) : raccourcis tapés (`del` → Δ, `sig` → Σ, `*` → ·, `^2` →
     ², `^-1` → ⁻¹, `=>` → ⇒, `->` → →, `<=` → ≤, `!=` → ≠, `~=` → ≈, `sqrt` → √,
@@ -330,8 +344,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     tout effacer), Notes, Calculatrice (`evaluer()` de `lib/calcul.ts`, Ans,
     historique, arrondi au nombre de c.s choisi, « Mettre … dans l'A.N. »
     pour les calculs). Téléphone : feuille qui glisse du bas, en portail sur
-    `body` (sinon la barre du bas passe devant), bouton rond au-dessus de la
-    barre. Ordinateur (≥ 1024 px) : panneau collant à droite de la question.
+    `body` (sinon la barre du bas passe devant), ouverte par un bouton
+    « Brouillon » en ligne au-dessus de l'exercice (un bouton flottant cachait
+    « Suivante », 2026-11-15). Ordinateur (≥ 1024 px) : panneau collant à droite de la question.
     Un brouillon par question, en mémoire seulement, jamais noté ; une nouvelle
     séance repart d'une feuille blanche.
     Les touches de la calculatrice écrivent au curseur (vu sur son iPhone le
@@ -366,6 +381,15 @@ fiches de révision ; le slider règle la longueur de la fiche.
       chapitre ». Titres de chapitres sur deux lignes au lieu d'être coupés.
     - Boutons d'ajout jamais grisés : champ `required`, le navigateur dit ce
       qui manque. Tout au « tu ».
+  - **Évaluation par un élève testeur** (2026-11-15) : prompt `scripts/eleve-testeur.md`
+    (Inès, Première, teste tout le site avec Playwright, juge la méthode de révision avec des
+    sources, compare aux documents du prof, note sur 10). Six tours : 7,0 → 7,5 → 8,0 → 8,3 →
+    8,5 → 8,8. Restes signalés : délais adaptés à l'historique (FSRS), deux réussites de tête
+    sur des jours différents avant « Maîtrisée ».
+  - `ZoneAction` (`components/ui.tsx`) : entoure le bouton principal d'un écran ; s'il
+    apparaît sous la barre du bas, la page défile pour le montrer. À utiliser pour tout
+    nouveau bouton d'action qui apparaît après une réponse.
+  - Recherche : requête gardée dans l'adresse (`?q=`), une faute de frappe tolérée (6 lettres et plus).
   - `components/MiseAJour.tsx` : message « Nouvelle version de Luno —
     Recharger » quand `version.json` (écrit à chaque build par
     `next.config.ts`, hash du commit) diffère de la version chargée. Ajouté le
@@ -379,10 +403,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - `contenu/` : ce que Claude rédige (voir « Ajouter du contenu »).
 - Modèle de données (`lib/types.ts`) : un DST liste ses chapitres à réviser
   (`chapitreIds`) ; une flashcard a une échéance (`echeance`, `intervalle`) :
-  l'intervalle double à chaque « Je savais » et repart de zéro à chaque
-  erreur, y compris une erreur à un QCM tiré de cette carte ; un point de
+  l'intervalle est multiplié par la facilité de la carte (voir ci-dessous) et
+  repart de zéro à chaque erreur, y compris une erreur à un QCM tiré de cette carte ; un point de
   fiche porte `n`, la plus petite taille (1 à 5) à laquelle il apparaît, ce
   qui rend le curseur instantané.
+  **Répétition espacée façon SM-2** (2026-11-15, `prochaineRevision()` dans `lib/store.ts`) :
+  quatre réponses (À revoir / Difficile / Su / Facile, délai affiché sous chaque bouton ;
+  carte neuve : tout à l'heure, demain, 2 j, 4 j), `facilite` par carte (1,3 à 3). Une carte
+  ratée repasse une fois dans la séance ; le recto reste visible au verso ; champ facultatif
+  pour écrire sa réponse avant de retourner. Le quota de 20 nouvelles cartes saute pour les
+  chapitres d'un DST dans 3 jours au plus (`lib/revision.ts`).
   Les flashcards sont mélangées à chaque séance (`melanger()` dans
   `components/travail/Revision.tsx`, demandé le 2026-11-14), quelle que soit
   l'entrée (chapitre, révision du jour, préparer un DST).
@@ -444,6 +474,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
 9. **Vérifier** : refaire chaque calcul et chaque bonne réponse (« les IA font des
    erreurs »), signaler les coquilles du prof sans les recopier.
 10. **Ne jamais faire un devoir noté à sa place** : méthode et exemples parallèles.
+11. **Ne pas rassurer à tort** (élève testeur, 2026-11-15) : se tester vaut mieux que relire ;
+    une notion n'est sue qu'après un rappel de tête un autre jour ; l'élève qui se note
+    elle-même est guidée par les mots clés ; un QCM dont la réponse se devine à sa forme ne
+    mesure rien (mieux vaut pas de QCM que de mauvais intrus).
+12. **Fidèle au prof jusqu'au programme** : ce que le prof dit hors DST (le ressort) sort de
+    Déf et des flashcards et reste en détail de fiche.
 
 ## Ajouter du contenu (cours envoyés par l'utilisateur)
 
