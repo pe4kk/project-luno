@@ -13,6 +13,7 @@ const TOUCHES: [string, string, string][] = [
   ["Σ", "Σ", "Somme"],
   ["v⃗", FLECHE, "Flèche de vecteur sur ce qui précède le curseur, ou sur la sélection"],
   ["′", "'", "Prime (M')"],
+  ["xᵢ", "_", "Indice : touche puis i-1, i+1, 2…"],
   ["a/b", "()/()", "Fraction"],
   ["²", "²", "Au carré"],
   ["⁻¹", "⁻¹", "Puissance moins un"],

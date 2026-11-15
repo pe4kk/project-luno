@@ -448,16 +448,18 @@ export function comparer(reponse: string, verso: string) {
   );
   // Les formules comptent aussi : « Δv⃗ = 0⃗ » écrit tel quel, c'est l'essentiel de la réponse.
   // Il faut les flèches de vecteur si le cours en met (« v = MM'/Δt » pour un vecteur
-  // vitesse perd des points), et le bon parenthésage.
+  // vitesse perd des points), et le bon parenthésage. Une formule juste à une majuscule
+  // près compte, avec un avertissement : Δt (une durée) et ΔT (une température) diffèrent.
   const rep = formuleNette(reponse);
   const ditNul = /\b(nul|nulle|zero)\b/.test(simplifier(reponse));
   const formules = formulesDe(verso).map((f) => {
     const attendue = formuleNette(f);
-    if (rep.includes(attendue)) return { f, trouvee: true, sansFleche: false };
+    if (rep.includes(attendue)) return { f, trouvee: true, casse: false, sansFleche: false };
+    if (rep.toLowerCase().includes(attendue.toLowerCase())) return { f, trouvee: true, casse: true, sansFleche: false };
     // « Il est nul » pour « Δv⃗ = 0⃗ » : c'est la même chose dite en mots.
-    if (ditNul && /=0$/.test(sansFleches(attendue))) return { f, trouvee: true, sansFleche: false };
+    if (ditNul && /=0$/.test(sansFleches(attendue))) return { f, trouvee: true, casse: false, sansFleche: false };
     const sansFleche = attendue !== sansFleches(attendue) && sansFleches(rep).includes(sansFleches(attendue));
-    return { f, trouvee: false, sansFleche };
+    return { f, trouvee: false, casse: false, sansFleche };
   });
   return {
     cles,

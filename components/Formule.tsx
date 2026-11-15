@@ -19,7 +19,7 @@ const FLECHE = String.fromCharCode(0x20d7);
 // Un indice en chiffres s'arrête aux chiffres : « M_2M_4 » = M₂M₄ (et non M avec « 2M »).
 const MORCEAU_INDICE = "(?:\\d+(?![a-zà-ÿ])|\\d+[a-zà-ÿ][A-Za-z0-9À-ÿ→/]*|[A-Za-zÀ-ÿ→/][A-Za-z0-9À-ÿ→/]*)(?:[.,][A-Za-z0-9À-ÿ→/]+)*";
 const VECTEUR = new RegExp(
-  `([ΔΣ−]?)([A-Za-z0-9'’ᵢₓᵧ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
+  `([ΔΣ−]?)([A-Za-z0-9'’ᵢₓᵧₙₘ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧₙₘ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
   "g",
 );
 const FRACTION = /\{\{(.+?) \/\/ (.+?)\}\}/g;

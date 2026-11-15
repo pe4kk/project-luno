@@ -9,8 +9,24 @@
 
 const LETTRE = "A-Za-zÀ-ÿ";
 
+/** Indices tapés après « _ » : « M_i-1 » → Mᵢ₋₁, « v_2 » → v₂ (chiffres, i, x, y, n, m, + et −). */
+const BAS: Record<string, string> = Object.fromEntries(
+  [..."0123456789ixynm+-−"].map((c, i) => [c, "₀₁₂₃₄₅₆₇₈₉ᵢₓᵧₙₘ₊₋₋"[i]]),
+);
+const enIndice = (_: string, s: string) => [...s].map((c) => BAS[c] ?? c).join("");
+const INDICE_TAPE = "[0-9ixynm+\\-−]+";
+
+/**
+ * « Mi-1 », « ti+1 », « xi » devant un chiffre ou une lettre : l'écriture la plus courante
+ * en physique pour Mᵢ₋₁, tᵢ₊₁ (chronophotographie, méthode d'Euler).
+ */
+const indicesImplicites = (t: string) =>
+  t.replace(/(?<![A-Za-zÀ-ÿ])([A-Za-z])i([+\-−])1(?![0-9])/g, (_, l, s) => `${l}ᵢ${s === "+" ? "₊" : "₋"}₁`);
+
 /** [motif, remplacement] appliqués à chaque frappe, dans cet ordre. */
-const RACCOURCIS: [RegExp, string][] = [
+const RACCOURCIS: [RegExp, string | ((...a: string[]) => string)][] = [
+  // L'indice se convertit dès la frappe suivante qui n'en fait plus partie (« M_i-1M »).
+  [new RegExp(`_(${INDICE_TAPE})(?=[^0-9ixynm+\\-−])`, "g"), enIndice],
   // « delta » et « sigma » en entier, ou « del » / « sig » suivis d'un caractère qui ne
   // continue pas un mot français (« delv » → Δv, mais « au-delà », « délai », « signe »
   // restent intacts). Le remplacement attend donc la frappe suivante.
@@ -30,11 +46,6 @@ const RACCOURCIS: [RegExp, string][] = [
   // Prime : l'apostrophe typographique de l'iPhone (’) ou « prime » tapé après une lettre.
   [/’/g, "'"],
   [new RegExp(`([${LETTRE}₀-₉])prime(?![${LETTRE}])`, "g"), "$1'"],
-  // Points d'une chronophotographie : « Mi-1 », « Mi+1 », « Mi » → Mᵢ₋₁, Mᵢ₊₁, Mᵢ (sinon
-  // « Mi-1Mi+1/(2Δt) » se lisait Mᵢ₋₁Mᵢ + 1/(2Δt)).
-  [/(^|[^A-Za-zÀ-ÿ])([A-Z]{1,2})i-1(?![0-9])/g, "$1$2ᵢ₋₁"],
-  [/([A-Zᵢ₋₁])Mi\+1(?![0-9])/g, "$1Mᵢ₊₁"],
-  [/(^|[^A-Za-zÀ-ÿ])([A-Z])i\+1(?![0-9])/g, "$1$2ᵢ₊₁"],
   [/\^-1/g, "⁻¹"],
   [/\^-2/g, "⁻²"],
   [/\^2/g, "²"],
@@ -46,8 +57,8 @@ const RACCOURCIS: [RegExp, string][] = [
 
 /** Applique les raccourcis à un texte tapé. */
 export function raccourcis(texte: string): string {
-  let t = texte;
-  for (const [motif, rempl] of RACCOURCIS) t = t.replace(motif, rempl);
+  let t = indicesImplicites(texte);
+  for (const [motif, rempl] of RACCOURCIS) t = t.replace(motif, rempl as string);
   return t;
 }
 
@@ -61,6 +72,7 @@ export const AIDE_RACCOURCIS: [string, string][] = [
   ["->", "→"],
   ["a/b", "fraction"],
   ["Mprime", "M′"],
+  ["M_i-1", "Mᵢ₋₁"],
 ];
 
 const UNITES = new Set(["m", "km", "cm", "mm", "s", "h", "min", "kg", "g", "N", "L", "mL", "J", "W"]);
@@ -98,7 +110,8 @@ function separe(t: string, k: number, motif: RegExp) {
  * unités (« m/s », « km/h ») restent en ligne.
  */
 export function versNotation(texte: string): string {
-  let t = texte;
+  // Un indice encore en cours de frappe (« M_i+1 » en fin de texte) est converti aussi.
+  let t = indicesImplicites(texte).replace(new RegExp(`_(${INDICE_TAPE})(?=[^0-9ixynm+\\-−]|$)`, "g"), enIndice);
   let i = t.indexOf("/");
   let garde = 0;
   while (i >= 0 && garde++ < 50) {
