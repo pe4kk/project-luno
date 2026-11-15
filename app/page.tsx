@@ -172,7 +172,7 @@ export default function Accueil() {
                   : revuesAujourdhui
                     ? `${pluriel(revuesAujourdhui, "déjà revue", "déjà revues")} aujourd'hui`
                     : duJour.plusTard
-                      ? `${duJour.plusTard} autres les jours suivants (${QUOTA_NOUVELLES} nouvelles par jour)`
+                      ? `${duJour.plusTard} autres les jours suivants (${QUOTA_NOUVELLES} nouvelles par jour, sans limite pour un DST dans 3 jours)`
                       : pluriel(dues, "carte", "cartes")}
             </p>
             {dues > 0 && (
@@ -193,7 +193,8 @@ export default function Accueil() {
               {(semaine.length > 0 ? semaine.slice(0, 3) : aVenir.slice(0, 2)).map((d) => (
                 <div key={d.id} className="flex items-center gap-2 text-[13.5px]">
                   <span className="size-2 shrink-0 rounded-full" style={{ background: matiere(d.matiereId)?.couleur }} />
-                  <span className="truncate">{matiere(d.matiereId)?.nom}</span>
+                  {/* Le titre du DST, pour distinguer l'interro du DM de la même matière. */}
+                  <span className="truncate">{d.titre || matiere(d.matiereId)?.nom}</span>
                   <span className="ml-auto shrink-0 text-muted">{compteARebours(d.date)}</span>
                 </div>
               ))}
