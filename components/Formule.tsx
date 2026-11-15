@@ -99,6 +99,9 @@ function formuleSimple(texte: string): ReactNode {
 export const MISE_EN_FORME = /\[\[([\s\S]+?)\]\]|(?<!_)__(?!_)([\s\S]+?)(?<!_)__(?!_)|==([\s\S]+?)==/g;
 
 export function formule(texte: string): ReactNode {
+  // Typographie française : espace insécable avant ? ! ; : » et après « (sinon le « ? »
+  // d'une question partait seul à la ligne, tour 4, R4).
+  texte = texte.replace(/ ([?!;:»])/g, "\u00a0$1").replace(/« /g, "«\u00a0");
   if (!/\[\[|__|==/.test(texte)) return formuleSimple(texte);
   const morceaux: ReactNode[] = [];
   let fin = 0;

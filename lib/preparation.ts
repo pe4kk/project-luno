@@ -164,7 +164,8 @@ export function etapes(
           ? "Questions de cours et calculs, chronométrés, avec une note sur 20."
           : "Questions de cours tirées de tes définitions, avec une note sur 20.",
       href: exos("interro"),
-      minutes: 30,
+      // L'interro blanche par défaut dure 1 h (14 questions de cours).
+      minutes: 60,
       veille: true,
     });
   return liste;

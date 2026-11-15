@@ -182,9 +182,17 @@ export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
   const borner = (x: number) => Math.min(3, Math.max(1.3, Math.round(x * 100) / 100));
   if (n === 0) return { niveau: 1 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.2) };
   const iv = f.intervalle;
-  // Carte neuve jugée difficile : elle revient tout à l'heure (comme Anki), sans repartir
-  // de zéro comme une carte ratée ; « Su » la ramène demain.
-  if (n === 1 && iv === 0) return { niveau: 2 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.15) };
+  // Carte neuve : quatre délais bien distincts (tour 4, R3) : À revoir = tout à l'heure,
+  // Difficile = demain, Su = 2 jours, Facile = 4 jours.
+  if (iv === 0) {
+    const premier = n === 1 ? 1 : n === 2 ? 2 : 4;
+    return {
+      niveau: 2 as const,
+      intervalle: premier,
+      echeance: dansJours(premier),
+      facilite: borner(fac + (n === 1 ? -0.15 : n === 3 ? 0.15 : 0)),
+    };
+  }
   const intervalle = Math.min(
     120,
     n === 1

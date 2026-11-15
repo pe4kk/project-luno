@@ -307,12 +307,14 @@ export function ModeInterro({
             titre: `Définition à savoir : ${q.def.terme}`,
             // La règle à retenir, c'est la définition elle-même (une par erreur) ; le rappel
             // donne les mots clés que le prof attend.
-            // Règle courte : le terme et le début de sa définition (14 mots au plus).
+            // Une vraie règle courte, réutilisable : les mots que le prof attend et qui
+            // manquaient dans la réponse (tour 4, défaut 19). Le rappel donne la définition.
             regle: (() => {
-              const mots = q.def.texte.split(/(?<=[.;:])\s/)[0].split(" ");
-              return `${q.def.terme} : ${mots.slice(0, 14).join(" ")}${mots.length > 14 ? "…" : ""}`;
+              const manquants = comparer(reponses[i].texte, q.def.texte).manquants.slice(0, 3);
+              const cles = manquants.length ? manquants : motsCles(q.def.texte).slice(0, 3);
+              return `${q.def.terme} : toujours citer ${cles.map((m) => `« ${m} »`).join(", ")}`;
             })(),
-            rappel: `Mots clés : ${motsCles(q.def.texte).slice(0, 5).join(", ")}`,
+            rappel: q.def.texte.split(/(?<=[.;])\s/)[0],
             theme: "Définitions",
             erreur: reponses[i].texte.trim()
               ? q.scientifique

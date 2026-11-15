@@ -23,7 +23,8 @@ const RACCOURCIS: [RegExp, string][] = [
   [/->/g, "→"],
   [/~=/g, "≈"],
   [/!=/g, "≠"],
-  [/<=/g, "≤"],
+  // « <= » attend la frappe suivante : « <=> » doit pouvoir donner ⟺ (tour 4, R2).
+  [/<=(?=[^>])/g, "≤"],
   [/>=/g, "≥"],
   [/sqrt/gi, "√"],
   // Prime : l'apostrophe typographique de l'iPhone (’) ou « prime » tapé après une lettre.

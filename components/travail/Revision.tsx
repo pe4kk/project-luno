@@ -73,13 +73,13 @@ export function Revision({
   const repondre = useCallback(
     (note: NoteCarte) => {
       if (!courant) return;
-      const su = note > 0;
       // Le retour ne compte pas une deuxième fois dans la répétition espacée : il sert
       // seulement à revoir la carte tant qu'elle est fraîche.
       if (!courant.retour) {
         const revient = carte && prochaineRevision(carte, note).intervalle === 0;
         noterFlashcard(courant.chapitreId, courant.carteId, note);
-        if (su) setSues((n) => n + 1);
+        // « Difficile » n'est pas « su du premier coup ».
+        if (note >= 2) setSues((n) => n + 1);
         if (revient)
           setPaquet((l) => {
             const ou = Math.min(index + 4, l.length);

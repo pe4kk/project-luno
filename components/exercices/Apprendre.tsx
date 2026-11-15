@@ -416,7 +416,20 @@ function Question({
       (t, i) => !abandon && (reponseJuste(mots[i] ?? "", [t]) || synonymes(simplifier(mots[i] ?? "").trim(), simplifier(t))),
     );
     setJustes(j);
-    if (j.every(Boolean) || abandon) decider(j.every(Boolean), mots.join(" | "));
+    // « J'avais juste » seulement si chaque mot faux peut être un synonyme : pas un mot
+    // déjà écrit ailleurs dans la phrase (« vitesse » pour « trajectoire ») ni la réponse
+    // d'un autre trou (tour 4, R5).
+    const visible = simplifier(sansMiseEnForme(carte.verso));
+    const plausible = q.trous.every((t, i) => {
+      if (j[i]) return true;
+      const m = simplifier(mots[i] ?? "").trim();
+      if (m.length < 3) return false;
+      // Les mots visibles de la phrase (sans les mots cachés) : le mot écrit y est-il déjà ?
+      const caches = new Set(q.trous!.map((u) => simplifier(u)));
+      const ailleurs = visible.split(" ").some((w) => w === m && !caches.has(w));
+      return !ailleurs && !q.trous!.some((u, k) => k !== i && simplifier(u) === m);
+    });
+    if (j.every(Boolean) || abandon || !plausible) decider(j.every(Boolean), mots.join(" | "));
     else setATrancher(true);
   };
 
@@ -583,14 +596,14 @@ function Question({
                 placeholder="Écris ce que tu sais, même incomplet"
                 scientifique={scientifique}
               />
-              <div className="mt-3 flex flex-wrap gap-2">
+              <ZoneAction cle={carte.id} className="mt-3 flex flex-wrap gap-2">
                 <Bouton onClick={() => setCompare(true)}>
                   Comparer au cours
                 </Bouton>
                 <Bouton variante="fantome" onClick={() => decider(false)}>
                   Je ne sais pas
                 </Bouton>
-              </div>
+              </ZoneAction>
             </>
           ) : (
             resultat && (
