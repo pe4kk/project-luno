@@ -269,7 +269,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     comparée aux mots clés du verso, vert/rouge, puis l'élève valide ; les formules et
     équations du verso comptent aussi, `formulesDe()` : « Δv⃗ = 0⃗ » tapé tel quel, une
     fraction écrite a/b, des indices tapés vxi ou des états (aq) omis sont reconnus ;
-    formule juste = « Formule juste », les mots manquants deviennent un complément). Notion courte
+    formule juste = « Formule juste », les mots manquants deviennent un complément ;
+    juste à une majuscule près = juste, avec « attention aux majuscules (Δt n'est pas ΔT) »). Notion courte
     (≤ 4 mots clés) : pas de palier 2. Palier gardé dans `apprendre` de la carte (0–3,
     synchronisé, la fusion garde le plus haut) ; le palier 3 alimente aussi la répétition
     espacée (`noterFlashcard`). Manches de 7 (notions commencées d'abord), une notion ratée
@@ -278,7 +279,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `lib/saisie.ts`) : raccourcis tapés (`del` → Δ, `sig` → Σ, `*` → ·, `^2` →
     ², `^-1` → ⁻¹, `=>` → ⇒, `->` → →, `<=` → ≤, `!=` → ≠, `~=` → ≈, `sqrt` → √,
     `pi` → π, `rho` → ρ, `prime` après une lettre → ', apostrophe ’ de l'iPhone →
-    ' ; vu le 2026-11-15 : « jpp écrire prime »), barre de touches (Δ, Σ, flèche de
+    ' ; vu le 2026-11-15 : « jpp écrire prime » ; indices : `M_i-1` → Mᵢ₋₁ (touche
+    xᵢ, conversion à la frappe suivante) et « Mi-1 », « ti+1 » reconnus sans tiret bas), barre de touches (Δ, Σ, flèche de
     vecteur, prime ′, fraction, ², ⁻¹, ·, ×10^, √, ⇒ ; la flèche couvre tout ce qui
     précède le curseur, ou la sélection : sélectionner « MM' » puis v⃗) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
     en vraie fraction (`versNotation`), les unités comme m/s restent en ligne.

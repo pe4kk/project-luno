@@ -569,10 +569,17 @@ function Question({
                 {resultat.formules.length > 0 && (
                   <p className="text-[13.5px] text-muted">
                     {resultat.formules.every((f) => f.trouvee) ? (
-                      <span className="font-semibold text-ok">
-                        <Check size={14} className="mr-1 inline" />
-                        Formule juste
-                      </span>
+                      <>
+                        <span className="font-semibold text-ok">
+                          <Check size={14} className="mr-1 inline" />
+                          Formule juste
+                        </span>
+                        {resultat.formules.some((f) => f.casse) && (
+                          <span className="mt-0.5 block">
+                            Attention aux majuscules : écris-la exactement comme dans le cours (Δt n&apos;est pas ΔT).
+                          </span>
+                        )}
+                      </>
                     ) : (
                       <>
                         Formule à retrouver :{" "}

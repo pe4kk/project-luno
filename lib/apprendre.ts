@@ -334,7 +334,14 @@ export function comparer(reponse: string, verso: string) {
   );
   // Les formules comptent aussi : « Δv⃗ = 0⃗ » écrit tel quel, c'est l'essentiel de la réponse.
   const rep = normFormule(reponse);
-  const formules = formulesDe(verso).map((f) => ({ f, trouvee: rep.includes(normFormule(f)) }));
+  // Une formule juste à une majuscule près compte, avec un avertissement : en physique,
+  // Δt (une durée) et ΔT (une température) ne sont pas la même grandeur.
+  const formules = formulesDe(verso).map((f) => {
+    const n = normFormule(f);
+    const exacte = rep.includes(n);
+    const casse = !exacte && rep.toLowerCase().includes(n.toLowerCase());
+    return { f, trouvee: exacte || casse, casse };
+  });
   return {
     cles,
     presents,
