@@ -182,6 +182,9 @@ export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
   const borner = (x: number) => Math.min(3, Math.max(1.3, Math.round(x * 100) / 100));
   if (n === 0) return { niveau: 1 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.2) };
   const iv = f.intervalle;
+  // Carte neuve jugée difficile : elle revient tout à l'heure (comme Anki), sans repartir
+  // de zéro comme une carte ratée ; « Su » la ramène demain.
+  if (n === 1 && iv === 0) return { niveau: 2 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.15) };
   const intervalle = Math.min(
     120,
     n === 1
@@ -508,7 +511,9 @@ export const useLuno = create<Etat>()(
       majPalier: (id, carteId, palier) =>
         set((s) => ({
           chapitres: majCarte(s.chapitres, id, carteId, (f) =>
-            (f.apprendre ?? 0) === palier ? f : { ...f, apprendre: palier, apprendreJour: todayISO() },
+            // Une carte sans date (progression d'avant le 2026-11-15) en reçoit une, sinon
+            // elle ne pourrait jamais devenir maîtrisée « un autre jour ».
+            (f.apprendre ?? 0) === palier && f.apprendreJour ? f : { ...f, apprendre: palier, apprendreJour: todayISO() },
           ),
         })),
       noterFlashcard: (id, carteId, note) =>

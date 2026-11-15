@@ -57,6 +57,7 @@ export function Revision({
   });
   const [index, setIndex] = useState(0);
   const [retournee, setRetournee] = useState(false);
+  const [essai, setEssai] = useState("");
   const [sues, setSues] = useState(0);
   // Nombre de cartes de la séance, sans les retours.
   const [total] = useState(() => paquet.length);
@@ -76,23 +77,27 @@ export function Revision({
       // Le retour ne compte pas une deuxième fois dans la répétition espacée : il sert
       // seulement à revoir la carte tant qu'elle est fraîche.
       if (!courant.retour) {
+        const revient = carte && prochaineRevision(carte, note).intervalle === 0;
         noterFlashcard(courant.chapitreId, courant.carteId, note);
         if (su) setSues((n) => n + 1);
-        else
+        if (revient)
           setPaquet((l) => {
             const ou = Math.min(index + 4, l.length);
             return [...l.slice(0, ou), { ...courant, retour: true }, ...l.slice(ou)];
           });
       }
       setRetournee(false);
+      setEssai("");
       setIndex((i) => i + 1);
     },
-    [courant, index, noterFlashcard],
+    [courant, carte, index, noterFlashcard],
   );
 
   useEffect(() => {
     const surTouche = (e: KeyboardEvent) => {
       if (fini) return;
+      // On écrit sa réponse : les touches (espace, chiffres) vont dans le champ.
+      if (e.target instanceof HTMLElement && e.target.closest("input, textarea")) return;
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         setRetournee((r) => !r);
@@ -253,6 +258,31 @@ export function Revision({
         </motion.div>
       </AnimatePresence>
 
+      {/* Écrire sa réponse avant de retourner (facultatif) : chercher et produire la réponse
+          fait mieux retenir que la reconnaître (effet de génération). */}
+      {!retournee ? (
+        <input
+          value={essai}
+          onChange={(e) => setEssai(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              e.stopPropagation();
+              setRetournee(true);
+            }
+          }}
+          placeholder="Écris ta réponse (facultatif), puis retourne"
+          aria-label="Ta réponse avant de retourner la carte"
+          className="mt-4 w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-[16px] outline-none focus:border-accent"
+        />
+      ) : (
+        essai.trim() && (
+          <p className="mt-4 rounded-xl bg-ink/5 px-3.5 py-2.5 text-[14.5px]">
+            <span className="mr-1.5 text-[12px] font-semibold uppercase tracking-wider text-muted">Tu as écrit</span>
+            {essai}
+          </p>
+        )
+      )}
       {/* Quatre réponses, comme Anki : le délai affiché sous chaque bouton dit quand la
           carte reviendra. « Difficile » la ramène plus tôt, « Facile » l'espace plus vite. */}
       <ZoneAction cle={retournee ? carte.id + "r" : carte.id} className="mt-6 grid grid-cols-4 gap-2">

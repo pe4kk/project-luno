@@ -144,7 +144,7 @@ export function LecteurCalcul({ calcul, quitter }: { calcul: Calcul; quitter: ()
             label="Expression littérale"
             valeur={litterale}
             changer={setLitterale}
-            placeholder={`${calcul.inconnue.replace(/\{\{|\}\}/g, "")} = …`}
+            placeholder={`${texteBrut(calcul.inconnue)} = …`}
           />
         </div>
         {!litteraleVue ? (

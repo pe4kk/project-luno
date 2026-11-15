@@ -132,7 +132,8 @@ export function texteBrut(texte: string): string {
   return sansMiseEnForme(texte)
     .replace(FRACTION, (_, h: string, b: string) => `${groupe(h)} / ${groupe(b)}`)
     .replaceAll(FLECHE, "")
-    .replace(INDICE, "$1$2");
+    // Indice en chiffres écrit en petit (« v_3 » → « v₃ »), sinon collé (« v_f » → « vf »).
+    .replace(INDICE, (_, l: string, i: string) => l + (/^\d+$/.test(i) ? i.replace(/\d/g, (c) => "₀₁₂₃₄₅₆₇₈₉"[Number(c)]) : i));
 }
 
 /** Petite fraction a sur b pour les touches (au lieu du « ⁄ », coupé en deux à l'écran). */

@@ -227,6 +227,22 @@ function Programme({ dst }: { dst: Dst }) {
         </p>
       ) : choix || auProgramme.length === 0 ? (
         <div className="rounded-[18px] border border-line bg-surface px-4 py-2 shadow-card">
+          {/* DST du calendrier du lycée : rien n'est coché. On propose de tout prendre d'un coup
+              (le prof n'a souvent pas encore dit ce qui tombe). */}
+          {auProgramme.length === 0 && deLaMatiere.length > 1 && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line py-2.5">
+              <p className="text-[13.5px] text-muted">Tu ne sais pas encore ce qui tombe ?</p>
+              <Bouton
+                variante="doux"
+                onClick={() => {
+                  s.majDst(dst.id, { chapitreIds: [...new Set([...dst.chapitreIds, ...deLaMatiere.map((c) => c.id)])] });
+                  setChoix(false);
+                }}
+              >
+                Prendre les {deLaMatiere.length} chapitres
+              </Bouton>
+            </div>
+          )}
           <ul>
             {deLaMatiere.map((c) => {
               const coche = dst.chapitreIds.includes(c.id);

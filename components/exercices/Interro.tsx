@@ -307,7 +307,11 @@ export function ModeInterro({
             titre: `Définition à savoir : ${q.def.terme}`,
             // La règle à retenir, c'est la définition elle-même (une par erreur) ; le rappel
             // donne les mots clés que le prof attend.
-            regle: `${q.def.terme} : ${q.def.texte.split(/(?<=[.;])\s/)[0]}`,
+            // Règle courte : le terme et le début de sa définition (14 mots au plus).
+            regle: (() => {
+              const mots = q.def.texte.split(/(?<=[.;:])\s/)[0].split(" ");
+              return `${q.def.terme} : ${mots.slice(0, 14).join(" ")}${mots.length > 14 ? "…" : ""}`;
+            })(),
             rappel: `Mots clés : ${motsCles(q.def.texte).slice(0, 5).join(", ")}`,
             theme: "Définitions",
             erreur: reponses[i].texte.trim()

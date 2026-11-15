@@ -277,7 +277,9 @@ export function ModeApprendre({
     // - le palier 3 réussi ne la rend maîtrisée que si le palier précédent date d'un autre jour.
     const rattrapage = revenues.includes(carte.id);
     const aujourdhui = new Date().toISOString().slice(0, 10);
-    const memeJour = carte.apprendreJour === aujourdhui && (carte.apprendre ?? 0) > 0;
+    // Jamais travaillée avant aujourd'hui (même réussie du premier coup) : une seule réussite
+    // sans délai ne prouve pas qu'on retiendra (tour 3, B1).
+    const memeJour = !carte.apprendreJour || carte.apprendreJour === aujourdhui || (carte.apprendre ?? 0) === 0;
     let etat: EtatReponse = reussi ? "palier" : "echec";
     let nouveau = reussi ? apresReussite(carte, q.palier) : apresEchec(carte, q.palier);
     if (reussi && rattrapage) {

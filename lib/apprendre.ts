@@ -16,7 +16,7 @@ export const MAITRISEE = 3;
 export const TAILLE_MANCHE = 7;
 
 const VIDES = new Set(
-  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux partir obtenue obtenu obtient".split(
+  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux partir obtenue obtenu obtient defini definie definis definit relation decompose decomposer succession appelle appele appelee correspond donne".split(
     " ",
   ),
 );
@@ -127,11 +127,15 @@ const debutQuestion = (recto: string) =>
  * écartée : il n'y aurait pas une seule bonne réponse.
  */
 function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashcard[]) {
+  const motsRecto = motsDuRecto(carte);
+  // Deux mots voisins (« géocentrique » et « héliocentrique ») ont des définitions de
+  // même forme : c'est justement le bon intrus, même si elles se ressemblent.
+  const voisine = (f: Flashcard) =>
+    !estQuestion(carte.recto) && !estQuestion(f.recto) && f.recto !== carte.recto && [...motsDuRecto(f)].some((m) => motsRecto.has(m));
   const valable = (f: Flashcard) =>
     f.id !== carte.id &&
     f.verso !== carte.verso &&
-    recouvrement(f.verso, carte.verso) < 0.35 &&
-    recouvrement(carte.verso, f.verso) < 0.35;
+    (voisine(f) || (recouvrement(f.verso, carte.verso) < 0.35 && recouvrement(carte.verso, f.verso) < 0.35));
   const formeBonne = forme(carte.verso);
   const reprendQuestion = recouvrement(carte.verso, carte.recto) > 0;
   const debut = debutQuestion(carte.recto);
@@ -143,6 +147,13 @@ function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashc
     e += (2 * Math.abs(f.verso.length - la)) / Math.max(la, f.verso.length);
     if (reprendQuestion && recouvrement(f.verso, carte.recto) === 0) e += 1.5;
     if (debut && debutQuestion(f.recto) === debut) e -= 1;
+    // Carte de vocabulaire (« Référentiel géocentrique ») : les intrus sont les définitions
+    // des notions voisines (« Référentiel terrestre », « héliocentrique »), d'autres mots à
+    // définir, jamais des réponses à des questions (tour 3, défaut 5).
+    if (!estQuestion(carte.recto)) {
+      if (estQuestion(f.recto)) e += 3;
+      else if ([...motsDuRecto(f)].some((m) => motsRecto.has(m))) e -= 2.5;
+    }
     return e + Math.random() * 0.6;
   };
   const candidats = [

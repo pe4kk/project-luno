@@ -26,6 +26,8 @@ export type EtapePreparation = {
    * part sur chaque jour, en début de séance, au lieu d'une seule fois.
    */
   recurrente?: boolean;
+  /** Durée valable pour chaque jour (un passage complet), au lieu d'être répartie. */
+  parJour?: boolean;
 };
 
 export function etapes(
@@ -97,8 +99,10 @@ export function etapes(
       titre: `Réviser les ${nbCartes} flashcards`,
       detail: "Les cartes des chapitres au programme : dis honnêtement si tu les savais.",
       href: lienTravail({ r: dst.id }),
-      minutes: Math.max(10, Math.round(nbCartes / 5)),
+      // Environ 20 s par carte (lire, chercher de tête, retourner, se noter), à chaque passage.
+      minutes: Math.max(10, Math.round(nbCartes / 3)),
       recurrente: true,
+      parJour: true,
     });
 
   // 2. Les exercices, seulement pour une éval avec exercices.
@@ -190,7 +194,9 @@ export function repartir(liste: EtapePreparation[], dateDst: string): JourPrepar
   // Révisions de tête : chaque jour (veille comprise), en tête de séance.
   jours.forEach((j, i) => {
     for (const e of recurrentes) {
-      const part = Math.max(10, Math.round(e.minutes / nb));
+      // Les cartes : un passage complet le premier jour, puis seulement celles qui
+      // reviennent (environ la moitié). Les notions : la durée totale répartie.
+      const part = e.parJour ? (i === 0 ? e.minutes : Math.max(10, Math.round(e.minutes / 2))) : Math.max(10, Math.round(e.minutes / nb));
       j.etapes.push({
         ...e,
         id: nb > 1 ? `${e.id}@${j.date}` : e.id,
