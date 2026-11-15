@@ -578,14 +578,18 @@ function JeRecite({ texte, matiere, versFiche }: { texte: TexteBac; matiere: Mat
   const [rang, setRang] = useState(0);
   const [montre, setMontre] = useState(false);
   const [coches, setCoches] = useState<Set<number>>(new Set());
-  const [bilan, setBilan] = useState({ dites: 0, total: 0 });
+  const [bilan, setBilan] = useState<{ dites: number; total: number; oublis: { passage: number; extrait: string; titre: string }[] }>({
+    dites: 0,
+    total: 0,
+    oublis: [],
+  });
   const etape = etapes[rang];
 
   const recommencer = () => {
     setRang(0);
     setMontre(false);
     setCoches(new Set());
-    setBilan({ dites: 0, total: 0 });
+    setBilan({ dites: 0, total: 0, oublis: [] });
   };
 
   if (!etape) {
@@ -599,6 +603,21 @@ function JeRecite({ texte, matiere, versFiche }: { texte: TexteBac; matiere: Mat
         <p className="font-hand mt-2 text-[22px] text-accent">
           {pct >= 80 ? "Tu tiens ton explication." : pct >= 50 ? "Encore un passage et ce sera solide." : "Relis le texte annoté, puis recommence."}
         </p>
+        {bilan.oublis.length > 0 && (
+          <div className="mt-4 text-left">
+            <p className="text-[13.5px] font-semibold text-bad">À retravailler ({bilan.oublis.length})</p>
+            <ul className="mt-1.5 grid gap-1.5 text-[14px] leading-snug">
+              {bilan.oublis.map((o, k) => (
+                <li key={k} className="flex gap-2">
+                  <span className="shrink-0 text-[12.5px] font-semibold text-muted">Passage {o.passage}</span>
+                  <span>
+                    <span className="font-display">« {o.extrait} »</span> : <span className="font-semibold">{o.titre}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           <Bouton variante="contour" onClick={versFiche}>
             <BookOpen size={16} /> Texte annoté
@@ -686,7 +705,17 @@ function JeRecite({ texte, matiere, versFiche }: { texte: TexteBac; matiere: Mat
           <Bouton
             className="mt-3 w-full"
             onClick={() => {
-              setBilan((b) => ({ dites: b.dites + coches.size, total: b.total + p.annotations.length }));
+              // Les idées non cochées : le bilan dira sur quoi revenir, passage par passage.
+              setBilan((b) => ({
+                dites: b.dites + coches.size,
+                total: b.total + p.annotations.length,
+                oublis: [
+                  ...b.oublis,
+                  ...p.annotations
+                    .filter((_, i) => !coches.has(i))
+                    .map((a) => ({ passage: rang + 1, extrait: a.extrait, titre: a.titre })),
+                ],
+              }));
               setCoches(new Set());
               setMontre(false);
               setRang((r) => r + 1);

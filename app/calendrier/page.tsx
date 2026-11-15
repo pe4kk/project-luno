@@ -68,7 +68,8 @@ export default function Calendrier() {
       matiereId: matieres[0]?.id ?? "",
       titre: "",
       date,
-      heure: "08:00",
+      // Heure facultative : vide tant qu'on ne l'a pas choisie (tour 5, T3).
+      heure: "",
       dureeMin: 120,
       salle: "",
       notes: "",

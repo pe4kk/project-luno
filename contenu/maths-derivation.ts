@@ -25,7 +25,7 @@ const matiere = { nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" };
 
 export const MATHS_DERIVATION: ChapitrePublie = {
   id: "maths-1re-derivation",
-  version: 4,
+  version: 5,
   definitions: DEF_MATHS_DERIVATION,
   matiere,
   titre: "Séquence 2 · Dérivation",
@@ -412,8 +412,8 @@ export const MATHS_DERIVATION: ChapitrePublie = {
     },
     {
       type: "trou",
-      texte: "Une fonction dérivable en tout réel d'un intervalle I est dite dérivable ___ I.",
-      reponses: ["sur"],
+      texte: "Une fonction dérivable en tout réel d'un intervalle I est dite dérivable sur I ; on définit alors sa fonction ___, notée f'.",
+      reponses: ["dérivée", "derivee"],
       explication: "On dit « dérivable sur I », et on définit alors sa fonction dérivée f'.",
     },
     {

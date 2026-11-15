@@ -1328,7 +1328,8 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         titre: "Exercices du Chap. 11",
         fichier: `${dossier}/exercices-chap11.pdf`,
-        detail: "Énoncés · 4 pages",
+        // Le PDF du prof porte le titre « Exercices du Chap.13 » (numérotation du manuel).
+        detail: "Énoncés · 4 pages · le PDF s'intitule « Chap. 13 » (numéro du manuel), c'est bien ce chapitre",
       },
       {
         titre: "Correction des exercices du Chap. 11",

@@ -16,7 +16,7 @@ export const MAITRISEE = 3;
 export const TAILLE_MANCHE = 7;
 
 const VIDES = new Set(
-  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux partir obtenue obtenu obtient defini definie definis definit relation decompose decomposer succession appelle appele appelee correspond donne".split(
+  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux partir obtenue obtenu obtient uniquement seulement toujours jamais notamment egalement exactement defini definie definis definit relation decompose decomposer succession appelle appele appelee correspond donne".split(
     " ",
   ),
 );

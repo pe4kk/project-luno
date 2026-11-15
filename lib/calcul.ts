@@ -134,7 +134,9 @@ export function lireNombre(saisie: string): number | null {
     .replace(/[⁻]/g, "-")
     .replace(/[⁰-⁹¹²³]/g, (c) => String(sup.indexOf(c)))
     .replace(/,/g, ".")
-    .replace(/[×x·*]10\^?(-?\d+)$/i, "e$1");
+    .replace(/[×x·*]10\^?\+?(-?\d+)$/i, "e$1")
+    // « 3,4e+3 » (écriture des calculatrices) : le « + » de l'exposant est accepté.
+    .replace(/e\+(\d)/i, "e$1");
   if (!/^-?\d*\.?\d+(e-?\d+)?$/i.test(t)) return null;
   const v = Number(t);
   return Number.isFinite(v) ? v : null;

@@ -297,6 +297,11 @@ export function ModeInterro({
     const sur20 = Math.round(((obtenu / total) * 20) * 2) / 2;
     const temps = Math.round((Math.min(maintenant, fin ?? maintenant) - debut) / 60_000);
 
+    // Fréquence de chaque mot dans toutes les définitions des chapitres choisis.
+    const rarete = new Map<string, number>();
+    for (const c of selection)
+      for (const d of c.definitions ?? [])
+        for (const m of new Set(motsCles(d.texte).map((x) => x.toLowerCase()))) rarete.set(m, (rarete.get(m) ?? 0) + 1);
     const erreurs = questions.flatMap((q, i) => {
       if (q.type === "cours") {
         if (notes[i] === null || notes[i] === 1) return [];
@@ -310,9 +315,14 @@ export function ModeInterro({
             // Une vraie règle courte, réutilisable : les mots que le prof attend et qui
             // manquaient dans la réponse (tour 4, défaut 19). Le rappel donne la définition.
             regle: (() => {
-              const manquants = comparer(reponses[i].texte, q.def.texte).manquants.slice(0, 3);
-              const cles = manquants.length ? manquants : motsCles(q.def.texte).slice(0, 3);
-              return `${q.def.terme} : toujours citer ${cles.map((m) => `« ${m} »`).join(", ")}`;
+              // Les mots qui font la définition : ni ceux du terme lui-même (« Inertie :
+              // citer inertie »), ni les mots courants de toutes les définitions (force,
+              // système…). Les plus rares d'abord : « attache » plutôt que « contact ».
+              const duTerme = new Set(motsCles(q.def.terme).map((m) => m.toLowerCase()));
+              const utiles = (l: string[]) => l.filter((m) => !duTerme.has(m.toLowerCase())).sort((x, y) => (rarete.get(x.toLowerCase()) ?? 0) - (rarete.get(y.toLowerCase()) ?? 0));
+              const manquants = utiles(comparer(reponses[i].texte, q.def.texte).manquants);
+              const cles = (manquants.length ? manquants : utiles(motsCles(q.def.texte))).slice(0, 3);
+              return `${q.def.terme} : ne pas oublier ${cles.map((m) => `« ${m} »`).join(", ")}`;
             })(),
             rappel: q.def.texte.split(/(?<=[.;])\s/)[0],
             theme: "Définitions",

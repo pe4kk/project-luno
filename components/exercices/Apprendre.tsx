@@ -24,6 +24,7 @@ import {
   dansLeQuiz,
   decouperTrous,
   estQuestion,
+  motsCles,
   preparerNotion,
   repartition,
   synonymes,
@@ -255,6 +256,11 @@ export function ModeApprendre({
   const chapitre = chapitres.find((c) => c.id === q.chapitreId);
   const matiere = matieres.find((m) => m.id === chapitre?.matiereId);
   const scientifique = estScientifique(matiere?.nom);
+  // Mots du cours de ce chapitre (rectos et versos) : écrire un autre terme du cours dans un
+  // trou, c'est confondre deux notions, pas employer un synonyme (tour 5, T2).
+  const vocabulaire = new Set(
+    (chapitre?.flashcards ?? []).flatMap((f) => motsCles(`${f.recto} ${f.verso}`).map((m) => simplifier(m))),
+  );
 
   /** Garde la réponse dans le journal (lu par Claude) ; renvoie son identifiant. */
   const repondre = (reussi: boolean, reponse: string): { id: string; etat: EtatReponse } => {
@@ -346,6 +352,7 @@ export function ModeApprendre({
             emoji={matiere?.emoji}
             couleur={matiere?.couleur ?? "#888"}
             repondre={repondre}
+            vocabulaire={vocabulaire}
             signaler={signalerQuiz}
             suivant={() => setIndex((i) => i + 1)}
           />
@@ -363,6 +370,7 @@ function Question({
   emoji,
   couleur,
   repondre,
+  vocabulaire,
   suivant,
   signaler,
 }: {
@@ -373,6 +381,7 @@ function Question({
   emoji?: string;
   couleur: string;
   repondre: (reussi: boolean, reponse: string) => { id: string; etat: EtatReponse };
+  vocabulaire: Set<string>;
   signaler: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
   suivant: () => void;
 }) {
@@ -427,7 +436,8 @@ function Question({
       // Les mots visibles de la phrase (sans les mots cachés) : le mot écrit y est-il déjà ?
       const caches = new Set(q.trous!.map((u) => simplifier(u)));
       const ailleurs = visible.split(" ").some((w) => w === m && !caches.has(w));
-      return !ailleurs && !q.trous!.some((u, k) => k !== i && simplifier(u) === m);
+      const autreTerme = vocabulaire.has(m) || vocabulaire.has(m.replace(/s$/, ""));
+      return !ailleurs && !autreTerme && !q.trous!.some((u, k) => k !== i && simplifier(u) === m);
     });
     if (j.every(Boolean) || abandon || !plausible) decider(j.every(Boolean), mots.join(" | "));
     else setATrancher(true);

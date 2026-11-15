@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, RotateCcw, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { cleCarte, encre, pastel, prochaineRevision, useLuno, type NoteCarte } from "@/lib/store";
 import { Bouton, BoutonIcone, ZoneAction, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
@@ -59,6 +59,8 @@ export function Revision({
   const [retournee, setRetournee] = useState(false);
   const [essai, setEssai] = useState("");
   const [sues, setSues] = useState(0);
+  // Cartes ratées (« À revoir ») : les seules qui restent vraiment pour aujourd'hui.
+  const [ratees, setRatees] = useState(0);
   // Nombre de cartes de la séance, sans les retours.
   const [total] = useState(() => paquet.length);
 
@@ -80,6 +82,7 @@ export function Revision({
         noterFlashcard(courant.chapitreId, courant.carteId, note);
         // « Difficile » n'est pas « su du premier coup ».
         if (note >= 2) setSues((n) => n + 1);
+        if (note === 0) setRatees((n) => n + 1);
         if (revient)
           setPaquet((l) => {
             const ou = Math.min(index + 4, l.length);
@@ -110,7 +113,10 @@ export function Revision({
   }, [fini, retournee, repondre]);
 
   if (fini) {
-    const aRevoir = total - sues;
+    // Le message suit les délais choisis (tour 5, T1) : « Difficile » revient demain, pas
+    // aujourd'hui, et une carte ratée a déjà été revue dans la séance.
+    const difficiles = total - sues - ratees;
+    const aRevoir = ratees;
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -135,16 +141,17 @@ export function Revision({
           {pluriel(sues, "carte sue", "cartes sues")} du premier coup sur {total}.
         </p>
         <p className="mt-2 text-[13.5px] text-muted">
-          {aRevoir > 0
-            ? `${pluriel(aRevoir, "carte reste", "cartes restent")} à revoir aujourd'hui. Les autres reviendront plus tard, de plus en plus espacées.`
-            : "Ces cartes reviendront plus tard, de plus en plus espacées."}
+          {[
+            difficiles > 0 ? `${pluriel(difficiles, "carte difficile revient", "cartes difficiles reviennent")} demain.` : "",
+            aRevoir > 0
+              ? `${pluriel(aRevoir, "carte ratée a été revue", "cartes ratées ont été revues")} dans la séance ; elles reviendront vite.`
+              : "",
+            "Les autres reviendront plus tard, de plus en plus espacées.",
+          ]
+            .filter(Boolean)
+            .join(" ")}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          {aRevoir > 0 && (
-            <Bouton variante="contour" onClick={terminer}>
-              <RotateCcw size={16} /> Plus tard
-            </Bouton>
-          )}
           <Bouton onClick={terminer}>Terminer</Bouton>
         </div>
       </motion.div>
