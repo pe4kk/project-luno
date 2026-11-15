@@ -83,7 +83,8 @@ function telechargerWord(n: NoteMatiere, matiere: string) {
   const url = URL.createObjectURL(new Blob(["﻿", html], { type: "application/msword" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${(n.titre || "Note").replace(/[\\/:*?"<>|]+/g, " ").trim() || "Note"}.doc`;
+  // « Oral : la chute libre » → « Oral - la chute libre.doc » (les deux-points sont interdits).
+  a.download = `${(n.titre || "Note").replace(/\s*:\s*/g, " - ").replace(/[\\/*?"<>|]+/g, " ").replace(/\s+/g, " ").trim() || "Note"}.doc`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

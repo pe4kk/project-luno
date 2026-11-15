@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, BookOpen, Check, ChevronRight, Eye, EyeOff, Mic, RotateCcw } from "lucide-react";
 import { formule } from "@/components/Formule";
-import { Bouton, pluriel } from "@/components/ui";
+import { Bouton, ZoneAction, pluriel } from "@/components/ui";
 import { PROGRAMME_BAC, TEXTES_BAC } from "@/contenu/bac-francais";
 import {
   GENRES_BAC,
@@ -637,9 +637,11 @@ function JeRecite({ texte, matiere, versFiche }: { texte: TexteBac; matiere: Mat
             Explique ce passage à voix haute, comme devant l&apos;examinateur : les procédés, puis ce qu&apos;ils
             montrent. {pluriel(p.annotations.length, "idée")} à retrouver.
           </p>
-          <Bouton className="mt-3 w-full" onClick={() => setMontre(true)}>
-            <Eye size={16} /> J&apos;ai fini : voir ce qu&apos;il fallait dire
-          </Bouton>
+          <ZoneAction cle={p}>
+            <Bouton className="mt-3 w-full" onClick={() => setMontre(true)}>
+              <Eye size={16} /> J&apos;ai fini : voir ce qu&apos;il fallait dire
+            </Bouton>
+          </ZoneAction>
         </>
       ) : (
         <>

@@ -70,8 +70,9 @@ export function ModeProblemes({ entete, occupe }: { entete: ReactNode; occupe: (
     <div>
       {entete}
       <p className="mb-4 max-w-[640px] text-[14.5px] text-muted">
-        Une situation réelle, à rédiger comme sur ta copie : données, bilan des forces, loi, expression
-        littérale, A.N., conclusion. À chaque étape, tu compares avec ce que ton prof attend et tu coches.
+        Un sujet à rédiger comme sur ta copie, étape par étape (en sciences : données, loi, expression
+        littérale, A.N. ; en histoire : problématique, plan, arguments). À chaque étape, tu compares
+        avec ce que ton prof attend et tu coches.
       </p>
       {liste.length === 0 ? (
         <EtatVide icone={<PenLine size={26} />} titre="Pas encore de problème" texte="Ils arrivent avec les chapitres publiés." />

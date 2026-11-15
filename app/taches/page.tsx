@@ -106,7 +106,7 @@ export default function Taches() {
           aria-label="Nouvelle tâche"
           required
           className={classeSaisie + " !bg-surface"}
-          placeholder="Ex. Exercice 12 de maths pour jeudi"
+          placeholder="Ex. Maths : exo 12 pour jeudi"
           value={saisie}
           onChange={(e) => setSaisie(e.target.value)}
         />

@@ -92,7 +92,7 @@ export const DEF_PC_CHAP9: DefinitionCours[] = [
     "• Sa direction : celle du vecteur MᵢMᵢ₊₁⃗ (donc celle du segment [MᵢMᵢ₊₁]) ;\n• son sens : celui du mouvement ;\n• sa norme : proportionnelle, selon l'échelle choisie pour représenter les vitesses, à la valeur de la vitesse instantanée vᵢ. Une vitesse s'exprime en m/s.",
   ),
   d(
-    "Vitesse (fiche méthode Euler)",
+    "Vitesse (taux de variation de la position)",
     "La vitesse est le taux de variation de la position (en mathématiques, on parle de dérivée de la position). Une dérivée (ou un taux de variation) indique comment varie la position le long de la trajectoire.",
     "Uniforme : taux de variation nul, vitesse constante. Accéléré : taux de variation > 0, la vitesse augmente. Décéléré : taux de variation < 0, la vitesse diminue.",
   ),

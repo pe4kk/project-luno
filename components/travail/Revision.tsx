@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, RotateCcw, X } from "lucide-react";
 import { cleCarte, encre, pastel, useLuno } from "@/lib/store";
-import { Bouton, BoutonIcone, pluriel } from "@/components/ui";
+import { Bouton, BoutonIcone, ZoneAction, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { Emoji } from "@/components/Emoji";
@@ -20,6 +20,8 @@ function melanger<T>(liste: T[]): T[] {
 }
 
 export type CarteARevoir = { chapitreId: string; carteId: string };
+/** `retour` : carte ratée qui repasse une fois, quelques cartes plus loin, dans la même séance. */
+type Passage = CarteARevoir & { retour?: boolean };
 
 export function Revision({
   cartes,
@@ -32,7 +34,7 @@ export function Revision({
   // Le paquet est mélangé, puis figé, au début de chaque séance (demandé le 2026-11-14) :
   // les cartes ne reviennent jamais dans le même ordre.
   // Une carte publiée dans deux chapitres (« Référentiel ») ne passe qu'une fois.
-  const [paquet] = useState(() => {
+  const [paquet, setPaquet] = useState<Passage[]>(() => {
     const vues = new Set<string>();
     return melanger(
       cartes.filter((x) => {
@@ -48,6 +50,8 @@ export function Revision({
   const [index, setIndex] = useState(0);
   const [retournee, setRetournee] = useState(false);
   const [sues, setSues] = useState(0);
+  // Nombre de cartes de la séance, sans les retours.
+  const [total] = useState(() => paquet.length);
 
   const courant = paquet[index];
   const chapitre =
@@ -60,12 +64,21 @@ export function Revision({
   const repondre = useCallback(
     (su: boolean) => {
       if (!courant) return;
-      noterFlashcard(courant.chapitreId, courant.carteId, su);
-      if (su) setSues((n) => n + 1);
+      // Le retour ne compte pas une deuxième fois dans la répétition espacée : il sert
+      // seulement à revoir la carte tant qu'elle est fraîche.
+      if (!courant.retour) {
+        noterFlashcard(courant.chapitreId, courant.carteId, su);
+        if (su) setSues((n) => n + 1);
+        else
+          setPaquet((l) => {
+            const ou = Math.min(index + 4, l.length);
+            return [...l.slice(0, ou), { ...courant, retour: true }, ...l.slice(ou)];
+          });
+      }
       setRetournee(false);
       setIndex((i) => i + 1);
     },
-    [courant, noterFlashcard],
+    [courant, index, noterFlashcard],
   );
 
   useEffect(() => {
@@ -82,7 +95,7 @@ export function Revision({
   }, [fini, retournee, repondre]);
 
   if (fini) {
-    const aRevoir = paquet.length - sues;
+    const aRevoir = total - sues;
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -104,7 +117,7 @@ export function Revision({
         </motion.div>
         <h2 className="text-[28px]">Séance terminée</h2>
         <p className="mt-1 text-[15px] text-muted">
-          {pluriel(sues, "carte sue", "cartes sues")} sur {paquet.length}.
+          {pluriel(sues, "carte sue", "cartes sues")} du premier coup sur {total}.
         </p>
         <p className="mt-2 text-[13.5px] text-muted">
           {aRevoir > 0
@@ -193,6 +206,11 @@ export function Revision({
               >
                 {formule(carte.recto)}
               </span>
+              {courant.retour && (
+                <span className="absolute top-4 rounded-full bg-surface/80 px-2.5 py-0.5 text-[12px] font-semibold text-muted">
+                  Elle revient : tu l&apos;avais ratée
+                </span>
+              )}
               <span className="absolute bottom-4 text-[13px] text-muted">
                 Touche la carte pour la retourner
               </span>
@@ -201,6 +219,8 @@ export function Revision({
               className="flip-face absolute inset-0 flex flex-col items-center gap-4 overflow-y-auto [&>:first-child]:mt-auto [&>:last-child]:mb-auto rounded-[18px] border-[1.5px] border-ink bg-surface p-6 shadow-[6px_6px_0_var(--blush)]"
               style={{ transform: "rotateY(180deg)" }}
             >
+              {/* La question reste visible au dos : on sait à quoi on répondait. */}
+              <span className="text-[13px] font-semibold leading-snug text-muted">{formule(carte.recto)}</span>
               <span
                 className={
                   carte.schema
@@ -223,7 +243,7 @@ export function Revision({
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <ZoneAction cle={retournee ? carte.id + "r" : carte.id} className="mt-6 grid grid-cols-2 gap-3">
         <Bouton
           variante="contour"
           className="!border-bad/40 !py-3.5 !text-bad hover:!bg-bad/10"
@@ -239,7 +259,7 @@ export function Revision({
         >
           <Check size={18} /> Je savais
         </Bouton>
-      </div>
+      </ZoneAction>
       <p className="mt-3 text-center text-[12.5px] text-muted">
         Retourne la carte, puis indique si tu connaissais la réponse.
       </p>

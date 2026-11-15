@@ -430,7 +430,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </span>
               </span>
               <span
-                className={`max-w-full truncate px-0.5 text-[10px] leading-none transition-colors ${
+                className={`max-w-full truncate px-0.5 text-[10px] leading-none transition-colors max-[359px]:px-0 max-[359px]:text-[9px] max-[359px]:tracking-[-0.03em] ${
                   ici ? "font-semibold text-ink" : "font-medium text-muted"
                 }`}
               >

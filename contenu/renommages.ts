@@ -7,6 +7,8 @@
  */
 export const RECTOS_RENOMMES: Record<string, string> = {
   // physique-mouvement
+  "vecteur vitesse par encadrement (fiche euler)": "Vecteur vitesse par encadrement",
+  "vecteur vitesse par encadrement (chap. 11)": "Vecteur vitesse par encadrement",
   "limite du modèle du point matériel": "Quelle est la limite du modèle du point matériel ?",
   "repère d'espace et horloge": "À quoi servent le repère d'espace et l'horloge d'un référentiel ?",
   "les trois types de trajectoires": "Quels sont les trois types de trajectoires ?",

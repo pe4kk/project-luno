@@ -10,8 +10,8 @@ import { formule, sansMiseEnForme } from "@/components/Formule";
 import { Emoji } from "@/components/Emoji";
 import { SaisieFormule } from "@/components/SaisieFormule";
 import { DessinSchema } from "@/components/Schema";
-import { Bouton, BoutonIcone, Carte, EtatVide, pluriel } from "@/components/ui";
-import { reponseJuste } from "@/lib/contenu";
+import { Bouton, BoutonIcone, Carte, EtatVide, ZoneAction, pluriel } from "@/components/ui";
+import { reponseJuste, simplifier } from "@/lib/contenu";
 import { estScientifique, versNotation } from "@/lib/saisie";
 import { encre, pastel, useLuno } from "@/lib/store";
 import {
@@ -26,6 +26,7 @@ import {
   estQuestion,
   preparerNotion,
   repartition,
+  synonymes,
   type NotionManche,
 } from "@/lib/apprendre";
 import type { Chapitre, EntreeQuiz } from "@/lib/types";
@@ -366,6 +367,8 @@ function Question({
   const champs = useRef<(HTMLInputElement | null)[]>([]);
   const [mots, setMots] = useState<string[]>(() => (q.trous ?? []).map(() => ""));
   const [justes, setJustes] = useState<boolean[] | null>(null);
+  // Trous faux : l'élève peut dire qu'il avait un mot de même sens avant que ça compte.
+  const [aTrancher, setATrancher] = useState(false);
   const carte = q.carte;
   const resultat = useMemo(() => (compare ? comparer(saisie, carte.verso) : null), [compare, saisie, carte.verso]);
   useEffect(() => {
@@ -389,9 +392,12 @@ function Question({
     if (verdict !== null || !q.trous) return;
     const vides = mots.findIndex((m) => !m.trim());
     if (!abandon && vides >= 0) return champs.current[vides]?.focus();
-    const j = q.trous.map((t, i) => !abandon && reponseJuste(mots[i] ?? "", [t]));
+    const j = q.trous.map(
+      (t, i) => !abandon && (reponseJuste(mots[i] ?? "", [t]) || synonymes(simplifier(mots[i] ?? "").trim(), simplifier(t))),
+    );
     setJustes(j);
-    decider(j.every(Boolean), mots.join(" | "));
+    if (j.every(Boolean) || abandon) decider(j.every(Boolean), mots.join(" | "));
+    else setATrancher(true);
   };
 
   return (
@@ -464,7 +470,7 @@ function Question({
             {morceaux.map((m, k) => {
               if (typeof m === "string") return <span key={k}>{formule(m)}</span>;
               const i = m;
-              if (verdict !== null && justes)
+              if (justes)
                 return (
                   <span
                     key={k}
@@ -498,7 +504,27 @@ function Question({
               );
             })}
           </p>
-          {verdict === null && (
+          {verdict === null && aTrancher && (
+            <ZoneAction cle="trancher" className="mt-3 grid gap-2">
+              <p className="text-[13.5px] text-muted">
+                Tu as écrit :{" "}
+                {mots
+                  .map((m, i) => (justes && !justes[i] ? `« ${m.trim() || "rien"} »` : null))
+                  .filter(Boolean)
+                  .join(", ")}
+                . Si c&apos;est un mot de même sens, compte-le juste.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Bouton type="button" onClick={() => decider(false, mots.join(" | "))}>
+                  OK, à revoir
+                </Bouton>
+                <Bouton type="button" variante="contour" onClick={() => decider(true, mots.join(" | "))}>
+                  <Check size={16} /> J&apos;avais juste
+                </Bouton>
+              </div>
+            </ZoneAction>
+          )}
+          {verdict === null && !aTrancher && (
             <div className="mt-3 flex flex-wrap gap-2">
               <Bouton type="submit">Vérifier</Bouton>
               <Bouton type="button" variante="fantome" onClick={() => verifierTrous(true)}>
@@ -512,7 +538,7 @@ function Question({
               {verdict ? "" : " : il faut les trouver tous pour passer au palier suivant"}.
             </p>
           )}
-          {verdict === false && mots.some((m, i) => m.trim() && justes && !justes[i]) && (
+          {verdict === false && !aTrancher && mots.some((m, i) => m.trim() && justes && !justes[i]) && (
             <p className="mt-1 text-[13.5px] text-muted">
               Tu as écrit :{" "}
               {mots
@@ -575,7 +601,9 @@ function Question({
                       </span>
                     ) : (
                       <>
-                        Formule à retrouver :{" "}
+                        {resultat.formules.some((f) => f.sansFleche)
+                          ? "Formule juste, mais il manque les flèches de vecteur : "
+                          : "Formule à retrouver : "}
                         <span className="font-semibold text-bad">
                           {resultat.formules.filter((f) => !f.trouvee).map((f, i) => (
                             <span key={i} className="mr-2 inline-block">{formule(f.f)}</span>
@@ -604,14 +632,14 @@ function Question({
                     </p>
                   ))}
                 {verdict === null && (
-                  <div className="flex flex-wrap gap-2">
+                  <ZoneAction cle={resultat} className="flex flex-wrap gap-2">
                     <Bouton onClick={() => decider(true)}>
                       <Check size={17} /> C&apos;était juste
                     </Bouton>
                     <Bouton variante="contour" onClick={() => decider(false)}>
                       Presque : à revoir
                     </Bouton>
-                  </div>
+                  </ZoneAction>
                 )}
               </div>
             )
@@ -638,12 +666,12 @@ function Question({
               )}
             </div>
           )}
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <ZoneAction cle={verdict} className="mt-3 flex flex-wrap items-center gap-2">
             <Bouton onClick={suivant} autoFocus>
               Continuer
             </Bouton>
             {idJournal && <Signaler id={idJournal} signaler={signaler} />}
-          </div>
+          </ZoneAction>
         </div>
       )}
     </Carte>

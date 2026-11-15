@@ -10,7 +10,7 @@ import { Check, ChevronLeft, ChevronRight, Clock, ScrollText, Send, X } from "lu
 import { formule } from "@/components/Formule";
 import { Emoji } from "@/components/Emoji";
 import { SaisieFormule } from "@/components/SaisieFormule";
-import { Bouton, BoutonIcone, Carte, EnvoyerAClaude, EtatVide, pluriel } from "@/components/ui";
+import { Bouton, BoutonIcone, Carte, EnvoyerAClaude, EtatVide, ZoneAction, pluriel } from "@/components/ui";
 import { Curseur } from "@/components/Curseur";
 import { ecrireAvecCs, remplir, tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
 import { bilans, useDemandes, type Demande } from "@/lib/demandes";
@@ -216,7 +216,7 @@ export function ModeInterro({
                     </span>
                     <span className="block text-[15.5px] font-semibold leading-snug">{c.titre}</span>
                     <span className="text-[12.5px] text-muted">
-                      {c.definitions?.length ?? 0} déf. · {c.calculs?.length ?? 0} calculs
+                      {c.definitions?.length ?? 0} déf. · {pluriel(c.calculs?.length ?? 0, "calcul")}
                     </span>
                   </span>
                 </button>
@@ -291,7 +291,11 @@ export function ModeInterro({
         return [{
           matiereId: q.matiereId,
           e: {
-            titre: consigneCours(q.def),
+            // Une erreur réutilisable, pas seulement la question (règle 8 des contenus).
+            titre: `Définition à savoir : ${q.def.terme}`,
+            regle: "Restituer la définition avec les mots du cours : ce sont eux que le prof attend.",
+            rappel: q.def.texte.split(/(?<=[.;])\s/)[0],
+            theme: "Définitions",
             erreur: reponses[i].texte.trim()
               ? q.scientifique
                 ? versNotation(reponses[i].texte)
@@ -310,6 +314,13 @@ export function ModeInterro({
         matiereId: q.matiereId,
         e: {
           titre: `${quoi} : ${q.calcul.titre}`,
+          regle:
+            !v || !v.valeur
+              ? "Écrire l'expression littérale, convertir chaque donnée en unité SI, puis seulement faire l'A.N."
+              : !v.unite
+                ? "Toujours écrire l'unité du résultat, dans le système international."
+                : "Arrondir au nombre de chiffres significatifs de la donnée la moins précise.",
+          theme: !v || !v.valeur ? "Méthode" : !v.unite ? "Unités" : "Chiffres significatifs",
           erreur: reponses[i].texte ? `${reponses[i].texte} ${reponses[i].unite}` : "Pas répondu.",
           correction: `${q.calcul.litterale}, puis ${v?.attendu ?? "l'A.N. avec son unité"}.`,
           chapitre: q.chapitre,
@@ -385,7 +396,7 @@ export function ModeInterro({
                 }}
               >
                 {ajoute ? <Check size={16} /> : null}
-                {ajoute ? "Ajouté à Mes erreurs" : `Ajouter mes ${erreurs.length} erreurs à Mes erreurs`}
+                {ajoute ? "Ajouté à Mes erreurs" : erreurs.length > 1 ? `Ajouter mes ${erreurs.length} erreurs à Mes erreurs` : "Ajouter mon erreur à Mes erreurs"}
               </Bouton>
             )}
             <Bouton variante="doux" onClick={() => setEnvoiBilan(true)}>
@@ -566,7 +577,7 @@ export function ModeInterro({
           )}
         </motion.div>
       </AnimatePresence>
-      <div className="mt-4 grid grid-cols-2 gap-2">
+      <ZoneAction cle={index} className="mt-4 grid grid-cols-2 gap-2">
         <Bouton variante="contour" disabled={index === 0} onClick={() => setIndex(index - 1)}>
           <ChevronLeft size={16} /> Précédente
         </Bouton>
@@ -577,7 +588,7 @@ export function ModeInterro({
         ) : (
           <Bouton onClick={rendre}>Rendre la copie</Bouton>
         )}
-      </div>
+      </ZoneAction>
       {index + 1 < questions.length && (
         <Bouton variante="fantome" className="mt-2 w-full" onClick={rendre}>
           Rendre la copie maintenant

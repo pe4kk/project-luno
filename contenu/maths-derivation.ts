@@ -499,7 +499,7 @@ export const LECON_DERIVATION: Lecon = {
   niveau: "Première",
   duree: "20 min",
   intro:
-    "On reconstruit le chapitre pas à pas, à partir d'une seule idée : la pente d'une droite. À chaque étape, réponds de tête (ou sur un brouillon) avant de dévoiler la réponse. Les exemples ne sont pas ceux de tes fiches d'exercices : la méthode est la même, pour que tu puisses ensuite faire les tiens seul.",
+    "On reconstruit le chapitre pas à pas, à partir d'une seule idée : la pente d'une droite. À chaque étape, réponds de tête (ou sur un brouillon) avant de dévoiler la réponse. Les exemples ne sont pas ceux de tes fiches d'exercices : la méthode est la même, pour que tu puisses ensuite faire les tiens sans aide.",
   etapes: [
     {
       titre: "Le point de départ : la pente d'une droite",

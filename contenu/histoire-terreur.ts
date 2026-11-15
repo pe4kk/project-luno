@@ -219,7 +219,7 @@ const DATES: DateCle[] = [
     date: "5 avril 1794",
     tri: "1794-04-05",
     evenement: "Exécution de Danton, chef des Indulgents",
-    precision: "Elle forme un soulèvement contre Robespierre, désigné comme « dictateur ».",
+    precision: "Danton voulait arrêter la Terreur. Après son exécution, l'opposition à Robespierre, désigné comme « dictateur », grandit jusqu'à sa chute le 9 thermidor.",
     importance: 2,
   },
   {
@@ -254,7 +254,7 @@ const DATES: DateCle[] = [
 
 export const HISTOIRE_TERREUR: ChapitrePublie = {
   id: "hg-1re-convention-terreur",
-  version: 2,
+  version: 3,
   matiere,
   titre: "La Convention et la Terreur (1792-1794)",
   definitions: DEFINITIONS,
@@ -314,7 +314,7 @@ export const HISTOIRE_TERREUR: ChapitrePublie = {
         points: [
           { t: "Guerre de Vendée : en réaction à la levée de 300 000 hommes (mars 1793), l'Ouest se soulève. ==Guerre civile entre « bleus » (républicains) et « blancs » (royalistes), de 1793 à 1796==, gagnée par les républicains.", n: 1 },
           { t: "Bilan : plus de 180 000 morts côté royaliste et 120 000 côté républicain.", n: 3 },
-          { t: "Danton, chef des Indulgents (Montagnards opposés à la Terreur, qui veulent la paix intérieure), est exécuté : un soulèvement se forme contre Robespierre, désigné comme « dictateur ».", n: 2 },
+          { t: "Danton, chef des Indulgents (Montagnards opposés à la Terreur, qui veulent la paix intérieure), est exécuté en avril 1794. Ensuite, l'opposition à Robespierre, désigné comme « dictateur », grandit jusqu'au 9 thermidor.", n: 2 },
           { t: "==Robespierre est arrêté le 9 thermidor et exécuté le 10 thermidor an II (28 juillet 1794) : c'est la fin de la Terreur.== Des sans-culottes et Montagnards sont aussi exécutés ; les exilés reviennent.", n: 1, image: ARRESTATION },
           { t: "Les ennemis désignés ne sont pas seulement les royalistes : les Girondins chassés de la Convention (ex. Olympe de Gouges) et les révolutionnaires jugés trop modérés (ex. Danton) sont aussi poursuivis.", n: 4 },
           { t: "Après la Terreur, la Convention dite « thermidorienne » gouverne encore un an ; le Directoire commence en octobre 1795.", n: 4 },

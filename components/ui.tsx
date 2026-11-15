@@ -78,6 +78,43 @@ export function BoutonIcone({
   );
 }
 
+/**
+ * Zone qui contient le bouton principal d'un écran (Continuer, Je savais, Rendre la
+ * copie…). Chaque fois que `cle` change, si la zone est cachée sous la barre d'onglets
+ * du bas (téléphone) ou sous le bord de l'écran, la page défile juste assez pour la montrer.
+ */
+export function ZoneAction({
+  cle,
+  className = "",
+  children,
+}: {
+  cle: unknown;
+  className?: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // Laisse la carte s'afficher (animations d'entrée) avant de mesurer.
+    const t = window.setTimeout(() => {
+      const r = el.getBoundingClientRect();
+      const telephone = window.matchMedia("(max-width: 1023px)").matches;
+      const bas = window.innerHeight - (telephone ? 104 : 16);
+      if (r.bottom > bas) {
+        const depl = Math.min(r.bottom - bas, Math.max(0, r.top - 80));
+        if (depl > 0) window.scrollBy({ top: depl, behavior: "smooth" });
+      }
+    }, 120);
+    return () => window.clearTimeout(t);
+  }, [cle]);
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
 export function Carte({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <div className={`rounded-[18px] border border-line bg-surface p-5 shadow-card sm:p-6 ${className}`}>
@@ -325,16 +362,22 @@ export function EnvoyerAClaude({
               )}
             </>
           ) : (
-            <p className="mt-0.5 text-[13.5px] text-muted">
-              Connecte-toi dans « Mes données » (la roue dentée) pour envoyer ta demande
-              directement, photos et PDF compris : Claude la traite quatre fois par jour.
+            <p className="mt-0.5 text-[14px] leading-relaxed text-ink">
+              <strong>Il faut un compte pour envoyer.</strong> Ouvre « Mes données » (la roue dentée en
+              haut), crée ton compte ou connecte-toi, puis reviens ici : ta demande partira avec ses
+              photos et PDF, et Claude la traite quatre fois par jour. La réponse s&apos;affiche ici toute seule.
               {photos.length > 0 &&
                 " Sans compte, les pièces jointes ne peuvent pas partir : envoie-les-moi dans le chat."}
             </p>
           )}
         </div>
       )}
-      <p className="text-[14.5px] leading-relaxed text-muted">
+      <details className="group" open={!direct || undefined}>
+      <summary className="cursor-pointer list-none text-[14px] font-semibold text-muted hover:text-ink">
+        <span className="mr-1 inline-block transition-transform group-open:rotate-90">›</span>
+        Autres moyens (copier la demande, GitHub)
+      </summary>
+      <p className="mt-2 text-[14.5px] leading-relaxed text-muted">
         {direct
           ? `Ou transmets-la toi-même, pour une réponse plus rapide : Claude rédige ${resultat}, et tout apparaît ici à ta prochaine visite.`
           : `Le site ne peut pas joindre Claude tout seul. Transmets-lui ta demande par l'un de ces deux moyens : il rédige ${resultat}, et tout apparaît ici à ta prochaine visite.`}
@@ -368,6 +411,7 @@ export function EnvoyerAClaude({
           </a>
         </div>
       </div>
+      </details>
     </Fenetre>
   );
 }

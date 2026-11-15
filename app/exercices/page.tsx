@@ -340,7 +340,8 @@ function ModeSerie({ entete, occupe }: { entete: ReactNode; occupe: (b: boolean)
               className="mt-3"
             />
             <Bouton
-              className="mt-6 w-full"
+              // Sur téléphone, la barre collée en bas porte déjà « Commencer ».
+              className={`mt-6 w-full ${chapitre ? "max-lg:hidden" : ""}`}
               onClick={() => (chapitre ? lancer() : setAide(true))}
             >
               Commencer
@@ -752,7 +753,7 @@ function Exercices() {
               aria-selected={actif}
               data-actif={actif}
               onClick={() => setMode(o.id)}
-              className={`relative z-10 min-h-10 flex-1 whitespace-nowrap rounded-full px-2.5 text-[13.5px] font-semibold transition-colors duration-200 sm:flex-none sm:px-4 sm:text-[14px] ${
+              className={`relative z-10 min-h-10 flex-1 whitespace-nowrap rounded-full px-2.5 text-[13.5px] max-[379px]:px-1.5 max-[379px]:text-[12.5px] font-semibold transition-colors duration-200 sm:flex-none sm:px-4 sm:text-[14px] ${
                 actif ? "text-bg" : "text-muted hover:text-ink"
               }`}
             >

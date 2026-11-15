@@ -29,6 +29,11 @@ const RACCOURCIS: [RegExp, string][] = [
   // Prime : l'apostrophe typographique de l'iPhone (’) ou « prime » tapé après une lettre.
   [/’/g, "'"],
   [new RegExp(`([${LETTRE}₀-₉])prime(?![${LETTRE}])`, "g"), "$1'"],
+  // Points d'une chronophotographie : « Mi-1 », « Mi+1 », « Mi » → Mᵢ₋₁, Mᵢ₊₁, Mᵢ (sinon
+  // « Mi-1Mi+1/(2Δt) » se lisait Mᵢ₋₁Mᵢ + 1/(2Δt)).
+  [/(^|[^A-Za-zÀ-ÿ])([A-Z]{1,2})i-1(?![0-9])/g, "$1$2ᵢ₋₁"],
+  [/([A-Zᵢ₋₁])Mi\+1(?![0-9])/g, "$1Mᵢ₊₁"],
+  [/(^|[^A-Za-zÀ-ÿ])([A-Z])i\+1(?![0-9])/g, "$1$2ᵢ₊₁"],
   [/\^-1/g, "⁻¹"],
   [/\^-2/g, "⁻²"],
   [/\^2/g, "²"],
@@ -45,8 +50,17 @@ export function raccourcis(texte: string): string {
   return t;
 }
 
-/** Aide affichée sous un champ. */
-export const AIDE_RACCOURCIS = "del → Δ · sig → Σ (avant une lettre ou un espace) · * → · · ^2 → ² · ^-1 → ⁻¹ · -> → → · a/b → fraction · Mprime → M' · flèche v⃗ sur la sélection";
+/** Aide affichée sous un champ : ce qu'on tape, ce qu'on obtient. */
+export const AIDE_RACCOURCIS: [string, string][] = [
+  ["del", "Δ"],
+  ["sig", "Σ"],
+  ["^2", "²"],
+  ["^-1", "⁻¹"],
+  ["*", "·"],
+  ["->", "→"],
+  ["a/b", "fraction"],
+  ["Mprime", "M′"],
+];
 
 const UNITES = new Set(["m", "km", "cm", "mm", "s", "h", "min", "kg", "g", "N", "L", "mL", "J", "W"]);
 
@@ -70,6 +84,12 @@ function groupeApres(t: string, debut: number): number | null {
   return null;
 }
 
+/** Le caractère en `k` coupe-t-il un terme ? Une virgule entre deux chiffres est décimale (9,81). */
+function separe(t: string, k: number, motif: RegExp) {
+  if (t[k] === "," && /\d/.test(t[k - 1] ?? "") && /\d/.test(t[k + 1] ?? "")) return false;
+  return motif.test(t[k]);
+}
+
 /**
  * Texte tapé → notation des contenus de Luno (fractions `{{a // b}}`), pour l'aperçu.
  * Le numérateur est le groupe entre parenthèses ou le terme collé avant « / » (produit
@@ -89,7 +109,7 @@ export function versNotation(texte: string): string {
       num = t.slice(g + 1, i - 1);
     } else {
       debutNum = i;
-      while (debutNum > 0 && !/[\s=+−\-,;:(⇒→≈<>\[\]]/.test(t[debutNum - 1]) && t.slice(debutNum - 2, debutNum) !== "__") debutNum--;
+      while (debutNum > 0 && !separe(t, debutNum - 1, /[\s=+−\-,;:(⇒→≈<>\[\]]/) && t.slice(debutNum - 2, debutNum) !== "__") debutNum--;
       num = t.slice(debutNum, i);
     }
     let finDen: number;
@@ -100,7 +120,7 @@ export function versNotation(texte: string): string {
       den = t.slice(i + 2, h - 1);
     } else {
       finDen = i + 1;
-      while (finDen < t.length && !/[\s=+−\-,;:)·×⇒→≈<>/\[\]]/.test(t[finDen]) && t.slice(finDen, finDen + 2) !== "__") finDen++;
+      while (finDen < t.length && !separe(t, finDen, /[\s=+−\-,;:)·×⇒→≈<>/\[\]]/) && t.slice(finDen, finDen + 2) !== "__") finDen++;
       den = t.slice(i + 1, finDen);
     }
     const unite = UNITES.has(num.trim()) && UNITES.has(den.trim());

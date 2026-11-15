@@ -18,7 +18,7 @@ import {
   CalendarClock,
 } from "lucide-react";
 import { useLuno } from "@/lib/store";
-import { simplifier } from "@/lib/contenu";
+import { distance, simplifier } from "@/lib/contenu";
 import { dateLongue } from "@/lib/dates";
 import { lienFichier, lienTravail } from "@/lib/liens";
 import { LECONS } from "@/contenu/lecons";
@@ -56,15 +56,29 @@ function ContenuResultat({ r }: { r: Resultat }) {
 
 export default function Recherche() {
   const { matieres, chapitres, dsts, taches } = useLuno();
-  const [requete, setRequete] = useState("");
+  // La recherche est gardée dans l'adresse (?q=…) : en revenant d'un résultat avec le
+  // bouton retour, on retrouve sa liste.
+  const [requete, setRequeteBrute] = useState(() =>
+    typeof window === "undefined" ? "" : (new URLSearchParams(window.location.search).get("q") ?? ""),
+  );
+  const setRequete = (q: string) => {
+    setRequeteBrute(q);
+    const url = new URL(window.location.href);
+    if (q) url.searchParams.set("q", q);
+    else url.searchParams.delete("q");
+    window.history.replaceState(window.history.state, "", url);
+  };
   const mots = simplifier(requete).split(" ").filter(Boolean);
 
   const groupes = useMemo<Groupe[]>(() => {
     if (mots.length === 0 || mots.join("").length < 2) return [];
     // Un texte correspond s'il contient tous les mots tapés, sans tenir compte des accents.
+    // Une faute de frappe est tolérée sur les mots de six lettres et plus (« Robespiere »).
     const trouve = (...textes: string[]) => {
       const t = simplifier(textes.join(" "));
-      return mots.every((m) => t.includes(m));
+      return mots.every(
+        (m) => t.includes(m) || (m.length >= 6 && t.split(" ").some((x) => Math.abs(x.length - m.length) <= 1 && distance(x, m) <= 1)),
+      );
     };
     const nomMatiere = (id: string) => matieres.find((m) => m.id === id);
     const etiquette = (id: string) => {

@@ -159,13 +159,14 @@ export function VueChapitre({
             aria-controls="panneau-chapitre"
             tabIndex={onglet === id ? 0 : -1}
             onClick={() => setOnglet(id)}
-            className="relative flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-[14.5px] font-semibold transition-colors duration-300 sm:px-5"
+            // Cinq onglets doivent tenir à 320 px : moins de marge et pas de compteur sur petit écran.
+            className="relative flex min-h-11 items-center gap-2 rounded-xl px-2.5 py-2 text-[14.5px] font-semibold transition-colors duration-300 max-[379px]:px-1.5 max-[379px]:text-[13.5px] sm:px-5"
             style={{ color: onglet === id ? foncee : "var(--muted)" }}
           >
             <Icone size={16} className="relative hidden sm:block" />
             <span className="relative">{label}</span>
             {id === "flashcards" && chapitre.flashcards.length > 0 && (
-              <span className="relative rounded-full bg-ink/10 px-1.5 text-[11.5px]">
+              <span className="relative rounded-full bg-ink/10 px-1.5 text-[11.5px] max-[419px]:hidden">
                 {chapitre.flashcards.length}
               </span>
             )}
@@ -322,7 +323,7 @@ function OngletCours({
       <>
         <Documents chapitre={chapitre} />
         <Carte className="flex flex-wrap items-center justify-between gap-3">
-          <p className="min-w-0 flex-1 text-[14.5px] text-muted">
+          <p className="min-w-[200px] flex-1 text-[14.5px] text-muted">
             Flashcards, fiche, définitions et exercices sont déjà prêts. Tu peux ajouter tes
             propres notes sur ce chapitre.
           </p>
@@ -338,7 +339,7 @@ function OngletCours({
       <Documents chapitre={chapitre} />
       <Carte>
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="min-w-0 flex-1 text-[14.5px] text-muted">
+          <p className="min-w-[200px] flex-1 text-[14.5px] text-muted">
             {publie
               ? "Tes notes sur ce chapitre, en plus du contenu déjà prêt."
               : "Colle ton cours ici ou importe un fichier texte. Pour un PDF ou une photo, utilise le bouton « Envoyer à Claude » ci-dessous."}

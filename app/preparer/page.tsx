@@ -10,6 +10,7 @@ import { Bouton, EnTete, EtatVide, pluriel } from "@/components/ui";
 import { compteARebours, dateLongue, dureeLisible, joursAvant } from "@/lib/dates";
 import { etapes as listerEtapes, repartir } from "@/lib/preparation";
 import { encre, pastel, useLuno } from "@/lib/store";
+import { useSynchro } from "@/lib/synchro";
 import type { Dst } from "@/lib/types";
 
 export default function Page() {
@@ -132,6 +133,7 @@ function Preparer() {
 
 function Programme({ dst }: { dst: Dst }) {
   const s = useLuno();
+  const connecte = useSynchro((e) => Boolean(e.session));
   const m = s.matieres.find((x) => x.id === dst.matiereId);
   const couleur = m?.couleur ?? "var(--copper)";
   const foncee = encre(couleur);
@@ -344,8 +346,9 @@ function Programme({ dst }: { dst: Dst }) {
               ))}
               <p className="flex items-start gap-2 text-[13px] text-muted">
                 <Target size={15} className="mt-0.5 shrink-0" />
-                Touche une étape pour l&apos;ouvrir, puis coche-la quand c&apos;est fait. Ton avancement est gardé sur tous
-                tes appareils.
+                Touche une étape pour l&apos;ouvrir, puis coche-la quand c&apos;est fait. {connecte
+                  ? "Ton avancement est gardé sur tous tes appareils."
+                  : "Ton avancement est gardé dans ce navigateur (connecte-toi dans « Mes données » pour le retrouver sur tes autres appareils)."}
               </p>
             </div>
           )}

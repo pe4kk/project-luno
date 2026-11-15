@@ -109,7 +109,11 @@ export function chiffresSignificatifs(ecriture: string): number {
 export function ecrireAvecCs(x: number, n: number): string {
   if (x === 0) return "0";
   const exp = Math.floor(Math.log10(Math.abs(x)));
-  const arrondi = Number(x.toPrecision(n));
+  // Arrondi décimal exact : (0,082 / 0,040).toPrecision(2) donnait « 2,0 » au lieu de
+  // 2,1, car 2,05 est stocké 2,0499999… On corrige l'erreur de représentation d'abord.
+  const pas = 10 ** (exp - n + 1);
+  const m0 = Math.abs(x) / pas;
+  const arrondi = Math.sign(x) * Number((Math.round(m0 * (1 + 1e-12)) * pas).toPrecision(n));
   if (exp >= 4 || (exp >= n && exp >= 2) || exp < -3) {
     const m = arrondi / 10 ** exp;
     const exposant = String(exp)
@@ -171,9 +175,47 @@ export function remplir(texte: string, v: Version) {
     .replace(/\{(\w+)\}/g, (m, k) => v.textes[k] ?? m);
 }
 
+/**
+ * Unités d'une même grandeur, avec leur valeur en unité de base. Une réponse donnée
+ * dans une unité équivalente (53 cm·s⁻¹ pour 0,53 m·s⁻¹) est convertie avant d'être
+ * comparée : la valeur est juste, mais on rappelle l'unité que le prof attend.
+ */
+const FACTEURS: Record<string, [string, number]> = {
+  "m·s⁻¹": ["vitesse", 1],
+  "m/s": ["vitesse", 1],
+  "cm·s⁻¹": ["vitesse", 0.01],
+  "km/h": ["vitesse", 1000 / 3600],
+  "km·h⁻¹": ["vitesse", 1000 / 3600],
+  s: ["temps", 1],
+  ms: ["temps", 1e-3],
+  min: ["temps", 60],
+  h: ["temps", 3600],
+  m: ["longueur", 1],
+  cm: ["longueur", 0.01],
+  mm: ["longueur", 1e-3],
+  km: ["longueur", 1000],
+  kg: ["masse", 1],
+  g: ["masse", 1e-3],
+  L: ["volume", 1],
+  mL: ["volume", 1e-3],
+  mol: ["quantite", 1],
+  mmol: ["quantite", 1e-3],
+};
+
+/** Coefficient pour passer de `de` à `vers`, ou null si ce n'est pas la même grandeur. */
+export function conversion(de: string, vers: string): number | null {
+  if (de === vers) return 1;
+  const a = FACTEURS[de];
+  const b = FACTEURS[vers];
+  if (!a || !b || a[0] !== b[0]) return null;
+  return a[1] / b[1];
+}
+
 export type Verdict = {
   valeur: boolean;
   unite: boolean;
+  /** Unité différente mais de la même grandeur (cm·s⁻¹ au lieu de m·s⁻¹). */
+  uniteEquivalente?: boolean;
   cs: boolean;
   csDonnes: number;
   attendu: string;
@@ -186,10 +228,15 @@ export function verifier(c: Calcul, v: Version, saisie: string, unite: string): 
   const csDonnes = chiffresSignificatifs(saisie);
   // Juste à 1 % près, ou à l'arrondi près du dernier chiffre écrit (3,1 pour 3,06).
   const dernier = x === 0 ? 0 : 10 ** (Math.floor(Math.log10(Math.abs(x))) - Math.max(1, csDonnes) + 1);
-  const valeur = Math.abs(x - v.resultat) <= Math.max(Math.abs(v.resultat) * 0.01, dernier / 2) + 1e-12;
+  // Valeur ramenée dans l'unité attendue : 0,53 km/h n'est pas 0,53 m·s⁻¹.
+  const k = unite ? conversion(unite, c.unite) : 1;
+  const valeur =
+    k !== null &&
+    Math.abs(x * k - v.resultat) <= Math.max(Math.abs(v.resultat) * 0.01, (dernier * k) / 2) + 1e-12;
   return {
     valeur,
     unite: unite === c.unite,
+    uniteEquivalente: unite !== c.unite && k !== null,
     cs: csDonnes === v.cs,
     csDonnes,
     attendu: `${c.inconnue} = ${ecrireAvecCs(v.resultat, v.cs)} ${c.unite} (${v.cs} c.s)`,

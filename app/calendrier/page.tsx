@@ -134,7 +134,7 @@ export default function Calendrier() {
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_340px_340px] 2xl:gap-x-12">
         <Carte className="min-w-0 !p-3 sm:!p-6">
           <div className="mb-4 flex items-center justify-between gap-2">
-            <h2 className="min-w-0 text-[20px] leading-tight sm:text-[24px]">
+            <h2 className="min-w-0 text-[20px] leading-tight [overflow-wrap:anywhere] max-[379px]:text-[18px] sm:text-[24px]">
               {titreMois(vue.annee, vue.mois)}
             </h2>
             <div className="flex shrink-0 items-center gap-1">
@@ -147,7 +147,9 @@ export default function Calendrier() {
                   setVue({ annee: d.getFullYear(), mois: d.getMonth() });
                 }}
               >
-                Aujourd&apos;hui
+                {/* À 320 px (zoom de l'iPhone), le mot entier chevauchait le mois. */}
+                <span className="max-[379px]:hidden">Aujourd&apos;hui</span>
+                <span className="min-[380px]:hidden">Auj.</span>
               </Bouton>
               <Bouton
                 variante="contour"

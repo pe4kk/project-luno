@@ -118,8 +118,22 @@ export function AvecBrouillon({
             : ""
         }
       >
-        {/* En bas, de la place pour le bouton rond : il ne cache pas la dernière ligne. */}
-        <div className="min-w-0 pb-16 lg:pb-0">{children}</div>
+        <div className="min-w-0">
+          {/* Téléphone : bouton en ligne au-dessus de l'exercice. Un bouton flottant
+              finissait toujours par cacher « Suivante » ou un corrigé. */}
+          {grand === false && !ouvert && (
+            <div className="mb-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setOuvert(true)}
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface px-4 text-[14px] font-medium text-ink shadow-card"
+              >
+                <PenLine size={16} className="text-accent" /> Brouillon
+              </button>
+            </div>
+          )}
+          {children}
+        </div>
         {ouvert && grand === true && (
           <motion.aside
             initial={{ opacity: 0, transform: "translate3d(24px, 0, 0)" }}
@@ -135,7 +149,7 @@ export function AvecBrouillon({
       {grand !== null && createPortal(
       <>
       <AnimatePresence>
-        {!ouvert && (
+        {!ouvert && grand === true && (
           <motion.button
             key="bouton"
             type="button"
@@ -145,10 +159,9 @@ export function AvecBrouillon({
             onClick={() => setOuvert(true)}
             aria-label="Brouillon"
             title="Brouillon"
-            // Rond et discret sur téléphone, pour ne rien cacher de la question.
-            className="fixed bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+84px)] right-3 z-30 flex size-12 items-center justify-center gap-2 rounded-full bg-accent text-[14px] font-semibold text-on-accent shadow-pop lg:bottom-6 lg:right-6 lg:size-auto lg:min-h-11 lg:px-4"
+            className="fixed bottom-6 right-6 z-30 flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-4 text-[14px] font-semibold text-on-accent shadow-pop"
           >
-            <PenLine size={18} /> <span className="hidden lg:inline">Brouillon</span>
+            <PenLine size={18} /> Brouillon
           </motion.button>
         )}
       </AnimatePresence>
@@ -699,10 +712,22 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
       const raccourci = avant.replace(/(Ans|×10\^|√\(|.)$/u, "");
       return ecrire(raccourci + apres, raccourci.length, raccourci.length);
     }
-    // Après un résultat, un opérateur à la fin continue le calcul à partir de lui.
-    if (res !== null && !apres && saisie && /^[+−×÷²]/.test(mis) && historique[0]?.expr === saisie) {
+    const apresResultat = res !== null && !apres && saisie && historique[0]?.expr === saisie;
+    // Après un résultat, un opérateur à la fin continue le calcul à partir de lui…
+    if (apresResultat && /^[+−×÷²]/.test(mis)) {
       setRes(null);
       return ecrire(`Ans${mis}`, 3 + mis.length, 3 + mis.length);
+    }
+    // … et un nombre, Ans, π ou une racine commencent un nouveau calcul (comme sur une
+    // calculatrice de lycée) : « 90÷36 = » puis « Ans×2 » donne Ans×2, pas 90÷36Ans×2.
+    if (apresResultat && mis !== "⌫" && mis !== "()÷()") {
+      setRes(null);
+      return ecrire(mis, mis.length, mis.length);
+    }
+    // Fraction déjà posée, curseur dans le numérateur : a/b passe au dénominateur
+    // (au doigt, placer le curseur entre deux parenthèses est presque impossible).
+    if (mis === "()÷()" && fin === debut && apres.startsWith(")÷(")) {
+      return ecrire(saisie, debut + 3, debut + 3);
     }
     if (mis === "()÷()") {
       // Fraction : (numérateur)÷(dénominateur), le curseur dans le numérateur ; une
@@ -712,8 +737,12 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
       const curseur = choisi ? debut + texte.length - 1 : debut + 1;
       return ecrire(avant + texte + apres, curseur, curseur);
     }
-    ecrire(avant + mis + apres, debut + mis.length, debut + mis.length);
+    // Multiplication écrite en toutes lettres : « 36Ans » se lirait mal.
+    const signe = /^(Ans|π|√\(|\()/.test(mis) && /[\d)²π]$/.test(avant) ? "×" : "";
+    ecrire(avant + signe + mis + apres, debut + signe.length + mis.length, debut + signe.length + mis.length);
   };
+  // Dénominateur encore vide : on rappelle comment y aller.
+  const denominateurVide = saisie.includes(")÷()");
 
   return (
     <div data-defile className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-3 pb-3 lg:p-4">
@@ -783,6 +812,11 @@ function Calculatrice({ cs, versAN }: { cs?: number; versAN?: (texte: string) =>
           </div>
         )}
       </div>
+      {denominateurVide && (
+        <p className="mt-1.5 text-right text-[12.5px] text-muted">
+          Numérateur fini ? Touche <strong className="text-ink">a/b</strong> pour passer au dénominateur.
+        </p>
+      )}
       <div className="mt-2 grid grid-cols-5 gap-1.5">
         {TOUCHES_CALC.map((t) => (
           <button

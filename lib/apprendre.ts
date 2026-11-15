@@ -16,10 +16,34 @@ export const MAITRISEE = 3;
 export const TAILLE_MANCHE = 7;
 
 const VIDES = new Set(
-  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux".split(
+  "alors aussi avec avoir avant cela celle celui cette dans depuis donc elle elles entre est être fait font leur leurs mais même nous pour plus quand quel quelle qu'il sans selon sont tout tous toute toutes très vers une des les par sur qui que dont ou où son ses aux ils lui cet ces sous peut ainsi comme deux trois quatre cinq exemple exemples comment pourquoi quels quelles quoi faut signifie auquel lequel laquelle lesquels duquel chaque autre autres celles ceux partir obtenue obtenu obtient".split(
     " ",
   ),
 );
+
+/**
+ * Mots de même sens, acceptés l'un pour l'autre quand on corrige une réponse écrite
+ * (« au bout » pour « à l'extrémité », « consécutives » pour « successives »).
+ */
+const SYNONYMES: string[][] = [
+  ["extremite", "bout"],
+  ["successives", "successifs", "successive", "successif", "consecutives", "consecutifs", "consecutive", "consecutif"],
+  ["nul", "nulle", "nuls", "nulles", "zero"],
+  ["constant", "constante", "constants", "constantes", "inchange", "inchangee"],
+  ["oppose", "opposee", "opposes", "opposees", "contraire", "inverse"],
+  ["colineaires", "paralleles", "colineaire", "parallele"],
+  ["intervalle", "duree"],
+  ["instant", "moment", "date"],
+];
+const GROUPE = new Map<string, number>(SYNONYMES.flatMap((g, i) => g.map((m) => [m, i] as const)));
+/** Deux mots (sans accents) de même sens ? */
+export const synonymes = (a: string, b: string) => GROUPE.has(a) && GROUPE.get(a) === GROUPE.get(b);
+
+/** Le texte sans ses exemples : « (par exemple cartésien) », « Exemples : cycliste… ». */
+export const sansExemples = (texte: string) =>
+  texte
+    .replace(/\((?:par )?ex(?:emples?|\.)[^)]*\)/gi, " ")
+    .replace(/(?:par exemple|exemples?\s*:|ex\.\s*:?)[^.;]*/gi, " ");
 
 /** Les mots qui comptent dans un texte (sans formules, mots vides ni petits mots). */
 export function motsCles(texte: string): string[] {
@@ -74,10 +98,30 @@ function recouvrement(a: string, b: string) {
 }
 
 /**
+ * La forme d'une réponse : une formule (« Δv⃗ = 0⃗ … »), une consigne (« Tracer… »),
+ * un oui / non, ou une phrase. Un intrus d'une autre forme se repère sans rien savoir.
+ */
+function forme(verso: string) {
+  const t = sansMiseEnForme(verso).trim();
+  if (/^(oui|non)\b/i.test(t)) return "ouinon";
+  if (/=/.test(t.slice(0, 24))) return "formule";
+  const premier = t.split(/[\s,;:]/)[0] ?? "";
+  if (/^[A-ZÀ-Ý][a-zà-ÿ]+(er|ir|re)$/.test(premier) && !/^(Le|La|Les|Une?)$/.test(premier)) return "consigne";
+  return "phrase";
+}
+
+/** Le début d'une question (« Que vaut », « Comment », « À quoi »), pour des intrus du même genre. */
+const debutQuestion = (recto: string) =>
+  estQuestion(recto) ? simplifier(recto).split(" ").slice(0, 2).join(" ") : "";
+
+/**
  * Les quatre propositions d'un QCM : le verso et trois versos du même chapitre d'abord,
- * de longueur proche (sinon la bonne réponse se devine à sa forme). Une carte qui dit
- * presque la même chose que la bonne réponse est écartée : il n'y aurait pas une seule
- * bonne réponse (« Principe d'inertie » et « Le principe d'inertie en une ligne »).
+ * de même forme (formule, consigne, phrase) et de longueur proche, sinon la bonne réponse
+ * se devine à sa forme (tour 1 de l'élève testeur : « Que vaut Δv⃗ ? » avec une seule
+ * réponse en « Δv⃗ = », et un intrus « Oui : … »). Si la bonne réponse reprend des mots
+ * de la question (« repère d'espace », « horloge »), les intrus qui en reprennent aussi
+ * passent devant. Une carte qui dit presque la même chose que la bonne réponse est
+ * écartée : il n'y aurait pas une seule bonne réponse.
  */
 function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashcard[]) {
   const valable = (f: Flashcard) =>
@@ -85,14 +129,33 @@ function choixPour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flashc
     f.verso !== carte.verso &&
     recouvrement(f.verso, carte.verso) < 0.35 &&
     recouvrement(carte.verso, f.verso) < 0.35;
-  const proches = (l: Flashcard[]) =>
-    melanger(l.filter(valable))
-      .sort((a, b) => Math.abs(a.verso.length - carte.verso.length) - Math.abs(b.verso.length - carte.verso.length))
-      .slice(0, 6);
-  // Parmi les plus proches en longueur, un tirage : le QCM change d'une fois à l'autre.
-  const candidats = [...melanger(proches(memeChapitre)), ...melanger(proches(ailleurs))];
-  const autres = candidats.slice(0, 3);
-  return melanger([carte.verso, ...autres.map((f) => f.verso)]);
+  const formeBonne = forme(carte.verso);
+  const reprendQuestion = recouvrement(carte.verso, carte.recto) > 0;
+  const debut = debutQuestion(carte.recto);
+  const ecart = (f: Flashcard, ailleursPenalite: number) => {
+    let e = ailleursPenalite;
+    const fo = forme(f.verso);
+    if (fo !== formeBonne) e += fo === "ouinon" || formeBonne === "ouinon" ? 6 : 3;
+    const la = carte.verso.length;
+    e += (2 * Math.abs(f.verso.length - la)) / Math.max(la, f.verso.length);
+    if (reprendQuestion && recouvrement(f.verso, carte.recto) === 0) e += 1.5;
+    if (debut && debutQuestion(f.recto) === debut) e -= 1;
+    return e + Math.random() * 0.6;
+  };
+  const candidats = [
+    ...memeChapitre.filter(valable).map((f) => ({ f, e: ecart(f, 0) })),
+    ...ailleurs.filter(valable).map((f) => ({ f, e: ecart(f, 2) })),
+  ].sort((a, b) => a.e - b.e);
+  // Deux cartes identiques ailleurs (même verso) ne comptent qu'une fois.
+  const versos = new Set<string>([carte.verso]);
+  const autres: string[] = [];
+  for (const { f } of candidats) {
+    if (versos.has(f.verso)) continue;
+    versos.add(f.verso);
+    autres.push(f.verso);
+    if (autres.length === 3) break;
+  }
+  return melanger([carte.verso, ...autres]);
 }
 
 /** Un recto rédigé en question (« Quelle est… ? ») plutôt qu'un mot à définir. */
@@ -288,11 +351,28 @@ const normFormule = (t: string) =>
     .replace(/\((aq|l|s|g)\)/g, "")
     .replace(/⇄|↔|<->|->|⟶/g, "→")
     .replace(/\{\{(.+?)\s*\/\/\s*(.+?)\}\}/g, "($1)/($2)")
-    .replace(/\u20d7/g, "")
     .replace(/[’′]/g, "'")
-    .replace(/[\s()·*×]/g, "")
+    .replace(/[\s·*×]/g, "")
     .replace(/−/g, "-")
-    .replace(/_/g, "");
+    .replace(/_/g, "")
+    .replace(/0\u20d7/g, "0");
+
+/**
+ * Retire les parenthèses qui n'entourent qu'un seul terme (« (2Δt) » = « 2Δt ») mais
+ * garde celles qui comptent : « Mᵢ₋₁Mᵢ₊₁/(2Δt) » n'est pas « (Mᵢ₋₁Mᵢ₊₁)/(2Δt) ».
+ */
+const sansParenthesesInutiles = (t: string) => {
+  let avant = "";
+  while (avant !== t) {
+    avant = t;
+    t = t.replace(/\(([^()+\-/=]*)\)/g, "$1");
+  }
+  return t;
+};
+// Les indices ᵢ₋₁ et ᵢ₊₁ font partie du nom d'un point (Mᵢ₋₁) : ce ne sont pas des opérations.
+const indicesDePoints = (t: string) => t.replace(/([A-Z])i([+-])1(?![0-9])/g, (_, l, sg) => `${l}{i${sg === "+" ? "p" : "m"}1}`);
+const formuleNette = (t: string) => sansParenthesesInutiles(indicesDePoints(normFormule(t)));
+const sansFleches = (t: string) => t.replace(/\u20d7/g, "");
 
 /** Les formules d'un verso (« Δv⃗ = 0⃗ », « ΣF⃗ = {{m·Δv⃗ // Δt}} »), telles qu'écrites. */
 export function formulesDe(verso: string): string[] {
@@ -312,6 +392,7 @@ export function formulesDe(verso: string): string[] {
 }
 
 export function comparer(reponse: string, verso: string) {
+  verso = sansExemples(verso);
   const dits = new Set(
     simplifier(reponse)
       .split(" ")
@@ -329,12 +410,22 @@ export function comparer(reponse: string, verso: string) {
   const presents = new Set(
     cles.filter((m) => {
       const s = simplifier(m);
-      return [...dits].some((d) => proche(d, s) || (s.length >= 6 && (d.startsWith(s.slice(0, -1)) || s.startsWith(d.slice(0, -1)))));
+      return [...dits].some((d) => proche(d, s) || synonymes(d, s) || (s.length >= 6 && (d.startsWith(s.slice(0, -1)) || s.startsWith(d.slice(0, -1)))));
     }),
   );
   // Les formules comptent aussi : « Δv⃗ = 0⃗ » écrit tel quel, c'est l'essentiel de la réponse.
-  const rep = normFormule(reponse);
-  const formules = formulesDe(verso).map((f) => ({ f, trouvee: rep.includes(normFormule(f)) }));
+  // Il faut les flèches de vecteur si le cours en met (« v = MM'/Δt » pour un vecteur
+  // vitesse perd des points), et le bon parenthésage.
+  const rep = formuleNette(reponse);
+  const ditNul = /\b(nul|nulle|zero)\b/.test(simplifier(reponse));
+  const formules = formulesDe(verso).map((f) => {
+    const attendue = formuleNette(f);
+    if (rep.includes(attendue)) return { f, trouvee: true, sansFleche: false };
+    // « Il est nul » pour « Δv⃗ = 0⃗ » : c'est la même chose dite en mots.
+    if (ditNul && /=0$/.test(sansFleches(attendue))) return { f, trouvee: true, sansFleche: false };
+    const sansFleche = attendue !== sansFleches(attendue) && sansFleches(rep).includes(sansFleches(attendue));
+    return { f, trouvee: false, sansFleche };
+  });
   return {
     cles,
     presents,

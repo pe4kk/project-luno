@@ -522,7 +522,7 @@ export const LECON_REDACTION: Lecon = {
   niveau: "Première",
   duree: "12 min",
   intro:
-    "On va construire ensemble une réponse complète, étape par étape, sur l'exercice de l'homme-canon que ton prof a corrigé. À chaque étape, réponds de tête avant de dévoiler la réponse : c'est ce qui fait rentrer la méthode. À la fin, tu rédigeras seul un exercice du même type.",
+    "On va construire ensemble une réponse complète, étape par étape, sur l'exercice de l'homme-canon que ton prof a corrigé. À chaque étape, réponds de tête avant de dévoiler la réponse : c'est ce qui fait rentrer la méthode. À la fin, tu rédigeras toi-même un exercice du même type.",
   etapes: [
     {
       titre: "Un titre qui dit ce que tu cherches",

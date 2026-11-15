@@ -21,7 +21,6 @@ export const CARTES_HORS_QUIZ = new Set(
     "Quelle est la limite du modèle du point matériel ?",
     "Quel est le lien entre la vitesse et la position ?",
     "À quoi sert la relation de Chasles dans la méthode d'Euler ?",
-    "Vecteur vitesse par encadrement (fiche Euler)", // même formule que celle du chap. 11
     // Chap. 11
     "Cinématique", // mot-catégorie : flashcard seulement
     "Faut-il une force pour être en mouvement ?", // redit le principe d'inertie

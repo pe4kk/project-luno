@@ -45,7 +45,7 @@ export function peutSExercer(c: Chapitre): boolean {
 
 export function maxQuestions(c: Chapitre): number {
   return Math.min(
-    12,
+    20,
     c.exercices.length > 0 ? c.exercices.length : c.flashcards.length,
   );
 }
@@ -128,7 +128,7 @@ export function simplifier(s: string): string {
     .trim();
 }
 
-function distance(a: string, b: string): number {
+export function distance(a: string, b: string): number {
   const d = Array.from({ length: a.length + 1 }, (_, i) => [
     i,
     ...Array(b.length).fill(0),

@@ -238,8 +238,21 @@ export function SaisieFormule({
           {formule(apercu)}
         </p>
       ) : (
-        <p className="mt-1 text-[12px] text-muted">
-          {scientifique ? `${AIDE_RACCOURCIS} · sélectionne pour encadrer ou souligner` : "Sélectionne un passage pour l'encadrer, le souligner ou le surligner."}
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12px] text-muted">
+          {scientifique ? (
+            <>
+              <span>Raccourcis :</span>
+              {AIDE_RACCOURCIS.map(([tape, donne]) => (
+                <span key={tape} className="whitespace-nowrap">
+                  <kbd className="rounded border border-line bg-surface px-1 font-sans text-[11.5px] text-ink">{tape}</kbd>{" "}
+                  {donne}
+                </span>
+              ))}
+              <span>· sélectionne un passage pour l&apos;encadrer</span>
+            </>
+          ) : (
+            "Sélectionne un passage pour l'encadrer, le souligner ou le mettre en gras."
+          )}
         </p>
       )}
     </div>

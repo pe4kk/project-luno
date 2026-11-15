@@ -43,6 +43,12 @@ const CARTE_SYSTEME = {
   verso:
     "L'objet dont on étudie le mouvement. On le modélise par un point matériel : un seul point, en général son centre de gravité, auquel on associe toute la masse m. Il est ponctuel si ses dimensions sont petites devant la région où il évolue.",
 };
+const CARTE_ENCADREMENT = {
+  recto: "Vecteur vitesse par encadrement",
+  schema: ENCADREMENT,
+  verso:
+    "v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}, avec Δt la durée entre deux positions : le vecteur vitesse en Mᵢ est parallèle au segment [Mᵢ₋₁Mᵢ₊₁]. Exemple : v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}}.",
+};
 const CARTE_REFERENTIEL = {
   recto: "Référentiel",
   verso:
@@ -52,7 +58,7 @@ const CARTE_REFERENTIEL = {
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 11,
+    version: 12,
     // Retirées : « Point matériel » (fondu dans « Système ») ; les logiciels de TP (inutile à l'éval).
     cartesRetirees: [
       "Point matériel",
@@ -91,7 +97,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
       {
         recto: "Référentiel terrestre",
         verso:
-          "Lié à un objet fixe à la surface de la Terre. Pour les mouvements sur Terre plus courts qu'une rotation de la Terre : cycliste, chute d'une balle.",
+          "Lié à un objet fixe à la surface de la Terre. Pour les mouvements sur Terre plus courts qu’une rotation de la Terre. Exemples : cycliste, chute d’une balle.",
       },
       {
         recto: "Référentiel géocentrique",
@@ -167,11 +173,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         verso:
           "La vitesse est le taux de variation de la position ; en mathématiques, on parle de dérivée de la position.",
       },
-      {
-        recto: "Vecteur vitesse par encadrement (fiche Euler)", schema: ENCADREMENT,
-        verso:
-          "v⃗₂ = {{M₁M₃⃗ // t₃ − t₁}} : le vecteur vitesse en M₂ est parallèle au segment [M₁M₃].",
-      },
+      CARTE_ENCADREMENT,
       {
         recto: "Méthode d'Euler", schema: EULER,
         verso:
@@ -522,7 +524,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 11,
+    version: 12,
     cartesRetirees: ["Système ponctuel"],
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
@@ -568,11 +570,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         recto: "Où les lois de Newton sont-elles valables ?",
         verso: "Uniquement dans un référentiel galiléen.",
       },
-      {
-        recto: "Vecteur vitesse par encadrement (chap. 11)", schema: ENCADREMENT,
-        verso:
-          "v⃗ᵢ = {{Mᵢ₋₁Mᵢ₊₁⃗ // 2Δt}}, avec Δt l'intervalle de temps entre deux positions.",
-      },
+      CARTE_ENCADREMENT,
       {
         recto: "Vecteur variation de vitesse",
         verso:

@@ -51,6 +51,18 @@ export function reconnaitreDate(texte: string, aujourdhui = new Date()): DateRec
     if (!m[3] && new Date(annee, mois - 1, jour).getTime() < aujourdhui.getTime() - 31 * 86_400_000) annee++;
     trouves.push({ iso: toISO(new Date(annee, mois - 1, jour)), debut: m.index!, fin: m.index! + m[0].length });
   }
+  // Date en toutes lettres : « le 2 décembre », « 1er déc. », « 15 janvier 2027 ».
+  const MOIS = ["janv", "fevr", "mars", "avr", "mai", "juin", "juil", "aout", "sept", "oct", "nov", "dec"];
+  for (const m of t.matchAll(
+    /(?<!\d)(\d{1,2})(?:er)?\s+(janvier|janv\.?|fevrier|fevr?\.?|mars|avril|avr\.?|mai|juin|juillet|juil\.?|aout|septembre|sept\.?|octobre|oct\.?|novembre|nov\.?|decembre|dec\.?)(?![a-z])(?:\s+(\d{4}))?/g,
+  )) {
+    const jour = Number(m[1]);
+    const mois = MOIS.findIndex((x) => m[2].startsWith(x.slice(0, 3)) && (x !== "mars" || m[2].startsWith("mar")) && (x !== "mai" || m[2].startsWith("mai")));
+    if (jour < 1 || jour > 31 || mois < 0) continue;
+    let annee = m[3] ? Number(m[3]) : aujourdhui.getFullYear();
+    if (!m[3] && new Date(annee, mois, jour).getTime() < aujourdhui.getTime() - 31 * 86_400_000) annee++;
+    trouves.push({ iso: toISO(new Date(annee, mois, jour)), debut: m.index!, fin: m.index! + m[0].length });
+  }
   // Mots relatifs.
   for (const [re, n] of [
     ["apres[- ]demain", 2],

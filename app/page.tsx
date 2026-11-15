@@ -188,13 +188,18 @@ export default function Accueil() {
             <p className="text-[13px] font-semibold text-muted [overflow-wrap:anywhere]">DST cette semaine</p>
             <p className="mt-1 font-display text-[clamp(30px,10vw,44px)] leading-none">{semaine.length}</p>
             <div className="mt-3 flex flex-col gap-1.5">
-              {(semaine.length > 1 ? semaine.slice(1, 4) : aVenir.slice(1, 3)).map((d) => (
+              {/* La liste correspond au nombre : tous les DST des 7 jours (le prochain compris). */}
+              {semaine.length === 0 && aVenir.length > 0 && <p className="text-[12.5px] text-muted">Ensuite :</p>}
+              {(semaine.length > 0 ? semaine.slice(0, 3) : aVenir.slice(0, 2)).map((d) => (
                 <div key={d.id} className="flex items-center gap-2 text-[13.5px]">
                   <span className="size-2 shrink-0 rounded-full" style={{ background: matiere(d.matiereId)?.couleur }} />
                   <span className="truncate">{matiere(d.matiereId)?.nom}</span>
                   <span className="ml-auto shrink-0 text-muted">{compteARebours(d.date)}</span>
                 </div>
               ))}
+              {semaine.length > 3 && (
+                <p className="text-[12.5px] text-muted">et {pluriel(semaine.length - 3, "autre")}</p>
+              )}
             </div>
           </Carte>
         </div>

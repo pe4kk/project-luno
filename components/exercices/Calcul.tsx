@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AvecBrouillon } from "@/components/Brouillon";
 import { motion } from "motion/react";
 import { Eye, RefreshCw, X } from "lucide-react";
-import { formule } from "@/components/Formule";
+import { formule, texteBrut } from "@/components/Formule";
 import { SaisieFormule } from "@/components/SaisieFormule";
 import { Bouton, BoutonIcone, classeSaisie } from "@/components/ui";
 import { remplir, tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
@@ -29,7 +29,7 @@ export function ChampAN({
       <span className="shrink-0 text-[15px] font-semibold">{formule(calcul.inconnue)} =</span>
       <input
         inputMode="decimal"
-        aria-label={`Valeur de ${calcul.inconnue}`}
+        aria-label={`Valeur de ${texteBrut(calcul.inconnue)}`}
         placeholder="ex. 2,9 ou 7,5×10^3"
         disabled={desactive}
         value={valeur}
@@ -59,7 +59,11 @@ export function RetourAN({ verdict, version }: { verdict: Verdict; version: Vers
   const tout = verdict.valeur && verdict.unite && verdict.cs;
   const lignes = [
     verdict.valeur ? "✓ Valeur juste." : "✗ La valeur ne correspond pas : reprends ton expression littérale et tes conversions.",
-    verdict.unite ? "✓ Unité juste." : "✗ Unité : pense à celle de la grandeur cherchée.",
+    verdict.unite
+      ? "✓ Unité juste."
+      : verdict.uniteEquivalente
+        ? "✗ Unité : ta valeur est juste dans cette unité, mais ton prof attend l'unité du système international."
+        : "✗ Unité : pense à celle de la grandeur cherchée.",
     verdict.cs
       ? `✓ ${version.cs} chiffres significatifs, comme la donnée la moins précise.`
       : `✗ Tu as écrit ${verdict.csDonnes} chiffre${verdict.csDonnes > 1 ? "s" : ""} significatif${verdict.csDonnes > 1 ? "s" : ""} : il en faut ${version.cs}, comme la donnée la moins précise.`,
@@ -71,7 +75,7 @@ export function RetourAN({ verdict, version }: { verdict: Verdict; version: Vers
           {l}
         </p>
       ))}
-      {!tout && <p className="mt-1.5 font-semibold text-ink">Ton prof attend : {verdict.attendu}</p>}
+      {!tout && <p className="mt-1.5 font-semibold text-ink">Ton prof attend : {formule(verdict.attendu)}</p>}
     </div>
   );
 }
