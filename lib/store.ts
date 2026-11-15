@@ -17,7 +17,8 @@ import type {
   Schema,
   Tache,
 } from "./types";
-import { dansJours, todayISO } from "./dates";
+import { dansJours, joursAvant, todayISO } from "./dates";
+import { delaiPour, reviser, type EtatFsrs, type Grade } from "./fsrs";
 import { reconnaitreDate } from "./echeance";
 import {
   CALENDRIER_EVENEMENTS,
@@ -172,47 +173,35 @@ type Etat = Donnees & {
 export type NoteCarte = 0 | 1 | 2 | 3;
 
 /**
- * Répétition espacée façon SM-2 (Anki) : l'intervalle est multiplié par la facilité de
- * la carte, qui baisse quand on la rate ou qu'on la trouve difficile et monte quand elle
- * est facile. Une carte ratée revient le jour même et repart à zéro.
+ * Répétition espacée FSRS, comme Anki (`lib/fsrs.ts`) : stabilité et difficulté de chaque
+ * carte recalculées à chaque réponse selon le temps écoulé, prochain délai choisi pour
+ * avoir 90 % de chances de s'en souvenir. Une carte ratée revient le jour même. Une carte
+ * revue avec l'ancien système (intervalle qui doublait, puis SM-2) reprend son intervalle
+ * comme stabilité de départ, et sa facilité comme difficulté.
  */
 export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
   const n: NoteCarte = note === true ? 2 : note === false ? 0 : note;
-  const fac = f.facilite ?? 2.5;
-  const borner = (x: number) => Math.min(3, Math.max(1.3, Math.round(x * 100) / 100));
-  if (n === 0) return { niveau: 1 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.2) };
-  const iv = f.intervalle;
-  // Carte neuve : quatre délais bien distincts (tour 4, R3) : À revoir = tout à l'heure,
-  // Difficile = demain, Je savais = 2 jours, Facile = 4 jours.
-  if (iv === 0) {
-    const premier = n === 1 ? 1 : n === 2 ? 2 : 4;
-    return {
-      niveau: 2 as const,
-      intervalle: premier,
-      echeance: dansJours(premier),
-      facilite: borner(fac + (n === 1 ? -0.15 : n === 3 ? 0.15 : 0)),
-    };
-  }
-  const intervalle = Math.min(
-    120,
-    n === 1
-      ? Math.max(1, Math.round((iv || 1) * 1.2))
-      : n === 2
-        ? iv === 0
-          ? 1
-          : iv === 1
-            ? 3
-            : Math.round(iv * fac)
-        : iv === 0
-          ? 4
-          : Math.round(Math.max(iv * fac * 1.3, iv + 2)),
-  );
-  return {
-    niveau: 2 as const,
-    intervalle,
-    echeance: dansJours(intervalle),
-    facilite: borner(fac + (n === 1 ? -0.15 : n === 3 ? 0.15 : 0)),
+  const g = (n + 1) as Grade;
+  const aujourdhui = todayISO();
+  const etat: EtatFsrs | null = f.stabilite
+    ? { stabilite: f.stabilite, difficulte: f.difficulte ?? 5 }
+    : f.niveau > 0 && f.intervalle > 0
+      ? {
+          stabilite: f.intervalle,
+          // Facilité SM-2 (1,3 difficile à 3 facile) → difficulté FSRS (10 à 1).
+          difficulte: f.facilite ? Math.min(10, Math.max(1, 10 - ((f.facilite - 1.3) / 1.7) * 9)) : 5,
+        }
+      : null;
+  const jours = f.revueLe ? Math.max(0, -joursAvant(f.revueLe)) : f.intervalle;
+  const suivant = reviser(etat, g, jours);
+  const base = {
+    stabilite: Math.round(suivant.stabilite * 100) / 100,
+    difficulte: Math.round(suivant.difficulte * 100) / 100,
+    revueLe: aujourdhui,
   };
+  if (g === 1) return { ...base, niveau: 1 as const, intervalle: 0, echeance: aujourdhui };
+  const intervalle = delaiPour(suivant.stabilite);
+  return { ...base, niveau: 2 as const, intervalle, echeance: dansJours(intervalle) };
 }
 
 /**

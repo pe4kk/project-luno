@@ -386,8 +386,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - **Évaluation par un élève testeur** (2026-11-15) : prompt `scripts/eleve-testeur.md`
     (Inès, Première, teste tout le site avec Playwright, juge la méthode de révision avec des
     sources, compare aux documents du prof, note sur 10). Six tours : 7,0 → 7,5 → 8,0 → 8,3 →
-    8,5 → 8,8. Restes signalés : délais adaptés à l'historique (FSRS), deux réussites de tête
-    sur des jours différents avant « Maîtrisée ».
+    8,5 → 8,8. Restes signalés : délais adaptés à l'historique (fait le 2026-11-15 : FSRS),
+    deux réussites de tête sur des jours différents avant « Maîtrisée » (à discuter).
   - `ZoneAction` (`components/ui.tsx`) : entoure le bouton principal d'un écran ; s'il
     apparaît sous la barre du bas, la page défile pour le montrer. À utiliser pour tout
     nouveau bouton d'action qui apparaît après une réponse.
@@ -405,13 +405,18 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - `contenu/` : ce que Claude rédige (voir « Ajouter du contenu »).
 - Modèle de données (`lib/types.ts`) : un DST liste ses chapitres à réviser
   (`chapitreIds`) ; une flashcard a une échéance (`echeance`, `intervalle`) :
-  l'intervalle est multiplié par la facilité de la carte (voir ci-dessous) et
-  repart de zéro à chaque erreur, y compris une erreur à un QCM tiré de cette carte ; un point de
+  le délai est calculé par FSRS (voir ci-dessous), et une erreur, y compris à un QCM
+  tiré de cette carte, la fait revenir le jour même ; un point de
   fiche porte `n`, la plus petite taille (1 à 5) à laquelle il apparaît, ce
   qui rend le curseur instantané.
-  **Répétition espacée façon SM-2** (2026-11-15, `prochaineRevision()` dans `lib/store.ts`) :
-  quatre réponses (À revoir / Difficile / Je savais / Facile, délai affiché sous chaque bouton ;
-  carte neuve : tout à l'heure, demain, 2 j, 4 j), `facilite` par carte (1,3 à 3). Une carte
+  **Répétition espacée FSRS, l'algorithme d'Anki** (2026-11-15, demandé ; `lib/fsrs.ts`,
+  FSRS-4.5 avec ses paramètres par défaut, appelé par `prochaineRevision()` dans
+  `lib/store.ts`) : chaque carte a une `stabilite` (jours), une `difficulte` (1 à 10) et
+  `revueLe` ; à chaque réponse, elles sont recalculées selon le temps écoulé, et le délai
+  vise 90 % de chances de s'en souvenir. Quatre réponses (À revoir / Difficile / Je savais /
+  Facile, délai affiché sous chaque bouton ; carte neuve : tout à l'heure, demain, 4 j,
+  14 j). Les cartes de l'ancien système reprennent leur intervalle comme stabilité et leur
+  `facilite` (SM-2, plus utilisée) comme difficulté. Une carte
   ratée repasse une fois dans la séance ; le recto reste visible au verso ; champ facultatif
   pour écrire sa réponse avant de retourner. Le quota de 20 nouvelles cartes saute pour les
   chapitres d'un DST dans 3 jours au plus (`lib/revision.ts`).
@@ -766,6 +771,18 @@ un PDF ou une photo directement dans le chat.
 - Pas encore fait : tests automatisés dans le dépôt.
 
 ## Prochaines étapes
+
+0. **En attente de son choix (2026-11-15)** : maquettes publiées
+   (https://claude.ai/artifact/2iBmZhc3EGYuLyv3Ex4HAg) pour ses « Lunotes » :
+   - onglet **« Exos types »** dans chaque chapitre scientifique : le moins d'exercices
+     entiers corrigés possible, qui couvrent tous les types de questions du chapitre ;
+     sujet d'un côté, correction claire à part ; à la fin, tous les types maîtrisés.
+     Exos du prof s'il en envoie, sinon sujets type bac et manuels trouvés en ligne
+     (vérifiés). Options : A liste des types, B sujet puis correction, C carte types × exos ;
+     proposé A + B.
+   - **demander une explication sur une partie du cours** : A sélectionner puis demander
+     (réponse au prochain passage de la tâche planifiée), B « ? » déjà rédigé, C les deux à
+     la suite ; proposé C.
 
 1. Proposer de reprendre ses autres fiches existantes (voir « Ajouter du
    contenu ») et traiter les nouveaux cours qu'il envoie.

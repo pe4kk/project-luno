@@ -24,6 +24,12 @@ export type Flashcard = {
    * cartes difficiles reviennent plus souvent, les faciles s'espacent plus vite.
    */
   facilite?: number;
+  /** FSRS (algorithme d'Anki, `lib/fsrs.ts`) : stabilité en jours. */
+  stabilite?: number;
+  /** FSRS : difficulté, de 1 (facile) à 10. */
+  difficulte?: number;
+  /** AAAA-MM-JJ de la dernière révision (temps écoulé pour FSRS). */
+  revueLe?: string;
   /** Mode « Apprendre » : palier atteint (0 à 3, 3 = maîtrisée). */
   apprendre?: number;
   /** AAAA-MM-JJ du dernier changement de palier : « maîtrisée » demande un autre jour. */
