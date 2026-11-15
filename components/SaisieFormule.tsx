@@ -11,7 +11,8 @@ const FLECHE = String.fromCharCode(0x20d7);
 const TOUCHES: [string, string, string][] = [
   ["Δ", "Δ", "Delta"],
   ["Σ", "Σ", "Somme"],
-  ["v⃗", FLECHE, "Flèche de vecteur sur la lettre précédente"],
+  ["v⃗", FLECHE, "Flèche de vecteur sur ce qui précède le curseur, ou sur la sélection"],
+  ["′", "'", "Prime (M')"],
   ["a/b", "()/()", "Fraction"],
   ["²", "²", "Au carré"],
   ["⁻¹", "⁻¹", "Puissance moins un"],
@@ -135,6 +136,13 @@ export function SaisieFormule({
       if (fin > debut) return marquer("encadrer");
       changer(`${avant}[[]]${apres}`);
       return poserCurseur(debut + 2);
+    }
+    if (texte === FLECHE && fin > debut) {
+      // Une sélection (« MM' », « AB », « OM₃ ») : la flèche couvre toute la sélection.
+      let f = fin;
+      while (f > debut && /\s/.test(valeur[f - 1])) f--;
+      changer(valeur.slice(0, f) + FLECHE + valeur.slice(f));
+      return poserCurseur(f + 1);
     }
     changer(avant + texte + apres);
     poserCurseur(debut + texte.length);

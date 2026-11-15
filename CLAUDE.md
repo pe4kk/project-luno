@@ -274,8 +274,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - **Saisie de formules au téléphone** (`components/SaisieFormule.tsx`,
     `lib/saisie.ts`) : raccourcis tapés (`del` → Δ, `sig` → Σ, `*` → ·, `^2` →
     ², `^-1` → ⁻¹, `=>` → ⇒, `->` → →, `<=` → ≤, `!=` → ≠, `~=` → ≈, `sqrt` → √,
-    `pi` → π, `rho` → ρ), barre de touches (Δ, Σ, flèche de vecteur, fraction,
-    ², ⁻¹, ·, ×10^, √, ⇒) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
+    `pi` → π, `rho` → ρ, `prime` après une lettre → ', apostrophe ’ de l'iPhone →
+    ' ; vu le 2026-11-15 : « jpp écrire prime »), barre de touches (Δ, Σ, flèche de
+    vecteur, prime ′, fraction, ², ⁻¹, ·, ×10^, √, ⇒ ; la flèche couvre tout ce qui
+    précède le curseur, ou la sélection : sélectionner « MM' » puis v⃗) et aperçu dessiné : `a/b` ou `(a+b)/(2c)` s'affiche
     en vraie fraction (`versNotation`), les unités comme m/s restent en ligne.
     Seulement dans les matières scientifiques (`estScientifique()` dans
     `lib/saisie.ts`, demandé le 2026-11-12) : ailleurs, texte simple. « del » et

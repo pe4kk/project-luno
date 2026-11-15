@@ -238,6 +238,7 @@ const normFormule = (t: string) =>
     .replace(/⇄|↔|<->|->|⟶/g, "→")
     .replace(/\{\{(.+?)\s*\/\/\s*(.+?)\}\}/g, "($1)/($2)")
     .replace(/\u20d7/g, "")
+    .replace(/[’′]/g, "'")
     .replace(/[\s()·*×]/g, "")
     .replace(/−/g, "-")
     .replace(/_/g, "");

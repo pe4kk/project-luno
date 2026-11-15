@@ -26,6 +26,9 @@ const RACCOURCIS: [RegExp, string][] = [
   [/<=/g, "≤"],
   [/>=/g, "≥"],
   [/sqrt/gi, "√"],
+  // Prime : l'apostrophe typographique de l'iPhone (’) ou « prime » tapé après une lettre.
+  [/’/g, "'"],
+  [new RegExp(`([${LETTRE}₀-₉])prime(?![${LETTRE}])`, "g"), "$1'"],
   [/\^-1/g, "⁻¹"],
   [/\^-2/g, "⁻²"],
   [/\^2/g, "²"],
@@ -43,7 +46,7 @@ export function raccourcis(texte: string): string {
 }
 
 /** Aide affichée sous un champ. */
-export const AIDE_RACCOURCIS = "del → Δ · sig → Σ (avant une lettre ou un espace) · * → · · ^2 → ² · ^-1 → ⁻¹ · -> → → · a/b → fraction";
+export const AIDE_RACCOURCIS = "del → Δ · sig → Σ (avant une lettre ou un espace) · * → · · ^2 → ² · ^-1 → ⁻¹ · -> → → · a/b → fraction · Mprime → M' · flèche v⃗ sur la sélection";
 
 const UNITES = new Set(["m", "km", "cm", "mm", "s", "h", "min", "kg", "g", "N", "L", "mL", "J", "W"]);
 

@@ -18,7 +18,7 @@ const FLECHE = String.fromCharCode(0x20d7);
 // Un indice peut contenir « . » ou « , » suivis d'une lettre : C_m,mère (sans espace).
 const MORCEAU_INDICE = "[A-Za-z0-9À-ÿ→/]+(?:[.,][A-Za-z0-9À-ÿ→/]+)*";
 const VECTEUR = new RegExp(
-  `([ΔΣ−]?)([A-Za-z0-9'ᵢₓᵧ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
+  `([ΔΣ−]?)([A-Za-z0-9'’ᵢₓᵧ₀-₉₊₋ΠΣ]+)${FLECHE}([ᵢₓᵧ₀-₉₊₋]*)(?:_(${MORCEAU_INDICE}))?`,
   "g",
 );
 const FRACTION = /\{\{(.+?) \/\/ (.+?)\}\}/g;
