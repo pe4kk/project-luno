@@ -111,13 +111,69 @@ Coche au fur et à mesure ; si tu n'as pas pu tester un point, dis pourquoi.
     définitions et corrections de physique et de maths), tutoiement constant,
     textes trop longs ou incompréhensibles.
 
+## Analyse de fond : est-ce qu'on apprend vraiment avec Luno ?
+
+C'est la partie la plus importante : une appli jolie qui fait mal réviser ne
+vaut rien. Juge-la comme une élève exigeante **et** comme quelqu'un qui s'est
+renseigné sur la façon dont on apprend.
+
+1. **Renseigne-toi d'abord** (WebSearch et WebFetch si tu les as, sinon tes
+   connaissances) sur ce que disent les sciences cognitives et les profs :
+   récupération active (*testing effect*), répétition espacée et ses
+   algorithmes (Leitner, SM-2 d'Anki, FSRS), entrelacement, apprentissage par
+   paliers, effet de génération, difficultés désirables, illusion de maîtrise
+   (relire ≠ savoir), feedback immédiat vs différé, charge cognitive, et ce
+   qu'attend une interro de cours de Première (restituer une définition, une
+   loi, appliquer une méthode). Cite tes sources en une ligne chacune.
+2. **Compare Luno à ces principes**, écran par écran : flashcards et
+   répétition espacée (l'intervalle qui double, le quota de 20 nouvelles par
+   jour, l'ordre, les cartes ratées), mode Apprendre (paliers QCM → trous → de
+   tête : est-ce une vraie progression ? la validation par l'élève lui-même
+   est-elle trop indulgente ?), interro blanche, fiches à curseur, Déf,
+   « Préparer une éval » (le programme proposé est-il réaliste et efficace ?
+   la répartition sur les jours a-t-elle du sens ?), « Mes erreurs ». Pour
+   chaque mécanisme : ce qui est bien fondé, ce qui est faux ou contre-productif,
+   ce qui manque, et ce que font mieux Anki, Quizlet ou d'autres.
+3. **Simule une vraie révision** : tu as l'interro de physique (chap. 9, chap. 11
+   et fiches méthode) bientôt. Révise vraiment avec Luno pendant une session
+   longue (révision du jour, une manche Apprendre complète, une interro
+   blanche). Dis honnêtement : à la fin, saurais-tu mieux ton cours ? Qu'est-ce
+   qui t'a fait perdre du temps ? Qu'est-ce qui t'a fait croire que tu savais
+   alors que non ?
+4. **Qualité des contenus** : prends au moins 15 flashcards, 10 définitions,
+   10 exercices et une fiche complète (physique, maths, histoire, HGGSP,
+   français). Pour chacun : juste ? clair ? utile pour l'éval ? au bon niveau ?
+   formulé comme le prof ? Relève chaque erreur, approximation, doublon, carte
+   inutile, question qui se devine, corrigé faux, avec le texte exact.
+5. **Fidélité au cours du prof** : les vrais documents du prof sont dans le
+   dépôt (lecture seule) : `/home/user/project-luno/public/documents/`
+   (`physique-chimie/` : chap. 9, chap. 11, fiches méthode Euler, forces,
+   variation de vitesse, exercices et correction du chap. 11 ; `hggsp/` :
+   fiches méthode ; `histoire-geo/` : documents du cours sur la Terreur).
+   Lis-les (outil Read, avec `pages` pour les PDF) et compare ligne à ligne
+   avec ce que Luno affiche pour ces chapitres (Déf, flashcards, fiche,
+   exercices). Signale : ce qui manque du cours (une définition, une formule,
+   une méthode que le prof attend), ce que Luno ajoute qui n'est pas au
+   programme, ce qui est dit autrement que le prof au point de changer le
+   sens, les notations différentes de celles du prof, et les erreurs du prof
+   que Luno aurait recopiées ou mal signalées. Le contenu publié est aussi
+   lisible dans `/home/user/project-luno/contenu/` si tu veux tout voir d'un coup.
+
+Note cette partie à part : **Méthode de révision** /10, **Qualité des
+contenus** /10, **Fidélité au cours** /10. Elles comptent dans la note globale
+autant que tout le reste réuni.
+
 ## Ton rendu (en français, ton d'élève franche mais précise)
 
 1. **Note globale sur 10** (avec une décimale), puis une note sur 10 par
    rubrique : Première impression, Navigation et ergonomie téléphone, Beauté et
    fluidité, Travail (cours, Déf, flashcards, fiches), Quiz et exercices
    (qualité des questions), Organisation (calendrier, À faire, Préparer),
-   Fiabilité (bugs, données qui restent, console).
+   Fiabilité (bugs, données qui restent, console), puis **Méthode de
+   révision**, **Qualité des contenus** et **Fidélité au cours** (ces trois-là
+   pèsent la moitié de la note globale). Ajoute ton analyse de fond (sources,
+   mécanisme par mécanisme, bilan de ta séance de révision, écarts avec le
+   cours du prof).
    Barème : 10 = je le conseille à toute ma classe sans réserve ; 9 = excellent,
    quelques détails ; 7 = bien mais des trucs agaçants ; 5 = utilisable mais
    frustrant ; moins = je désinstalle.
