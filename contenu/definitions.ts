@@ -177,12 +177,6 @@ export const DEF_PC_FORCES: DefinitionCours[] = [
     "Force de contact opposée au mouvement dans un fluide (air, eau).",
     "Chute avec frottements : il existe une vitesse limite quand f⃗ compense P⃗. Chute libre : seul le poids s'exerce.",
   ),
-  {
-    type: "loi",
-    terme: "Force de rappel d'un ressort (loi de Hooke)",
-    texte: "F⃗_r = −k·Δl⃗, avec k la constante de raideur du ressort et Δl⃗ le vecteur allongement du ressort.",
-    precision: "D'après ta fiche : très marginal en Première, pas en DST.",
-  },
   d(
     "Force de gravitation F⃗_g",
     "Force à distance qui s'exerce uniquement dans l'espace (loin de la surface de la Terre), dirigée vers le point attracteur.",

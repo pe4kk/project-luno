@@ -67,7 +67,7 @@ function Essentiel({
                 {i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="text-[15px] font-semibold leading-snug">{formule(e.regle || e.titre)}</span>
+                <span className="text-[15px] font-semibold leading-snug">{formule(e.regle || e.titre)}</span>{" "}
                 {e.theme && (
                   <span className="ml-1.5 inline-block rounded-full bg-accent-soft px-2 py-px align-[1px] text-[11px] font-semibold text-accent">
                     {e.theme}

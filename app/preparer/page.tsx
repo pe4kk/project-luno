@@ -11,6 +11,7 @@ import { compteARebours, dateLongue, dureeLisible, joursAvant } from "@/lib/date
 import { etapes as listerEtapes, repartir } from "@/lib/preparation";
 import { encre, pastel, useLuno } from "@/lib/store";
 import { useSynchro } from "@/lib/synchro";
+import { estScientifique } from "@/lib/saisie";
 import type { Dst } from "@/lib/types";
 
 export default function Page() {
@@ -75,7 +76,12 @@ function Preparer() {
           {aVenir.map((d, i) => {
             const m = matiere(d.matiereId);
             const nb = s.chapitres.filter((c) => d.chapitreIds.includes(c.id)).length;
-            const total = d.preparation ? listerEtapes(d, s.chapitres, s.erreurs, d.preparation.type) : [];
+            const total = d.preparation
+              ? repartir(
+                  listerEtapes(d, s.chapitres, s.erreurs, d.preparation.type, estScientifique(m?.nom)),
+                  d.date,
+                ).flatMap((x) => x.etapes)
+              : [];
             const faites = total.filter((e) => d.preparation?.faits.includes(e.id)).length;
             const j = joursAvant(d.date);
             return (
@@ -142,8 +148,10 @@ function Programme({ dst }: { dst: Dst }) {
   const [choix, setChoix] = useState(auProgramme.length === 0);
   const type = dst.preparation?.type;
   const faits = dst.preparation?.faits ?? [];
-  const liste = type ? listerEtapes(dst, s.chapitres, s.erreurs, type) : [];
-  const jours = repartir(liste, dst.date);
+  const nomMatiere = s.matieres.find((m) => m.id === dst.matiereId)?.nom;
+  const jours = repartir(type ? listerEtapes(dst, s.chapitres, s.erreurs, type, estScientifique(nomMatiere)) : [], dst.date);
+  // Les révisions de tête sont répétées chaque jour : on compte chaque séance.
+  const liste = jours.flatMap((j) => j.etapes);
   const nbFaites = liste.filter((e) => faits.includes(e.id)).length;
   const minutes = liste.filter((e) => !faits.includes(e.id)).reduce((n, e) => n + e.minutes, 0);
 
@@ -313,6 +321,13 @@ function Programme({ dst }: { dst: Dst }) {
                       environ {dureeLisible(jour.etapes.reduce((n, e) => n + e.minutes, 0))}
                     </span>
                   </div>
+                  {jour.etapes.reduce((n, e) => n + e.minutes, 0) > 180 && (
+                    // Trop pour une journée (éval le lendemain) : ce qui rapporte le plus d'abord.
+                    <p className="mb-1.5 rounded-lg bg-accent-soft px-3 py-2 text-[13px] leading-snug text-ink">
+                      C&apos;est beaucoup pour une journée. Priorité : les définitions, puis une ou deux manches
+                      « Apprendre » et l&apos;interro blanche. Se tester rapporte plus que relire.
+                    </p>
+                  )}
                   <ul>
                     {jour.etapes.map((e) => {
                       const fait = faits.includes(e.id);

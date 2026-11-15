@@ -15,6 +15,7 @@ import { Curseur } from "@/components/Curseur";
 import { ecrireAvecCs, remplir, tirer, verifier, type Verdict, type Version } from "@/lib/calcul";
 import { bilans, useDemandes, type Demande } from "@/lib/demandes";
 import { melanger } from "@/lib/contenu";
+import { comparer, motsCles } from "@/lib/apprendre";
 import { estScientifique, versNotation } from "@/lib/saisie";
 import { encre, pastel, useLuno } from "@/lib/store";
 import type { Calcul, Chapitre, DefinitionCours } from "@/lib/types";
@@ -65,7 +66,8 @@ export function ModeInterro({
   // Venu de « Faire une interro blanche » (accueil) : les chapitres du DST sont cochés.
   const [choisis, setChoisis] = useState<string[]>(() => initiaux.filter((id) => possibles.some((c) => c.id === id)));
   const [aideChoix, setAideChoix] = useState(false);
-  const [nbCours, setNbCours] = useState(6);
+  // Une interro d'1 h sur trois chapitres pose bien plus de 6 questions (tour 2).
+  const [nbCours, setNbCours] = useState(14);
   const [nbCalculs, setNbCalculs] = useState(2);
   const [duree, setDuree] = useState(60);
   const [questions, setQuestions] = useState<Question[] | null>(null);
@@ -74,6 +76,7 @@ export function ModeInterro({
   const [index, setIndex] = useState(0);
   const [rendu, setRendu] = useState(false);
   const [notes, setNotes] = useState<(number | null)[]>([]);
+  const [aConfirmer, setAConfirmer] = useState<number | null>(null);
   const [fin, setFin] = useState<number | null>(null);
   const [maintenant, setMaintenant] = useState(() => Date.now());
   const [ajoute, setAjoute] = useState(false);
@@ -227,7 +230,7 @@ export function ModeInterro({
         <Carte className="h-fit lg:sticky lg:top-24">
           <p className="text-[17px] font-semibold">Ton interro</p>
           <p className="mt-3 text-[14px] font-semibold">Questions de cours : {Math.min(nbCours, totalDefs)}</p>
-          <Curseur min={0} max={Math.max(1, Math.min(12, totalDefs))} value={Math.min(nbCours, totalDefs)} onChange={setNbCours} label="Questions de cours" />
+          <Curseur min={0} max={Math.max(1, Math.min(20, totalDefs))} value={Math.min(nbCours, totalDefs)} onChange={setNbCours} label="Questions de cours" />
           <p className="mt-2 text-[14px] font-semibold">Calculs : {Math.min(nbCalculs, totalCalculs)}</p>
           <Curseur min={0} max={Math.max(1, Math.min(5, totalCalculs))} value={Math.min(nbCalculs, totalCalculs)} onChange={setNbCalculs} label="Calculs" />
           <p className="mt-3 text-[14px] font-semibold">Durée</p>
@@ -237,7 +240,12 @@ export function ModeInterro({
                 key={d.id}
                 role="radio"
                 aria-checked={duree === d.id}
-                onClick={() => setDuree(d.id)}
+                onClick={() => {
+                  setDuree(d.id);
+                  // Environ 3 à 4 min par question de cours, calculs à part.
+                  if (d.id === 30) setNbCours(8);
+                  if (d.id === 60) setNbCours(14);
+                }}
                 className={`min-h-10 rounded-full px-3.5 text-[13.5px] font-semibold transition-colors duration-200 ${
                   duree === d.id ? "bg-ink text-bg" : "bg-ink/5 text-muted"
                 }`}
@@ -274,6 +282,10 @@ export function ModeInterro({
 
   // ———————— Copie rendue : correction ————————
   if (rendu) {
+    // Part des mots clés du cours présents dans chaque réponse de cours (aide à se noter).
+    const couverture = questions.map((q, i) =>
+      q.type === "cours" && motsCles(q.def.texte).length >= 3 ? comparer(reponses[i].texte, q.def.texte) : null,
+    );
     const points = questions.map((q, i) => {
       if (q.type === "cours") return notes[i] === null ? null : notes[i]! * q.points;
       const v = verdicts[i];
@@ -293,8 +305,10 @@ export function ModeInterro({
           e: {
             // Une erreur réutilisable, pas seulement la question (règle 8 des contenus).
             titre: `Définition à savoir : ${q.def.terme}`,
-            regle: "Restituer la définition avec les mots du cours : ce sont eux que le prof attend.",
-            rappel: q.def.texte.split(/(?<=[.;])\s/)[0],
+            // La règle à retenir, c'est la définition elle-même (une par erreur) ; le rappel
+            // donne les mots clés que le prof attend.
+            regle: `${q.def.terme} : ${q.def.texte.split(/(?<=[.;])\s/)[0]}`,
+            rappel: `Mots clés : ${motsCles(q.def.texte).slice(0, 5).join(", ")}`,
             theme: "Définitions",
             erreur: reponses[i].texte.trim()
               ? q.scientifique
@@ -440,7 +454,16 @@ export function ModeInterro({
                         key={o.v}
                         role="radio"
                         aria-checked={notes[i] === o.v}
-                        onClick={() => setNotes(notes.map((n, j) => (j === i ? o.v : n)))}
+                        onClick={() => {
+                          // « Juste » alors que la moitié des mots clés du cours manque : on
+                          // demande de confirmer (la note qu'on se met soi-même gonfle vite).
+                          if (o.v === 1 && aConfirmer !== i && couverture[i] !== null && couverture[i]!.part < 0.5) {
+                            setAConfirmer(i);
+                            return;
+                          }
+                          setAConfirmer(null);
+                          setNotes(notes.map((n, j) => (j === i ? o.v : n)));
+                        }}
                         className={`min-h-10 rounded-xl text-[14px] font-semibold transition-colors duration-200 ${
                           notes[i] === o.v
                             ? o.v === 1
@@ -451,10 +474,23 @@ export function ModeInterro({
                             : "bg-ink/5 text-muted"
                         }`}
                       >
-                        {o.l}
+                        {o.v === 1 && aConfirmer === i ? "Oui, juste" : o.l}
                       </button>
                     ))}
                   </div>
+                  {couverture[i] && (
+                    <p className="mt-2 text-[13px] text-muted">
+                      Mots clés du cours retrouvés : {couverture[i]!.presents.size} / {couverture[i]!.cles.length}
+                      {couverture[i]!.manquants.length > 0 && (
+                        <> · il manque <span className="font-semibold text-bad">{couverture[i]!.manquants.slice(0, 6).join(", ")}</span></>
+                      )}
+                    </p>
+                  )}
+                  {aConfirmer === i && (
+                    <p className="mt-1 text-[13.5px] font-semibold text-bad" role="alert">
+                      Il manque plus de la moitié des mots clés. Ton prof compterait-il juste ? Si oui, touche encore « Oui, juste ».
+                    </p>
+                  )}
                 </>
               ) : (
                 <>

@@ -19,8 +19,21 @@ export type Flashcard = {
   echeance: string;
   /** Schéma affiché avec la réponse. */
   schema?: Schema;
+  /**
+   * Facilité de la carte (répétition espacée façon SM-2, 1,3 à 3, 2,5 au départ) : les
+   * cartes difficiles reviennent plus souvent, les faciles s'espacent plus vite.
+   */
+  facilite?: number;
   /** Mode « Apprendre » : palier atteint (0 à 3, 3 = maîtrisée). */
   apprendre?: number;
+  /** AAAA-MM-JJ du dernier changement de palier : « maîtrisée » demande un autre jour. */
+  apprendreJour?: string;
+  /**
+   * Mauvaises réponses écrites à la main pour le QCM d'une question (même forme, même
+   * sujet). Sans elles, une carte-question saute le QCM : les intrus pris dans d'autres
+   * cartes se devinaient à leur forme.
+   */
+  leurres?: string[];
   /** Pas posée dans le quiz du mode Apprendre (méthode, astuce, détail hors DST). */
   horsQuiz?: boolean;
 };

@@ -6,7 +6,11 @@
  * Ajouter ici toute carte renommée, et augmenter la `version` du chapitre.
  */
 export const RECTOS_RENOMMES: Record<string, string> = {
+  // hggsp-theme4
+  "comment l'information a-t-elle changé entre hier et aujourd'hui ?":
+    "Comment la circulation de l'information a-t-elle changé entre l'imprimé et l'ère numérique ?",
   // physique-mouvement
+  "vecteur vitesse instantanée (cours, chap. 9)": "Vecteur vitesse en Mᵢ à partir du point suivant",
   "vecteur vitesse par encadrement (fiche euler)": "Vecteur vitesse par encadrement",
   "vecteur vitesse par encadrement (chap. 11)": "Vecteur vitesse par encadrement",
   "limite du modèle du point matériel": "Quelle est la limite du modèle du point matériel ?",

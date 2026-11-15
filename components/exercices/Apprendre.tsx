@@ -257,7 +257,7 @@ export function ModeApprendre({
   const scientifique = estScientifique(matiere?.nom);
 
   /** Garde la réponse dans le journal (lu par Claude) ; renvoie son identifiant. */
-  const repondre = (reussi: boolean, reponse: string): string => {
+  const repondre = (reussi: boolean, reponse: string): { id: string; etat: EtatReponse } => {
     const carte = q.carte;
     const idJournal = `${Date.now().toString(36)}-${carte.id.slice(0, 8)}`;
     noterQuiz({
@@ -272,10 +272,24 @@ export function ModeApprendre({
       ...(q.trous ? { attendu: q.trous.join(" | ") } : {}),
       juste: reussi,
     });
-    const nouveau = reussi ? apresReussite(carte, q.palier) : apresEchec(carte, q.palier);
+    // Pas de « maîtrisée » le jour même (illusion de maîtrise, tour 2 de l'élève testeur) :
+    // - une notion ratée puis rattrapée dans la même manche ne monte pas ;
+    // - le palier 3 réussi ne la rend maîtrisée que si le palier précédent date d'un autre jour.
+    const rattrapage = revenues.includes(carte.id);
+    const aujourdhui = new Date().toISOString().slice(0, 10);
+    const memeJour = carte.apprendreJour === aujourdhui && (carte.apprendre ?? 0) > 0;
+    let etat: EtatReponse = reussi ? "palier" : "echec";
+    let nouveau = reussi ? apresReussite(carte, q.palier) : apresEchec(carte, q.palier);
+    if (reussi && rattrapage) {
+      nouveau = carte.apprendre ?? 0;
+      etat = "rattrapee";
+    } else if (reussi && nouveau >= MAITRISEE && memeJour) {
+      nouveau = Math.max(carte.apprendre ?? 0, 2);
+      etat = "attente";
+    } else if (reussi && nouveau >= MAITRISEE) etat = "maitrisee";
     majPalier(q.chapitreId, carte.id, nouveau);
     // Écrire de tête, c'est savoir : la carte entre dans la répétition espacée.
-    if (q.palier === 3) noterFlashcard(q.chapitreId, carte.id, reussi);
+    if (q.palier === 3 && !(reussi && rattrapage)) noterFlashcard(q.chapitreId, carte.id, reussi);
     setResultats((x) => [
       ...x,
       { carteId: carte.id, recto: carte.recto, palier: q.palier, reussi, maitrisee: reussi && nouveau >= MAITRISEE },
@@ -295,7 +309,7 @@ export function ModeApprendre({
       });
       setRevenues((x) => [...x, carte.id]);
     }
-    return idJournal;
+    return { id: idJournal, etat };
   };
 
   return (
@@ -356,7 +370,7 @@ function Question({
   chapitre: string;
   emoji?: string;
   couleur: string;
-  repondre: (reussi: boolean, reponse: string) => string;
+  repondre: (reussi: boolean, reponse: string) => { id: string; etat: EtatReponse };
   signaler: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
   suivant: () => void;
 }) {
@@ -376,10 +390,14 @@ function Question({
   }, [q.palier]);
 
   const [idJournal, setIdJournal] = useState<string | null>(null);
+  const [etat, setEtat] = useState<EtatReponse | null>(null);
+  const [confirmer, setConfirmer] = useState(false);
   const decider = (reussi: boolean, reponse = saisie) => {
     if (verdict !== null) return;
     setVerdict(reussi);
-    setIdJournal(repondre(reussi, reponse));
+    const r = repondre(reussi, reponse);
+    setIdJournal(r.id);
+    setEtat(r.etat);
   };
 
   // Palier 2 : le verso, chaque mot caché remplacé par un champ.
@@ -632,9 +650,24 @@ function Question({
                     </p>
                   ))}
                 {verdict === null && (
-                  <ZoneAction cle={resultat} className="flex flex-wrap gap-2">
-                    <Bouton onClick={() => decider(true)}>
-                      <Check size={17} /> C&apos;était juste
+                  <ZoneAction cle={resultat} className="flex flex-wrap items-center gap-2">
+                    {confirmer && (
+                      <p className="w-full text-[13.5px] font-semibold text-bad" role="alert">
+                        Tu n&apos;as retrouvé que {resultat.presents.size} mot{resultat.presents.size > 1 ? "s" : ""} clé
+                        {resultat.presents.size > 1 ? "s" : ""} sur {resultat.cles.length}. Ton prof compterait-il
+                        vraiment juste ? Si oui, confirme.
+                      </p>
+                    )}
+                    <Bouton
+                      onClick={() => {
+                        // Auto-validation encadrée : sous la moitié des mots clés et sans la
+                        // formule, on demande une confirmation (l'élève se surnote facilement).
+                        const formuleOk = resultat.formules.length > 0 && resultat.formules.every((f) => f.trouvee);
+                        if (!confirmer && !formuleOk && resultat.cles.length >= 3 && resultat.part < 0.5) setConfirmer(true);
+                        else decider(true);
+                      }}
+                    >
+                      <Check size={17} /> {confirmer ? "Oui, c'était juste" : "C'était juste"}
                     </Bouton>
                     <Bouton variante="contour" onClick={() => decider(false)}>
                       Presque : à revoir
@@ -650,11 +683,15 @@ function Question({
       {verdict !== null && (
         <div className="mt-4">
           <p className={`text-[15px] font-semibold ${verdict ? "text-ok" : "text-bad"}`} role="status">
-            {verdict
-              ? q.palier === 3
-                ? "Maîtrisée !"
-                : "Bien vu, palier suivant."
-              : "Pas encore : elle revient un peu plus loin."}
+            {etat === "maitrisee"
+              ? "Maîtrisée ! Elle reviendra de temps en temps pour ne pas l'oublier."
+              : etat === "attente"
+                ? "Juste ! Pour la maîtriser, réussis-la encore de tête un autre jour."
+                : etat === "rattrapee"
+                  ? "Rattrapée. Elle reste à retravailler un autre jour."
+                  : verdict
+                    ? "Bien vu, palier suivant."
+                    : "Pas encore : elle revient un peu plus loin."}
           </p>
           {q.inverse && (
             <div className="mt-2 rounded-xl bg-ink/5 p-3.5 text-[14.5px] leading-relaxed">
@@ -677,6 +714,8 @@ function Question({
     </Carte>
   );
 }
+
+type EtatReponse = "maitrisee" | "attente" | "rattrapee" | "palier" | "echec";
 
 const SIGNAUX: { id: NonNullable<EntreeQuiz["signal"]>; label: string }[] = [
   { id: "pas-claire", label: "Pas claire" },

@@ -128,7 +128,11 @@ type Etat = Donnees & {
     c: { recto: string; verso: string },
   ) => void;
   supprimerFlashcard: (chapitreId: string, carteId: string) => void;
-  noterFlashcard: (chapitreId: string, carteId: string, su: boolean) => void;
+  /**
+   * Réponse à une carte : false / 0 = à revoir, 1 = difficile, true / 2 = bien,
+   * 3 = facile.
+   */
+  noterFlashcard: (chapitreId: string, carteId: string, note: boolean | NoteCarte) => void;
   /** Mode Apprendre : garde une réponse dans le journal (lu par Claude pour améliorer les quiz). */
   noterQuiz: (e: EntreeQuiz) => void;
   signalerQuiz: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
@@ -164,6 +168,41 @@ type Etat = Donnees & {
   toutEffacer: () => void;
   remplacerTout: (d: Donnees) => void;
 };
+
+export type NoteCarte = 0 | 1 | 2 | 3;
+
+/**
+ * Répétition espacée façon SM-2 (Anki) : l'intervalle est multiplié par la facilité de
+ * la carte, qui baisse quand on la rate ou qu'on la trouve difficile et monte quand elle
+ * est facile. Une carte ratée revient le jour même et repart à zéro.
+ */
+export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
+  const n: NoteCarte = note === true ? 2 : note === false ? 0 : note;
+  const fac = f.facilite ?? 2.5;
+  const borner = (x: number) => Math.min(3, Math.max(1.3, Math.round(x * 100) / 100));
+  if (n === 0) return { niveau: 1 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.2) };
+  const iv = f.intervalle;
+  const intervalle = Math.min(
+    120,
+    n === 1
+      ? Math.max(1, Math.round((iv || 1) * 1.2))
+      : n === 2
+        ? iv === 0
+          ? 1
+          : iv === 1
+            ? 3
+            : Math.round(iv * fac)
+        : iv === 0
+          ? 4
+          : Math.round(Math.max(iv * fac * 1.3, iv + 2)),
+  );
+  return {
+    niveau: 2 as const,
+    intervalle,
+    echeance: dansJours(intervalle),
+    facilite: borner(fac + (n === 1 ? -0.15 : n === 3 ? 0.15 : 0)),
+  };
+}
 
 /**
  * Une même carte peut être publiée dans deux chapitres (« Référentiel » en chap. 9 et
@@ -467,26 +506,18 @@ export const useLuno = create<Etat>()(
       // Répétition espacée simple : l'intervalle double à chaque bonne réponse
       // (1, 2, 4, 8… jours) et repart de zéro à la moindre erreur.
       majPalier: (id, carteId, palier) =>
-        set((s) => ({ chapitres: majCarte(s.chapitres, id, carteId, (f) => ({ ...f, apprendre: palier })) })),
-      noterFlashcard: (id, carteId, su) =>
+        set((s) => ({
+          chapitres: majCarte(s.chapitres, id, carteId, (f) =>
+            (f.apprendre ?? 0) === palier ? f : { ...f, apprendre: palier, apprendreJour: todayISO() },
+          ),
+        })),
+      noterFlashcard: (id, carteId, note) =>
         set((s) => {
           const carte = s.chapitres.find((c) => c.id === id)?.flashcards.find((f) => f.id === carteId);
           const j = s.jour.date === todayISO() ? s.jour : { date: todayISO(), nouvelles: 0, revues: 0 };
           return {
           jour: { ...j, nouvelles: j.nouvelles + (carte?.niveau === 0 ? 1 : 0), revues: j.revues + 1 },
-          chapitres: majCarte(s.chapitres, id, carteId, (f) => {
-              if (!su)
-                return { ...f, niveau: 1, intervalle: 0, echeance: todayISO() };
-              const intervalle = f.intervalle
-                ? Math.min(f.intervalle * 2, 60)
-                : 1;
-              return {
-                ...f,
-                niveau: 2,
-                intervalle,
-                echeance: dansJours(intervalle),
-              };
-            }),
+          chapitres: majCarte(s.chapitres, id, carteId, (f) => ({ ...f, ...prochaineRevision(f, note) })),
           };
         }),
 

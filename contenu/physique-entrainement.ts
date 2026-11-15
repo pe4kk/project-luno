@@ -274,7 +274,7 @@ export const CALCULS_CHAP9: Calcul[] = [
     id: "calc-vitesse-encadrement",
     titre: "Vitesse sur une chronophotographie",
     enonce:
-      "Sur la chronophotographie d'un skateur, en vraie grandeur à l'échelle indiquée, les positions sont prises toutes les τ = {tau} ms. On mesure M_2M_4 = {d} cm.",
+      "Sur la chronophotographie d’un skateur, à l’échelle 1 (vraie grandeur), les positions sont prises toutes les τ = {tau} ms. On mesure M_2M_4 = {d} cm.",
     question: "Calcule la valeur de la vitesse v_3 du skateur au point M_3.",
     variables: [
       { nom: "d", min: 3.0, max: 9.0, pas: 0.2 },

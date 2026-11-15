@@ -62,7 +62,9 @@ export function RetourAN({ verdict, version }: { verdict: Verdict; version: Vers
     verdict.unite
       ? "✓ Unité juste."
       : verdict.uniteEquivalente
-        ? "✗ Unité : ta valeur est juste dans cette unité, mais ton prof attend l'unité du système international."
+        ? verdict.valeur
+          ? "✗ Unité : ta valeur est juste dans cette unité, mais ton prof attend l'unité du système international."
+          : "✗ Unité : ton prof attend l'unité du système international."
         : "✗ Unité : pense à celle de la grandeur cherchée.",
     verdict.cs
       ? `✓ ${version.cs} chiffres significatifs, comme la donnée la moins précise.`

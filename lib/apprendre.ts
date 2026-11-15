@@ -47,7 +47,10 @@ export const sansExemples = (texte: string) =>
 
 /** Les mots qui comptent dans un texte (sans formules, mots vides ni petits mots). */
 export function motsCles(texte: string): string[] {
-  const brut = sansMiseEnForme(texte).replace(/\{\{[^}]*\}\}/g, " ");
+  // « de l'ordre de » n'est pas un mot du cours (tour 2 : « il manque ordre »).
+  const brut = sansMiseEnForme(texte)
+    .replace(/\{\{[^}]*\}\}/g, " ")
+    .replace(/de l['’]ordre d['’e]/gi, " ");
   return [
     ...new Set(
       brut
@@ -266,7 +269,16 @@ export function preparerNotion(
     const inv = inversePour(carte, memeChapitre, ailleurs);
     if (inv) return { chapitreId, carte, palier, choix: inv.choix, inverse: inv.enonce };
   }
-  let choix = palier === 1 ? choixPour(carte, memeChapitre, ailleurs) : undefined;
+  // Une carte-question sans leurres écrits à la main saute le QCM : des intrus pris dans
+  // d'autres cartes n'ont ni la même forme ni le même sujet, la bonne réponse se devine.
+  if (palier === 1 && estQuestion(carte.recto) && !(carte.leurres && carte.leurres.length >= 3))
+    palier = estCourte(carte) ? 3 : 2;
+  let choix =
+    palier === 1
+      ? carte.leurres && carte.leurres.length >= 3
+        ? melanger([carte.verso, ...melanger(carte.leurres).slice(0, 3)])
+        : choixPour(carte, memeChapitre, ailleurs)
+      : undefined;
   // Pas assez d'autres cartes pour un QCM : on passe au palier suivant.
   if (choix && choix.length < 4) {
     palier = estCourte(carte) ? 3 : 2;
@@ -312,11 +324,21 @@ function sansDoublons(chapitres: Chapitre[]) {
 
 export function composerManche(chapitres: Chapitre[], taille = TAILLE_MANCHE): NotionManche[] {
   const toutes = sansDoublons(chapitres);
+  // Une notion déjà avancée aujourd'hui passe après les autres : la reposer tout de suite
+  // ne mesure que la mémoire immédiate.
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  const vueAujourdhui = (f: Flashcard) => f.apprendreJour === aujourdhui;
   const enCours = melanger(toutes.filter((x) => (x.carte.apprendre ?? 0) > 0 && (x.carte.apprendre ?? 0) < MAITRISEE)).sort(
-    (a, b) => (b.carte.apprendre ?? 0) - (a.carte.apprendre ?? 0),
+    (a, b) =>
+      Number(vueAujourdhui(a.carte)) - Number(vueAujourdhui(b.carte)) || (b.carte.apprendre ?? 0) - (a.carte.apprendre ?? 0),
   );
   const nouvelles = melanger(toutes.filter((x) => !x.carte.apprendre));
-  return melanger([...enCours, ...nouvelles].slice(0, taille)).map((x) => {
+  const ordre = [
+    ...enCours.filter((x) => !vueAujourdhui(x.carte)),
+    ...nouvelles,
+    ...enCours.filter((x) => vueAujourdhui(x.carte)),
+  ];
+  return melanger(ordre.slice(0, taille)).map((x) => {
     const du = (meme: boolean) => toutes.filter((y) => (y.chapitreId === x.chapitreId) === meme).map((y) => y.carte);
     return preparerNotion(x.chapitreId, x.carte, du(true), du(false));
   });

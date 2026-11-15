@@ -1,4 +1,4 @@
-import { todayISO } from "./dates";
+import { joursAvant, todayISO } from "./dates";
 import { estDue } from "./store";
 import type { Chapitre, Dst } from "./types";
 
@@ -30,13 +30,20 @@ export function revisionDuJour(
       (f.niveau === 0 ? nouvelles : revues).push({ chapitreId: c.id, carteId: f.id });
     }
 
+  // DST dans trois jours au plus : ses cartes nouvelles passent toutes, sans quota (la
+  // veille d'une interro, « Rien à revoir aujourd'hui » n'avait pas de sens).
+  const proches = new Set(
+    dsts.filter((d) => d.date >= aujourdhui && joursAvant(d.date) <= 3).flatMap((d) => d.chapitreIds),
+  );
+  const urgentes = nouvelles.filter((x) => proches.has(x.chapitreId));
+  const autres = nouvelles.filter((x) => !proches.has(x.chapitreId));
   const dejaVues = jour.date === aujourdhui ? jour.nouvelles : 0;
-  const quota = Math.max(0, QUOTA_NOUVELLES - dejaVues);
-  const cartes = [...revues, ...nouvelles.slice(0, quota)];
+  const quota = Math.max(0, QUOTA_NOUVELLES - dejaVues - urgentes.length);
+  const cartes = [...revues, ...urgentes, ...autres.slice(0, quota)];
   return {
     cartes,
     /** Nouvelles cartes gardées pour les jours suivants. */
-    plusTard: Math.max(0, nouvelles.length - quota),
+    plusTard: Math.max(0, autres.length - quota),
     /** Nombre de cartes du jour, par chapitre. */
     parChapitre: cartes.reduce<Record<string, number>>((m, x) => {
       m[x.chapitreId] = (m[x.chapitreId] ?? 0) + 1;

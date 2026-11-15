@@ -21,6 +21,11 @@ export type EtapePreparation = {
   minutes: number;
   /** Étape de fin : à garder pour la veille. */
   veille?: boolean;
+  /**
+   * Révision de tête à refaire chaque jour (répétition espacée) : `repartir` en pose une
+   * part sur chaque jour, en début de séance, au lieu d'une seule fois.
+   */
+  recurrente?: boolean;
 };
 
 export function etapes(
@@ -28,6 +33,7 @@ export function etapes(
   chapitres: Chapitre[],
   erreurs: ErreurNotee[],
   type: "cours" | "exos",
+  scientifique = true,
 ): EtapePreparation[] {
   const auProgramme = chapitres.filter((c) => dst.chapitreIds.includes(c.id));
   const plusieurs = auProgramme.length > 1;
@@ -41,8 +47,8 @@ export function etapes(
     if (c.fiche)
       liste.push({
         id: `fiche:${c.id}`,
-        titre: `Lire la fiche${nom(c)}`,
-        detail: "Taille « Standard », puis « Complète » pour les détails.",
+        titre: `Comprendre la fiche${nom(c)}`,
+        detail: "Lis-la en taille « Standard », puis ferme-la et redis de tête les points essentiels. Relire ne suffit pas : c'est se tester qui fait retenir.",
         href: lien(c, "fiche"),
         minutes: 15,
       });
@@ -79,22 +85,36 @@ export function etapes(
     liste.push({
       id: "apprendre",
       titre: `Apprendre les ${nbNotions} notions`,
-      detail: "Les reconnaître, les compléter, puis les écrire de tête, par manches de 7.",
+      detail: "Les compléter, puis les écrire de tête, par manches de 7. Une notion n'est maîtrisée qu'après une réussite de tête un autre jour.",
       href: exos("apprendre"),
-      minutes: Math.min(40, 10 + Math.round(nbNotions / 2)),
+      // Environ 1,5 min par notion (deux ou trois paliers de 30 s), réparti sur les jours.
+      minutes: Math.round(nbNotions * 1.5),
+      recurrente: true,
     });
   if (nbCartes)
     liste.push({
       id: "cartes",
       titre: `Réviser les ${nbCartes} flashcards`,
-      detail: "Toutes les cartes des chapitres au programme.",
+      detail: "Les cartes des chapitres au programme : dis honnêtement si tu les savais.",
       href: lienTravail({ r: dst.id }),
-      minutes: Math.min(30, 5 + Math.round(nbCartes / 3)),
+      minutes: Math.max(10, Math.round(nbCartes / 5)),
+      recurrente: true,
     });
 
   // 2. Les exercices, seulement pour une éval avec exercices.
   if (type === "exos") {
-    if (auProgramme.some(peutSExercer))
+    // Hors sciences (HGGSP, histoire), un DST « avec exercices », c'est une dissertation
+    // ou une étude critique : on rédige un sujet, pas une série de QCM.
+    const aRediger = auProgramme.some((c) => (c.problemes?.length ?? 0) > 0);
+    if (!scientifique && aRediger)
+      liste.push({
+        id: "problemes",
+        titre: "Rédiger un sujet (dissertation ou étude critique)",
+        detail: "Introduction et plan détaillé au brouillon, puis compare au corrigé étape par étape. Relis d'abord la méthode dans Apprendre → Méthodes.",
+        href: exos("problemes"),
+        minutes: 60,
+      });
+    if (scientifique && auProgramme.some(peutSExercer))
       liste.push({
         id: "serie",
         titre: "Faire une série d'exercices",
@@ -110,7 +130,7 @@ export function etapes(
         href: exos("calculs"),
         minutes: 20,
       });
-    if (auProgramme.some((c) => (c.problemes?.length ?? 0) > 0))
+    if (scientifique && aRediger)
       liste.push({
         id: "problemes",
         titre: "Rédiger un problème",
@@ -150,7 +170,11 @@ export type JourPreparation = { date: string; etapes: EtapePreparation[] };
 
 /**
  * Répartit les étapes sur les jours qui restent, d'aujourd'hui à la veille (cinq jours
- * au plus) : le cours d'abord, à parts à peu près égales, et les étapes de fin la veille.
+ * au plus). Le cours à comprendre est réparti à parts à peu près égales ; les révisions
+ * de tête (`recurrente`) reviennent chaque jour, en début de séance, pour revoir ce qui
+ * a été appris la veille (répétition espacée), avec une part de la durée totale ; les
+ * étapes de fin vont la veille. Une étape répétée a un identifiant par jour
+ * (« apprendre@2026-11-16 »), pour être cochée jour par jour.
  */
 export function repartir(liste: EtapePreparation[], dateDst: string): JourPreparation[] {
   const reste = joursAvant(dateDst);
@@ -158,16 +182,31 @@ export function repartir(liste: EtapePreparation[], dateDst: string): JourPrepar
   const nb = Math.max(1, Math.min(5, reste));
   const premier = Math.max(0, reste - nb);
   const jours: JourPreparation[] = Array.from({ length: nb }, (_, i) => ({ date: dansJours(premier + i), etapes: [] }));
-  const debut = liste.filter((e) => !e.veille);
+  const debut = liste.filter((e) => !e.veille && !e.recurrente);
+  const recurrentes = liste.filter((e) => e.recurrente);
   const fin = liste.filter((e) => e.veille);
   // Avec plusieurs jours, la veille est réservée à la répétition générale.
   const libres = nb > 1 && fin.length ? nb - 1 : nb;
+  // Révisions de tête : chaque jour (veille comprise), en tête de séance.
+  jours.forEach((j, i) => {
+    for (const e of recurrentes) {
+      const part = Math.max(10, Math.round(e.minutes / nb));
+      j.etapes.push({
+        ...e,
+        id: nb > 1 ? `${e.id}@${j.date}` : e.id,
+        titre: nb > 1 && i > 0 ? e.titre.replace(/^Apprendre/, "Continuer d'apprendre").replace(/^Réviser/, "Revoir") : e.titre,
+        minutes: part,
+      });
+    }
+  });
   const total = debut.reduce((n, e) => n + e.minutes, 0) || 1;
   let cumul = 0;
   for (const e of debut) {
     jours[Math.min(libres - 1, Math.floor((cumul / total) * libres))].etapes.push(e);
     cumul += e.minutes;
   }
+  // Jour 1 : on comprend le cours avant de se tester dessus.
+  jours[0].etapes.sort((a, b) => Number(Boolean(a.recurrente)) - Number(Boolean(b.recurrente)));
   jours[nb - 1].etapes.push(...fin);
   return jours.filter((j) => j.etapes.length > 0);
 }

@@ -140,7 +140,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
           "v⃗ = {{MM'⃗ // Δt}}, avec MM'⃗ le vecteur déplacement et Δt la durée du parcours de M à M'.",
       },
       {
-        recto: "Vecteur vitesse instantanée (cours, chap. 9)", schema: VITESSE_INSTANTANEE,
+        recto: "Vecteur vitesse en Mᵢ à partir du point suivant", schema: VITESSE_INSTANTANEE,
         verso:
           "v⃗ᵢ = {{MᵢMᵢ₊₁⃗ // tᵢ₊₁ − tᵢ}}, avec la durée en s et le déplacement en m.",
       },
@@ -1003,7 +1003,9 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 11,
+    version: 12,
+    // Hors DST d'après la fiche du prof (« très marginal en 1re spé ») : reste dans la fiche seulement.
+    cartesRetirees: ["Force de rappel d'un ressort"],
     calculs: CALCULS_FORCES,
     definitions: DEF_PC_FORCES,
     matiere,
@@ -1048,11 +1050,6 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
         recto: "Qu'est-ce que la vitesse limite d'une chute ?",
         verso:
           "Dans une chute avec frottements, c'est la vitesse atteinte quand le frottement compense le poids : à partir de là, elle reste constante.",
-      },
-      {
-        recto: "Force de rappel d'un ressort", schema: RESSORT,
-        verso:
-          "Loi de Hooke : F⃗r = −k · Δl⃗, avec k la constante de raideur et Δl⃗ l'allongement du ressort.",
       },
       {
         recto: "Force de gravitation F⃗g", schema: GRAVITATION,

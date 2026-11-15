@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, RotateCcw, X } from "lucide-react";
-import { cleCarte, encre, pastel, useLuno } from "@/lib/store";
+import { cleCarte, encre, pastel, prochaineRevision, useLuno, type NoteCarte } from "@/lib/store";
 import { Bouton, BoutonIcone, ZoneAction, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
@@ -18,6 +18,14 @@ function melanger<T>(liste: T[]): T[] {
   }
   return l;
 }
+
+const NOTES: { note: NoteCarte; label: string; classe: string }[] = [
+  { note: 0, label: "À revoir", classe: "!border-bad/40 !text-bad hover:!bg-bad/10" },
+  { note: 1, label: "Difficile", classe: "!bg-ink/10 !text-ink hover:!bg-ink/15" },
+  { note: 2, label: "Su", classe: "!bg-accent !text-on-accent hover:!opacity-90" },
+  { note: 3, label: "Facile", classe: "!bg-ok/15 !text-ok hover:!bg-ok/25" },
+];
+const delai = (j: number) => (j === 0 ? "tout à l'heure" : j === 1 ? "demain" : j < 30 ? `${j} j` : `${Math.round(j / 30)} mois`);
 
 export type CarteARevoir = { chapitreId: string; carteId: string };
 /** `retour` : carte ratée qui repasse une fois, quelques cartes plus loin, dans la même séance. */
@@ -62,12 +70,13 @@ export function Revision({
   const fini = index >= paquet.length;
 
   const repondre = useCallback(
-    (su: boolean) => {
+    (note: NoteCarte) => {
       if (!courant) return;
+      const su = note > 0;
       // Le retour ne compte pas une deuxième fois dans la répétition espacée : il sert
       // seulement à revoir la carte tant qu'elle est fraîche.
       if (!courant.retour) {
-        noterFlashcard(courant.chapitreId, courant.carteId, su);
+        noterFlashcard(courant.chapitreId, courant.carteId, note);
         if (su) setSues((n) => n + 1);
         else
           setPaquet((l) => {
@@ -87,8 +96,9 @@ export function Revision({
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         setRetournee((r) => !r);
-      } else if (retournee && e.key === "ArrowRight") repondre(true);
-      else if (retournee && e.key === "ArrowLeft") repondre(false);
+      } else if (retournee && e.key === "ArrowRight") repondre(2);
+      else if (retournee && e.key === "ArrowLeft") repondre(0);
+      else if (retournee && ["1", "2", "3", "4"].includes(e.key)) repondre((Number(e.key) - 1) as NoteCarte);
     };
     window.addEventListener("keydown", surTouche);
     return () => window.removeEventListener("keydown", surTouche);
@@ -243,25 +253,26 @@ export function Revision({
         </motion.div>
       </AnimatePresence>
 
-      <ZoneAction cle={retournee ? carte.id + "r" : carte.id} className="mt-6 grid grid-cols-2 gap-3">
-        <Bouton
-          variante="contour"
-          className="!border-bad/40 !py-3.5 !text-bad hover:!bg-bad/10"
-          disabled={!retournee}
-          onClick={() => repondre(false)}
-        >
-          <X size={18} /> À revoir
-        </Bouton>
-        <Bouton
-          className="!bg-accent !py-3.5 !text-on-accent hover:!opacity-90"
-          disabled={!retournee}
-          onClick={() => repondre(true)}
-        >
-          <Check size={18} /> Je savais
-        </Bouton>
+      {/* Quatre réponses, comme Anki : le délai affiché sous chaque bouton dit quand la
+          carte reviendra. « Difficile » la ramène plus tôt, « Facile » l'espace plus vite. */}
+      <ZoneAction cle={retournee ? carte.id + "r" : carte.id} className="mt-6 grid grid-cols-4 gap-2">
+        {NOTES.map(({ note, label, classe }) => (
+          <Bouton
+            key={note}
+            variante={note === 0 ? "contour" : "plein"}
+            className={`!flex-col !gap-0.5 !px-1 !py-2.5 ${classe}`}
+            disabled={!retournee}
+            onClick={() => repondre(note)}
+          >
+            <span className="text-[14px] font-semibold leading-tight">{label}</span>
+            <span className="text-[11.5px] font-normal leading-tight opacity-80">
+              {delai(prochaineRevision(carte, note).intervalle)}
+            </span>
+          </Bouton>
+        ))}
       </ZoneAction>
       <p className="mt-3 text-center text-[12.5px] text-muted">
-        Retourne la carte, puis indique si tu connaissais la réponse.
+        Retourne la carte, puis dis honnêtement si tu la savais : c&apos;est ce qui règle quand elle revient.
       </p>
     </div>
   );

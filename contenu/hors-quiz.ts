@@ -36,5 +36,8 @@ export const CARTES_HORS_QUIZ = new Set(
     // Français : méthode de dissertation (dans la fiche, pas en quiz)
     "Quels trois axes proposer pour une dissertation sur Rimbaud ?",
     "Quelle nuance est attendue dans une dissertation sur Rimbaud ?",
+    // Français : critiques de Rimbaud, culture utile en dissertation mais pas en interro
+    "Que montre Étiemble dans Le Mythe de Rimbaud (1952) ?",
+    "Que dit Claudel de Rimbaud dans sa préface de 1912 ?",
   ].map((r) => r.toLowerCase()),
 );

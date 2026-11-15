@@ -14,7 +14,7 @@ const matiere = { nom: "HGGSP", couleur: "#8a5a78", emoji: "🏛️" };
 export const HGGSP_THEME_4: ChapitrePublie[] = [
   {
     id: "hggsp-1re-t4-intro",
-    version: 5,
+    version: 6,
     definitions: DEF_HGGSP_INTRO,
     matiere,
     titre: "Thème 4 · Introduction : s'informer",
@@ -63,7 +63,7 @@ export const HGGSP_THEME_4: ChapitrePublie[] = [
           "Comment se construisent les conditions d'un accès libre et éclairé à une information fiable dans une « société de l'information » ?",
       },
       {
-        recto: "Comment l'information a-t-elle changé entre hier et aujourd'hui ?",
+        recto: "Comment la circulation de l'information a-t-elle changé entre l'imprimé et l'ère numérique ?",
         verso:
           "Hier : rare, lente, verticale (des producteurs vers le public). Aujourd'hui : surabondante, immédiate, réticulaire (en réseau).",
       },
