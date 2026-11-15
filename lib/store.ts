@@ -183,7 +183,7 @@ export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
   if (n === 0) return { niveau: 1 as const, intervalle: 0, echeance: todayISO(), facilite: borner(fac - 0.2) };
   const iv = f.intervalle;
   // Carte neuve : quatre délais bien distincts (tour 4, R3) : À revoir = tout à l'heure,
-  // Difficile = demain, Su = 2 jours, Facile = 4 jours.
+  // Difficile = demain, Je savais = 2 jours, Facile = 4 jours.
   if (iv === 0) {
     const premier = n === 1 ? 1 : n === 2 ? 2 : 4;
     return {

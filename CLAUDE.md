@@ -408,7 +408,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
   fiche porte `n`, la plus petite taille (1 à 5) à laquelle il apparaît, ce
   qui rend le curseur instantané.
   **Répétition espacée façon SM-2** (2026-11-15, `prochaineRevision()` dans `lib/store.ts`) :
-  quatre réponses (À revoir / Difficile / Su / Facile, délai affiché sous chaque bouton ;
+  quatre réponses (À revoir / Difficile / Je savais / Facile, délai affiché sous chaque bouton ;
   carte neuve : tout à l'heure, demain, 2 j, 4 j), `facilite` par carte (1,3 à 3). Une carte
   ratée repasse une fois dans la séance ; le recto reste visible au verso ; champ facultatif
   pour écrire sa réponse avant de retourner. Le quota de 20 nouvelles cartes saute pour les

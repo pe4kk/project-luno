@@ -22,7 +22,7 @@ function melanger<T>(liste: T[]): T[] {
 const NOTES: { note: NoteCarte; label: string; classe: string }[] = [
   { note: 0, label: "À revoir", classe: "!border-bad/40 !text-bad hover:!bg-bad/10" },
   { note: 1, label: "Difficile", classe: "!bg-ink/10 !text-ink hover:!bg-ink/15" },
-  { note: 2, label: "Su", classe: "!bg-accent !text-on-accent hover:!opacity-90" },
+  { note: 2, label: "Je savais", classe: "!bg-accent !text-on-accent hover:!opacity-90" },
   { note: 3, label: "Facile", classe: "!bg-ok/15 !text-ok hover:!bg-ok/25" },
 ];
 const delai = (j: number) => (j === 0 ? "tout à l'heure" : j === 1 ? "demain" : j < 30 ? `${j} j` : `${Math.round(j / 30)} mois`);
