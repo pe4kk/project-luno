@@ -261,8 +261,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     sur l'éval de cours de physique du 16/11) : premier onglet de S'exercer
     (`components/exercices/Apprendre.tsx`, `lib/apprendre.ts`, `?mode=apprendre&dst=`),
     aussi étape « Apprendre les N notions » de Préparer une éval. Chaque flashcard monte
-    par paliers : 1 Reconnaître (QCM, verso + 3 versos voisins), 2 Compléter (un des mots
-    clés les plus longs du verso caché, vérifié par `reponseJuste`), 3 De tête (réponse
+    par paliers : 1 Reconnaître (QCM, verso + 3 versos voisins), 2 Compléter (de 1 à 4 mots
+    cachés selon la longueur de la réponse, un pour 4 mots clés, demandé le 2026-11-15 :
+    « un peu simple » ; mots du vocabulaire du chapitre, ni verbe conjugué ni mot de
+    liaison ni doublon ; un champ par trou, Entrée passe au suivant, palier réussi si
+    tous sont justes ; `trousPour()`, `decouperTrous()`), 3 De tête (réponse
     comparée aux mots clés du verso, vert/rouge, puis l'élève valide ; les formules et
     équations du verso comptent aussi, `formulesDe()` : « Δv⃗ = 0⃗ » tapé tel quel, une
     fraction écrite a/b, des indices tapés vxi ou des états (aq) omis sont reconnus ;

@@ -22,6 +22,7 @@ import {
   comparer,
   composerManche,
   dansLeQuiz,
+  decouperTrous,
   estQuestion,
   preparerNotion,
   repartition,
@@ -267,7 +268,7 @@ export function ModeApprendre({
       palier: q.palier,
       forme: q.inverse ? "inverse" : q.palier === 1 ? "qcm" : q.palier === 2 ? "trou" : "tete",
       reponse: reponse.slice(0, 500),
-      ...(q.trou ? { attendu: q.trou } : {}),
+      ...(q.trous ? { attendu: q.trous.join(" | ") } : {}),
       juste: reussi,
     });
     const nouveau = reussi ? apresReussite(carte, q.palier) : apresEchec(carte, q.palier);
@@ -362,11 +363,13 @@ function Question({
   const [saisie, setSaisie] = useState("");
   const [verdict, setVerdict] = useState<boolean | null>(null);
   const [compare, setCompare] = useState(false);
-  const champ = useRef<HTMLInputElement>(null);
+  const champs = useRef<(HTMLInputElement | null)[]>([]);
+  const [mots, setMots] = useState<string[]>(() => (q.trous ?? []).map(() => ""));
+  const [justes, setJustes] = useState<boolean[] | null>(null);
   const carte = q.carte;
   const resultat = useMemo(() => (compare ? comparer(saisie, carte.verso) : null), [compare, saisie, carte.verso]);
   useEffect(() => {
-    if (q.palier === 2) champ.current?.focus({ preventScroll: true });
+    if (q.palier === 2) champs.current[0]?.focus({ preventScroll: true });
   }, [q.palier]);
 
   const [idJournal, setIdJournal] = useState<string | null>(null);
@@ -376,14 +379,20 @@ function Question({
     setIdJournal(repondre(reussi, reponse));
   };
 
-  // Palier 2 : le verso, le mot caché remplacé par un champ.
-  const morceaux = useMemo(() => {
-    if (q.palier !== 2 || !q.trou) return null;
-    const texte = sansMiseEnForme(carte.verso);
-    const m = new RegExp(`(?<![A-Za-zÀ-ÿ])${q.trou}(?![A-Za-zÀ-ÿ])`).exec(texte);
-    if (!m) return null;
-    return [texte.slice(0, m.index), texte.slice(m.index + q.trou.length)];
-  }, [q.palier, q.trou, carte.verso]);
+  // Palier 2 : le verso, chaque mot caché remplacé par un champ.
+  const morceaux = useMemo(
+    () => (q.palier === 2 && q.trous ? decouperTrous(carte.verso, q.trous) : null),
+    [q.palier, q.trous, carte.verso],
+  );
+  /** Corrige chaque trou ; la notion passe le palier si tous sont justes. */
+  const verifierTrous = (abandon = false) => {
+    if (verdict !== null || !q.trous) return;
+    const vides = mots.findIndex((m) => !m.trim());
+    if (!abandon && vides >= 0) return champs.current[vides]?.focus();
+    const j = q.trous.map((t, i) => !abandon && reponseJuste(mots[i] ?? "", [t]));
+    setJustes(j);
+    decider(j.every(Boolean), mots.join(" | "));
+  };
 
   return (
     <Carte>
@@ -399,7 +408,9 @@ function Question({
           ? "Quelle notion correspond à cette définition ?"
           : q.palier === 1 && !estQuestion(carte.recto)
             ? "Choisis ce qui correspond à :"
-            : CONSIGNES[q.palier]}
+            : q.palier === 2 && (q.trous?.length ?? 0) > 1
+              ? `Complète les ${q.trous!.length} mots qui manquent.`
+              : CONSIGNES[q.palier]}
       </p>
       {q.inverse ? (
         <p className="mt-2 rounded-xl border-l-4 border-accent bg-ink/5 px-4 py-3 text-[16px] leading-relaxed">
@@ -441,50 +452,74 @@ function Question({
         </div>
       )}
 
-      {q.palier === 2 && morceaux && (
+      {q.palier === 2 && morceaux && q.trous && (
         <form
           className="mt-4"
           onSubmit={(e) => {
             e.preventDefault();
-            if (verdict !== null) return;
-            if (!saisie.trim()) return champ.current?.focus();
-            decider(reponseJuste(saisie, [q.trou!]));
+            verifierTrous();
           }}
         >
-          <p className="rounded-xl bg-ink/5 p-3.5 text-[15px] leading-[1.9]">
-            {formule(morceaux[0])}
-            {verdict === null ? (
-              <input
-                ref={champ}
-                value={saisie}
-                onChange={(e) => setSaisie(e.target.value)}
-                aria-label="Mot qui manque"
-                autoComplete="off"
-                autoCapitalize="off"
-                spellCheck={false}
-                className="mx-1 inline-block h-[1.7em] w-[min(9em,55%)] rounded-md !border-0 !border-b-2 !border-solid !border-accent bg-surface px-1.5 py-0 align-baseline leading-none !shadow-none outline-none"
-                style={{ fontSize: 16 }}
-              />
-            ) : (
-              <span className={`mx-1 rounded-md px-1.5 font-semibold ${verdict ? "bg-ok/15 text-ok" : "bg-bad/15 text-bad"}`}>
-                {q.trou}
-              </span>
-            )}
-            {formule(morceaux[1])}
+          <p className="rounded-xl bg-ink/5 p-3.5 text-[15px] leading-[2.1]">
+            {morceaux.map((m, k) => {
+              if (typeof m === "string") return <span key={k}>{formule(m)}</span>;
+              const i = m;
+              if (verdict !== null && justes)
+                return (
+                  <span
+                    key={k}
+                    className={`mx-0.5 rounded-md px-1.5 font-semibold ${justes[i] ? "bg-ok/15 text-ok" : "bg-bad/15 text-bad"}`}
+                  >
+                    {q.trous![i]}
+                  </span>
+                );
+              return (
+                <input
+                  key={k}
+                  ref={(el) => {
+                    champs.current[i] = el;
+                  }}
+                  value={mots[i] ?? ""}
+                  onChange={(e) => setMots((l) => l.map((x, j) => (j === i ? e.target.value : x)))}
+                  onKeyDown={(e) => {
+                    // Entrée : trou suivant, puis vérification au dernier.
+                    if (e.key !== "Enter" || i === q.trous!.length - 1) return;
+                    e.preventDefault();
+                    champs.current[i + 1]?.focus();
+                  }}
+                  enterKeyHint={i === q.trous!.length - 1 ? "done" : "next"}
+                  aria-label={`Mot qui manque ${i + 1}`}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  className="mx-0.5 inline-block h-[1.7em] w-[min(7.5em,42%)] rounded-md !border-0 !border-b-2 !border-solid !border-accent bg-surface px-1.5 py-0 align-baseline leading-none !shadow-none outline-none"
+                  style={{ fontSize: 16 }}
+                />
+              );
+            })}
           </p>
           {verdict === null && (
             <div className="mt-3 flex flex-wrap gap-2">
-              <Bouton type="submit">
-                Vérifier
-              </Bouton>
-              <Bouton type="button" variante="fantome" onClick={() => decider(false)}>
+              <Bouton type="submit">Vérifier</Bouton>
+              <Bouton type="button" variante="fantome" onClick={() => verifierTrous(true)}>
                 Je ne sais pas
               </Bouton>
             </div>
           )}
-          {verdict === false && saisie.trim() && (
+          {verdict !== null && justes && q.trous.length > 1 && (
             <p className="mt-2 text-[13.5px] text-muted">
-              Tu as écrit « {saisie.trim()} ».
+              {justes.filter(Boolean).length} / {q.trous.length} mots justes
+              {verdict ? "" : " : il faut les trouver tous pour passer au palier suivant"}.
+            </p>
+          )}
+          {verdict === false && mots.some((m, i) => m.trim() && justes && !justes[i]) && (
+            <p className="mt-1 text-[13.5px] text-muted">
+              Tu as écrit :{" "}
+              {mots
+                .map((m, i) => (m.trim() && justes && !justes[i] ? `« ${m.trim()} »` : null))
+                .filter(Boolean)
+                .join(", ")}
+              .
             </p>
           )}
         </form>

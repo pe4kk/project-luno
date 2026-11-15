@@ -63,7 +63,7 @@ export type NotionManche = {
    */
   inverse?: string;
   /** Palier 2 : le mot caché dans le verso. */
-  trou?: string;
+  trous?: string[];
 };
 
 /** Part des mots clés de `b` déjà présents dans `a` (0 à 1). */
@@ -131,21 +131,64 @@ function inversePour(carte: Flashcard, memeChapitre: Flashcard[], ailleurs: Flas
 }
 
 /**
- * Le mot caché au palier 2 : un mot du vocabulaire du chapitre (les mots des rectos et
- * des définitions : « tangente », « référentiel », « colinéaires »…), absent du recto de
- * la carte. Jamais un adverbe (« numériquement ») ni un mot banal.
+ * Un mot qui revient souvent sans être du cours : un verbe conjugué (« étudie », « exerce »,
+ * « vérifié ») ou un mot de liaison (« après », « rapport »). Ne sert pas de trou.
  */
-function trouPour(carte: Flashcard, vocabulaire: Set<string>) {
+const PASSAGE = new Set("apres rapport difference lointaines exerce permet avant partir ensemble diriges change pseudo aucune aucun".split(" "));
+const motDePassage = (m: string) => PASSAGE.has(m) || /(ent|ez|ons|e|ee|ees|es|er|ie|ise)$/.test(m) && /(ent|ez|ons|ee|ees|er|ie|ise|isee?)$|^(exerc|utilis|modelis|associ|etudi|verifi)/.test(m);
+
+/** Position d'un mot entier dans un texte (sans le prendre dans un autre mot). */
+const positionMot = (texte: string, mot: string, depuis = 0) => {
+  const m = new RegExp(`(?<![A-Za-zÀ-ÿ])${mot}(?![A-Za-zÀ-ÿ])`, "g");
+  m.lastIndex = depuis;
+  return m.exec(texte)?.index ?? -1;
+};
+
+/**
+ * Les mots cachés au palier 2 (demandé le 2026-11-15 : « plus qu'un mot, c'est un peu
+ * simple ») : de 1 à 4 selon la longueur de la réponse, un trou pour 4 mots clés environ.
+ * Ce sont des mots du vocabulaire du chapitre (mots des rectos, ou mots qui reviennent
+ * dans plusieurs réponses : « tangente », « référentiel », « colinéaires »…), absents du
+ * recto de la carte. Jamais un adverbe (« numériquement ») ni un mot banal. Rangés dans
+ * l'ordre du texte.
+ */
+function trousPour(carte: Flashcard, vocabulaire: Set<string>) {
+  const texte = sansMiseEnForme(carte.verso);
   const recto = [...motsDuRecto(carte)];
-  const tous = motsCles(carte.verso)
-    .filter((m) => !/ment$/i.test(m) && !recto.some((r) => memeMot(simplifier(m), r)))
-    .sort((a, b) => b.length - a.length);
-  const duCours = tous.filter((m) => [...vocabulaire].some((v) => memeMot(simplifier(m), v)));
-  // Aucun mot du cours dans la réponse : pas de texte à trous (un mot pris au hasard,
-  // « lointaines » ou « numériquement », n'apprend rien), on passera à « De tête ».
-  const mots = duCours.slice(0, 3);
-  if (!mots.length) return undefined;
-  return mots[Math.floor(Math.random() * mots.length)];
+  const cles = motsCles(carte.verso);
+  const duCours = cles.filter(
+    (m) =>
+      !/ment$/i.test(m) &&
+      !recto.some((r) => memeMot(simplifier(m), r)) &&
+      [...vocabulaire].some((v) => memeMot(simplifier(m), v)) &&
+      positionMot(texte, m) >= 0,
+  );
+  // Aucun mot du cours dans la réponse : pas de texte à trous (un mot pris au hasard
+  // n'apprend rien), on passera à « De tête ».
+  if (!duCours.length) return undefined;
+  const nombre = Math.max(1, Math.min(4, Math.round(cles.length / 4)));
+  // Un même mot ne sert qu'une fois (« force » et « forces »).
+  const distincts = melanger(duCours).filter(
+    (m, i, l) => l.findIndex((x) => memeMot(simplifier(x), simplifier(m))) === i,
+  );
+  return distincts
+    .slice(0, nombre)
+    .sort((a, b) => positionMot(texte, a) - positionMot(texte, b));
+}
+
+/** Le texte découpé autour des trous : morceaux de texte et numéros de trous, dans l'ordre. */
+export function decouperTrous(verso: string, trous: string[]): (string | number)[] {
+  const texte = sansMiseEnForme(verso);
+  const morceaux: (string | number)[] = [];
+  let fin = 0;
+  trous.forEach((mot, i) => {
+    const p = positionMot(texte, mot, fin);
+    if (p < 0) return;
+    morceaux.push(texte.slice(fin, p), i);
+    fin = p + mot.length;
+  });
+  morceaux.push(texte.slice(fin));
+  return morceaux;
 }
 
 export function preparerNotion(
@@ -166,13 +209,21 @@ export function preparerNotion(
     palier = estCourte(carte) ? 3 : 2;
     choix = undefined;
   }
+  // Vocabulaire du chapitre : les mots des rectos, et ceux qui reviennent dans au moins
+  // deux réponses (les mots du cours, pas les mots de passage).
+  const frequence = new Map<string, number>();
+  for (const f of memeChapitre)
+    for (const m of new Set(motsCles(f.verso).map(simplifier))) frequence.set(m, (frequence.get(m) ?? 0) + 1);
   const vocabulaire = new Set(
-    memeChapitre.flatMap((f) => [...motsDuRecto(f)]).filter((m) => m.length >= 5 && !/ment$/.test(m)),
+    [
+      ...memeChapitre.flatMap((f) => [...motsDuRecto(f)]),
+      ...[...frequence].filter(([m, n]) => n >= 2 && m.length >= 6 && !motDePassage(m)).map(([m]) => m),
+    ].filter((m) => m.length >= 5 && !/ment$/.test(m) && !motDePassage(m)),
   );
-  const trou = palier === 2 ? trouPour(carte, vocabulaire) : undefined;
+  const trous = palier === 2 ? trousPour(carte, vocabulaire) : undefined;
   // Aucun mot intéressant à cacher : on passe à « De tête ».
-  if (palier === 2 && !trou) palier = 3;
-  return { chapitreId, carte, palier, choix, trou };
+  if (palier === 2 && !trous) palier = 3;
+  return { chapitreId, carte, palier, choix, trous };
 }
 
 /**
