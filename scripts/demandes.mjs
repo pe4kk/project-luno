@@ -76,6 +76,14 @@ function verifierErreurs(r) {
     for (const k of ["erreur", "conseil", "source", "chapitre"]) if (e[k] !== undefined) texteOk(e[k], `erreurs[${i}].${k}`);
   });
 }
+// Explication d'un passage du cours (type « lecon » avec meta.explication) :
+// { explication: { texte, exemple?, piege? } }, mêmes notations que contenu/.
+function verifierExplication(r) {
+  exiger(r && r.explication && typeof r.explication === "object", "explication : { texte, exemple?, piege? }");
+  texteOk(r.explication?.texte, "explication.texte");
+  if (r.explication?.exemple !== undefined) texteOk(r.explication.exemple, "explication.exemple");
+  if (r.explication?.piege !== undefined) texteOk(r.explication.piege, "explication.piege");
+}
 function verifierNote(r) {
   exiger(r && r.note && typeof r.note === "object", "note : { titre, texte }");
   texteOk(r.note?.titre, "note.titre");
@@ -111,7 +119,8 @@ if (commande === "liste") {
   const [ligne] = requete("GET", `?id=eq.${id}&select=id,type,statut,meta`);
   if (!ligne) throw new Error(`Demande ${id} introuvable`);
   const reponse = JSON.parse(readFileSync(arg, "utf8"));
-  if (ligne.type === "lecon") verifierLecon(reponse);
+  if (ligne.type === "lecon" && ligne.meta?.explication) verifierExplication(reponse);
+  else if (ligne.type === "lecon") verifierLecon(reponse);
   else if (ligne.type === "erreurs" && ligne.meta?.bilan) verifierBilan(reponse);
   else if (ligne.type === "erreurs") verifierErreurs(reponse);
   else if (ligne.meta?.note) verifierNote(reponse);

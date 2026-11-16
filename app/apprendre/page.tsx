@@ -60,7 +60,7 @@ function Apprendre() {
   const lecons = toutes.filter((l) => !l.methode);
   const methodes = toutes.filter((l) => l.methode);
   const lecon = toutes.find((l) => l.id === params.get("l"));
-  const enCours = demandes.filter((d) => d.type === "lecon" && d.statut !== "prete");
+  const enCours = demandes.filter((d) => d.type === "lecon" && !d.meta.explication && d.statut !== "prete");
   const [sujet, setSujet] = useState("");
   const [niveau, setNiveau] = useState("Première");
   const [precision, setPrecision] = useState("");

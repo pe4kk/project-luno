@@ -209,6 +209,20 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     journal.set(e.id, deja ? { ...e, ...deja, signal: deja.signal ?? e.signal, remarque: deja.remarque ?? e.remarque } : e);
   }
 
+  // Exos types : par question, la meilleure note gagne ; la copie la plus récente reste.
+  const rang = { rate: 1, aide: 2, seul: 3 } as const;
+  const exos = { ...(b.exos ?? {}) };
+  for (const [k, x] of Object.entries(a.exos ?? {})) {
+    const y = exos[k];
+    if (!y) {
+      exos[k] = x;
+      continue;
+    }
+    const recent = x.date >= y.date ? x : y;
+    const note = (rang[x.note ?? "rate"] ?? 0) >= (rang[y.note ?? "rate"] ?? 0) ? (x.note ?? y.note) : y.note;
+    exos[k] = { ...recent, note };
+  }
+
   const publies = { ...b.publies };
   for (const [k, v] of Object.entries(a.publies)) publies[k] = Math.max(v, publies[k] ?? 0);
 
@@ -220,6 +234,7 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     erreurs,
     notes,
     journal: [...journal.values()].sort((x, y) => x.date.localeCompare(y.date)).slice(-400),
+    exos,
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };

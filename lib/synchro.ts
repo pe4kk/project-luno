@@ -83,6 +83,7 @@ function lesDonnees(): DonneesSynchro {
     erreurs: s.erreurs,
     notes: s.notes,
     journal: s.journal,
+    exos: s.exos,
     publies: s.publies,
     calendrier: s.calendrier,
   };
@@ -210,6 +211,7 @@ export function demarrerSynchro() {
       s.erreurs === avant.erreurs &&
       s.notes === avant.notes &&
       s.journal === avant.journal &&
+      s.exos === avant.exos &&
       s.calendrier === avant.calendrier &&
       s.publies === avant.publies
     )

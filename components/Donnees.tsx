@@ -114,6 +114,7 @@ export function BoutonDonnees() {
         erreurs: s.erreurs,
         notes: s.notes,
         journal: s.journal,
+        exos: s.exos,
         publies: s.publies,
         calendrier: s.calendrier,
       },

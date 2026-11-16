@@ -17,6 +17,7 @@ import {
   Plus,
   ScrollText,
   Search,
+  ClipboardCheck,
   Send,
   Trash2,
   Upload,
@@ -44,6 +45,8 @@ import { DessinSchema } from "@/components/Schema";
 import { Curseur } from "@/components/Curseur";
 import { OngletDefinitions } from "./Definitions";
 import { OngletDates } from "./Dates";
+import { OngletExosTypes, exosTypesDe } from "./ExosTypes";
+import { ZoneExplicable } from "./Explications";
 import { Illustration } from "@/components/Illustration";
 import { classePastille, usePastille } from "@/lib/pastille";
 import { Emoji } from "@/components/Emoji";
@@ -54,6 +57,7 @@ const ONGLETS = [
   { id: "dates", label: "Dates", icone: CalendarClock },
   { id: "flashcards", label: "Flashcards", icone: Layers },
   { id: "fiche", label: "Fiche", icone: ScrollText },
+  { id: "exos", label: "Exos types", icone: ClipboardCheck },
 ] as const;
 type Onglet = (typeof ONGLETS)[number]["id"];
 
@@ -75,7 +79,9 @@ export function VueChapitre({
   const onglets = ONGLETS.filter(
     (o) =>
       (o.id !== "defs" || (chapitre.definitions?.length ?? 0) > 0) &&
-      (o.id !== "dates" || (chapitre.dates?.length ?? 0) > 0),
+      (o.id !== "dates" || (chapitre.dates?.length ?? 0) > 0) &&
+      // Exos types : chapitres scientifiques qui en ont (contenu/exos-types.ts).
+      (o.id !== "exos" || exosTypesDe(chapitre) !== undefined),
   );
   const onglet: Onglet = onglets.some((o) => o.id === ongletDemande)
     ? (ongletDemande as Onglet)
@@ -164,7 +170,17 @@ export function VueChapitre({
             style={{ color: onglet === id ? foncee : "var(--muted)" }}
           >
             <Icone size={16} className="relative hidden sm:block" />
-            <span className="relative">{label}</span>
+            {/* « Exos types » devient « Exos » sur petit écran : cinq onglets tiennent à 320 px. */}
+            <span className="relative">
+              {id === "exos" ? (
+                <>
+                  <span className="max-[419px]:hidden">{label}</span>
+                  <span className="min-[420px]:hidden">Exos</span>
+                </>
+              ) : (
+                label
+              )}
+            </span>
             {id === "flashcards" && chapitre.flashcards.length > 0 && (
               <span className="relative rounded-full bg-ink/10 px-1.5 text-[11.5px] max-[419px]:hidden">
                 {chapitre.flashcards.length}
@@ -188,28 +204,44 @@ export function VueChapitre({
           {onglet === "cours" && (
             <OngletCours chapitre={chapitre} envoyer={() => setEnvoi(true)} />
           )}
+          {/* Sélectionner un passage du cours propose « Expliquer » (demande à Claude). */}
           {onglet === "defs" && (
-            <OngletDefinitions
-              chapitre={chapitre}
-              matiere={matiere}
-              envoyer={() => setEnvoi(true)}
-            />
+            <ZoneExplicable chapitre={chapitre} matiere={matiere.nom} onglet="defs">
+              <OngletDefinitions
+                chapitre={chapitre}
+                matiere={matiere}
+                envoyer={() => setEnvoi(true)}
+              />
+            </ZoneExplicable>
           )}
-          {onglet === "dates" && <OngletDates chapitre={chapitre} matiere={matiere} />}
+          {onglet === "dates" && (
+            <ZoneExplicable chapitre={chapitre} matiere={matiere.nom} onglet="dates">
+              <OngletDates chapitre={chapitre} matiere={matiere} />
+            </ZoneExplicable>
+          )}
           {onglet === "flashcards" && (
-            <OngletFlashcards
-              chapitre={chapitre}
-              envoyer={() => setEnvoi(true)}
-              versCours={() => setOnglet("cours")}
-            />
+            <ZoneExplicable chapitre={chapitre} matiere={matiere.nom} onglet="flashcards">
+              <OngletFlashcards
+                chapitre={chapitre}
+                envoyer={() => setEnvoi(true)}
+                versCours={() => setOnglet("cours")}
+              />
+            </ZoneExplicable>
           )}
           {onglet === "fiche" && (
-            <OngletFiche
-              chapitre={chapitre}
-              matiere={matiere}
-              envoyer={() => setEnvoi(true)}
-              versCours={() => setOnglet("cours")}
-            />
+            <ZoneExplicable chapitre={chapitre} matiere={matiere.nom} onglet="fiche">
+              <OngletFiche
+                chapitre={chapitre}
+                matiere={matiere}
+                envoyer={() => setEnvoi(true)}
+                versCours={() => setOnglet("cours")}
+              />
+            </ZoneExplicable>
+          )}
+          {onglet === "exos" && (
+            <ZoneExplicable chapitre={chapitre} matiere={matiere.nom} onglet="exos">
+              <OngletExosTypes chapitre={chapitre} matiere={matiere} />
+            </ZoneExplicable>
           )}
         </motion.div>
       </AnimatePresence>

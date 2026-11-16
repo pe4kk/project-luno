@@ -443,4 +443,41 @@ export type Donnees = {
   notes: NoteMatiere[];
   /** Journal des réponses au quiz (mode Apprendre). */
   journal?: EntreeQuiz[];
+  /** Exos types : copie et note de chaque question, clé « chapitre publié/exo/numéro ». */
+  exos?: Record<string, ProgresQuestion>;
 };
+
+/** Réussite d'une question d'exo type, notée par l'élève après la correction. */
+export type NoteQuestion = "seul" | "aide" | "rate";
+export type ProgresQuestion = {
+  /** Absente tant que la question n'a pas été corrigée. */
+  note?: NoteQuestion;
+  /** Ce que l'élève a rédigé dans « Ma copie ». */
+  copie?: string;
+  /** Date de la dernière modification (ISO), pour la fusion entre appareils. */
+  date: string;
+};
+
+/** Un type de question à savoir faire dans un chapitre (« Calculer une vitesse par encadrement »). */
+export type TypeQuestion = { id: string; titre: string; rappel?: string; /** Nom court pour « Couvre : … ». */ court?: string };
+export type QuestionExo = {
+  texte: string;
+  /** Identifiants des types de question couverts. */
+  types: string[];
+  /** Correction rédigée comme le prof l'attend (notation des contenus). */
+  correction: string;
+  points?: number;
+  schema?: Schema;
+};
+/** Un exercice entier, sujet et correction, qui couvre plusieurs types de question. */
+export type ExoType = {
+  id: string;
+  titre: string;
+  duree?: string;
+  /** D'où vient le sujet (« Inspiré d'un sujet de bac 2023 », « Exercice du prof »). */
+  source?: string;
+  enonce: string;
+  schema?: Schema;
+  questions: QuestionExo[];
+};
+export type ExosTypes = { types: TypeQuestion[]; exos: ExoType[] };

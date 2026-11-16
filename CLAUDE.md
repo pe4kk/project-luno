@@ -388,6 +388,30 @@ fiches de révision ; le slider règle la longueur de la fiche.
     sources, compare aux documents du prof, note sur 10). Six tours : 7,0 → 7,5 → 8,0 → 8,3 →
     8,5 → 8,8. Restes signalés : délais adaptés à l'historique (fait le 2026-11-15 : FSRS),
     deux réussites de tête sur des jours différents avant « Maîtrisée » (à discuter).
+  - **Exos types** (2026-11-16, maquettes A + B choisies,
+    https://claude.ai/artifact/2iBmZhc3EGYuLyv3Ex4HAg) : onglet « Exos types » (« Exos » sous
+    420 px) des chapitres scientifiques qui en ont (`components/travail/ExosTypes.tsx`,
+    `?o=exos&e=<exo>&v=sujet|copie|correction`). Contenu publié pour tous dans
+    `contenu/exos-types.ts` (`EXOS_TYPES`, clé = id du chapitre publié, lu directement, pas
+    copié dans les données) : `types` (id, titre, `court`, `rappel`) et le moins d'`exos`
+    entiers possible qui couvrent tous les types (énoncé, schéma, questions avec `types`,
+    `correction` rédigée comme le prof, `points`, `source`). Faits : chap. 9, chap. 11,
+    forces, oxydoréduction, dérivation (2 exos chacun, calculs refaits). A : liste des types
+    cochés (vert seul, cuivre avec la correction, rouge raté), exo conseillé. B : Sujet /
+    Ma copie (SaisieFormule, enregistrée) / Correction (cachée tant qu'on n'a pas fini,
+    « Voir quand même »), puis « Réussi seul / Avec la correction / Raté » par question.
+    Progression `exos` des données (synchronisée, clé « publié/exo/numéro », la meilleure
+    note gagne à la fusion). Sujets inspirés de sujets type bac et de manuels ; les
+    exercices de ses profs passeront devant s'il les envoie.
+  - **Demander une explication** (2026-11-16, option A) : `components/travail/Explications.tsx`.
+    Dans Déf, Dates, Flashcards, Fiche et Exos types (`ZoneExplicable`), sélectionner un
+    passage fait apparaître la bulle « Expliquer » (suivie par `selectionchange`) ; on dit ce
+    qui bloque (écrit ou dicté) et la demande part à Claude (type « lecon » avec
+    `meta.explication`, `passage`, `chapitreId`, `publieId`, `onglet` ; compte connecté
+    seulement). Réponse `{ explication: { texte, exemple?, piege? } }` (vérifiée par
+    `verifierExplication()`), affichée sous « Tes explications » en haut de l'onglet, avec
+    le passage cité ; en attente : heure du prochain passage. Consigne de la tâche planifiée
+    mise à jour le 2026-11-16.
   - `ZoneAction` (`components/ui.tsx`) : entoure le bouton principal d'un écran ; s'il
     apparaît sous la barre du bas, la page défile pour le montrer. À utiliser pour tout
     nouveau bouton d'action qui apparaît après une réponse.
@@ -772,17 +796,9 @@ un PDF ou une photo directement dans le chat.
 
 ## Prochaines étapes
 
-0. **En attente de son choix (2026-11-15)** : maquettes publiées
-   (https://claude.ai/artifact/2iBmZhc3EGYuLyv3Ex4HAg) pour ses « Lunotes » :
-   - onglet **« Exos types »** dans chaque chapitre scientifique : le moins d'exercices
-     entiers corrigés possible, qui couvrent tous les types de questions du chapitre ;
-     sujet d'un côté, correction claire à part ; à la fin, tous les types maîtrisés.
-     Exos du prof s'il en envoie, sinon sujets type bac et manuels trouvés en ligne
-     (vérifiés). Options : A liste des types, B sujet puis correction, C carte types × exos ;
-     proposé A + B.
-   - **demander une explication sur une partie du cours** : A sélectionner puis demander
-     (réponse au prochain passage de la tâche planifiée), B « ? » déjà rédigé, C les deux à
-     la suite ; proposé C.
+0. Exos types : il enverra peut-être les exercices de ses profs ; si oui, les mettre à
+   la place des sujets inspirés de manuels (`source: "Exercice du prof"`). Tester une
+   explication de bout en bout avec son compte (réponse de la tâche planifiée affichée).
 
 1. Proposer de reprendre ses autres fiches existantes (voir « Ajouter du
    contenu ») et traiter les nouveaux cours qu'il envoie.

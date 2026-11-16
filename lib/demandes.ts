@@ -28,6 +28,8 @@ export type ReponseErreurs = {
  * par Claude, rangé dans l'onglet « Notes » de la matière.
  */
 export type ReponseNote = { note: { titre: string; texte: string } };
+/** Réponse à une demande d'explication : texte, et au besoin un exemple et le piège à éviter. */
+export type ReponseExplication = { explication: { texte: string; exemple?: string; piege?: string } };
 
 export type Demande = {
   id: string;
@@ -45,9 +47,18 @@ export type Demande = {
     matieres?: string[];
     /** Texte à taper pour l'onglet « Notes » (passe par le type « cours »). */
     note?: boolean;
+    /**
+     * Explication d'un passage du cours (passe par le type « lecon ») : le passage
+     * sélectionné, le chapitre (id local et id publié) et l'onglet d'où vient la demande.
+     */
+    explication?: boolean;
+    passage?: string;
+    chapitreId?: string;
+    publieId?: string;
+    onglet?: string;
   };
   statut: "en_attente" | "prete" | "erreur";
-  reponse: (Lecon | ChapitrePublie | ReponseErreurs | ReponseNote) | null;
+  reponse: (Lecon | ChapitrePublie | ReponseErreurs | ReponseNote | ReponseExplication) | null;
   erreur: string | null;
   cree: string;
   traite: string | null;
@@ -189,10 +200,19 @@ export const idReponse = (d: Demande) => `dem-${d.id}`;
 /** Les bilans d'interro blanche demandés à Claude, du plus récent au plus ancien. */
 export const bilans = (liste: Demande[]) => liste.filter((d) => d.type === "erreurs" && d.meta.bilan);
 
+/** Les explications demandées sur un chapitre (id local ou id publié), de la plus récente à la plus ancienne. */
+export const explicationsDe = (liste: Demande[], chapitreId: string, publieId?: string) =>
+  liste.filter(
+    (d) =>
+      d.type === "lecon" &&
+      d.meta.explication &&
+      (d.meta.chapitreId === chapitreId || (publieId !== undefined && d.meta.publieId === publieId)),
+  );
+
 /** Les leçons rédigées pour cet utilisateur. */
 export function leconsPerso(liste: Demande[]): Lecon[] {
   return liste
-    .filter((d) => d.type === "lecon" && d.statut === "prete" && d.reponse)
+    .filter((d) => d.type === "lecon" && !d.meta.explication && d.statut === "prete" && d.reponse)
     .map((d) => ({ ...(d.reponse as Lecon), id: idReponse(d) }));
 }
 

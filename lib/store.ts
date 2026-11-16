@@ -16,6 +16,7 @@ import type {
   NoteMatiere,
   Schema,
   Tache,
+  ProgresQuestion,
 } from "./types";
 import { dansJours, joursAvant, todayISO } from "./dates";
 import { delaiPour, reviser, type EtatFsrs, type Grade } from "./fsrs";
@@ -137,6 +138,8 @@ type Etat = Donnees & {
   /** Mode Apprendre : garde une réponse dans le journal (lu par Claude pour améliorer les quiz). */
   noterQuiz: (e: EntreeQuiz) => void;
   signalerQuiz: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
+  /** Exos types : enregistre la copie ou la note d'une question (clé « publié/exo/numéro »). */
+  majExo: (cle: string, p: Partial<Omit<ProgresQuestion, "date">>) => void;
   /** Mode Apprendre : enregistre le palier atteint par une carte. */
   majPalier: (chapitreId: string, carteId: string, palier: number) => void;
 
@@ -240,6 +243,7 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   erreurs: s.erreurs,
   notes: s.notes,
   journal: s.journal,
+  exos: s.exos,
   calendrier: s.calendrier,
 });
 
@@ -253,6 +257,11 @@ export const useLuno = create<Etat>()(
       erreurs: [],
       notes: [],
       journal: [],
+      exos: {},
+      majExo: (cle, p) =>
+        set((s) => ({
+          exos: { ...(s.exos ?? {}), [cle]: { ...(s.exos ?? {})[cle], ...p, date: new Date().toISOString() } },
+        })),
       noterQuiz: (e) => set((s) => ({ journal: [...(s.journal ?? []), e].slice(-JOURNAL_MAX) })),
       signalerQuiz: (id, signal, remarque) =>
         set((s) => ({
@@ -662,6 +671,7 @@ export const useLuno = create<Etat>()(
           erreurs: [],
           notes: [],
           journal: [],
+          exos: {},
           publies: {},
           calendrier: null,
         })),
@@ -682,6 +692,7 @@ export const useLuno = create<Etat>()(
         erreurs: s.erreurs,
         notes: s.notes,
         journal: s.journal,
+        exos: s.exos,
         publies: s.publies,
         calendrier: s.calendrier,
         jour: s.jour,
@@ -741,6 +752,7 @@ export function normaliser(
     erreurs: d.erreurs ?? [],
     notes: (d.notes ?? []).map((n) => ({ ...n, documents: n.documents ?? [], modifie: n.modifie ?? 0 })),
     journal: (d.journal ?? []).slice(-JOURNAL_MAX),
+    exos: d.exos ?? {},
     publies,
     calendrier: d.calendrier ?? null,
   };
