@@ -439,7 +439,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
   `revueLe` ; à chaque réponse, elles sont recalculées selon le temps écoulé, et le délai
   vise 90 % de chances de s'en souvenir. Quatre réponses (À revoir / Difficile / Je savais /
   Facile, délai affiché sous chaque bouton ; carte neuve : tout à l'heure, demain, 4 j,
-  14 j). Les cartes de l'ancien système reprennent leur intervalle comme stabilité et leur
+  14 j ; « Je savais » en dégradé cuivré de la pastille d'onglet en thème clair, classe
+  `bouton-je-savais`, choisi le 2026-11-16 parmi 6 couleurs : la terracotta tirait sur le
+  rouge ; thème sombre inchangé). Les cartes de l'ancien système reprennent leur intervalle comme stabilité et leur
   `facilite` (SM-2, plus utilisée) comme difficulté. Une carte
   ratée repasse une fois dans la séance ; le recto reste visible au verso ; champ facultatif
   pour écrire sa réponse avant de retourner. Le quota de 20 nouvelles cartes saute pour les

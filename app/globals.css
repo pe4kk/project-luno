@@ -107,6 +107,19 @@ h3,
   background: var(--copper-grad);
 }
 
+/* Bouton « Je savais » des flashcards : dégradé cuivré et texte anthracite en thème
+   clair, accent cuivre en thème sombre (inchangé). */
+.bouton-je-savais {
+  background: linear-gradient(120deg, #a8674a, #e0a887 45%, #b9775a);
+  color: #2a2a2d;
+  box-shadow: 0 6px 16px -6px rgb(201 139 107 / 0.9);
+}
+:root[data-theme="dark"] .bouton-je-savais {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
 /* Petit titre en capitales espacées */
 .surtitre {
   font-size: 12.5px;
