@@ -419,7 +419,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     **fait** de culture générale utile en HGGSP, une **œuvre** (peinture avec la vraie image de
     Wikimedia Commons, texte ou discours court ou résumé ; liée au programme environ une fois sur
     deux, `programme`) et une **actualité** vérifiée (événement de 3 jours au plus, deux sources
-    indépendantes, n'importe quel sujet). HGGSP visée pour l'instant ; pour lui seul (amis : pas
+    indépendantes, n'importe quel sujet ; **la plus importante du moment**, celle qui fait la une
+    de la plupart des grands médias, pas une curiosité : demandé le 2026-11-18). HGGSP visée pour l'instant ; pour lui seul (amis : pas
     prévu). « Je connais déjà » range l'id dans `connues` des données (synchronisé, union) ; le
     passage suivant de la tâche remplace l'élément et garde l'ancien dans `anciens`. Historique :
     page `/decouvertes` (filtres, état « Déjà connue »). Lignes de la table `demandes` (type
@@ -436,7 +437,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     inverser : vocabulaire et définitions, langues (FR → EN/ES surtout), dates. Jamais : cartes-
     questions, méthodes, listes, formules. Carte inversée = progression FSRS à part, jamais le même
     jour que sa sœur, mots de la réponse cachés dans la définition. Marquée par Claude à la rédaction.
- : entoure le bouton principal d'un écran ; s'il
+  - `ZoneAction` (`components/ui.tsx`) : entoure le bouton principal d'un écran ; s'il
     apparaît sous la barre du bas, la page défile pour le montrer. À utiliser pour tout
     nouveau bouton d'action qui apparaît après une réponse.
   - Recherche : requête gardée dans l'adresse (`?q=`), une faute de frappe tolérée (6 lettres et plus).
