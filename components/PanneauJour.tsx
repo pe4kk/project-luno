@@ -27,7 +27,7 @@ export function PanneauJour() {
   const aFaire = s.taches
     .filter((t) => !t.fait)
     .sort((a, b) => (a.echeance || "9999").localeCompare(b.echeance || "9999"));
-  const dues = revisionDuJour(s.chapitres, s.dsts, s.jour).cartes.length;
+  const dues = revisionDuJour(s.chapitres, s.dsts, s.jour, s.reglages?.nouvellesParJour).cartes.length;
 
   return (
     <aside className="sticky top-24 flex max-h-[calc(100dvh-7rem)] flex-col gap-4 overflow-y-auto pb-6">

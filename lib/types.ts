@@ -42,6 +42,10 @@ export type Flashcard = {
   leurres?: string[];
   /** Pas posée dans le quiz du mode Apprendre (méthode, astuce, détail hors DST). */
   horsQuiz?: boolean;
+  /** Nombre d'oublis (« À revoir » sur une carte déjà sue) : 6 et plus = carte « sangsue ». */
+  oublis?: number;
+  /** Suspendue : elle ne revient plus en révision tant qu'on ne l'a pas réactivée. */
+  suspendue?: boolean;
 };
 
 /** Coordonnées dans un schéma : x vers la droite, y vers le bas. */
@@ -445,6 +449,38 @@ export type Donnees = {
   journal?: EntreeQuiz[];
   /** Exos types : copie et note de chaque question, clé « chapitre publié/exo/numéro ». */
   exos?: Record<string, ProgresQuestion>;
+  /** Historique des révisions de flashcards (statistiques, ajustement de FSRS). */
+  revisions?: EntreeRevision[];
+  reglages?: Reglages;
+};
+
+/** Une réponse à une flashcard (révision, mode Apprendre ou QCM), gardée dans l'historique. */
+export type EntreeRevision = {
+  id: string;
+  /** La carte : « recto|verso » en minuscules (même clé pour une carte publiée dans deux chapitres). */
+  carte: string;
+  chapitre: string;
+  /** Date et heure (ISO). */
+  date: string;
+  /** 0 À revoir, 1 Difficile, 2 Je savais, 3 Facile. */
+  note: 0 | 1 | 2 | 3;
+  /** Délai donné à la carte (jours ; 0 = le jour même). */
+  intervalle: number;
+  /** Carte jamais vue avant cette réponse. */
+  nouvelle?: boolean;
+};
+
+/** Réglages de la répétition espacée (page Statistiques), synchronisés. */
+export type Reglages = {
+  /** Taux de réussite visé (0,80 à 0,95 ; 0,90 par défaut, comme Anki). */
+  retention?: number;
+  /** Nouvelles cartes par jour (20 par défaut). */
+  nouvellesParJour?: number;
+  /** Poids FSRS ajustés sur l'historique (17 nombres), absents = poids par défaut. */
+  poids?: number[];
+  /** Date de l'ajustement et nombre de révisions utilisées. */
+  ajusteLe?: string;
+  ajusteSur?: number;
 };
 
 /** Réussite d'une question d'exo type, notée par l'élève après la correction. */

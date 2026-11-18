@@ -39,7 +39,7 @@ export default function Accueil() {
   const prochain = aVenir[0];
   const matiere = (id: string) => matieres.find((m) => m.id === id);
   const cartes = chapitres.flatMap((c) => c.flashcards);
-  const duJour = revisionDuJour(chapitres, dsts, s.jour);
+  const duJour = revisionDuJour(chapitres, dsts, s.jour, s.reglages?.nouvellesParJour);
   const dues = duJour.cartes.length;
   const revuesAujourdhui = s.jour.date === todayISO() ? s.jour.revues : 0;
   const semaine = aVenir.filter((d) => joursAvant(d.date) <= 7);
@@ -172,9 +172,14 @@ export default function Accueil() {
                   : revuesAujourdhui
                     ? `${pluriel(revuesAujourdhui, "déjà revue", "déjà revues")} aujourd'hui`
                     : duJour.plusTard
-                      ? `${duJour.plusTard} autres les jours suivants (${QUOTA_NOUVELLES} nouvelles par jour, sans limite pour un DST dans 3 jours)`
+                      ? `${duJour.plusTard} autres les jours suivants (${s.reglages?.nouvellesParJour ?? QUOTA_NOUVELLES} nouvelles par jour, sans limite pour un DST dans 3 jours)`
                       : pluriel(dues, "carte", "cartes")}
             </p>
+            {revuesAujourdhui > 0 && (
+              <Link href="/statistiques" className="mt-1.5 text-[13px] font-semibold text-accent underline-offset-2 hover:underline">
+                Mes statistiques
+              </Link>
+            )}
             {dues > 0 && (
               <Link
                 href={lienTravail({ r: "tout" })}

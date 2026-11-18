@@ -115,6 +115,8 @@ export function BoutonDonnees() {
         notes: s.notes,
         journal: s.journal,
         exos: s.exos,
+        revisions: s.revisions,
+        reglages: s.reglages,
         publies: s.publies,
         calendrier: s.calendrier,
       },

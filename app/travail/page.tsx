@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { QUOTA_NOUVELLES, revisionDuJour as revisionDuJour2 } from "@/lib/revision";
+import { QUOTA_NOUVELLES, cartesEnAvance, cartesRateesAujourdhui, revisionDuJour as revisionDuJour2 } from "@/lib/revision";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -15,6 +15,7 @@ import {
   Pencil,
   Plus,
   Trash2,
+  BarChart3,
 } from "lucide-react";
 import { COULEURS, EMOJIS, encre, estDue, pastel, useLuno } from "@/lib/store";
 import type { Matiere } from "@/lib/types";
@@ -64,9 +65,12 @@ function Travail() {
       (c) => c.id === params.get("c") && c.matiereId === matiere?.id,
     ) ?? null;
   const revisionDuJour = params.get("r") === "tout";
+  // Révisions sur mesure, lancées depuis les statistiques.
+  const surMesure = params.get("r") === "ratees" ? "ratees" : params.get("r") === "avance" ? "avance" : null;
   // « Préparer » un DST depuis l'accueil : toutes les cartes de ses chapitres.
   const dstRevise = s.dsts.find((d) => d.id === params.get("r"));
-  const duJour = revisionDuJour2(chapitres, s.dsts, s.jour);
+  const quota = s.reglages?.nouvellesParJour ?? QUOTA_NOUVELLES;
+  const duJour = revisionDuJour2(chapitres, s.dsts, s.jour, quota);
   // L'onglet « Bac » (épreuve anticipée) n'existe que dans la matière Français.
   const avecBac = matiere?.nom === "Français";
   const o = params.get("o");
@@ -78,6 +82,26 @@ function Travail() {
   const [fenetre, setFenetre] = useState<Matiere | true | null>(null);
   const [titreChapitre, setTitreChapitre] = useState("");
 
+  if (surMesure) {
+    const cartes = surMesure === "ratees" ? cartesRateesAujourdhui(chapitres, s.revisions ?? []) : cartesEnAvance(chapitres, 3);
+    return (
+      <div>
+        <EnTete
+          titre={surMesure === "ratees" ? "Les cartes ratées aujourd'hui" : "Réviser en avance"}
+          sousTitre={
+            surMesure === "ratees"
+              ? "Une deuxième chance avant de dormir : tes réponses comptent comme d'habitude."
+              : "Les cartes prévues dans les 3 prochains jours. Utile la veille d'un contrôle ; sinon, mieux vaut attendre leur jour."
+          }
+        />
+        {cartes.length > 0 ? (
+          <Revision cartes={cartes} terminer={() => router.push("/statistiques")} />
+        ) : (
+          <EtatVide icone={<Check size={26} />} titre="Rien à revoir ici" texte="Aucune carte ne correspond pour l'instant." />
+        )}
+      </div>
+    );
+  }
   if (revisionDuJour || dstRevise) {
     const deDst = dstRevise
       ? chapitres.filter((c) => dstRevise.chapitreIds.includes(c.id))
@@ -99,7 +123,7 @@ function Travail() {
             dstRevise
               ? `Les cartes de ${pluriel(deDst.length, "chapitre")} au programme.`
               : duJour.plusTard
-                ? `Tes cartes à revoir, et ${QUOTA_NOUVELLES} nouvelles au plus par jour : ${pluriel(duJour.plusTard, "nouvelle carte", "nouvelles cartes")} t'attendent les jours suivants.`
+                ? `Tes cartes à revoir, et ${quota} nouvelles au plus par jour : ${pluriel(duJour.plusTard, "nouvelle carte", "nouvelles cartes")} t'attendent les jours suivants.`
                 : "Toutes tes cartes à revoir, toutes matières confondues."
           }
         />
@@ -337,9 +361,17 @@ function Travail() {
               titre="Travail"
               sousTitre="Tes matières, leurs chapitres, tes cours, flashcards et fiches."
               action={
-                <Bouton onClick={() => setFenetre(true)}>
-                  <Plus size={17} /> Nouvelle matière
-                </Bouton>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/statistiques"
+                    className="inline-flex min-h-11 items-center gap-2 rounded-[10px] border border-line bg-surface px-4 text-[14.5px] font-medium transition-colors hover:border-ink/30"
+                  >
+                    <BarChart3 size={17} /> Statistiques
+                  </Link>
+                  <Bouton onClick={() => setFenetre(true)}>
+                    <Plus size={17} /> Nouvelle matière
+                  </Bouton>
+                </div>
               }
             />
             {matieres.length === 0 ? (

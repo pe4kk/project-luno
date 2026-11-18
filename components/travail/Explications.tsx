@@ -129,7 +129,7 @@ export function ZoneExplicable({
   );
 }
 
-function FenetreExplication({
+export function FenetreExplication({
   passage,
   fermer,
   chapitre,

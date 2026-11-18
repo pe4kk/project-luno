@@ -223,6 +223,10 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     exos[k] = { ...recent, note };
   }
 
+  // Historique des révisions : union par identifiant, dans l'ordre des dates.
+  const revisions = new Map((b.revisions ?? []).map((r) => [r.id, r]));
+  for (const r of a.revisions ?? []) revisions.set(r.id, r);
+
   const publies = { ...b.publies };
   for (const [k, v] of Object.entries(a.publies)) publies[k] = Math.max(v, publies[k] ?? 0);
 
@@ -235,6 +239,8 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     notes,
     journal: [...journal.values()].sort((x, y) => x.date.localeCompare(y.date)).slice(-400),
     exos,
+    revisions: [...revisions.values()].sort((x, y) => x.date.localeCompare(y.date)).slice(-6000),
+    reglages: { ...(b.reglages ?? {}), ...(a.reglages ?? {}) },
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };

@@ -84,6 +84,8 @@ function lesDonnees(): DonneesSynchro {
     notes: s.notes,
     journal: s.journal,
     exos: s.exos,
+    revisions: s.revisions,
+    reglages: s.reglages,
     publies: s.publies,
     calendrier: s.calendrier,
   };
@@ -212,6 +214,8 @@ export function demarrerSynchro() {
       s.notes === avant.notes &&
       s.journal === avant.journal &&
       s.exos === avant.exos &&
+      s.revisions === avant.revisions &&
+      s.reglages === avant.reglages &&
       s.calendrier === avant.calendrier &&
       s.publies === avant.publies
     )

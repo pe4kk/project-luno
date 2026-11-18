@@ -1,6 +1,32 @@
 import { joursAvant, todayISO } from "./dates";
-import { estDue } from "./store";
-import type { Chapitre, Dst } from "./types";
+import { cleCarte, estDue } from "./store";
+import type { Chapitre, Dst, EntreeRevision } from "./types";
+
+/**
+ * Révisions sur mesure (comme les « paquets filtrés » d'Anki), sans toucher au programme
+ * de la répétition espacée : les cartes ratées aujourd'hui, ou celles des prochains jours.
+ */
+export function cartesRateesAujourdhui(chapitres: Chapitre[], revisions: EntreeRevision[]): CarteDuJour[] {
+  const aujourdhui = todayISO();
+  const ratees = new Set(revisions.filter((r) => r.note === 0 && r.date.slice(0, 10) === aujourdhui).map((r) => r.carte));
+  return uneFois(chapitres, (f) => !f.suspendue && ratees.has(cleCarte(f)));
+}
+export function cartesEnAvance(chapitres: Chapitre[], jours = 3): CarteDuJour[] {
+  const aujourdhui = todayISO();
+  return uneFois(chapitres, (f) => !f.suspendue && f.niveau > 0 && f.echeance > aujourdhui && joursAvant(f.echeance) <= jours);
+}
+/** Une seule fois chaque carte (une carte peut être publiée dans deux chapitres). */
+function uneFois(chapitres: Chapitre[], garder: (f: Chapitre["flashcards"][number]) => boolean): CarteDuJour[] {
+  const vues = new Set<string>();
+  return chapitres.flatMap((c) =>
+    c.flashcards.filter((f) => {
+      const k = cleCarte(f);
+      if (!garder(f) || vues.has(k)) return false;
+      vues.add(k);
+      return true;
+    }).map((f) => ({ chapitreId: c.id, carteId: f.id })),
+  );
+}
 
 /**
  * Révision du jour avec un quota de nouvelles cartes.
@@ -18,6 +44,7 @@ export function revisionDuJour(
   chapitres: Chapitre[],
   dsts: Dst[],
   jour: { date: string; nouvelles: number },
+  quotaNouvelles: number = QUOTA_NOUVELLES,
 ) {
   const aujourdhui = todayISO();
   const ordonnes = trierParDst(chapitres, dsts);
@@ -38,7 +65,7 @@ export function revisionDuJour(
   const urgentes = nouvelles.filter((x) => proches.has(x.chapitreId));
   const autres = nouvelles.filter((x) => !proches.has(x.chapitreId));
   const dejaVues = jour.date === aujourdhui ? jour.nouvelles : 0;
-  const quota = Math.max(0, QUOTA_NOUVELLES - dejaVues - urgentes.length);
+  const quota = Math.max(0, quotaNouvelles - dejaVues - urgentes.length);
   const cartes = [...revues, ...urgentes, ...autres.slice(0, quota)];
   return {
     cartes,

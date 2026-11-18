@@ -444,6 +444,8 @@ function OngletCours({
 }
 
 function prochaineRevue(c: Flashcard): string {
+  // Suspendue depuis une révision : réactivable dans les statistiques.
+  if (c.suspendue) return "Suspendue";
   if (estDue(c)) return c.niveau === 0 ? "Nouvelle" : "À revoir";
   const j = joursAvant(c.echeance);
   return j === 1 ? "Revue demain" : `Revue dans ${j} j`;

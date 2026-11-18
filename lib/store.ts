@@ -17,6 +17,8 @@ import type {
   Schema,
   Tache,
   ProgresQuestion,
+  EntreeRevision,
+  Reglages,
 } from "./types";
 import { dansJours, joursAvant, todayISO } from "./dates";
 import { delaiPour, reviser, type EtatFsrs, type Grade } from "./fsrs";
@@ -90,7 +92,7 @@ const nouvelleCarte = (c: { recto: string; verso: string; schema?: Schema }): Fl
   echeance: todayISO(),
 });
 
-export const estDue = (c: Flashcard) => c.echeance <= todayISO();
+export const estDue = (c: Flashcard) => !c.suspendue && c.echeance <= todayISO();
 
 type Etat = Donnees & {
   /** Versions des chapitres publiés déjà repris dans ce navigateur. */
@@ -138,6 +140,11 @@ type Etat = Donnees & {
   /** Mode Apprendre : garde une réponse dans le journal (lu par Claude pour améliorer les quiz). */
   noterQuiz: (e: EntreeQuiz) => void;
   signalerQuiz: (id: string, signal: NonNullable<EntreeQuiz["signal"]>, remarque?: string) => void;
+  /** Annule la dernière réponse à une flashcard (faux bouton). Renvoie faux s'il n'y a rien à annuler. */
+  annulerRevision: () => boolean;
+  /** Suspend une carte (elle ne revient plus en révision) ou la réactive. */
+  suspendreCarte: (chapitreId: string, carteId: string, suspendue: boolean) => void;
+  majReglages: (r: Partial<Reglages>) => void;
   /** Exos types : enregistre la copie ou la note d'une question (clé « publié/exo/numéro »). */
   majExo: (cle: string, p: Partial<Omit<ProgresQuestion, "date">>) => void;
   /** Mode Apprendre : enregistre le palier atteint par une carte. */
@@ -182,7 +189,36 @@ export type NoteCarte = 0 | 1 | 2 | 3;
  * revue avec l'ancien système (intervalle qui doublait, puis SM-2) reprend son intervalle
  * comme stabilité de départ, et sa facilité comme difficulté.
  */
-export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
+export type OptionsRevision = {
+  /** Poids FSRS ajustés sur l'historique (sinon ceux par défaut). */
+  poids?: number[];
+  /** Taux de réussite visé (0,9 par défaut). */
+  retention?: number;
+  /** Nombre de cartes déjà prévues par date (AAAA-MM-JJ), pour étaler la charge. */
+  charge?: Map<string, number>;
+};
+
+/**
+ * Étalement de la charge (comme Anki) : un délai de 3 jours ou plus peut bouger d'environ
+ * 5 à 10 %, vers le jour qui a le moins de cartes prévues. Sans cela, toutes les cartes
+ * apprises le même soir reviendraient le même jour.
+ */
+function etaler(intervalle: number, charge?: Map<string, number>) {
+  if (intervalle < 3 || !charge) return intervalle;
+  const marge = Math.max(1, Math.round(intervalle * (intervalle < 20 ? 0.1 : 0.05)));
+  let meilleur = intervalle, min = Infinity;
+  for (let d = intervalle - marge; d <= intervalle + marge; d++) {
+    // À charge égale, le jour le plus proche du délai calculé.
+    const n = (charge.get(dansJours(d)) ?? 0) + Math.abs(d - intervalle) * 0.01;
+    if (n < min) {
+      min = n;
+      meilleur = d;
+    }
+  }
+  return meilleur;
+}
+
+export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte, o: OptionsRevision = {}) {
   const n: NoteCarte = note === true ? 2 : note === false ? 0 : note;
   const g = (n + 1) as Grade;
   const aujourdhui = todayISO();
@@ -196,16 +232,45 @@ export function prochaineRevision(f: Flashcard, note: boolean | NoteCarte) {
         }
       : null;
   const jours = f.revueLe ? Math.max(0, -joursAvant(f.revueLe)) : f.intervalle;
-  const suivant = reviser(etat, g, jours);
+  const suivant = reviser(etat, g, jours, o.poids?.length === 17 ? o.poids : undefined);
   const base = {
     stabilite: Math.round(suivant.stabilite * 100) / 100,
     difficulte: Math.round(suivant.difficulte * 100) / 100,
     revueLe: aujourdhui,
   };
   if (g === 1) return { ...base, niveau: 1 as const, intervalle: 0, echeance: aujourdhui };
-  const intervalle = delaiPour(suivant.stabilite);
+  const intervalle = etaler(delaiPour(suivant.stabilite, o.retention), o.charge);
   return { ...base, niveau: 2 as const, intervalle, echeance: dansJours(intervalle) };
 }
+
+/** Options de révision tirées des réglages de l'élève. */
+export const optionsDe = (r?: Reglages): OptionsRevision => ({ poids: r?.poids, retention: r?.retention });
+
+/** Nombre de cartes prévues par date, toutes matières confondues (cartes suspendues exclues). */
+export function chargeParJour(chapitres: Chapitre[]) {
+  const vues = new Set<string>();
+  const charge = new Map<string, number>();
+  for (const c of chapitres)
+    for (const f of c.flashcards) {
+      const cle = cleCarte(f);
+      if (f.suspendue || f.niveau === 0 || vues.has(cle)) continue;
+      vues.add(cle);
+      charge.set(f.echeance, (charge.get(f.echeance) ?? 0) + 1);
+    }
+  return charge;
+}
+
+/** Une carte oubliée au moins 6 fois après avoir été sue : mal formulée ou mal comprise. */
+export const SEUIL_SANGSUE = 6;
+export const estSangsue = (f: Flashcard) => (f.oublis ?? 0) >= SEUIL_SANGSUE;
+/** Nombre de réponses gardées dans l'historique (environ deux ans de révisions régulières). */
+export const HISTORIQUE_MAX = 6000;
+
+/**
+ * Annuler : les états d'avant les dernières réponses (en mémoire seulement, 30 au plus).
+ * Une réponse annulée remet la carte, le compteur du jour et l'historique comme avant.
+ */
+const pileAnnulation: { chapitres: Chapitre[]; jour: { date: string; nouvelles: number; revues: number }; revisions: EntreeRevision[] }[] = [];
 
 /**
  * Une même carte peut être publiée dans deux chapitres (« Référentiel » en chap. 9 et
@@ -244,6 +309,8 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   notes: s.notes,
   journal: s.journal,
   exos: s.exos,
+  revisions: s.revisions,
+  reglages: s.reglages,
   calendrier: s.calendrier,
 });
 
@@ -258,6 +325,17 @@ export const useLuno = create<Etat>()(
       notes: [],
       journal: [],
       exos: {},
+      revisions: [],
+      reglages: {},
+      annulerRevision: () => {
+        const avant = pileAnnulation.pop();
+        if (!avant) return false;
+        set({ chapitres: avant.chapitres, jour: avant.jour, revisions: avant.revisions });
+        return true;
+      },
+      suspendreCarte: (id, carteId, suspendue) =>
+        set((s) => ({ chapitres: majCarte(s.chapitres, id, carteId, (f) => ({ ...f, suspendue: suspendue || undefined })) })),
+      majReglages: (r) => set((s) => ({ reglages: { ...(s.reglages ?? {}), ...r } })),
       majExo: (cle, p) =>
         set((s) => ({
           exos: { ...(s.exos ?? {}), [cle]: { ...(s.exos ?? {})[cle], ...p, date: new Date().toISOString() } },
@@ -526,9 +604,30 @@ export const useLuno = create<Etat>()(
         set((s) => {
           const carte = s.chapitres.find((c) => c.id === id)?.flashcards.find((f) => f.id === carteId);
           const j = s.jour.date === todayISO() ? s.jour : { date: todayISO(), nouvelles: 0, revues: 0 };
+          if (!carte) return {};
+          pileAnnulation.push({ chapitres: s.chapitres, jour: s.jour, revisions: s.revisions ?? [] });
+          if (pileAnnulation.length > 30) pileAnnulation.shift();
+          const n: NoteCarte = note === true ? 2 : note === false ? 0 : note;
+          const suite = prochaineRevision(carte, n, { ...optionsDe(s.reglages), charge: chargeParJour(s.chapitres) });
+          const chapitre = s.chapitres.find((c) => c.id === id);
+          const entree: EntreeRevision = {
+            id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+            carte: cleCarte(carte),
+            chapitre: chapitre?.publieId ?? id,
+            date: new Date().toISOString(),
+            note: n,
+            intervalle: suite.intervalle,
+            ...(carte.niveau === 0 ? { nouvelle: true } : {}),
+          };
           return {
-          jour: { ...j, nouvelles: j.nouvelles + (carte?.niveau === 0 ? 1 : 0), revues: j.revues + 1 },
-          chapitres: majCarte(s.chapitres, id, carteId, (f) => ({ ...f, ...prochaineRevision(f, note) })),
+          jour: { ...j, nouvelles: j.nouvelles + (carte.niveau === 0 ? 1 : 0), revues: j.revues + 1 },
+          revisions: [...(s.revisions ?? []), entree].slice(-HISTORIQUE_MAX),
+          chapitres: majCarte(s.chapitres, id, carteId, (f) => ({
+            ...f,
+            ...suite,
+            // Un oubli = « À revoir » sur une carte qu'on savait déjà.
+            ...(n === 0 && f.niveau === 2 ? { oublis: (f.oublis ?? 0) + 1 } : {}),
+          })),
           };
         }),
 
@@ -672,6 +771,8 @@ export const useLuno = create<Etat>()(
           notes: [],
           journal: [],
           exos: {},
+          revisions: [],
+          reglages: {},
           publies: {},
           calendrier: null,
         })),
@@ -693,6 +794,8 @@ export const useLuno = create<Etat>()(
         notes: s.notes,
         journal: s.journal,
         exos: s.exos,
+        revisions: s.revisions,
+        reglages: s.reglages,
         publies: s.publies,
         calendrier: s.calendrier,
         jour: s.jour,
@@ -753,6 +856,8 @@ export function normaliser(
     notes: (d.notes ?? []).map((n) => ({ ...n, documents: n.documents ?? [], modifie: n.modifie ?? 0 })),
     journal: (d.journal ?? []).slice(-JOURNAL_MAX),
     exos: d.exos ?? {},
+    revisions: (d.revisions ?? []).slice(-HISTORIQUE_MAX),
+    reglages: d.reglages ?? {},
     publies,
     calendrier: d.calendrier ?? null,
   };

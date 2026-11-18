@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, X } from "lucide-react";
-import { cleCarte, encre, pastel, prochaineRevision, useLuno, type NoteCarte } from "@/lib/store";
+import Link from "next/link";
+import { Check, EyeOff, HelpCircle, Undo2, X } from "lucide-react";
+import { chargeParJour, cleCarte, encre, estSangsue, optionsDe, pastel, prochaineRevision, useLuno, type NoteCarte } from "@/lib/store";
+import { FenetreExplication } from "./Explications";
 import { Bouton, BoutonIcone, ZoneAction, pluriel } from "@/components/ui";
 import { formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
@@ -40,7 +42,39 @@ export function Revision({
   cartes: CarteARevoir[];
   terminer: () => void;
 }) {
-  const { chapitres, matieres, noterFlashcard } = useLuno();
+  const { chapitres, matieres, noterFlashcard, annulerRevision, suspendreCarte, reglages } = useLuno();
+  // Délais affichés sous les boutons : mêmes réglages et même étalement que la vraie réponse.
+  const options = useMemo(() => ({ ...optionsDe(reglages), charge: chargeParJour(chapitres) }), [reglages, chapitres]);
+  const [explication, setExplication] = useState<string | null>(null);
+  // Pour « Annuler » : l'état de la séance avant chaque réponse ou suspension.
+  // `enregistree` : la réponse a été notée dans la répétition espacée (pas pour un retour).
+  type Etape = { index: number; sues: number; ratees: number; paquet: Passage[]; quoi: "reponse" | "suspension"; enregistree: boolean; chapitreId: string; carteId: string };
+  const [historique, setHistorique] = useState<Etape[]>([]);
+  const memoriser = (quoi: Etape["quoi"], enregistree: boolean) =>
+    courant &&
+    setHistorique((h) => [...h.slice(-29), { index, sues, ratees, paquet, quoi, enregistree, chapitreId: courant.chapitreId, carteId: courant.carteId }]);
+  /** Annule la dernière réponse (ou suspension) : la carte revient, comme avant. */
+  const annuler = () => {
+    const e = historique[historique.length - 1];
+    if (!e) return;
+    if (e.quoi === "reponse" && e.enregistree) annulerRevision();
+    if (e.quoi === "suspension") suspendreCarte(e.chapitreId, e.carteId, false);
+    setHistorique((h) => h.slice(0, -1));
+    setPaquet(e.paquet);
+    setSues(e.sues);
+    setRatees(e.ratees);
+    setIndex(e.index);
+    setRetournee(e.quoi === "reponse");
+    setEssai("");
+  };
+  const suspendre = () => {
+    if (!courant) return;
+    memoriser("suspension", false);
+    suspendreCarte(courant.chapitreId, courant.carteId, true);
+    setRetournee(false);
+    setEssai("");
+    setIndex((i) => i + 1);
+  };
   // Le paquet est mélangé, puis figé, au début de chaque séance (demandé le 2026-11-14) :
   // les cartes ne reviennent jamais dans le même ordre.
   // Une carte publiée dans deux chapitres (« Référentiel ») ne passe qu'une fois.
@@ -74,13 +108,16 @@ export function Revision({
   const couleur = matiere?.couleur ?? "#b5573d";
   const fini = index >= paquet.length;
 
-  const repondre = useCallback(
-    (note: NoteCarte) => {
+  // Le raccourci clavier appelle toujours la dernière version de `repondre`.
+  const repondreRef = useRef<(n: NoteCarte) => void>(() => {});
+  // Fonction simple (pas de useCallback) : elle lit l'état de la séance à jour.
+  const repondre = (note: NoteCarte) => {
       if (!courant) return;
+      memoriser("reponse", !courant.retour);
       // Le retour ne compte pas une deuxième fois dans la répétition espacée : il sert
       // seulement à revoir la carte tant qu'elle est fraîche.
       if (!courant.retour) {
-        const revient = carte && prochaineRevision(carte, note).intervalle === 0;
+        const revient = carte && prochaineRevision(carte, note, options).intervalle === 0;
         noterFlashcard(courant.chapitreId, courant.carteId, note);
         // « Difficile » n'est pas « su du premier coup ».
         if (note >= 2) setSues((n) => n + 1);
@@ -94,9 +131,11 @@ export function Revision({
       setRetournee(false);
       setEssai("");
       setIndex((i) => i + 1);
-    },
-    [courant, carte, index, noterFlashcard],
-  );
+  };
+
+  useEffect(() => {
+    repondreRef.current = repondre;
+  });
 
   useEffect(() => {
     const surTouche = (e: KeyboardEvent) => {
@@ -106,13 +145,13 @@ export function Revision({
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         setRetournee((r) => !r);
-      } else if (retournee && e.key === "ArrowRight") repondre(2);
-      else if (retournee && e.key === "ArrowLeft") repondre(0);
-      else if (retournee && ["1", "2", "3", "4"].includes(e.key)) repondre((Number(e.key) - 1) as NoteCarte);
+      } else if (retournee && e.key === "ArrowRight") repondreRef.current(2);
+      else if (retournee && e.key === "ArrowLeft") repondreRef.current(0);
+      else if (retournee && ["1", "2", "3", "4"].includes(e.key)) repondreRef.current((Number(e.key) - 1) as NoteCarte);
     };
     window.addEventListener("keydown", surTouche);
     return () => window.removeEventListener("keydown", surTouche);
-  }, [fini, retournee, repondre]);
+  }, [fini, retournee]);
 
   if (fini) {
     // Le message suit les délais choisis (tour 5, T1) : « Difficile » revient demain, pas
@@ -154,6 +193,17 @@ export function Revision({
             .join(" ")}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
+          {historique.length > 0 && (
+            <Bouton variante="fantome" onClick={annuler}>
+              <Undo2 size={16} /> Annuler la dernière réponse
+            </Bouton>
+          )}
+          <Link
+            href="/statistiques"
+            className="inline-flex min-h-11 items-center justify-center rounded-[10px] border border-line bg-surface px-4 text-[14.5px] font-medium hover:border-ink/30"
+          >
+            Statistiques
+          </Link>
           <Bouton onClick={terminer}>Terminer</Bouton>
         </div>
       </motion.div>
@@ -187,6 +237,14 @@ export function Revision({
         <span className="text-[13px] font-semibold text-muted">
           {index + 1} / {paquet.length}
         </span>
+        {historique.length > 0 && (
+          <BoutonIcone label="Annuler la dernière réponse" onClick={annuler}>
+            <Undo2 size={18} />
+          </BoutonIcone>
+        )}
+        <BoutonIcone label="Suspendre cette carte (elle ne reviendra plus)" onClick={suspendre}>
+          <EyeOff size={18} />
+        </BoutonIcone>
         <BoutonIcone
           label="Quitter la révision"
           onClick={terminer}
@@ -305,14 +363,41 @@ export function Revision({
           >
             <span className="text-[14px] font-semibold leading-tight">{label}</span>
             <span className="text-[11.5px] font-normal leading-tight opacity-80">
-              {delai(prochaineRevision(carte, note).intervalle)}
+              {delai(prochaineRevision(carte, note, options).intervalle)}
             </span>
           </Bouton>
         ))}
       </ZoneAction>
+      {/* Carte « sangsue » (comme Anki) : oubliée encore et encore, elle est sans doute mal
+          formulée ou mal comprise ; la revoir ne suffit plus. */}
+      {retournee && estSangsue(carte) && (
+        <div className="mt-4 rounded-xl border border-copper/50 bg-accent-soft px-3.5 py-3 text-[13.5px] leading-relaxed">
+          <p>
+            <strong>Tu as oublié cette carte {carte.oublis} fois.</strong> La revoir ne suffit plus : demande une
+            explication, réécris-la avec tes mots, ou mets-la de côté.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Bouton variante="contour" className="!min-h-10 !py-1.5" onClick={() => setExplication(`${carte.recto} : ${carte.verso}`)}>
+              <HelpCircle size={15} /> Demander une explication
+            </Bouton>
+            <Bouton variante="fantome" className="!min-h-10 !py-1.5" onClick={suspendre}>
+              <EyeOff size={15} /> Suspendre
+            </Bouton>
+          </div>
+        </div>
+      )}
       <p className="mt-3 text-center text-[12.5px] text-muted">
         Retourne la carte, puis dis honnêtement si tu la savais : c&apos;est ce qui règle quand elle revient.
       </p>
+      {chapitre && matiere && (
+        <FenetreExplication
+          passage={explication}
+          fermer={() => setExplication(null)}
+          chapitre={chapitre}
+          matiere={matiere.nom}
+          onglet="flashcards"
+        />
+      )}
     </div>
   );
 }

@@ -446,6 +446,35 @@ fiches de révision ; le slider règle la longueur de la fiche.
   ratée repasse une fois dans la séance ; le recto reste visible au verso ; champ facultatif
   pour écrire sa réponse avant de retourner. Le quota de 20 nouvelles cartes saute pour les
   chapitres d'un DST dans 3 jours au plus (`lib/revision.ts`).
+  **« La totale » d'Anki** (2026-11-18, demandé) :
+  - Historique `revisions` des données (`EntreeRevision` : carte « recto|verso », chapitre,
+    date, note 0-3, intervalle, `nouvelle` ; 6000 dernières, synchronisé, union par id),
+    écrit par `noterFlashcard` (révision, Apprendre palier 3, QCM raté).
+  - Réglages `reglages` (synchronisés) : `retention` (taux visé 80–95 %), `nouvellesParJour`
+    (5–50, remplace `QUOTA_NOUVELLES` partout), `poids` (17 poids FSRS ajustés), `ajusteLe`,
+    `ajusteSur`. `prochaineRevision(f, note, optionsDe(reglages) + charge)`.
+  - Ajustement de FSRS sur l'historique (`ajuster()` dans `lib/fsrs.ts`) : rejoue chaque carte
+    (une révision par jour), perte logarithmique, Adam avec gradient par différences finies,
+    rappel vers les poids par défaut, bornes de FSRS-4.5 ; dès 400 révisions évaluables ;
+    gardé seulement s'il prédit mieux. Testé sur un élève simulé (retrouve un oubli plus
+    rapide, ~1 s sur iPhone).
+  - Étalement de la charge (`etaler()`) : délai ≥ 3 j décalé de 5–10 % vers le jour le moins
+    chargé (`chargeParJour()`).
+  - Oublis (`oublis` d'une carte, « À revoir » sur une carte déjà sue) ; **sangsue** à 6
+    (`estSangsue()`) : bandeau dans la révision (Demander une explication, Suspendre) et liste
+    dans les statistiques.
+  - **Suspendre** (`suspendue`, `estDue` l'exclut ; étiquette « Suspendue » dans le chapitre,
+    réactivation dans les statistiques) et **Annuler** la dernière réponse (pile en mémoire
+    dans le store, `annulerRevision()`, 30 au plus ; bouton ↶ dans la révision et sur l'écran
+    de fin).
+  - Page **`/statistiques`** (`app/statistiques/page.tsx`, liens depuis Travail, l'accueil et la
+    fin d'une séance) : aujourd'hui, série, réussite réelle 30 j, à revoir cette semaine,
+    calendrier de 18 semaines (une teinte cuivre, colonnes élastiques), prévision 30 jours en
+    barres (toucher une barre), répartition solides / en cours / nouvelles, révisions sur
+    mesure (`/travail?r=ratees`, `r=avance` : `cartesRateesAujourdhui()`, `cartesEnAvance()`),
+    sangsues, suspendues, réglages et ajustement.
+  - Pas fait (dit à l'utilisateur) : étapes d'apprentissage en minutes, textes à trous et
+    cartes inversées créés par l'élève, images masquées, audio, hors connexion complet.
   Les flashcards sont mélangées à chaque séance (`melanger()` dans
   `components/travail/Revision.tsx`, demandé le 2026-11-14), quelle que soit
   l'entrée (chapitre, révision du jour, préparer un DST).
