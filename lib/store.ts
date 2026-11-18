@@ -145,6 +145,7 @@ type Etat = Donnees & {
   /** Suspend une carte (elle ne revient plus en révision) ou la réactive. */
   suspendreCarte: (chapitreId: string, carteId: string, suspendue: boolean) => void;
   majReglages: (r: Partial<Reglages>) => void;
+  marquerConnue: (id: string, connue: boolean) => void;
   /** Exos types : enregistre la copie ou la note d'une question (clé « publié/exo/numéro »). */
   majExo: (cle: string, p: Partial<Omit<ProgresQuestion, "date">>) => void;
   /** Mode Apprendre : enregistre le palier atteint par une carte. */
@@ -311,6 +312,7 @@ const photo = (s: Donnees & { calendrier: string[] | null }) => ({
   exos: s.exos,
   revisions: s.revisions,
   reglages: s.reglages,
+  connues: s.connues,
   calendrier: s.calendrier,
 });
 
@@ -327,6 +329,11 @@ export const useLuno = create<Etat>()(
       exos: {},
       revisions: [],
       reglages: {},
+      connues: [],
+      marquerConnue: (id, connue) =>
+        set((s) => ({
+          connues: connue ? [...new Set([...(s.connues ?? []), id])] : (s.connues ?? []).filter((x) => x !== id),
+        })),
       annulerRevision: () => {
         const avant = pileAnnulation.pop();
         if (!avant) return false;
@@ -773,6 +780,7 @@ export const useLuno = create<Etat>()(
           exos: {},
           revisions: [],
           reglages: {},
+          connues: [],
           publies: {},
           calendrier: null,
         })),
@@ -796,6 +804,7 @@ export const useLuno = create<Etat>()(
         exos: s.exos,
         revisions: s.revisions,
         reglages: s.reglages,
+        connues: s.connues,
         publies: s.publies,
         calendrier: s.calendrier,
         jour: s.jour,
@@ -858,6 +867,7 @@ export function normaliser(
     exos: d.exos ?? {},
     revisions: (d.revisions ?? []).slice(-HISTORIQUE_MAX),
     reglages: d.reglages ?? {},
+    connues: d.connues ?? [],
     publies,
     calendrier: d.calendrier ?? null,
   };

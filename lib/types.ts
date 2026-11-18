@@ -452,6 +452,8 @@ export type Donnees = {
   /** Historique des révisions de flashcards (statistiques, ajustement de FSRS). */
   revisions?: EntreeRevision[];
   reglages?: Reglages;
+  /** Découverte du jour : identifiants des faits, œuvres et actus marqués « Je connais déjà ». */
+  connues?: string[];
 };
 
 /** Une réponse à une flashcard (révision, mode Apprendre ou QCM), gardée dans l'historique. */
@@ -481,6 +483,8 @@ export type Reglages = {
   /** Date de l'ajustement et nombre de révisions utilisées. */
   ajusteLe?: string;
   ajusteSur?: number;
+  /** Découverte du jour activée (fait, œuvre, actualité déposés au passage de 6 h). */
+  decouverte?: boolean;
 };
 
 /** Réussite d'une question d'exo type, notée par l'élève après la correction. */

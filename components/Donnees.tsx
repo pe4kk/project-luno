@@ -117,6 +117,7 @@ export function BoutonDonnees() {
         exos: s.exos,
         revisions: s.revisions,
         reglages: s.reglages,
+        connues: s.connues,
         publies: s.publies,
         calendrier: s.calendrier,
       },

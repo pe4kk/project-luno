@@ -412,7 +412,31 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `verifierExplication()`), affichée sous « Tes explications » en haut de l'onglet, avec
     le passage cité ; en attente : heure du prochain passage. Consigne de la tâche planifiée
     mise à jour le 2026-11-16.
-  - `ZoneAction` (`components/ui.tsx`) : entoure le bouton principal d'un écran ; s'il
+  - **Découverte du jour** (2026-11-18, maquettes A pour le fait et l'actu, B « cartel de
+    musée » pour l'œuvre, https://claude.ai/artifact/Ph6fdRsEw5jGoMUD83k5Vf) : sur l'accueil
+    (`components/Decouverte.tsx`, sous « À faire »), compte connecté, activée par
+    `reglages.decouverte` (bouton « Activer », désactivable dans `/decouvertes`). Chaque jour : un
+    **fait** de culture générale utile en HGGSP, une **œuvre** (peinture avec la vraie image de
+    Wikimedia Commons, texte ou discours court ou résumé ; liée au programme environ une fois sur
+    deux, `programme`) et une **actualité** vérifiée (événement de 3 jours au plus, deux sources
+    indépendantes, n'importe quel sujet). HGGSP visée pour l'instant ; pour lui seul (amis : pas
+    prévu). « Je connais déjà » range l'id dans `connues` des données (synchronisé, union) ; le
+    passage suivant de la tâche remplace l'élément et garde l'ancien dans `anciens`. Historique :
+    page `/decouvertes` (filtres, état « Déjà connue »). Lignes de la table `demandes` (type
+    « lecon », `meta.decouverte`, `meta.jour`, prêtes d'emblée), écrites par la tâche avec
+    `node scripts/demandes.mjs decouvertes | decouverte <compte> <fichier>` (vérifie formats,
+    répétitions, âge de l'actu, sources, image qui répond) ; images :
+    `images-commons "<mots>"` puis `image-commons "<File:…>"` (miniature 960 px sur
+    upload.wikimedia.org, agrandie en 1920 px). L'environnement `project-luno` autorise
+    commons.wikimedia.org et upload.wikimedia.org depuis le 2026-11-18. Formats : `lib/decouverte.ts`.
+    Testé sur un faux serveur (`LUNO_PROJET=http://localhost:54321` pour le script,
+    `NEXT_PUBLIC_SUPABASE_URL` pour le site, session injectée dans `luno-compte`).
+  - **Cartes inversées : décidé, pas encore codé** (2026-11-18, après recherche : le sens non
+    travaillé n'est retenu qu'à 70–90 %, Leuba 1966 ; Anki les réserve au contenu important). À
+    inverser : vocabulaire et définitions, langues (FR → EN/ES surtout), dates. Jamais : cartes-
+    questions, méthodes, listes, formules. Carte inversée = progression FSRS à part, jamais le même
+    jour que sa sœur, mots de la réponse cachés dans la définition. Marquée par Claude à la rédaction.
+ : entoure le bouton principal d'un écran ; s'il
     apparaît sous la barre du bas, la page défile pour le montrer. À utiliser pour tout
     nouveau bouton d'action qui apparaît après une réponse.
   - Recherche : requête gardée dans l'adresse (`?q=`), une faute de frappe tolérée (6 lettres et plus).
@@ -827,7 +851,9 @@ un PDF ou une photo directement dans le chat.
 
 ## Prochaines étapes
 
-0. Exos types : il enverra peut-être les exercices de ses profs ; si oui, les mettre à
+0. Découverte du jour : vérifier après le passage de 6 h du 19/11 qu'elle s'affiche chez lui
+   (il doit d'abord toucher « Activer » sur l'accueil) et que l'image et les sources sont justes.
+   Exos types : il enverra peut-être les exercices de ses profs ; si oui, les mettre à
    la place des sujets inspirés de manuels (`source: "Exercice du prof"`). Tester une
    explication de bout en bout avec son compte (réponse de la tâche planifiée affichée).
 

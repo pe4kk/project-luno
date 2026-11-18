@@ -5,6 +5,7 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase, synchroDisponible, useSynchro } from "./synchro";
 import { useLuno } from "./store";
 import type { ChapitrePublie, DocumentNote, ErreurNotee, Lecon } from "./types";
+import type { ReponseDecouverte } from "./decouverte";
 
 /**
  * Demandes envoyées à Claude depuis le site (table `demandes`, voir supabase/schema.sql).
@@ -56,9 +57,15 @@ export type Demande = {
     chapitreId?: string;
     publieId?: string;
     onglet?: string;
+    /**
+     * Découverte du jour (fait, œuvre, actualité) : ligne écrite directement par la tâche
+     * planifiée, prête d'emblée, une par jour (`jour`, AAAA-MM-JJ heure de Paris).
+     */
+    decouverte?: boolean;
+    jour?: string;
   };
   statut: "en_attente" | "prete" | "erreur";
-  reponse: (Lecon | ChapitrePublie | ReponseErreurs | ReponseNote | ReponseExplication) | null;
+  reponse: (Lecon | ChapitrePublie | ReponseErreurs | ReponseNote | ReponseExplication | ReponseDecouverte) | null;
   erreur: string | null;
   cree: string;
   traite: string | null;
@@ -212,7 +219,7 @@ export const explicationsDe = (liste: Demande[], chapitreId: string, publieId?: 
 /** Les leçons rédigées pour cet utilisateur. */
 export function leconsPerso(liste: Demande[]): Lecon[] {
   return liste
-    .filter((d) => d.type === "lecon" && !d.meta.explication && d.statut === "prete" && d.reponse)
+    .filter((d) => d.type === "lecon" && !d.meta.explication && !d.meta.decouverte && d.statut === "prete" && d.reponse)
     .map((d) => ({ ...(d.reponse as Lecon), id: idReponse(d) }));
 }
 

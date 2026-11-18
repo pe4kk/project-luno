@@ -241,6 +241,7 @@ export function fusionner(a: DonneesSynchro, b: DonneesSynchro): DonneesSynchro 
     exos,
     revisions: [...revisions.values()].sort((x, y) => x.date.localeCompare(y.date)).slice(-6000),
     reglages: { ...(b.reglages ?? {}), ...(a.reglages ?? {}) },
+    connues: [...new Set([...(b.connues ?? []), ...(a.connues ?? [])])],
     publies,
     calendrier: a.calendrier ?? b.calendrier,
   };

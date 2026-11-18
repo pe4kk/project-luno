@@ -9,6 +9,16 @@
 //   node scripts/demandes.mjs journal [AAAA-MM-JJ]      réponses au quiz (mode Apprendre) depuis
 //                                                       cette date : signalements, cartes souvent
 //                                                       ratées, réponses fausses (pour améliorer les quiz)
+//   node scripts/demandes.mjs decouvertes               comptes qui ont activé la découverte du jour :
+//                                                       à créer aujourd'hui ? éléments « Je connais déjà »
+//                                                       à remplacer ? historique (pour ne rien répéter)
+//   node scripts/demandes.mjs decouverte <compte> <fichier>
+//                                                       dépose la découverte du jour { fait, oeuvre, actu }
+//                                                       (les trois si elle n'existe pas encore aujourd'hui,
+//                                                       sinon seulement les éléments à remplacer)
+//   node scripts/demandes.mjs images-commons "<mots>"   cherche une œuvre sur Wikimedia Commons (fichiers)
+//   node scripts/demandes.mjs image-commons "<File:…>"  adresse 800 px, page et crédit d'un fichier Commons,
+//                                                       prêts pour `oeuvre.image`
 //
 // La clé secrète Supabase n'est jamais dans le dépôt : dans l'environnement cloud
 // « project-luno », le proxy réseau l'ajoute lui-même à l'en-tête `apikey` des requêtes
@@ -16,7 +26,8 @@
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync } from "node:fs";
 
-const PROJET = "https://jexdghinuyirmyebfxvp.supabase.co";
+// LUNO_PROJET : un faux serveur local pour tester le script, jamais un vrai compte.
+const PROJET = process.env.LUNO_PROJET || "https://jexdghinuyirmyebfxvp.supabase.co";
 const URL = `${PROJET}/rest/v1/demandes`;
 const CLE = process.env.SUPABASE_CLE_SECRETE || "remplacee-par-le-proxy";
 
@@ -111,6 +122,89 @@ function verifierCours(c) {
   });
 }
 
+// --- Découverte du jour (fait, œuvre, actualité), voir lib/decouverte.ts ---
+const jourParis = (d = new Date()) => new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Paris" }).format(d);
+const DONNEES = `${PROJET}/rest/v1/donnees`;
+/** Appel de l'API de Commons ; elle limite les requêtes rapprochées : on réessaie après une pause. */
+function commons(params) {
+  const q = new globalThis.URLSearchParams({ ...params, format: "json" });
+  for (let essai = 1; ; essai++) {
+    const brut = execFileSync("curl", ["-sS", "-A", "LunoBot/1.0 (outil scolaire)", `https://commons.wikimedia.org/w/api.php?${q}`], { encoding: "utf8" });
+    try {
+      return JSON.parse(brut);
+    } catch {
+      if (essai >= 4) throw new Error(`Commons ne répond pas : ${brut.slice(0, 120)}`);
+      execFileSync("sleep", [String(10 * essai)]);
+    }
+  }
+}
+function lignesDecouverte(compte) {
+  return requete("GET", `?user_id=eq.${compte}&meta->>decouverte=eq.true&statut=eq.prete&select=id,meta,reponse&order=cree.desc`);
+}
+function elementsDe(lignes) {
+  return lignes.flatMap((l) => {
+    const d = l.reponse?.decouverte;
+    if (!d) return [];
+    return [
+      { ...d.fait, type: "fait", jour: d.jour },
+      { ...d.oeuvre, type: "oeuvre", jour: d.jour },
+      { ...d.actu, type: "actu", jour: d.jour },
+      ...(d.anciens || []).map((a) => ({ ...a, jour: d.jour })),
+    ];
+  });
+}
+function joursDepuis(iso, jour) {
+  return Math.round((Date.parse(jour) - Date.parse(iso)) / 86_400_000);
+}
+function urlRepond(url) {
+  try {
+    const code = execFileSync("curl", ["-sS", "-A", "LunoBot/1.0 (outil scolaire)", "-o", "/dev/null", "-L", "-w", "%{http_code}", url], { encoding: "utf8" });
+    return Number(code) < 400;
+  } catch {
+    return false;
+  }
+}
+function verifierDecouverte(r, jour, deja, complet) {
+  const titres = new Set(deja.map((e) => `${e.type}|${(e.titre || "").trim().toLowerCase()}`));
+  const nouveau = (type, t) => exiger(!titres.has(`${type}|${(t || "").trim().toLowerCase()}`), `${type} : « ${t} » a déjà été proposé`);
+  if (complet) exiger(r.fait && r.oeuvre && r.actu, "première découverte du jour : fait, oeuvre et actu sont tous les trois attendus");
+  if (r.fait) {
+    texteOk(r.fait.titre, "fait.titre"); texteOk(r.fait.texte, "fait.texte");
+    for (const k of ["suite", "utile", "matiere"]) if (r.fait[k] !== undefined) texteOk(r.fait[k], `fait.${k}`);
+    nouveau("fait", r.fait.titre);
+  }
+  if (r.oeuvre) {
+    const o = r.oeuvre;
+    for (const k of ["titre", "auteur", "date"]) texteOk(o[k], `oeuvre.${k}`);
+    exiger(["peinture", "litterature", "discours"].includes(o.genre), "oeuvre.genre : peinture, litterature ou discours");
+    exiger(Array.isArray(o.points) && o.points.length >= 2 && o.points.length <= 4, "oeuvre.points : 2 à 4 choses à retenir");
+    (o.points || []).forEach((t, i) => texteOk(t, `oeuvre.points[${i}]`));
+    for (const k of ["lieu", "extrait", "aPlacer", "suite"]) if (o[k] !== undefined) texteOk(o[k], `oeuvre.${k}`);
+    exiger(typeof o.programme === "boolean", "oeuvre.programme : true si l'œuvre est liée au programme d'HGGSP, sinon false");
+    if (o.genre === "peinture") exiger(o.image, "oeuvre.image : obligatoire pour une peinture (voir image-commons)");
+    if (o.image) {
+      exiger(/^https:\/\/upload\.wikimedia\.org\//.test(o.image.url || ""), "oeuvre.image.url : une adresse upload.wikimedia.org (voir image-commons)");
+      exiger(/^https:\/\/commons\.wikimedia\.org\//.test(o.image.page || ""), "oeuvre.image.page : la page Commons du fichier");
+      texteOk(o.image.credit, "oeuvre.image.credit");
+      if (o.image.url) exiger(urlRepond(o.image.url), `oeuvre.image.url ne répond pas : ${o.image.url}`);
+    }
+    nouveau("oeuvre", o.titre);
+  }
+  if (r.actu) {
+    const a = r.actu;
+    texteOk(a.titre, "actu.titre"); texteOk(a.texte, "actu.texte");
+    if (a.suite !== undefined) texteOk(a.suite, "actu.suite");
+    exiger(/^\d{4}-\d{2}-\d{2}$/.test(a.date || ""), "actu.date : date de l'événement, AAAA-MM-JJ");
+    const age = joursDepuis(a.date, jour);
+    exiger(age >= 0 && age <= 3, `actu.date : l'événement doit dater de 3 jours au plus (ici ${age} j)`);
+    const sources = Array.isArray(a.sources) ? a.sources : [];
+    const hotes = new Set(sources.map((x) => { try { return new globalThis.URL(x.url).hostname.replace(/^www\./, ""); } catch { return ""; } }));
+    exiger(sources.length >= 2 && hotes.size >= 2 && !hotes.has(""), "actu.sources : au moins deux sources de sites différents { nom, url }");
+    sources.forEach((x, i) => texteOk(x.nom, `actu.sources[${i}].nom`));
+    nouveau("actu", a.titre);
+  }
+}
+
 const [commande, id, arg] = process.argv.slice(2);
 if (commande === "liste") {
   const lignes = requete("GET", "?statut=eq.en_attente&order=cree.asc&select=id,type,titre,texte,meta,cree");
@@ -174,10 +268,79 @@ if (commande === "liste") {
         ({ chapitre, recto, forme, reponse, attendu })),
     }, null, 2));
   }
+} else if (commande === "decouvertes") {
+  const jour = jourParis();
+  const comptes = requete("GET", "?select=user_id,reglages:contenu->reglages,connues:contenu->connues", undefined, DONNEES)
+    .filter((l) => l.reglages?.decouverte === true);
+  const sortie = comptes.map((l) => {
+    const lignes = lignesDecouverte(l.user_id);
+    const duJour = lignes.find((x) => x.meta?.jour === jour);
+    const d = duJour?.reponse?.decouverte;
+    const connues = new Set(l.connues || []);
+    const historique = elementsDe(lignes);
+    const oeuvres = historique.filter((e) => e.type === "oeuvre").slice(0, 10);
+    return {
+      compte: l.user_id,
+      jour,
+      aCreer: !duJour,
+      aRemplacer: d ? ["fait", "oeuvre", "actu"].filter((t) => connues.has(d[t]?.id)) : [],
+      oeuvresDuProgrammeSurLesDernieres: `${oeuvres.filter((e) => e.programme).length}/${oeuvres.length}`,
+      dejaConnues: historique.filter((e) => connues.has(e.id)).map((e) => `${e.type} · ${e.titre}`),
+      historique: historique.map((e) => `${e.jour} · ${e.type} · ${e.titre}${e.auteur ? ` (${e.auteur})` : ""}`),
+    };
+  });
+  console.log(JSON.stringify(sortie, null, 2));
+} else if (commande === "decouverte" && id && arg) {
+  const jour = jourParis();
+  const r = JSON.parse(readFileSync(arg, "utf8"));
+  const lignes = lignesDecouverte(id);
+  const duJour = lignes.find((x) => x.meta?.jour === jour);
+  verifierDecouverte(r, jour, elementsDe(lignes), !duJour);
+  if (erreurs.length) {
+    console.error("Découverte refusée, à corriger :\n- " + erreurs.join("\n- "));
+    process.exit(1);
+  }
+  const avecId = (type) => r[type] && { ...r[type], id: `${jour}-${type}-${Math.random().toString(36).slice(2, 7)}` };
+  const maintenant = new Date().toISOString();
+  if (!duJour) {
+    requete("POST", "", {
+      user_id: id, type: "lecon", titre: `Découverte du ${jour}`, texte: "Découverte du jour, écrite par la tâche planifiée.",
+      meta: { decouverte: true, jour }, statut: "prete", traite: maintenant,
+      reponse: { decouverte: { jour, fait: avecId("fait"), oeuvre: avecId("oeuvre"), actu: avecId("actu"), anciens: [] } },
+    });
+    console.log(`Découverte du ${jour} déposée.`);
+  } else {
+    const d = { ...duJour.reponse.decouverte, anciens: [...(duJour.reponse.decouverte.anciens || [])] };
+    for (const type of ["fait", "oeuvre", "actu"]) {
+      if (!r[type]) continue;
+      d.anciens.push({ ...d[type], type, remplaceLe: maintenant });
+      d[type] = avecId(type);
+    }
+    requete("PATCH", `?id=eq.${duJour.id}`, { reponse: { decouverte: d }, traite: maintenant });
+    console.log(`Découverte du ${jour} : ${["fait", "oeuvre", "actu"].filter((t) => r[t]).join(", ")} remplacé(s).`);
+  }
+} else if (commande === "images-commons" && id) {
+  const json = commons({ action: "query", list: "search", srnamespace: "6", srlimit: "10", srsearch: id });
+  for (const r of json.query?.search || []) console.log(r.title);
+} else if (commande === "image-commons" && id) {
+  const titre = id.startsWith("File:") ? id : `File:${id}`;
+  const json = commons({ action: "query", titles: titre, prop: "imageinfo", iiprop: "url|extmetadata", iiurlwidth: "960" });
+  const page = Object.values(json.query?.pages || {})[0];
+  const info = page?.imageinfo?.[0];
+  if (!info) { console.error(`Fichier introuvable sur Commons : ${titre}`); process.exit(1); }
+  const m = info.extmetadata || {};
+  const net = (h) => String(h?.value || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  console.log(JSON.stringify({
+    // Miniature de 960 px servie par upload.wikimedia.org (tailles admises : 500, 960, 1280, 1920…).
+    url: String(info.thumburl || info.url).split("?")[0].replace("https://thumb.wikimedia.org/", "https://upload.wikimedia.org/"),
+    page: info.descriptionurl,
+    credit: [net(m.Artist), net(m.Credit).slice(0, 60), net(m.LicenseShortName)]
+      .filter((x) => x && !/unknown source/i.test(x)).join(" · "),
+  }, null, 2));
 } else if (commande === "erreur" && id && arg) {
   requete("PATCH", `?id=eq.${id}`, { statut: "erreur", erreur: arg, traite: new Date().toISOString() });
   console.log(`Demande ${id} : marquée en erreur.`);
 } else {
-  console.error("Usage : liste | repondre <id> <fichier.json> | erreur <id> \"<message>\" | images <id> | journal [AAAA-MM-JJ]");
+  console.error("Usage : liste | repondre <id> <fichier.json> | erreur <id> \"<message>\" | images <id> | journal [AAAA-MM-JJ] | decouvertes | decouverte <compte> <fichier.json> | images-commons \"<mots>\" | image-commons \"<File:…>\"");
   process.exit(2);
 }

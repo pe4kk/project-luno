@@ -9,6 +9,7 @@ import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "
 import { lienTravail } from "@/lib/liens";
 import { Carte, pluriel } from "@/components/ui";
 import { Emoji } from "@/components/Emoji";
+import { DecouverteDuJour } from "@/components/Decouverte";
 
 const RACCOURCIS = [
   { href: "/calendrier", titre: "Calendrier", texte: "Note tes DST", icone: CalendarDays, couleur: "#b5573d" },
@@ -246,6 +247,8 @@ export default function Accueil() {
           </ul>
         </div>
       )}
+
+      <DecouverteDuJour />
 
       {vide ? (
         <>
