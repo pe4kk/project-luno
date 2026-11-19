@@ -7,6 +7,8 @@ import { Bouton, EnTete, pluriel } from "@/components/ui";
 import { useDemandes } from "@/lib/demandes";
 import { NOMS_GENRE, NOMS_TYPE, historiqueDecouvertes, type ElementDecouverte } from "@/lib/decouverte";
 import { useLuno } from "@/lib/store";
+import { useImageOeuvre } from "@/components/Decouverte";
+import type { ImageOeuvre } from "@/lib/decouverte";
 import { synchroDisponible, useSynchro } from "@/lib/synchro";
 
 /** Historique de la découverte du jour : tout ce que Claude a proposé, et ce que tu connaissais déjà. */
@@ -126,16 +128,7 @@ function Ligne({ e, connue }: { e: ElementDecouverte & { jour: string }; connue:
       </button>
       {ouvert && (
         <div className="grid gap-2 px-4 pb-4 text-[14.5px] leading-relaxed sm:pl-[78px]">
-          {e.type === "oeuvre" && e.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={e.image.url}
-              alt={e.titre}
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              className="max-h-72 w-auto max-w-full justify-self-start rounded-xl"
-            />
-          )}
+          {e.type === "oeuvre" && e.image && <ImageHistorique image={e.image} titre={e.titre} />}
           {e.type === "oeuvre" ? (
             <>
               {e.extrait && <blockquote className="border-l-[3px] border-accent pl-3 italic">{formule(e.extrait)}</blockquote>}
@@ -166,5 +159,20 @@ function Ligne({ e, connue }: { e: ElementDecouverte & { jour: string }; connue:
         </div>
       )}
     </li>
+  );
+}
+
+function ImageHistorique({ image, titre }: { image: ImageOeuvre; titre: string }) {
+  const img = useImageOeuvre(image);
+  if (!img.src) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={img.src}
+      alt={titre}
+      loading="lazy"
+      onError={img.rater}
+      className="max-h-72 w-auto max-w-full justify-self-start rounded-xl"
+    />
   );
 }

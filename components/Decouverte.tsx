@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Clock, ExternalLink, Newspaper, Quote, Sparkles, Undo2 } from "lucide-react";
 import { formule } from "@/components/Formule";
 import { Bouton, Fenetre } from "@/components/ui";
 import { compteARebours, joursAvant, todayISO } from "@/lib/dates";
-import { prochainPassage, useDemandes } from "@/lib/demandes";
+import { lienDocumentNote, prochainPassage, useDemandes } from "@/lib/demandes";
 import {
   NOMS_GENRE,
   decouvertes,
@@ -163,8 +163,33 @@ function CarteFait({ fait }: { fait: FaitDuJour }) {
   );
 }
 
+/**
+ * Adresse de l'image d'une œuvre : d'abord la copie du stockage privé (adresse signée d'une
+ * heure), puis Wikimedia si elle manque ou ne charge pas, puis rien (vignette sans image).
+ */
+export function useImageOeuvre(image?: ImageOeuvre) {
+  const [signee, setSignee] = useState<{ chemin: string; url: string | null } | null>(null);
+  const [essai, setEssai] = useState(0);
+  const chemin = image?.chemin;
+  useEffect(() => {
+    if (!chemin) return;
+    let vivant = true;
+    void lienDocumentNote(chemin).then((url) => vivant && setSignee({ chemin, url }));
+    return () => {
+      vivant = false;
+    };
+  }, [chemin]);
+  if (!image || essai >= 2) return { src: undefined, attente: false, copie: false, rater: () => {} };
+  const copie = Boolean(chemin) && essai === 0 && signee?.url !== null;
+  const attente = copie && signee?.chemin !== chemin;
+  const src = copie ? (signee?.url ?? undefined) : image.url;
+  return { src, attente, copie, rater: () => setEssai(copie ? 1 : 2) };
+}
+
 function CarteOeuvre({ oeuvre }: { oeuvre: OeuvreDuJour }) {
   const [agrandie, setAgrandie] = useState(false);
+  const img = useImageOeuvre(oeuvre.image);
+  const image = oeuvre.image && (img.src || img.attente) ? oeuvre.image : undefined;
   const suite =
     oeuvre.extrait || oeuvre.suite ? (
       <div className="grid gap-2">
@@ -179,21 +204,25 @@ function CarteOeuvre({ oeuvre }: { oeuvre: OeuvreDuJour }) {
   return (
     <Cadre id={oeuvre.id} etiquette={`L'œuvre du jour · ${NOMS_GENRE[oeuvre.genre] ?? "Œuvre"}`} titre={oeuvre.titre} suite={suite}>
       <div className="grid grid-cols-[88px_minmax(0,1fr)] items-start gap-3.5">
-        {oeuvre.image ? (
+        {image ? (
           <button
             type="button"
             onClick={() => setAgrandie(true)}
             aria-label={`Agrandir : ${oeuvre.titre}`}
             className="overflow-hidden rounded-[10px] border border-line bg-blush"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={oeuvre.image.url}
-              alt={oeuvre.titre}
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              className="aspect-[3/4] w-full object-cover"
-            />
+            {img.src ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={img.src}
+                alt={oeuvre.titre}
+                loading="lazy"
+                onError={img.rater}
+                className="aspect-[3/4] w-full object-cover"
+              />
+            ) : (
+              <span className="block aspect-[3/4] w-full" />
+            )}
           </button>
         ) : (
           <div
@@ -220,8 +249,15 @@ function CarteOeuvre({ oeuvre }: { oeuvre: OeuvreDuJour }) {
         ))}
       </ul>
       {oeuvre.aPlacer && <Utile titre="À placer en copie" texte={oeuvre.aPlacer} />}
-      {oeuvre.image && (
-        <ImageAgrandie image={oeuvre.image} titre={oeuvre.titre} ouverte={agrandie} fermer={() => setAgrandie(false)} />
+      {image && (
+        <ImageAgrandie
+          image={image}
+          src={img.src}
+          copie={img.copie}
+          titre={oeuvre.titre}
+          ouverte={agrandie}
+          fermer={() => setAgrandie(false)}
+        />
       )}
     </Cadre>
   );
@@ -229,17 +265,21 @@ function CarteOeuvre({ oeuvre }: { oeuvre: OeuvreDuJour }) {
 
 function ImageAgrandie({
   image,
+  src,
+  copie,
   titre,
   ouverte,
   fermer,
 }: {
   image: ImageOeuvre;
+  src?: string;
+  copie: boolean;
   titre: string;
   ouverte: boolean;
   fermer: () => void;
 }) {
-  // Plus grande que la vignette : Wikimedia sert les miniatures en 500, 960, 1280, 1920 px…
-  const grande = image.url.replace(/\/(\d+)px-/, "/1920px-");
+  // La copie du stockage fait 960 px ; sinon Wikimedia sert aussi 1280, 1920 px…
+  const grande = copie && src ? src : image.url.replace(/\/(\d+)px-/, "/1920px-");
   return (
     <Fenetre ouverte={ouverte} fermer={fermer} titre={titre}>
       <figure className="grid gap-2">
@@ -247,10 +287,9 @@ function ImageAgrandie({
         <img
           src={grande}
           onError={(e) => {
-            if (e.currentTarget.src !== image.url) e.currentTarget.src = image.url;
+            if (!copie && e.currentTarget.src !== image.url) e.currentTarget.src = image.url;
           }}
           alt={titre}
-          referrerPolicy="no-referrer"
           className="max-h-[70dvh] w-full rounded-xl object-contain"
         />
         <figcaption className="text-[12.5px] text-muted">

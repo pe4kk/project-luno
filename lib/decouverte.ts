@@ -23,8 +23,14 @@ export type FaitDuJour = {
 };
 
 export type ImageOeuvre = {
-  /** Image hébergée par Wikimedia (upload.wikimedia.org), en 800 px de large environ. */
+  /** Image hébergée par Wikimedia (upload.wikimedia.org), en 960 px de large. */
   url: string;
+  /**
+   * Copie de l'image dans le stockage privé du compte (`<compte>/decouvertes/<id>.jpg`),
+   * faite par la tâche : le site l'affiche en priorité, car Wikimedia limite les images
+   * demandées directement par les navigateurs (vu le 2026-11-19 : image cassée sur iPhone).
+   */
+  chemin?: string;
   /** Page de l'image sur Wikimedia Commons (licence, auteur). */
   page: string;
   /** « Musée du Louvre · domaine public ». */

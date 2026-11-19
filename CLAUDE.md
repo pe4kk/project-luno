@@ -428,7 +428,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `node scripts/demandes.mjs decouvertes | decouverte <compte> <fichier>` (vérifie formats,
     répétitions, âge de l'actu, sources, image qui répond) ; images :
     `images-commons "<mots>"` puis `image-commons "<File:…>"` (miniature 960 px sur
-    upload.wikimedia.org, agrandie en 1920 px). L'environnement `project-luno` autorise
+    upload.wikimedia.org, agrandie en 1920 px). **Le script copie l'image dans le stockage
+    privé du compte** (`<compte>/decouvertes/<id>.jpg`, `image.chemin`) et le site l'affiche
+    d'abord (adresse signée), Wikimedia ensuite, sinon la vignette sans image : le 2026-11-19
+    l'image venue de Wikimedia s'affichait cassée sur son iPhone (Wikimedia limite les images
+    demandées par les navigateurs). Réparer une découverte déjà déposée :
+    `node scripts/demandes.mjs recopier-images <compte>`. L'environnement `project-luno` autorise
     commons.wikimedia.org et upload.wikimedia.org depuis le 2026-11-18. Formats : `lib/decouverte.ts`.
     Testé sur un faux serveur (`LUNO_PROJET=http://localhost:54321` pour le script,
     `NEXT_PUBLIC_SUPABASE_URL` pour le site, session injectée dans `luno-compte`).

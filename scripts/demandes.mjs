@@ -16,6 +16,8 @@
 //                                                       dépose la découverte du jour { fait, oeuvre, actu }
 //                                                       (les trois si elle n'existe pas encore aujourd'hui,
 //                                                       sinon seulement les éléments à remplacer)
+//   node scripts/demandes.mjs recopier-images <compte>  copie dans le stockage les images d'œuvres
+//                                                       qui n'y sont pas (réparation)
 //   node scripts/demandes.mjs images-commons "<mots>"   cherche une œuvre sur Wikimedia Commons (fichiers)
 //   node scripts/demandes.mjs image-commons "<File:…>"  adresse 800 px, page et crédit d'un fichier Commons,
 //                                                       prêts pour `oeuvre.image`
@@ -158,12 +160,35 @@ function joursDepuis(iso, jour) {
 }
 function urlRepond(url) {
   try {
-    const code = execFileSync("curl", ["-sS", "-A", "LunoBot/1.0 (outil scolaire)", "-o", "/dev/null", "-L", "-w", "%{http_code}", url], { encoding: "utf8" });
+    const code = // Comme le site : un navigateur qui envoie l'adresse du site (Wikimedia refuse les images
+    // demandées par un navigateur sans « Referer »).
+    execFileSync("curl", ["-sS", "-A", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Safari/604.1",
+      "-e", "https://pe4kk.github.io/", "-o", "/dev/null", "-L", "-w", "%{http_code}", url], { encoding: "utf8" });
     return Number(code) < 400;
   } catch {
     return false;
   }
 }
+/** Copie l'image d'une œuvre dans le stockage privé du compte ; rend son chemin, ou null. */
+function copierImage(compte, id, url) {
+  const fichier = `/tmp/luno-decouverte-${id}.jpg`;
+  try {
+    execFileSync("curl", ["-sSf", "-A", "LunoBot/1.0 (outil scolaire)", "-o", fichier, url]);
+    const chemin = `${compte}/decouvertes/${id}.jpg`;
+    execFileSync("curl", ["-sSf", "-X", "POST", `${PROJET}/storage/v1/object/demandes/${chemin}`, "-H", `apikey: ${CLE}`,
+      "-H", "Content-Type: image/jpeg", "-H", "x-upsert: true", "--data-binary", `@${fichier}`], { encoding: "utf8" });
+    return chemin;
+  } catch (e) {
+    console.error(`Image non copiée (le site utilisera Wikimedia) : ${e.message.split("\n")[0]}`);
+    return null;
+  }
+}
+const avecCopie = (compte, o) => {
+  if (!o?.image?.url || o.image.chemin) return o;
+  const chemin = copierImage(compte, o.id, o.image.url);
+  return chemin ? { ...o, image: { ...o.image, chemin } } : o;
+};
+
 function verifierDecouverte(r, jour, deja, complet) {
   const titres = new Set(deja.map((e) => `${e.type}|${(e.titre || "").trim().toLowerCase()}`));
   const nouveau = (type, t) => exiger(!titres.has(`${type}|${(t || "").trim().toLowerCase()}`), `${type} : « ${t} » a déjà été proposé`);
@@ -300,7 +325,11 @@ if (commande === "liste") {
     console.error("Découverte refusée, à corriger :\n- " + erreurs.join("\n- "));
     process.exit(1);
   }
-  const avecId = (type) => r[type] && { ...r[type], id: `${jour}-${type}-${Math.random().toString(36).slice(2, 7)}` };
+  const avecId = (type) => {
+    if (!r[type]) return r[type];
+    const e = { ...r[type], id: `${jour}-${type}-${Math.random().toString(36).slice(2, 7)}` };
+    return type === "oeuvre" ? avecCopie(id, e) : e;
+  };
   const maintenant = new Date().toISOString();
   if (!duJour) {
     requete("POST", "", {
@@ -318,6 +347,17 @@ if (commande === "liste") {
     }
     requete("PATCH", `?id=eq.${duJour.id}`, { reponse: { decouverte: d }, traite: maintenant });
     console.log(`Découverte du ${jour} : ${["fait", "oeuvre", "actu"].filter((t) => r[t]).join(", ")} remplacé(s).`);
+  }
+} else if (commande === "recopier-images" && id) {
+  // Réparation : copie dans le stockage les images d'œuvres qui n'y sont pas encore.
+  for (const l of lignesDecouverte(id)) {
+    const d = l.reponse?.decouverte;
+    if (!d?.oeuvre?.image || d.oeuvre.image.chemin) continue;
+    const oeuvre = avecCopie(id, d.oeuvre);
+    if (oeuvre.image.chemin) {
+      requete("PATCH", `?id=eq.${l.id}`, { reponse: { decouverte: { ...d, oeuvre } } });
+      console.log(`${d.jour} : image copiée (${oeuvre.image.chemin}).`);
+    }
   }
 } else if (commande === "images-commons" && id) {
   const json = commons({ action: "query", list: "search", srnamespace: "6", srlimit: "10", srsearch: id });
