@@ -368,6 +368,12 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
           {visibles ? "Cacher les annotations" : "Afficher les annotations"}
         </button>
       </div>
+      {texte.extraits && (
+        <p className="mb-2 rounded-xl bg-ink/5 px-3.5 py-2 text-[13.5px] leading-relaxed text-muted">
+          Seulement les passages commentés : le poème est encore protégé par le droit d&apos;auteur. Lis-le en
+          entier sur ton polycopié.
+        </p>
+      )}
       {visibles && (
         <p className="mb-1 text-[12.5px] text-muted lg:hidden">Touche un passage en couleur pour lire la remarque.</p>
       )}
@@ -497,6 +503,24 @@ function FicheTexte({ texte, matiere }: { texte: TexteBac; matiere: Matiere }) {
         </p>
         <p className="mt-1 text-[15.5px] leading-relaxed">{texte.problematique}</p>
       </div>
+
+      {texte.essentiel && (
+        <div className="mt-4 rounded-2xl border border-line px-4 py-3">
+          <p className="surtitre" style={{ color: foncee }}>
+            L&apos;essentiel en une minute
+          </p>
+          <ul className="mt-1.5 flex flex-col gap-1.5">
+            {texte.essentiel.map((p, i) => (
+              <li key={i} className="flex gap-2.5 text-[15px] leading-relaxed">
+                <span className="mt-[3px] shrink-0 font-semibold tabular-nums" style={{ color: foncee }}>
+                  {i + 1}.
+                </span>
+                <span className="min-w-0">{formule(p)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {texte.lecture && (
         <p className="mt-4 flex gap-2.5 text-[14px] leading-relaxed text-muted">

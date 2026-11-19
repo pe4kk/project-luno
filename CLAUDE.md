@@ -192,8 +192,14 @@ fiches de révision ; le slider règle la longueur de la fiche.
     de l'utilisateur) : les `extrait` des annotations reprennent les mots du texte à
     l'identique (apostrophes « ’ »), sans chevauchement dans une même strophe ; ne
     garder que l'essentiel de l'explication du prof. Prêt : « À la Musique »
-    (Rimbaud, 32 remarques). Attendus : deux autres textes des Cahiers de Douai,
-    « Femme noire » de Senghor (parcours), puis théâtre, roman, littérature d'idées.
+    (Rimbaud, 33 remarques, complété le 2026-11-19 avec sa feuille annotée en classe) et « Femme
+    noire » (Senghor, parcours, 2026-11-19, d'après la correction du DST de M. Waquet et ses
+    notes du cours oral ; 4 mouvements, 34 remarques). Chaque texte a un résumé `essentiel`
+    (« L'essentiel en une minute », en haut de la fiche, demandé : « une fiche qui résume
+    l'analyse »). Un texte encore protégé (auteur mort depuis moins de 70 ans) n'est pas recopié
+    en entier dans le dépôt public : seulement les passages commentés, `extraits: true`
+    (bandeau « lis-le sur ton polycopié »). Coquille de la correction : « Aimée Césaire » (Aimé).
+    Attendus : deux autres textes des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.
@@ -572,6 +578,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     mesure rien (mieux vaut pas de QCM que de mauvais intrus).
 12. **Fidèle au prof jusqu'au programme** : ce que le prof dit hors DST (le ressort) sort de
     Déf et des flashcards et reste en détail de fiche.
+13. **Commenter un texte (français, et toute analyse de document)** (tiré de son DST de
+    français corrigé, 2026-11-19) : une idée = une citation analysée (procédé exact, puis
+    pourquoi, comment, quel effet), jamais un relevé seul ni une généralité ; analyser ensemble
+    ce que le texte relie ; rien sans preuve dans le texte (pas de surinterprétation : d'abord
+    le sens simple) ; mesurer l'héritage avant de dire « original » ; toujours commenter la fin ;
+    chaque partie répond à la problématique, la conclusion rappelle le contexte.
 
 ## Ajouter du contenu (cours envoyés par l'utilisateur)
 
@@ -898,6 +910,10 @@ un PDF ou une photo directement dans le chat.
   répondre à toute la question, lecture de graphique), avec `regle`, `rappel` et
   `theme` pour la vue « L'essentiel » (version 2 de la réponse, qui met à jour les
   erreurs déjà reprises de même titre).
+- (2026-11-19) DST de français du 15/10 (commentaire de « Femme noire », 14/20) : 9 erreurs
+  généralisées déposées dans « Mes erreurs » de Français (demande `erreurs` prête) et une note
+  « Formulations du prof, réutilisables » dans Notes de Français (demande `cours` avec
+  `meta.note`, prête). Points forts selon le prof : clarté, bonne expression, procédés cités.
 - (2026-11-13) **« Mes erreurs » : deux vues, demandé** : « L'essentiel » (une ligne
   par erreur, la règle, un rappel et une étiquette, à relire en une minute avant
   l'éval ; toucher une ligne ouvre le détail) et « Détaillé » (la vue complète).

@@ -108,6 +108,13 @@ export type TexteBac = {
   categories?: Record<string, string>;
   /** Conseil pour la lecture à voix haute (2 points). */
   lecture?: string;
+  /** Le résumé à se redire avant l'oral, en haut de la fiche (5 à 7 lignes). */
+  essentiel?: string[];
+  /**
+   * Seulement les passages commentés, pas le texte entier (texte encore protégé par le
+   * droit d'auteur, dépôt public) : l'élève lit le poème complet sur son polycopié.
+   */
+  extraits?: boolean;
   introduction: string[];
   problematique: string;
   mouvements: MouvementBac[];

@@ -17,6 +17,14 @@ export const A_LA_MUSIQUE: TexteBac = {
   date: "1870",
   forme: "9 quatrains d’alexandrins, rimes croisées",
   categories: { theme: "Objets : la réification", registre: "Satire et mots péjoratifs" },
+  essentiel: [
+    "==Une satire de la bourgeoisie de Charleville==, qui pastiche « Promenades d’hiver » de Glatigny mais en plus acerbe. Cahiers de Douai, 1870, Rimbaud a 15 ans.",
+    "Le décalage d’emblée : un titre d’ode (« À la Musique ») et un lieu banal (« Place de la gare »). La musique elle-même est dévalorisée : un orchestre militaire, fonctionnel, plein de « couacs ».",
+    "==Les hommes sont réifiés, les femmes animalisées== : le notaire « pend à ses breloques », les employés deviennent des « bureaux », les dames sont menées par des « cornacs » comme des éléphants.",
+    "Tous sont en représentation : on vient se montrer (« parade le gandin »), pas écouter. Une classe qui se confond avec ses apparences.",
+    "Puis le « Moi, je suis » : le poète débraillé, en marge, ==l’être contre l’avoir==, dans un jeu de regards avec les jeunes filles qui reste un fantasme.",
+    "Liberté du vers : césure après « à », mot familier « couacs », sonorités lourdes en b et gr. Ouverture : « Roman ».",
+  ],
   lecture:
     "Respecter la versification : le « e » se prononce devant une consonne, pas devant une voyelle ni en fin de vers. Donner le ton : moqueur dans la première partie, plus léger et rêveur dans la seconde.",
   introduction: [
@@ -110,25 +118,25 @@ export const A_LA_MUSIQUE: TexteBac = {
               extrait: "L’orchestre militaire",
               cat: "registre",
               titre: "Musique militaire",
-              texte: "Ni Mozart ni Wagner : une musique fonctionnelle, au centre du jardin comme l’armée est au centre de cette ville de garnison, en pleine rivalité franco-prussienne.",
+              texte: "Ni Mozart ni Wagner : une musique fonctionnelle, utilitaire, au centre du jardin comme l’armée est au centre de cette ville de garnison, en pleine tension franco-prussienne. Décalage avec le titre : la musique est dévalorisée.",
             },
             {
               extrait: "Balance ses schakos",
               cat: "registre",
-              titre: "Image risible",
-              texte: "Les coiffures militaires rigides oscillent au rythme d’une valse.",
+              titre: "Image comique",
+              texte: "Les schakos, coiffures militaires rigides, oscillent au rythme d’une valse : des soldats qui dansent.",
             },
             {
               extrait: "parade le gandin",
               cat: "registre",
               titre: "En représentation",
-              texte: "Le gandin, dandy oisif, cherche à se montrer. L’article défini (« le gandin », « le notaire ») désigne un type, un stéréotype.",
+              texte: "Le gandin, dandy oisif, cherche à se montrer. Satire : les bourgeois ne viennent pas pour écouter l’orchestre, mais pour parader. L’article défini (« le gandin », « le notaire ») désigne un type, un stéréotype.",
             },
             {
               extrait: "ses breloques à chiffres",
               cat: "theme",
               titre: "Réification",
-              texte: "Le verbe « pendre » inverse les rôles : le notaire dépend de son accessoire, signe de propriété dont il est fier. Peut-être regarde-t-il l’heure : le temps, c’est de l’argent.",
+              texte: "Hyperbole péjorative : le verbe « pendre » inverse les rôles, le notaire dépend de son objet et devient lui-même un objet. Les breloques (des bibelots) font écho aux « bêtises » de la strophe 1. Peut-être regarde-t-il l’heure : le temps, c’est de l’argent.",
               retenir: "l’objet vaut plus que l’homme",
             },
             {
@@ -151,7 +159,7 @@ export const A_LA_MUSIQUE: TexteBac = {
               extrait: "rentiers à lorgnons",
               cat: "theme",
               titre: "Caractérisés par un objet",
-              texte: "Les rentiers vivent de leur argent sans travailler. Le lorgnon suggère des regards de convoitise ; s’ils relèvent les fausses notes, c’est par ostentation.",
+              texte: "Les rentiers (des bourgeois qui vivent de leur argent sans travailler) sont, eux aussi, associés à un objet. Le lorgnon suggère des regards de convoitise ; s’ils relèvent les fausses notes, c’est par ostentation.",
             },
             {
               extrait: "couacs",
@@ -169,14 +177,20 @@ export const A_LA_MUSIQUE: TexteBac = {
             {
               extrait: "traînent leurs grosses dames",
               cat: "vers",
-              titre: "Allitérations en b et gr",
-              texte: "Les sonorités et la répétition gros / grosses miment la lourdeur, physique autant que morale.",
+              titre: "Redondance péjorative",
+              texte: "« Gros », « bouffis », « grosses » : la répétition insiste sur leur corpulence, et les allitérations en b et gr miment la lourdeur, physique autant que morale.",
             },
             {
               extrait: "officieux cornacs",
               cat: "figure",
               titre: "Métaphore",
-              texte: "Un cornac conduit les éléphants : les dames sont donc comparées à des éléphants. Les hommes sont chosifiés, les femmes animalisées.",
+              texte: "Un cornac conduit les éléphants : les « grosses dames » sont donc comparées à des éléphants, menées par leurs dames de compagnie. Les hommes sont chosifiés, les femmes animalisées.",
+            },
+            {
+              extrait: "Celles dont les volants",
+              cat: "figure",
+              titre: "Périphrase",
+              texte: "Elle désigne les dames de compagnie, qui escortent les « grosses dames » comme des cornacs mènent des éléphants. Elles ne sont même pas nommées, seulement par leurs volants : encore la personne réduite à ce qu’elle porte.",
             },
             {
               extrait: "airs de réclames",
@@ -353,6 +367,346 @@ export const A_LA_MUSIQUE: TexteBac = {
   ],
 };
 
+/**
+ * Texte du parcours, reçu le 2026-11-19 : correction du DST (commentaire, M. Waquet, 4 pages),
+ * notes du cours oral, copie corrigée. Senghor est mort en 2001 : poème encore protégé, on ne
+ * garde que les passages commentés (`extraits`).
+ */
+export const FEMME_NOIRE: TexteBac = {
+  id: "senghor-femme-noire",
+  genre: "poesie",
+  titre: "Femme noire",
+  auteur: "Léopold Sédar Senghor",
+  date: "1945",
+  forme: "4 strophes de versets (5, 5, 5 et 3), sans rimes",
+  parcours: true,
+  extraits: true,
+  categories: { registre: "Lyrisme et éloge", theme: "La femme et l’Afrique", vers: "Verset et sonorités" },
+  essentiel: [
+    "==Un éloge (tonalité épidictique) de toutes les femmes noires==, pas d’une femme en particulier : pas de déterminant devant « Femme nue, femme noire ».",
+    "Héritage : l’éloge de la femme, la femme-paysage (romantiques), la fuite du temps (Ronsard). ==Originalité : célébrer la femme NOIRE en français==, en versets inspirés du Cantique des cantiques.",
+    "Un portrait en trois âges : la mère protectrice (« ombre »), l’amante désirée (« Terre promise », « fruit mûr »), la femme sereine et divine (« attaches célestes »).",
+    "La couleur noire revalorisée (« obscure, sombres, noir, vin ») et l’Afrique associée à la femme (savane, tamtam, gazelle, princes du Mali) : ==ne jamais séparer l’Afrique de la femme, c’est par elle que Senghor la magnifie.==",
+    "La fin : « Je chante ta beauté qui passe, forme que je fixe dans l’Éternel » : le poète immortalise la femme, et fait l’éloge de la poésie elle-même. Vision cyclique, pas tragique : les cendres nourrissent la vie.",
+    "Un poème incantatoire, fait pour être dit : la reprise « Femme nue, femme… », le poète comme un griot. Lien au parcours « Émancipations créatrices ».",
+  ],
+  lecture:
+    "Lire lentement, avec un ton incantatoire : marquer chaque reprise « Femme nue, femme… », respirer aux virgules des versets, ralentir sur le dernier tercet.",
+  introduction: [
+    "==« Négritude » : terme audacieux, formé sur « nègre », injure raciste que le Martiniquais Aimé Césaire et Senghor retournent avec fierté==. Le mouvement revendique la valeur d’une couleur longtemps méprisée.",
+    "Léopold Sédar Senghor (1906-2001), Sénégalais, agrégé de grammaire, futur président du Sénégal (1960-1980) et académicien, affirme l’identité, la culture et l’histoire des peuples noirs après des siècles de domination coloniale qui en niait l’existence.",
+    "« Femme noire » paraît dans Chants d’ombre (1945). Par son thème et sa tonalité épidictique, le poème s’inscrit dans la tradition occidentale ; ==par sa forme (des versets qui rappellent le Cantique des cantiques) et par son audace (célébrer la femme noire et non plus blanche), il marque son originalité.==",
+    "Ce n’est pas un poème « défensif » : il ne répond pas aux clichés en argumentant, il célèbre simplement la femme noire, et à travers elle une Afrique sensuelle, sauvage et sublime.",
+  ],
+  problematique: "Comment le poète parvient-il à magnifier la femme noire ?",
+  mouvements: [
+    {
+      titre: "De la mère protectrice à la femme désirée",
+      fiche: [
+        "Le premier vers pose le sujet sans déterminant : ==il s’agit de toutes les femmes noires==. Le verset 2 associe la couleur à la « vie » et la forme à la « beauté ».",
+        "« J’ai grandi à ton ombre » : la femme est une mère protectrice ; l’ombre abrite l’enfant de la chaleur équatoriale. « La douceur de tes mains bandait mes yeux » : le toucher, la protection contre la dureté du monde.",
+        "« Et voilà » : le présentatif marque une rupture sans transition, l’irruption du désir à l’adolescence.",
+        "==Le champ lexical de l’incandescence amoureuse== (« Été », « Midi », « calciné », « foudroie », « éclair ») : chaleur, désir, coup de foudre. « Je te découvre » joue sur deux sens.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Femme nue, femme noire",
+            "Vêtue de ta couleur qui est vie, de ta forme qui est beauté !",
+            "J’ai grandi à ton ombre ; la douceur de tes mains bandait mes yeux.",
+            "Et voilà […] au cœur de l’Été et de Midi, je te découvre Terre promise du haut d’un haut col calciné",
+            "Et ta beauté me foudroie en plein cœur, comme l’éclair d’un aigle.",
+          ],
+          annotations: [
+            {
+              extrait: "Femme nue, femme noire",
+              cat: "figure",
+              titre: "Absence de déterminant",
+              texte: "Ni « la » ni « une » : Senghor ne célèbre pas une femme en particulier, mais toutes les femmes noires, au-delà de leurs particularités.",
+              retenir: "pas de déterminant : toutes les femmes noires",
+            },
+            {
+              extrait: "ta couleur qui est vie",
+              cat: "theme",
+              titre: "Le noir, c’est la vie",
+              texte: "La peau habille naturellement la femme, sans parure : la couleur noire, si souvent méprisée, est associée à la vie. Le mot reviendra au dernier vers.",
+            },
+            {
+              extrait: "ta forme qui est beauté",
+              cat: "theme",
+              titre: "Forme et beauté",
+              texte: "Vie, forme, beauté : trois mots qui définissent aussi une poésie réussie. Le dernier tercet reprendra « forme » et « beauté ».",
+            },
+            {
+              extrait: "J’ai grandi à ton ombre",
+              cat: "theme",
+              titre: "La mère protectrice",
+              texte: "L’ombre abrite l’enfant du soleil et de la chaleur ; il a grandi sous la responsabilité de la femme. L’ombre est rassurante, alors que chez les romantiques elle est un double inquiétant.",
+              retenir: "ombre = protection",
+            },
+            {
+              extrait: "la douceur de tes mains bandait mes yeux",
+              cat: "figure",
+              titre: "Le toucher",
+              texte: "Le sens tactile dit la proximité entre la mère et l’enfant : elle le protège de l’extérieur et garde son innocence. Idée de protection, pas de « perfection ».",
+            },
+            {
+              extrait: "Et voilà",
+              cat: "registre",
+              titre: "Présentatif",
+              texte: "Il signale l’absence de transition : le désir fait irruption dans la vie de l’adolescent.",
+            },
+            {
+              extrait: "au cœur de l’Été et de Midi",
+              cat: "figure",
+              titre: "Double sens",
+              texte: "Au sens littéral, la chaleur de l’Afrique ; au sens figuré, l’éveil du désir et le moment le plus intense de la vie (« midi », sommet du jour).",
+            },
+            {
+              extrait: "je te découvre",
+              cat: "figure",
+              titre: "Syllepse de sens",
+              texte: "« Découvrir » signifie à la fois connaître et déshabiller : l’érotisme est clairement affirmé.",
+              retenir: "un mot, deux sens à la fois",
+            },
+            {
+              extrait: "Terre promise",
+              cat: "figure",
+              titre: "Métaphore biblique",
+              texte: "La terre promise par Dieu aux Hébreux, et plus largement le paradis : la rencontre physique est inéluctable et la femme aimée magnifiée.",
+            },
+            {
+              extrait: "du haut d’un haut col calciné",
+              cat: "vers",
+              titre: "Répétition de « haut »",
+              texte: "Elle souligne la position de surplomb de l’adolescent et l’élévation du lieu. L’article indéfini « un » ne permet pas de situer le lieu : effet de généralité. « Calciné » prolonge la chaleur.",
+            },
+            {
+              extrait: "comme l’éclair d’un aigle",
+              cat: "figure",
+              titre: "Comparaison",
+              texte: "Avec « foudroie », l’image du coup de foudre : la beauté frappe comme un éclair. Elle complète le champ lexical de l’incandescence amoureuse.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "L’amante, sensuelle et africaine",
+      fiche: [
+        "==La métaphore du fruit et du vin fait de la femme une amante qu’on goûte== : le sens du goût après le toucher. Le « vin » renvoie à l’ivresse, les « extases » à l’excès.",
+        "La couleur noire est partout (« obscure », « sombres », « noir », « vin ») : une isotopie qui prend ici une connotation positive, à l’inverse de la culture occidentale où le noir est associé au mal.",
+        "La femme est associée à l’Afrique : la savane (la vue), le tamtam (l’ouïe). Le corps à corps amoureux se joue dans les sonorités.",
+        "==Le dernier verset contrebalance l’insistance sur le corps== : la voix « est le chant spirituel de l’Aimée » (présent de vérité générale). L’amour s’élève au-delà du corporel.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Femme nue, femme obscure",
+            "Fruit mûr à la chair ferme, sombres extases du vin noir, bouche qui fais lyrique ma bouche",
+            "Savane aux horizons purs, savane qui frémis aux caresses ferventes du Vent d’Est",
+            "Tamtam sculpté, tamtam tendu qui grondes sous les doigts du vainqueur",
+            "Ta voix grave de contralto est le chant spirituel de l’Aimée.",
+          ],
+          annotations: [
+            {
+              extrait: "femme obscure",
+              cat: "theme",
+              titre: "Mystère",
+              texte: "« Obscure » dit la couleur, mais aussi le mystère de la femme, qui rend sa célébration inépuisable.",
+            },
+            {
+              extrait: "Fruit mûr à la chair ferme",
+              cat: "figure",
+              titre: "Métaphore du fruit",
+              texte: "L’âge adulte, la maturité ; le sens du goût, comme si la femme pouvait être goûtée charnellement.",
+            },
+            {
+              extrait: "sombres extases du vin noir",
+              cat: "figure",
+              titre: "Ivresse et passion",
+              texte: "Le vin, c’est l’ivresse ; les extases, l’excès, la sortie de soi vers un ailleurs, physique autant que spirituel. Encore le noir, valorisé.",
+            },
+            {
+              extrait: "bouche qui fais lyrique ma bouche",
+              cat: "figure",
+              titre: "Antanaclase",
+              texte: "Le même mot dans deux sens : la première « bouche » est sensuelle, la seconde est la voix du poète inspiré. La femme est sa muse. « Lyrique » renvoie aussi à la lyre d’Orphée.",
+              retenir: "la femme inspire le poète : c’est sa muse",
+            },
+            {
+              extrait: "Savane aux horizons purs",
+              cat: "theme",
+              titre: "La femme-paysage",
+              texte: "Héritage romantique. Le mot, sans déterminant, est stylisé ; « purs » connote l’innocence. Senghor ne garde pas le cliché du monde sauvage, mais une beauté épurée.",
+            },
+            {
+              extrait: "savane qui frémis aux caresses ferventes du Vent d’Est",
+              cat: "vers",
+              titre: "Harmonie imitative",
+              texte: "Les sons « van » (savane, ferventes, vent) alternent avec l’allitération en « r » (horizons, purs, frémis, caresses) : comme si se jouait le corps à corps entre la femme et l’homme. La seconde moitié du verset est plus longue que la première : l’image est amplifiée.",
+            },
+            {
+              extrait: "Tamtam sculpté, tamtam tendu qui grondes",
+              cat: "vers",
+              titre: "Consonnes dures",
+              texte: "Les allitérations en « t » et « d » évoquent la résistance d’un corps qui ne se laisse pas dompter. « Sculpté », « tendu » : une beauté épurée.",
+            },
+            {
+              extrait: "sous les doigts du vainqueur",
+              cat: "theme",
+              titre: "La femme instrument",
+              texte: "La femme est comparée à un instrument que l’homme fait chanter, mais elle « gronde » comme le tonnerre : elle sait le remettre à sa place.",
+            },
+            {
+              extrait: "est le chant spirituel de l’Aimée",
+              cat: "registre",
+              titre: "Le spirituel",
+              texte: "Le présent de vérité générale élève la relation au-delà du corps : l’insistance sur le physique est contrebalancée.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "La femme sereine, sublime et divinisée",
+      fiche: [
+        "Dans ce quintil, ==des métaphores hyperboliques disent la sérénité et la sagesse de la femme==, qui retrouve son rôle protecteur du début (« ombre », « angoisse » apaisée).",
+        "La femme est de l’ordre du divin : « attaches célestes », perles devenues « étoiles », or rouge. Une source perpétuelle d’émerveillement.",
+        "==L’histoire est convoquée : les « princes du Mali »== (empire du XIIIᵉ au XVIᵉ siècle) donnent à la femme noire une noblesse que l’idéologie coloniale lui refusait.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Femme nue, femme obscure",
+            "Huile que ne ride nul souffle, huile calme aux flancs de l’athlète, aux flancs des princes du Mali",
+            "Gazelle aux attaches célestes, les perles sont étoiles sur la nuit de ta peau",
+            "[…] les reflets de l’or rouge sur ta peau qui se moire",
+            "À l’ombre de ta chevelure, s’éclaire mon angoisse aux soleils prochains de tes yeux.",
+          ],
+          annotations: [
+            {
+              extrait: "Huile que ne ride nul souffle",
+              cat: "figure",
+              titre: "Métaphore",
+              texte: "L’huile que rien ne trouble : l’apaisement autant que la ténacité. Le mot est repris et amplifié (« huile calme »).",
+            },
+            {
+              extrait: "aux flancs de l’athlète",
+              cat: "figure",
+              titre: "Métonymie",
+              texte: "L’huile évoque les soins dont la femme pare les athlètes : une présence tactile, rassurante, protectrice, gage de santé.",
+            },
+            {
+              extrait: "princes du Mali",
+              cat: "theme",
+              titre: "L’histoire africaine",
+              texte: "Référence au prestigieux empire du Mali (XIIIᵉ-XVIᵉ siècle) : la femme noire est associée à la royauté, une noblesse que l’idéologie coloniale lui déniait.",
+              retenir: "rendre à l’Afrique son histoire",
+            },
+            {
+              extrait: "Gazelle aux attaches célestes",
+              cat: "theme",
+              titre: "Divinisation",
+              texte: "La gazelle (un mouvement, le sens cinesthésique) n’est pas un animal ordinaire : ses attaches « célestes » la transfigurent.",
+            },
+            {
+              extrait: "les perles sont étoiles sur la nuit de ta peau",
+              cat: "figure",
+              titre: "Métaphore",
+              texte: "Les perles rattachent la femme au ciel ; la peau devient la nuit, encore une image positive du noir.",
+            },
+            {
+              extrait: "l’or rouge sur ta peau qui se moire",
+              cat: "registre",
+              titre: "Émerveillement",
+              texte: "Une beauté toujours en mouvement : les reflets changent sans cesse, la femme est une source perpétuelle d’émerveillement.",
+            },
+            {
+              extrait: "s’éclaire mon angoisse",
+              cat: "theme",
+              titre: "Retour de la protection",
+              texte: "L’ombre revient et chasse l’angoisse du poète : la femme apaise, comme la mère du début. Cette angoisse annonce la fuite du temps du dernier tercet.",
+            },
+            {
+              extrait: "aux soleils prochains de tes yeux",
+              cat: "figure",
+              titre: "Métaphore",
+              texte: "Les yeux sont des soleils (pas de « comme » : métaphore, pas comparaison). Antithèse avec « ombre » : l’ombre et la lumière.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "Immortaliser la femme par le chant",
+      fiche: [
+        "Toujours lire de près la fin d’un poème. ==Le dernier tercet répond à l’angoisse : le poète « fixe dans l’Éternel » une beauté qui passe.== De passif, il devient actif ; de protégé, il protège.",
+        "Héritage : la fuite du temps, depuis Ronsard (« Quand vous serez bien vieille… », 1578). Originalité : l’appliquer à une femme noire.",
+        "==L’antithèse « beauté qui passe » / « l’Éternel » déplace l’éloge vers la poésie elle-même== : la forme du poème ne prend pas une ride, tout lecteur pourra redire cette beauté.",
+        "Vision cyclique, pas tragique : le « Destin jaloux » (allégorie) réduit la femme en cendres qui « nourrissent les racines de la vie ». Idée de réincarnation, plus païenne que chrétienne.",
+        "Le poète se fait griot : « Je chante ». La reprise « Femme nue, femme… » rend le poème incantatoire : à chaque lecture, la femme réapparaît en majesté.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Femme nue, femme noire",
+            "Je chante ta beauté qui passe, forme que je fixe dans l’Éternel",
+            "Avant que le Destin jaloux ne te réduise en cendres pour nourrir les racines de la vie.",
+          ],
+          annotations: [
+            {
+              extrait: "Femme nue, femme noire",
+              cat: "registre",
+              titre: "Incantation",
+              texte: "La reprise en tête de chaque strophe (« femme noire » au début et à la fin, « femme obscure » au milieu) donne au poème un ton incantatoire, comme une formule magique.",
+              retenir: "le poème fait réapparaître celle qu’il nomme",
+            },
+            {
+              extrait: "Je chante",
+              cat: "theme",
+              titre: "Le poète griot",
+              texte: "Le poète se donne une mission. Il chante comme le griot (dyâli) qui dit les récits fondateurs de la communauté, au rythme d’un instrument.",
+            },
+            {
+              extrait: "ta beauté qui passe",
+              cat: "figure",
+              titre: "Antithèse",
+              texte: "Avec « l’Éternel » : la beauté passagère du corps contre la forme éternelle du poème. Le thème de la fuite du temps, hérité de Ronsard.",
+            },
+            {
+              extrait: "forme que je fixe dans l’Éternel",
+              cat: "theme",
+              titre: "Éloge de la poésie",
+              texte: "« Forme » reprend le verset 2 : la forme du corps devient la forme du poème. Senghor fait aussi l’éloge de la poésie et de sa puissance d’immortaliser.",
+              retenir: "immortaliser par les mots",
+            },
+            {
+              extrait: "le Destin jaloux",
+              cat: "figure",
+              titre: "Personnification, allégorie",
+              texte: "Une idée abstraite représentée comme une personne : seule la mort peut anéantir cette beauté.",
+            },
+            {
+              extrait: "pour nourrir les racines de la vie",
+              cat: "vers",
+              titre: "Le cycle et l’assonance en « i »",
+              texte: "Les cendres nourrissent la vie : une vision cyclique, pas tragique. L’assonance en « i » insiste sur les termes mélioratifs ; « vie » fait écho au verset 2.",
+              retenir: "la mort nourrit la vie",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  conclusion: [
+    "==Le poème s’inscrit pleinement dans le parcours « Émancipations créatrices »== : poète francophone dont la langue maternelle était le wolof, Senghor utilise toutes les ressources du français pour magnifier un être que la tradition poétique n’avait jamais célébré, la femme noire.",
+    "Tout en reprenant des thèmes anciens (la fuite du temps de Ronsard, la femme-paysage des romantiques), il s’émancipe de la tradition en valorisant l’oralité et la fonction magique du poème : faire réapparaître l’être dont on parle.",
+    "Rappeler la négritude : affirmer la beauté de la femme noire, c’est répondre aux clichés coloniaux en célébrant plutôt qu’en se défendant.",
+    "Ouverture : Senghor souhaitait que ses poèmes soient psalmodiés, accompagnés d’une kora. Ou Ronsard, « Quand vous serez bien vieille », pour comparer deux manières de vaincre le temps.",
+  ],
+};
+
 export const PROGRAMME_BAC: ProgrammeGenre[] = [
   {
     genre: "poesie",
@@ -366,7 +720,7 @@ export const PROGRAMME_BAC: ProgrammeGenre[] = [
       A_LA_MUSIQUE,
       { titre: "Deuxième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
       { titre: "Troisième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
-      { titre: "Femme noire, Léopold Sédar Senghor", attente: "En attente du cours", parcours: true },
+      FEMME_NOIRE,
     ],
   },
   { genre: "theatre", places: [] },
