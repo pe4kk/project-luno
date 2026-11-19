@@ -63,11 +63,17 @@ export function DecouverteDuJour() {
         </Link>
       </div>
       {derniere ? (
-        <div className="grid items-start gap-4 lg:grid-cols-3">
-          <CarteFait fait={derniere.fait} />
-          <CarteOeuvre oeuvre={derniere.oeuvre} />
-          <CarteActu actu={derniere.actu} />
-        </div>
+        <>
+          {/* Téléphone et portable : une seule carte, trois onglets (l'accueil restait trop long). */}
+          <div className="lg:hidden">
+            <OngletsDecouverte d={derniere} />
+          </div>
+          <div className="hidden items-start gap-4 lg:grid lg:grid-cols-3">
+            <CarteFait fait={derniere.fait} />
+            <CarteOeuvre oeuvre={derniere.oeuvre} />
+            <CarteActu actu={derniere.actu} />
+          </div>
+        </>
       ) : (
         <p className="flex items-center gap-2 rounded-[18px] border border-line bg-surface px-5 py-4 text-[14.5px] text-muted">
           <Clock size={16} className="shrink-0" />
@@ -75,6 +81,50 @@ export function DecouverteDuJour() {
         </p>
       )}
     </section>
+  );
+}
+
+const ONGLETS = [
+  ["fait", "Le fait"],
+  ["oeuvre", "L’œuvre"],
+  ["actu", "L’actu"],
+] as const;
+
+function OngletsDecouverte({ d }: { d: ReturnType<typeof decouvertes>[number] }) {
+  const connues = useLuno((s) => s.connues ?? []);
+  // On ouvre le premier élément pas encore marqué « Je connais déjà ».
+  const [choisi, setChoisi] = useState<(typeof ONGLETS)[number][0]>(
+    () => ONGLETS.find(([k]) => !connues.includes(d[k].id))?.[0] ?? "fait",
+  );
+  return (
+    <div className="grid gap-2.5">
+      <div role="tablist" aria-label="La découverte du jour" className="flex gap-1.5">
+        {ONGLETS.map(([k, nom]) => (
+          <button
+            key={k}
+            type="button"
+            role="tab"
+            aria-selected={choisi === k}
+            onClick={() => setChoisi(k)}
+            className={`min-h-10 flex-1 rounded-full border px-3 text-[13.5px] font-semibold transition-colors ${
+              choisi === k ? "border-ink bg-ink text-bg" : "border-line bg-surface text-ink hover:border-ink/30"
+            }`}
+          >
+            {nom}
+            {connues.includes(d[k].id) && <Check size={13} className="ml-1 inline align-[-1px]" aria-label="déjà connu" />}
+          </button>
+        ))}
+      </div>
+      <div role="tabpanel">
+        {choisi === "fait" ? (
+          <CarteFait fait={d.fait} />
+        ) : choisi === "oeuvre" ? (
+          <CarteOeuvre oeuvre={d.oeuvre} />
+        ) : (
+          <CarteActu actu={d.actu} />
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -124,11 +174,11 @@ function Cadre({
       {ouvert && suite}
       <div className="flex flex-wrap gap-2">
         {suite && (
-          <Bouton variante="plein" onClick={() => setOuvert((o) => !o)} aria-expanded={ouvert}>
+          <Bouton variante="contour" onClick={() => setOuvert((o) => !o)} aria-expanded={ouvert}>
             {ouvert ? "Replier" : "Lire la suite"}
           </Bouton>
         )}
-        <Bouton variante="contour" onClick={() => marquer(id, true)}>
+        <Bouton variante="fantome" onClick={() => marquer(id, true)}>
           Je connais déjà
         </Bouton>
       </div>

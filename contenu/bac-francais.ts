@@ -58,6 +58,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "Place de la gare, à Charleville.",
+              cle: true,
               cat: "registre",
               titre: "Décalage",
               texte: "Le lieu, trivial et bruyant, court-circuite l’éloge annoncé : la précision réaliste servira la caricature.",
@@ -75,6 +76,7 @@ export const A_LA_MUSIQUE: TexteBac = {
           annotations: [
             {
               extrait: "mesquines pelouses",
+              cle: true,
               cat: "figure",
               titre: "Hypallage",
               texte: "L’adjectif porte sur les pelouses, mais ce sont les bourgeois qui sont mesquins, sans imagination, trop rationnels.",
@@ -88,6 +90,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "Tous les bourgeois",
+              cle: true,
               cat: "figure",
               titre: "Hyperbole",
               texte: "Rimbaud ne vise pas seulement les bourgeois de Charleville, mais la classe sociale en général.",
@@ -116,6 +119,7 @@ export const A_LA_MUSIQUE: TexteBac = {
           annotations: [
             {
               extrait: "L’orchestre militaire",
+              cle: true,
               cat: "registre",
               titre: "Musique militaire",
               texte: "Ni Mozart ni Wagner : une musique fonctionnelle, utilitaire, au centre du jardin comme l’armée est au centre de cette ville de garnison, en pleine tension franco-prussienne. Décalage avec le titre : la musique est dévalorisée.",
@@ -134,6 +138,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "ses breloques à chiffres",
+              cle: true,
               cat: "theme",
               titre: "Réification",
               texte: "Hyperbole péjorative : le verbe « pendre » inverse les rôles, le notaire dépend de son objet et devient lui-même un objet. Les breloques (des bibelots) font écho aux « bêtises » de la strophe 1. Peut-être regarde-t-il l’heure : le temps, c’est de l’argent.",
@@ -169,6 +174,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "gros bureaux bouffis",
+              cle: true,
               cat: "figure",
               titre: "Métonymie",
               texte: "Les employés deviennent leur bureau : ils jouent tellement le jeu social qu’ils s’identifient au lieu où ils travaillent.",
@@ -182,6 +188,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "officieux cornacs",
+              cle: true,
               cat: "figure",
               titre: "Métaphore",
               texte: "Un cornac conduit les éléphants : les « grosses dames » sont donc comparées à des éléphants, menées par leurs dames de compagnie. Les hommes sont chosifiés, les femmes animalisées.",
@@ -252,6 +259,7 @@ export const A_LA_MUSIQUE: TexteBac = {
           annotations: [
             {
               extrait: "Moi, je suis",
+              cle: true,
               cat: "figure",
               titre: "Emphase et ambiguïté",
               texte: "« Moi, je » s’oppose aux bourgeois (structure reprise à Glatigny). On croit lire le verbe être, l’authenticité contre l’avoir ; c’est le verbe suivre, un regard désirant.",
@@ -259,6 +267,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "débraillé comme un étudiant",
+              cle: true,
               cat: "theme",
               titre: "La bohème",
               texte: "Le poète ne soigne pas sa tenue, à l’inverse des bourgeois aliénés par leurs vêtements et leurs objets : il apporte du désordre dans l’ordre social.",
@@ -299,6 +308,7 @@ export const A_LA_MUSIQUE: TexteBac = {
             },
             {
               extrait: "Je suis, sous le corsage",
+              cle: true,
               cat: "figure",
               titre: "Ambiguïté redoublée",
               texte: "Suit-il des yeux le corps, ou est-il déjà sous le corsage ? Les deux. Il déshabille mentalement les jeunes filles, dans un mouvement descendant.",
@@ -327,12 +337,14 @@ export const A_LA_MUSIQUE: TexteBac = {
           annotations: [
             {
               extrait: "la bottine, le bas…",
+              cle: true,
               cat: "figure",
               titre: "Aposiopèse",
               texte: "Les points de suspension interrompent la phrase : de la bottine au bas, au lecteur d’imaginer la suite. « Déniché » garde un sous-entendu grivois.",
             },
             {
               extrait: "Je reconstruis les corps",
+              cle: true,
               cat: "theme",
               titre: "L’imagination",
               texte: "Il imagine sans passer à l’acte, comme le lecteur imagine le texte à partir des mots.",
@@ -420,6 +432,7 @@ export const FEMME_NOIRE: TexteBac = {
           annotations: [
             {
               extrait: "Femme nue, femme noire",
+              cle: true,
               cat: "figure",
               titre: "Absence de déterminant",
               texte: "Ni « la » ni « une » : Senghor ne célèbre pas une femme en particulier, mais toutes les femmes noires, au-delà de leurs particularités.",
@@ -439,6 +452,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "J’ai grandi à ton ombre",
+              cle: true,
               cat: "theme",
               titre: "La mère protectrice",
               texte: "L’ombre abrite l’enfant du soleil et de la chaleur ; il a grandi sous la responsabilité de la femme. L’ombre est rassurante, alors que chez les romantiques elle est un double inquiétant.",
@@ -464,6 +478,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "je te découvre",
+              cle: true,
               cat: "figure",
               titre: "Syllepse de sens",
               texte: "« Découvrir » signifie à la fois connaître et déshabiller : l’érotisme est clairement affirmé.",
@@ -517,6 +532,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "Fruit mûr à la chair ferme",
+              cle: true,
               cat: "figure",
               titre: "Métaphore du fruit",
               texte: "L’âge adulte, la maturité ; le sens du goût, comme si la femme pouvait être goûtée charnellement.",
@@ -529,6 +545,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "bouche qui fais lyrique ma bouche",
+              cle: true,
               cat: "figure",
               titre: "Antanaclase",
               texte: "Le même mot dans deux sens : la première « bouche » est sensuelle, la seconde est la voix du poète inspiré. La femme est sa muse. « Lyrique » renvoie aussi à la lyre d’Orphée.",
@@ -536,6 +553,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "Savane aux horizons purs",
+              cle: true,
               cat: "theme",
               titre: "La femme-paysage",
               texte: "Héritage romantique. Le mot, sans déterminant, est stylisé ; « purs » connote l’innocence. Senghor ne garde pas le cliché du monde sauvage, mais une beauté épurée.",
@@ -599,6 +617,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "princes du Mali",
+              cle: true,
               cat: "theme",
               titre: "L’histoire africaine",
               texte: "Référence au prestigieux empire du Mali (XIIIᵉ-XVIᵉ siècle) : la femme noire est associée à la royauté, une noblesse que l’idéologie coloniale lui déniait.",
@@ -606,6 +625,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "Gazelle aux attaches célestes",
+              cle: true,
               cat: "theme",
               titre: "Divinisation",
               texte: "La gazelle (un mouvement, le sens cinesthésique) n’est pas un animal ordinaire : ses attaches « célestes » la transfigurent.",
@@ -624,6 +644,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "s’éclaire mon angoisse",
+              cle: true,
               cat: "theme",
               titre: "Retour de la protection",
               texte: "L’ombre revient et chasse l’angoisse du poète : la femme apaise, comme la mère du début. Cette angoisse annonce la fuite du temps du dernier tercet.",
@@ -657,6 +678,7 @@ export const FEMME_NOIRE: TexteBac = {
           annotations: [
             {
               extrait: "Femme nue, femme noire",
+              cle: true,
               cat: "registre",
               titre: "Incantation",
               texte: "La reprise en tête de chaque strophe (« femme noire » au début et à la fin, « femme obscure » au milieu) donne au poème un ton incantatoire, comme une formule magique.",
@@ -670,12 +692,14 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "ta beauté qui passe",
+              cle: true,
               cat: "figure",
               titre: "Antithèse",
               texte: "Avec « l’Éternel » : la beauté passagère du corps contre la forme éternelle du poème. Le thème de la fuite du temps, hérité de Ronsard.",
             },
             {
               extrait: "forme que je fixe dans l’Éternel",
+              cle: true,
               cat: "theme",
               titre: "Éloge de la poésie",
               texte: "« Forme » reprend le verset 2 : la forme du corps devient la forme du poème. Senghor fait aussi l’éloge de la poésie et de sa puissance d’immortaliser.",
@@ -689,6 +713,7 @@ export const FEMME_NOIRE: TexteBac = {
             },
             {
               extrait: "pour nourrir les racines de la vie",
+              cle: true,
               cat: "vers",
               titre: "Le cycle et l’assonance en « i »",
               texte: "Les cendres nourrissent la vie : une vision cyclique, pas tragique. L’assonance en « i » insiste sur les termes mélioratifs ; « vie » fait écho au verset 2.",

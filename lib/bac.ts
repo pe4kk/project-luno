@@ -75,6 +75,8 @@ export type AnnotationBac = {
   texte: string;
   /** Formule courte à retenir, écrite à la main. */
   retenir?: string;
+  /** Remarque gardée dans le mode « L'essentiel » (2 ou 3 par strophe). */
+  cle?: boolean;
 };
 
 /** Une strophe, une réplique ou un paragraphe, avec ses remarques. */

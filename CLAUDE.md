@@ -389,6 +389,23 @@ fiches de révision ; le slider règle la longueur de la fiche.
       chapitre ». Titres de chapitres sur deux lignes au lieu d'être coupés.
     - Boutons d'ajout jamais grisés : champ `required`, le navigateur dit ce
       qui manque. Tout au « tu ».
+  - **Critique de design du 2026-11-19** (« corrige tout ») :
+    - Un même chiffre partout : « À revoir aujourd'hui » des Statistiques = `revisionDuJour()`
+      de l'accueil (nouvelles du quota comprises) ; la barre « aujourd'hui » de la prévision aussi.
+      État vide des Statistiques (« Pas encore de révision » + Réviser).
+    - Accueil : carte de révision « N nouvelles gardées pour les jours suivants » (le quota est
+      expliqué dans les Statistiques) ; le jour même d'un DST, « Relire mes erreurs » remplace
+      « Préparer cette éval ». Découverte du jour : sous 1024 px une seule carte à trois onglets
+      (Le fait · L'œuvre · L'actu, ouverte sur le premier pas encore connu), trois colonnes au-delà ;
+      « Lire la suite » en contour, « Je connais déjà » discret.
+    - Matière : en-tête réduit à une ligne dans les sous-onglets (Erreurs, Notes, Bac) ;
+      « Erreurs » au lieu de « Mes erreurs » sous 420 px, onglets resserrés sous 360 px.
+    - Bac, texte annoté : **deux modes** (demandé) « L'essentiel » (remarques `cle: true`, 2 ou 3
+      par strophe) et « Tout », choix gardé (`luno-bac-annotations`) ; toucher une couleur de la
+      légende n'affiche que cette famille ; compteur « N remarques sur M » ; retrait suspendu des
+      vers trop longs (texte annoté et Je récite). Tout nouveau texte marque ses remarques `cle`.
+    - Bac, fiche : « L'essentiel » et la problématique ouverts, le reste en parties repliables
+      (`PartieFiche`) avec un sommaire (Introduction, I à IV, Conclusion, Grammaire, Tout déplier).
   - **Évaluation par un élève testeur** (2026-11-15) : prompt `scripts/eleve-testeur.md`
     (Inès, Première, teste tout le site avec Playwright, juge la méthode de révision avec des
     sources, compare aux documents du prof, note sur 10). Six tours : 7,0 → 7,5 → 8,0 → 8,3 →

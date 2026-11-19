@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, BookOpen, CalendarDays, Check, GraduationCap, ListTodo, Target, ClipboardCheck } from "lucide-react";
 import { encre, pastel, useLuno } from "@/lib/store";
-import { QUOTA_NOUVELLES, revisionDuJour } from "@/lib/revision";
+import { revisionDuJour } from "@/lib/revision";
 import { compteARebours, dateLongue, dureeLisible, joursAvant, todayISO } from "@/lib/dates";
 import { lienTravail } from "@/lib/liens";
 import { Carte, pluriel } from "@/components/ui";
@@ -52,6 +52,7 @@ export default function Accueil() {
   const auProgramme = prochain ? chapitres.filter((c) => prochain.chapitreIds.includes(c.id)) : [];
   const interroPossible = auProgramme.some((c) => (c.definitions?.length ?? 0) + (c.calculs?.length ?? 0) > 0);
   const cartesDst = auProgramme.reduce((n, c) => n + c.flashcards.length, 0);
+  const jourJ = prochain ? joursAvant(prochain.date) === 0 : false;
 
   return (
     <div>
@@ -107,9 +108,16 @@ export default function Accueil() {
                     Au programme : {auProgramme.map((c) => c.titre).join(" · ")}
                   </p>
                   <div className="relative mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <Link href={`/preparer?d=${encodeURIComponent(prochain.id)}`} className={`${classeLien} !mt-0`}>
-                      {prochain.preparation ? "Continuer mon programme" : "Préparer cette éval"} <ArrowRight size={16} />
-                    </Link>
+                    {jourJ ? (
+                      // Le jour même, on ne prépare plus : on relit ses erreurs à ne pas refaire.
+                      <Link href={lienTravail({ m: prochain.matiereId, o: "erreurs" })} className={`${classeLien} !mt-0`}>
+                        Relire mes erreurs <ArrowRight size={16} />
+                      </Link>
+                    ) : (
+                      <Link href={`/preparer?d=${encodeURIComponent(prochain.id)}`} className={`${classeLien} !mt-0`}>
+                        {prochain.preparation ? "Continuer mon programme" : "Préparer cette éval"} <ArrowRight size={16} />
+                      </Link>
+                    )}
                     {interroPossible ? (
                       <Link
                         href={`/exercices?mode=interro&dst=${encodeURIComponent(prochain.id)}`}
@@ -131,6 +139,10 @@ export default function Accueil() {
                     </Link>
                   </div>
                 </>
+              ) : jourJ ? (
+                <Link href={lienTravail({ m: prochain.matiereId, o: "erreurs" })} className={classeLien}>
+                  Relire mes erreurs <ArrowRight size={16} />
+                </Link>
               ) : (
                 <Link href={`/preparer?d=${encodeURIComponent(prochain.id)}`} className={classeLien}>
                   Préparer cette éval <ArrowRight size={16} />
@@ -173,7 +185,7 @@ export default function Accueil() {
                   : revuesAujourdhui
                     ? `${pluriel(revuesAujourdhui, "déjà revue", "déjà revues")} aujourd'hui`
                     : duJour.plusTard
-                      ? `${duJour.plusTard} autres les jours suivants (${s.reglages?.nouvellesParJour ?? QUOTA_NOUVELLES} nouvelles par jour, sans limite pour un DST dans 3 jours)`
+                      ? `${pluriel(duJour.plusTard, "nouvelle", "nouvelles")} gardées pour les jours suivants`
                       : pluriel(dues, "carte", "cartes")}
             </p>
             {revuesAujourdhui > 0 && (

@@ -1,10 +1,10 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, BookOpen, Check, ChevronRight, Eye, EyeOff, Mic, RotateCcw } from "lucide-react";
+import { ArrowLeft, BookOpen, Check, ChevronDown, ChevronRight, Eye, EyeOff, Mic, RotateCcw } from "lucide-react";
 import { formule } from "@/components/Formule";
 import { Bouton, ZoneAction, pluriel } from "@/components/ui";
 import { PROGRAMME_BAC, TEXTES_BAC } from "@/contenu/bac-francais";
@@ -214,11 +214,12 @@ function decouper(passage: PassageBac, premier: number): Morceau[][] {
 }
 
 /** Numérote les annotations d'un bout à l'autre du texte et découpe les lignes. */
-function numeroter(texte: TexteBac) {
+function numeroter(texte: TexteBac, garder: (a: AnnotationBac) => boolean = () => true) {
   let n = 1;
   return texte.mouvements.map((m) => ({
     titre: m.titre,
-    passages: m.passages.map((brut) => {
+    passages: m.passages.map((tout) => {
+      const brut = { ...tout, annotations: tout.annotations.filter(garder) };
       // Les remarques sont numérotées dans l'ordre où leurs passages apparaissent.
       const place = (a: AnnotationBac) => {
         const l = brut.lignes.findIndex((x) => x.includes(a.extrait));
@@ -292,16 +293,55 @@ function VueTexte({ matiere, texte, vue }: { matiere: Matiere; texte: TexteBac; 
   );
 }
 
-function Legende({ categories, className = "" }: { categories: CategorieBac[]; className?: string }) {
+function Legende({
+  categories,
+  className = "",
+  filtre,
+  choisir,
+}: {
+  categories: CategorieBac[];
+  className?: string;
+  /** Avec `choisir`, toucher une couleur n'affiche que cette famille de remarques. */
+  filtre?: string | null;
+  choisir?: (cat: string | null) => void;
+}) {
   return (
     <ul className={`flex flex-wrap gap-1.5 ${className}`} aria-label="Code couleur">
-      {categories.map((c) => (
-        <li key={c.id} className="rounded-full px-2.5 py-1 text-[12px] font-semibold" style={{ background: fond(c.couleur, 38) }}>
-          {c.nom}
-        </li>
-      ))}
+      {categories.map((c) => {
+        const eteinte = filtre && filtre !== c.id;
+        const style = { background: fond(c.couleur, eteinte ? 14 : 38), boxShadow: filtre === c.id ? `0 0 0 2px ${c.couleur}` : undefined };
+        return (
+          <li key={c.id}>
+            {choisir ? (
+              <button
+                type="button"
+                aria-pressed={filtre === c.id}
+                onClick={() => choisir(filtre === c.id ? null : c.id)}
+                className={`min-h-8 rounded-full px-2.5 py-1 text-[12px] font-semibold transition-opacity ${eteinte ? "opacity-60" : ""}`}
+                style={style}
+              >
+                {c.nom}
+              </button>
+            ) : (
+              <span className="block rounded-full px-2.5 py-1 text-[12px] font-semibold" style={style}>
+                {c.nom}
+              </span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
+}
+
+type ModeAnnotations = "essentiel" | "tout";
+const CLE_MODE = "luno-bac-annotations";
+function lireMode(): ModeAnnotations {
+  try {
+    return localStorage.getItem(CLE_MODE) === "tout" ? "tout" : "essentiel";
+  } catch {
+    return "essentiel";
+  }
 }
 
 function Note({
@@ -343,19 +383,74 @@ function Note({
   );
 }
 
+/** Une partie repliable de la fiche. */
+function PartieFiche({ id, nom, couleur, children }: { id: string; nom: string; couleur: string; children: ReactNode }) {
+  return (
+    <details id={`fiche-${id}`} data-partie className="group scroll-mt-24 border-t border-line">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-2 [&::-webkit-details-marker]:hidden">
+        <span className="font-display text-[19px] leading-snug" style={{ color: couleur }}>
+          {nom}
+        </span>
+        <ChevronDown size={18} className="shrink-0 text-muted transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="pb-4">{children}</div>
+    </details>
+  );
+}
+
 function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
   const categories = categoriesDe(texte);
   const couleur = (cat: string) => categories.find((c) => c.id === cat)?.couleur ?? "var(--copper)";
   const nomCat = (cat: string) => categories.find((c) => c.id === cat)?.nom ?? "";
   const [visibles, setVisibles] = useState(true);
   const [choisi, setChoisi] = useState<number | null>(null);
+  // Deux modes (demandé le 2026-11-19) : « L'essentiel » (les remarques `cle`, allégées) et
+  // « Tout » (l'explication complète du prof). Un texte sans remarque `cle` montre tout.
+  const [mode, setMode] = useState<ModeAnnotations>(lireMode);
+  const [filtre, setFiltre] = useState<string | null>(null);
+  const aDesCles = texte.mouvements.some((m) => m.passages.some((p) => p.annotations.some((a) => a.cle)));
+  const essentiel = mode === "essentiel" && aDesCles;
+  const changerMode = (m: ModeAnnotations) => {
+    setMode(m);
+    setChoisi(null);
+    try {
+      localStorage.setItem(CLE_MODE, m);
+    } catch {}
+  };
 
-  const blocs = useMemo(() => numeroter(texte), [texte]);
+  const blocs = useMemo(
+    () => numeroter(texte, (a) => (!essentiel || a.cle === true) && (!filtre || a.cat === filtre)),
+    [texte, essentiel, filtre],
+  );
+  const total = texte.mouvements.reduce((n, m) => n + m.passages.reduce((k, p) => k + p.annotations.length, 0), 0);
+  const affichees = blocs.reduce((n, m) => n + m.passages.reduce((k, p) => k + p.passage.annotations.length, 0), 0);
 
   return (
     <div>
       <div className="mb-2 flex flex-wrap items-center justify-between gap-3 rounded-[18px] border border-line bg-surface px-4 py-2.5 shadow-card">
-        <Legende categories={categories} className={visibles ? "" : "opacity-40"} />
+        <div className="flex w-full flex-wrap items-center justify-between gap-2 lg:w-auto lg:flex-nowrap">
+        {aDesCles && (
+          <div role="group" aria-label="Quantité de remarques" className="flex rounded-full border border-line p-0.5">
+            {(
+              [
+                ["essentiel", "L’essentiel"],
+                ["tout", "Tout"],
+              ] as const
+            ).map(([m, nom]) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => changerMode(m)}
+                className={`min-h-9 rounded-full px-3 text-[13px] font-semibold transition-colors ${
+                  mode === m ? "bg-ink text-bg" : "text-muted hover:text-ink"
+                }`}
+              >
+                {nom}
+              </button>
+            ))}
+          </div>
+        )}
         <button
           onClick={() => {
             setVisibles((v) => !v);
@@ -367,6 +462,17 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
           {visibles ? <EyeOff size={15} /> : <Eye size={15} />}
           {visibles ? "Cacher les annotations" : "Afficher les annotations"}
         </button>
+        </div>
+        <Legende
+          categories={categories}
+          className={visibles ? "" : "opacity-40"}
+          filtre={filtre}
+          choisir={(c) => {
+            setFiltre(c);
+            setChoisi(null);
+          }}
+        />
+
       </div>
       {texte.extraits && (
         <p className="mb-2 rounded-xl bg-ink/5 px-3.5 py-2 text-[13.5px] leading-relaxed text-muted">
@@ -375,7 +481,12 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
         </p>
       )}
       {visibles && (
-        <p className="mb-1 text-[12.5px] text-muted lg:hidden">Touche un passage en couleur pour lire la remarque.</p>
+        <p className="mb-1 text-[12.5px] text-muted">
+          {affichees} remarque{affichees > 1 ? "s" : ""} sur {total}
+          {filtre ? ` · ${categories.find((c) => c.id === filtre)?.nom}` : ""}
+          <span className="lg:hidden"> · touche un passage en couleur pour lire la remarque</span>
+          {!filtre && <span className="hidden lg:inline"> · touche une couleur pour n’afficher qu’une famille</span>}
+        </p>
       )}
 
       {blocs.map((m, i) => (
@@ -404,7 +515,17 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
                   } ${passage.chapeau ? "text-center lg:text-left" : ""}`}
                 >
                   {lignes.map((ligne, k) => (
-                    <p key={k} className={passage.chapeau && k === 0 ? "text-[20px] sm:text-[22px]" : passage.chapeau ? "text-[14.5px] italic" : ""}>
+                    <p
+                      key={k}
+                      className={
+                        passage.chapeau && k === 0
+                          ? "text-[20px] sm:text-[22px]"
+                          : passage.chapeau
+                            ? "text-[14.5px] italic"
+                            : // Retrait suspendu : la suite d'un vers trop long est décalée, on voit où il finit.
+                              "pl-6 -indent-6"
+                      }
+                    >
                       {ligne.map((mo, x) => {
                         if (mo.n === undefined || !visibles) return <Fragment key={x}>{mo.t}</Fragment>;
                         const a = passage.annotations[mo.n - premier];
@@ -424,7 +545,7 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
                                 );
                               }}
                               aria-label={`${a.extrait} : ${a.titre}`}
-                              className="rounded-[5px] px-[3px] py-px text-left transition-shadow"
+                              className="rounded-[5px] px-[3px] py-px indent-0 text-left transition-shadow"
                               style={{
                                 background: fond(c),
                                 boxShadow: choisi === mo.n ? `0 0 0 2px ${c}` : undefined,
@@ -435,7 +556,7 @@ function TexteAnnote({ texte, foncee }: { texte: TexteBac; foncee: string }) {
                             </button>
                             <sup
                               aria-hidden
-                              className="ml-0.5 inline-flex size-[16px] items-center justify-center rounded-full bg-ink align-super font-sans text-[10px] font-semibold not-italic text-bg"
+                              className="ml-0.5 inline-flex size-[16px] items-center justify-center rounded-full bg-ink indent-0 align-super font-sans text-[10px] font-semibold not-italic text-bg"
                             >
                               {mo.n}
                             </sup>
@@ -490,11 +611,23 @@ function FicheTexte({ texte, matiere }: { texte: TexteBac; matiere: Matiere }) {
       ))}
     </ul>
   );
-  const titre = (t: string) => (
-    <h3 className="mb-2 mt-6 font-display text-[20px]" style={{ color: foncee }}>
-      {t}
-    </h3>
-  );
+  // La fiche faisait une dizaine d'écrans sur téléphone : chaque partie se replie, l'essentiel
+  // et la problématique restent ouverts, un sommaire mène à chaque partie.
+  const parties = [
+    { id: "intro", nom: "Introduction" },
+    ...texte.mouvements.map((m, i) => ({ id: `m${i}`, nom: ["I", "II", "III", "IV"][i] })),
+    { id: "conclusion", nom: "Conclusion" },
+    { id: "grammaire", nom: "Grammaire" },
+  ];
+  const zone = useRef<HTMLDivElement>(null);
+  const ouvrir = (id: string) => {
+    const d = zone.current?.querySelector<HTMLDetailsElement>(`#fiche-${id}`);
+    if (!d) return;
+    d.open = true;
+    d.scrollIntoView({ block: "start", behavior: "smooth" });
+  };
+  const toutOuvrir = (ouvert: boolean) =>
+    zone.current?.querySelectorAll<HTMLDetailsElement>("details[data-partie]").forEach((d) => (d.open = ouvert));
   return (
     <div className="mx-auto max-w-[820px] rounded-[22px] border border-line bg-surface px-5 pb-7 pt-5 shadow-card sm:px-9 sm:pt-7">
       <div className="rounded-2xl px-4 py-3" style={{ background: pastel(matiere.couleur, 13) }}>
@@ -531,58 +664,80 @@ function FicheTexte({ texte, matiere }: { texte: TexteBac; matiere: Matiere }) {
         </p>
       )}
 
-      {titre("Introduction")}
-      {puces(texte.introduction)}
+      <nav aria-label="Parties de la fiche" className="mt-5 flex flex-wrap items-center gap-1.5">
+        {parties.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => ouvrir(p.id)}
+            className="min-h-9 rounded-full border border-line px-3 text-[13px] font-semibold text-ink transition-colors hover:border-ink/30"
+          >
+            {p.nom}
+          </button>
+        ))}
+        <button type="button" onClick={() => toutOuvrir(true)} className="min-h-9 px-2 text-[13px] font-semibold text-accent">
+          Tout déplier
+        </button>
+        <button type="button" onClick={() => toutOuvrir(false)} className="min-h-9 px-2 text-[13px] font-semibold text-muted">
+          Tout replier
+        </button>
+      </nav>
 
-      <div className="mt-5 rounded-2xl border border-line px-4 py-3">
-        <p className="surtitre text-muted">Annonce du plan</p>
-        <ol className="mt-1.5 flex flex-col gap-1 text-[15px]">
-          {texte.mouvements.map((m, i) => (
-            <li key={m.titre}>
-              <span className="font-semibold">{["I", "II", "III", "IV"][i]}.</span> {m.titre}
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {texte.mouvements.map((m, i) => (
-        <section key={m.titre}>
-          {titre(`${["I", "II", "III", "IV"][i]}. ${m.titre}`)}
-          {puces(m.fiche)}
-          <p className="surtitre mb-1.5 mt-4 text-muted">Citations et procédés à placer</p>
-          <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-            {m.passages
-              .flatMap((p) => p.annotations)
-              .filter((a) => a.cat === "figure" || a.cat === "vers")
-              .map((a, k) => (
-                <li key={k} className="flex items-baseline gap-2 text-[14px] leading-snug">
-                  <span
-                    className="relative top-[1px] size-2.5 shrink-0 rounded-full"
-                    style={{ background: categories.find((c) => c.id === a.cat)?.couleur }}
-                  />
-                  <span className="min-w-0">
-                    <i className="font-display">« {a.extrait} »</i> : {a.titre.toLowerCase()}
-                  </span>
+      <div ref={zone} className="mt-2">
+        <PartieFiche id="intro" nom="Introduction" couleur={foncee}>
+          {puces(texte.introduction)}
+          <div className="mt-4 rounded-2xl border border-line px-4 py-3">
+            <p className="surtitre text-muted">Annonce du plan</p>
+            <ol className="mt-1.5 flex flex-col gap-1 text-[15px]">
+              {texte.mouvements.map((m, i) => (
+                <li key={m.titre}>
+                  <span className="font-semibold">{["I", "II", "III", "IV"][i]}.</span> {m.titre}
                 </li>
               ))}
-          </ul>
-        </section>
-      ))}
+            </ol>
+          </div>
+        </PartieFiche>
 
-      {titre("Conclusion")}
-      {puces(texte.conclusion)}
+        {texte.mouvements.map((m, i) => (
+          <PartieFiche key={m.titre} id={`m${i}`} nom={`${["I", "II", "III", "IV"][i]}. ${m.titre}`} couleur={foncee}>
+            {puces(m.fiche)}
+            <p className="surtitre mb-1.5 mt-4 text-muted">Citations et procédés à placer</p>
+            <ul className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+              {m.passages
+                .flatMap((p) => p.annotations)
+                .filter((a) => a.cat === "figure" || a.cat === "vers")
+                .map((a, k) => (
+                  <li key={k} className="flex items-baseline gap-2 text-[14px] leading-snug">
+                    <span
+                      className="relative top-[1px] size-2.5 shrink-0 rounded-full"
+                      style={{ background: categories.find((c) => c.id === a.cat)?.couleur }}
+                    />
+                    <span className="min-w-0">
+                      <i className="font-display">« {a.extrait} »</i> : {a.titre.toLowerCase()}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          </PartieFiche>
+        ))}
 
-      {titre("Question de grammaire")}
-      {texte.grammaire ? (
-        <div className="text-[15px] leading-relaxed">
-          <p className="font-semibold">{formule(texte.grammaire.question)}</p>
-          <p className="mt-1">{formule(texte.grammaire.reponse)}</p>
-        </div>
-      ) : (
-        <p className="text-[14px] text-muted">
-          Ton prof n&apos;en a pas encore donné pour ce texte. Envoie-la dans le chat quand tu l&apos;auras.
-        </p>
-      )}
+        <PartieFiche id="conclusion" nom="Conclusion" couleur={foncee}>
+          {puces(texte.conclusion)}
+        </PartieFiche>
+
+        <PartieFiche id="grammaire" nom="Question de grammaire" couleur={foncee}>
+          {texte.grammaire ? (
+            <div className="text-[15px] leading-relaxed">
+              <p className="font-semibold">{formule(texte.grammaire.question)}</p>
+              <p className="mt-1">{formule(texte.grammaire.reponse)}</p>
+            </div>
+          ) : (
+            <p className="text-[14px] text-muted">
+              Ton prof n&apos;en a pas encore donné pour ce texte. Envoie-la dans le chat quand tu l&apos;auras.
+            </p>
+          )}
+        </PartieFiche>
+      </div>
       <Legende categories={categories} className="mt-6 border-t border-line pt-4" />
     </div>
   );
@@ -668,7 +823,7 @@ function JeRecite({ texte, matiere, versFiche }: { texte: TexteBac; matiere: Mat
         style={{ borderTop: `4px solid ${matiere.couleur}` }}
       >
         {p.lignes.map((l, i) => (
-          <p key={i} className={p.chapeau && i > 0 ? "text-[14.5px] italic" : ""}>
+          <p key={i} className={p.chapeau ? (i > 0 ? "text-[14.5px] italic" : "") : "pl-6 -indent-6"}>
             {l}
           </p>
         ))}

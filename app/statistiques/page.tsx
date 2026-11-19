@@ -9,7 +9,7 @@ import { Bouton, Carte, EnTete, pluriel } from "@/components/ui";
 import { dansJours, joursAvant, todayISO } from "@/lib/dates";
 import { MINIMUM_AJUSTEMENT, RETENTION, ajuster, delaiPour, historiques, nombreEvaluables } from "@/lib/fsrs";
 import { lienTravail } from "@/lib/liens";
-import { QUOTA_NOUVELLES, cartesEnAvance, cartesRateesAujourdhui } from "@/lib/revision";
+import { QUOTA_NOUVELLES, cartesEnAvance, cartesRateesAujourdhui, revisionDuJour } from "@/lib/revision";
 import { cleCarte, estSangsue, useLuno } from "@/lib/store";
 import type { Chapitre, Flashcard } from "@/lib/types";
 
@@ -40,7 +40,7 @@ function cartesUniques(chapitres: Chapitre[]) {
 }
 
 export default function Statistiques() {
-  const { chapitres, matieres, revisions = [], reglages = {}, suspendreCarte } = useLuno();
+  const { chapitres, matieres, dsts, jour, revisions = [], reglages = {}, suspendreCarte } = useLuno();
   const aujourdhui = todayISO();
   const cartes = useMemo(() => cartesUniques(chapitres), [chapitres]);
 
@@ -82,6 +82,11 @@ export default function Statistiques() {
     const i = Math.max(0, joursAvant(f.echeance));
     if (i < 30) prevision[i].n++;
   }
+  // Aujourd'hui : exactement la révision du jour de l'accueil (cartes revenues, en retard, et
+  // nouvelles du quota), pour que les deux écrans donnent le même nombre.
+  const duJour = revisionDuJour(chapitres, dsts, jour, reglages.nouvellesParJour);
+  const nouvellesDuJour = duJour.cartes.length - prevision[0].n;
+  prevision[0].n = duJour.cartes.length;
   const maxPrev = Math.max(1, ...prevision.map((p) => p.n));
   const semaine = prevision.slice(0, 7).reduce((t, p) => t + p.n, 0);
 
@@ -103,8 +108,31 @@ export default function Statistiques() {
           valeur={reussite === null ? "—" : `${Math.round(reussite * 100)} %`}
           detail={reussite === null ? "pas encore assez de révisions" : `sur 30 jours · visé ${Math.round((reglages.retention ?? RETENTION) * 100)} %`}
         />
-        <Tuile titre="À revoir cette semaine" valeur={String(semaine)} detail={`dont ${prevision[0].n} aujourd'hui`} />
+        <Tuile
+          titre="À revoir aujourd'hui"
+          valeur={String(prevision[0].n)}
+          detail={`${nouvellesDuJour > 0 ? `dont ${pluriel(nouvellesDuJour, "nouvelle")} · ` : ""}${semaine} cette semaine`}
+        />
       </div>
+
+      {revisions.length === 0 && (
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 rounded-[18px] border border-dashed border-line bg-surface px-5 py-4">
+          <p className="min-w-0 flex-1 text-[14.5px] leading-relaxed">
+            <strong className="font-semibold">Pas encore de révision.</strong>{" "}
+            <span className="text-muted">
+              Fais ta première séance : tes jours de révision, ta série et ta réussite s&apos;afficheront ici.
+            </span>
+          </p>
+          {prevision[0].n > 0 && (
+            <Link
+              href={lienTravail({ r: "tout" })}
+              className="inline-flex min-h-11 items-center gap-2 rounded-[10px] bg-accent px-4 text-[14.5px] font-medium text-on-accent"
+            >
+              Réviser {pluriel(prevision[0].n, "carte")}
+            </Link>
+          )}
+        </div>
+      )}
 
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <Carte className="grid min-w-0 gap-3 [&>*]:min-w-0">
@@ -251,7 +279,7 @@ function Prevision({ prevision, max }: { prevision: { jour: string; n: number }[
     <div>
       <p className="text-[13.5px]" aria-live="polite">
         <strong className="tabular-nums">{pluriel(prevision[actif].n, "carte")}</strong>{" "}
-        <span className="text-muted">{actif === 0 ? "aujourd'hui (retards compris)" : actif === 1 ? "demain" : `le ${jourCourt(prevision[actif].jour)}`}</span>
+        <span className="text-muted">{actif === 0 ? "aujourd'hui (nouvelles et retards compris)" : actif === 1 ? "demain" : `le ${jourCourt(prevision[actif].jour)}`}</span>
       </p>
       <div className="mt-2 flex h-[120px] items-end gap-[2px] border-b border-line" role="img" aria-label="Cartes prévues chaque jour pendant 30 jours">
         {prevision.map((p, i) => (
