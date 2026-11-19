@@ -369,11 +369,7 @@ function VueNote({ matiere, note }: { matiere: Matiere; note: NoteMatiere }) {
               </p>
               <div className="mt-5 flex flex-col gap-4 text-[17px] leading-[1.75] sm:text-[18px]">
                 {paragraphes(note.texte).length ? (
-                  paragraphes(note.texte).map((p, i) => (
-                    <p key={i} className="whitespace-pre-line">
-                      {formule(p)}
-                    </p>
-                  ))
+                  <TexteNote texte={note.texte} couleur={matiere.couleur} />
                 ) : (
                   <p className="text-muted">
                     Note vide.{" "}
@@ -529,5 +525,120 @@ function Documents({ note, couleur }: { note: NoteMatiere; couleur: string }) {
         </ul>
       )}
     </section>
+  );
+}
+
+// ———————————— Lecture d'une note : une mise en page tirée du texte lui-même ————————————
+
+/** Une ligne en capitales, courte : un titre de section (« OUVRIR L'INTRODUCTION »). */
+const estTitre = (l: string) => l.length <= 70 && /[A-ZÀ-Ý]/.test(l) && l === l.toUpperCase() && !/^[•\-–]/.test(l);
+const estPuce = (l: string) => /^\s*[•\-–]\s+/.test(l);
+/** Une ligne « a · b · c » de trois éléments ou plus : des étiquettes. */
+const estListePoints = (l: string) => !estPuce(l) && l.split(" · ").length >= 3;
+const majuscule = (t: string) => t.charAt(0) + t.slice(1).toLowerCase();
+
+/** Les [mots entre crochets] (à remplacer) en pastilles ; [[encadré]] reste à formule(). */
+function avecTrous(t: string, couleur: string) {
+  const morceaux = t.split(/(?<!\[)\[([^\[\]]+)\](?!\])/);
+  return morceaux.map((m, i) =>
+    i % 2 ? (
+      <span
+        key={i}
+        className="mx-px rounded-md px-1.5 py-px text-[0.92em] font-medium"
+        style={{ background: pastel(couleur, 20), color: encre(couleur) }}
+      >
+        {m}
+      </span>
+    ) : (
+      <span key={i}>{formule(m)}</span>
+    ),
+  );
+}
+
+function TexteNote({ texte, couleur }: { texte: string; couleur: string }) {
+  const lignes = texte.split("\n");
+  const structure = lignes.some((l) => estTitre(l.trim()) || estPuce(l));
+  if (!structure)
+    return (
+      <>
+        {paragraphes(texte).map((p, i) => (
+          <p key={i} className="whitespace-pre-line">
+            {formule(p)}
+          </p>
+        ))}
+      </>
+    );
+
+  // Sections : un titre, puis ses puces et paragraphes.
+  type Bloc = { titre?: string; lignes: string[] };
+  const blocs: Bloc[] = [{ lignes: [] }];
+  for (const brut of lignes) {
+    const l = brut.trim();
+    if (!l) continue;
+    if (estTitre(l)) blocs.push({ titre: l, lignes: [] });
+    else blocs[blocs.length - 1].lignes.push(l);
+  }
+  const foncee = encre(couleur);
+  return (
+    <div className="flex flex-col gap-6 text-[15.5px] leading-relaxed sm:text-[16.5px]">
+      {blocs
+        .filter((b) => b.titre || b.lignes.length)
+        .map((b, i) => (
+          <section key={i} className="grid gap-2.5">
+            {b.titre && (
+              <h3 className="flex items-center gap-3 font-display text-[19px] leading-tight" style={{ color: foncee }}>
+                <span
+                  className="flex size-7 shrink-0 items-center justify-center rounded-full font-sans text-[12.5px] font-bold"
+                  style={{ background: pastel(couleur, 24) }}
+                >
+                  {blocs.slice(0, i + 1).filter((x) => x.titre).length}
+                </span>
+                {majuscule(b.titre)}
+              </h3>
+            )}
+            {b.lignes.map((l, k) => {
+              if (estPuce(l)) {
+                const corps = l.replace(/^\s*[•\-–]\s+/, "");
+                const deux = corps.indexOf(" : ");
+                const etiquette = deux > 0 && deux < 45 && corps.length - deux > 6 ? corps.slice(0, deux) : null;
+                const reste = etiquette ? corps.slice(deux + 3) : corps;
+                return (
+                  <div
+                    key={k}
+                    className="rounded-2xl border border-line bg-bg px-4 py-3"
+                    style={{ borderLeft: `3px solid ${couleur}` }}
+                  >
+                    {etiquette && (
+                      <p className="surtitre mb-1" style={{ color: foncee }}>
+                        {etiquette}
+                      </p>
+                    )}
+                    <p>{avecTrous(reste, couleur)}</p>
+                  </div>
+                );
+              }
+              if (estListePoints(l))
+                return (
+                  <ul key={k} className="flex flex-wrap gap-1.5">
+                    {l.split(" · ").map((x, j) => {
+                      const par = x.match(/^(.*?)\s*\((.+)\)$/);
+                      return (
+                        <li key={j} className="rounded-xl border border-line bg-bg px-3 py-1.5 text-[14px] leading-snug">
+                          <span className="font-semibold">{formule(par ? par[1] : x)}</span>
+                          {par && <span className="text-muted"> · {formule(par[2])}</span>}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                );
+              return (
+                <p key={k} className={i === 0 && !b.titre ? "text-muted" : ""}>
+                  {avecTrous(l, couleur)}
+                </p>
+              );
+            })}
+          </section>
+        ))}
+    </div>
   );
 }

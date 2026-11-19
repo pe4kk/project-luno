@@ -162,6 +162,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     gagne). Carte « Faire taper une feuille » : demande de type `cours` avec
     `meta.note: true`, réponse `{ note: { titre, texte } }` (vérifiée par
     `verifierNote()`), reprise en note avec l'id `dem-<id>` (matière créée si absente).
+    Lecture mise en page (`TexteNote`, 2026-11-19, « embellis cet onglet ») : une ligne en
+    CAPITALES = titre de section numéroté ; « • Étiquette : texte » = carte avec l'étiquette en
+    petit titre ; [mots entre crochets] = pastilles à remplacer ; « a (déf) · b · c » = étiquettes.
+    Un texte sans titres ni puces reste en paragraphes simples. Écrire les notes de Claude ainsi.
   - **Dates clés** (2026-11-13, demandé pour l'histoire : « une partie dates entre
     Déf et Flashcards » pour les matières non scientifiques, avec un mode
     chronologique) : `dates` d'un chapitre (`DateCle` : `date` affichée, `tri`
