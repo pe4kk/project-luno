@@ -731,6 +731,8 @@ export const useLuno = create<Etat>()(
         const chapitre: Chapitre = {
           ...base,
           publieId: p.id,
+          // Le titre suit la publication (le 2026-11-20 : « Chap. 11 » renuméroté « Chap. 13 »).
+          titre: p.titre,
           cours: base.cours.trim() ? base.cours : (p.cours ?? ""),
           documents: p.documents ?? base.documents ?? [],
           // Une carte déjà reprise garde sa progression ; son verso suit la publication

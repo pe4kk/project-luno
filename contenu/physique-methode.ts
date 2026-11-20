@@ -4,7 +4,7 @@ import { HOMME_CANON } from "./schemas-physique";
 
 /**
  * Physique-Chimie : la façon de rédiger qu'attend le professeur, relevée dans sa
- * correction des exercices du chap. 11 et dans ses cours (encadrés, formules
+ * correction des exercices du chap. 13 et dans ses cours (encadrés, formules
  * surlignées). Les exemples rédigés reprennent un exercice déjà corrigé par le prof
  * (l'homme-canon) ou des exercices parallèles, jamais le DM.
  * Version 7 (2026-11-13, demandé) : la méthode générale (titre, « par définition »,
@@ -20,7 +20,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 10,
+  version: 11,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -374,7 +374,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         "A.N. avec unité et chiffres significatifs",
         "Phrase de conclusion",
       ],
-      explication: "C'est le plan suivi par ton prof dans la correction des exercices du chap. 11 : la méthode générale, avec en plus le bilan des forces et la projection.",
+      explication: "C'est le plan suivi par ton prof dans la correction des exercices du chap. 13 : la méthode générale, avec en plus le bilan des forces et la projection.",
     },
     {
       type: "ordre",

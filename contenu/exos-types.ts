@@ -133,7 +133,7 @@ export const EXOS_TYPES: Record<string, ExosTypes> = {
     ],
   },
 
-  // ———————————————————— Chap. 11 · Mouvement d'un système et lois de Newton ————————————————————
+  // ———————————————————— Chap. 13 · Mouvement d'un système et lois de Newton ————————————————————
   "pc-1re-chap11-newton": {
     types: [
       { id: "bilan", court: "bilan des forces", titre: "Bilan des forces et schéma", rappel: "Système, référentiel, puis chaque force : nom, direction, sens." },

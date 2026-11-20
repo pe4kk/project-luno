@@ -21,7 +21,7 @@ export const CARTES_HORS_QUIZ = new Set(
     "Quelle est la limite du modèle du point matériel ?",
     "Quel est le lien entre la vitesse et la position ?",
     "À quoi sert la relation de Chasles dans la méthode d'Euler ?",
-    // Chap. 11
+    // Chap. 13
     "Cinématique", // mot-catégorie : flashcard seulement
     "Faut-il une force pour être en mouvement ?", // redit le principe d'inertie
     "Pourquoi le mouvement de la Lune autour de la Terre vérifie-t-il la 2e loi de Newton ?",

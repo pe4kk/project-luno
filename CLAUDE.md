@@ -422,7 +422,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     `contenu/exos-types.ts` (`EXOS_TYPES`, clé = id du chapitre publié, lu directement, pas
     copié dans les données) : `types` (id, titre, `court`, `rappel`) et le moins d'`exos`
     entiers possible qui couvrent tous les types (énoncé, schéma, questions avec `types`,
-    `correction` rédigée comme le prof, `points`, `source`). Faits : chap. 9, chap. 11,
+    `correction` rédigée comme le prof, `points`, `source`). Faits : chap. 9, chap. 13,
     forces, oxydoréduction, dérivation (2 exos chacun, calculs refaits). A : liste des types
     cochés (vert seul, cuivre avec la correction, rouge raté), exo conseillé. B : Sujet /
     Ma copie (SaisieFormule, enregistrée) / Correction (cachée tant qu'on n'a pas fini,
@@ -649,7 +649,7 @@ un PDF ou une photo directement dans le chat.
   ils sont publics (le dépôt l'est). Rester
   fidèle au cours fourni, niveau lycée. Pour corriger un chapitre publié,
   augmenter `version`.
-- **Règle de Déf** (tirée de ses réponses sur des exemples du chap. 9 et 11, le
+- **Règle de Déf** (tirée de ses réponses sur des exemples du chap. 9 et 13, le
   2026-11-14) :
   - Dans Déf, en `definition` : les **termes qu'un prof peut demander de définir**
     (système, référentiel, chronophotographie, vecteur déplacement, force…).
@@ -846,11 +846,12 @@ un PDF ou une photo directement dans le chat.
   première version, sans préfixe (`m-maths`, `c-deriv`, `d1`…). Ils sont
   maintenant reconnus aussi (`ANCIENS_EXEMPLES`, format version 4). Leçon
   d'exemple « photosynthèse » retirée. Physique-Chimie : trois chapitres
-  (Chap. 9, Chap. 11, les forces) avec les cinq PDF du prof, 67 flashcards,
+  (Chap. 9, Chap. 13, les forces ; « Chap. 13 » et non « 11 » comme dans le mail du prof,
+  corrigé le 2026-11-20 ; ids `pc-1re-chap11-*` gardés pour la progression) avec les cinq PDF du prof, 67 flashcards,
   55 exercices. Le mail du prof (reçu le 2026-11-11) confirme : interro de
-  cours d'1 h le lundi 16/11/2026 sur chap. 9, chap. 11 et les trois fiches
+  cours d'1 h le lundi 16/11/2026 sur chap. 9, chap. 13 et les trois fiches
   méthode ; DM à rendre le même jour (ex. 1 cas 2 et 3, ex. 4 de la fiche
-  d'exercices du chap. 11, à rédiger sur feuille). Quatrième chapitre « Fiche
+  d'exercices du chap. 13, à rédiger sur feuille). Quatrième chapitre « Fiche
   d'exercices et DM » : énoncé (converti du .docx en PDF) et correction du
   prof, exercices tirés des parties corrigées, pistes de méthode pour le DM.
   **Ne pas rédiger le DM à sa place** : la correction du prof ne le contient

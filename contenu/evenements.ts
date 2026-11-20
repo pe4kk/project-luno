@@ -11,9 +11,9 @@ const physique = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" }
 export const EVENEMENTS: EvenementPublie[] = [
   {
     id: "pc-interro-2026-11-16",
-    version: 1,
+    version: 2,
     matiere: physique,
-    titre: "Interrogation de cours : chap. 9, chap. 11 et fiches méthode",
+    titre: "Interrogation de cours : chap. 9, chap. 13 et fiches méthode",
     date: "2026-11-16",
     dureeMin: 60,
     notes:
@@ -27,12 +27,12 @@ export const EVENEMENTS: EvenementPublie[] = [
   },
   {
     id: "pc-dm-2026-11-16",
-    version: 1,
+    version: 2,
     matiere: physique,
     titre: "DM à rendre : ex. 1 (cas 2 et 3) et ex. 4",
     date: "2026-11-16",
     dureeMin: 0,
-    notes: "Fiche d'exercices du chap. 11, à rédiger sur feuille.",
+    notes: "Fiche d'exercices du chap. 13, à rédiger sur feuille.",
     chapitres: ["pc-1re-chap11-exercices", "pc-1re-methode-redaction"],
   },
 ];

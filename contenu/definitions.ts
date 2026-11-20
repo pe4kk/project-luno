@@ -37,7 +37,7 @@ const p = (terme: string, texte: string, precision?: string): DefinitionCours =>
 export const SYSTEME = d(
   "Système",
   "Le système est l'objet dont on étudie le mouvement. Pour simplifier l'étude, on modélise le système mobile par un seul point particulier, appelé « point matériel », en général le centre de gravité du système, auquel on associe toute la masse m du système.",
-  "Si ses dimensions sont petites devant la taille de la région de l'espace où il évolue, on dit que le système est ponctuel (chap. 11). La modélisation par un point matériel peut toutefois faire perdre des informations sur le mouvement (exemple : la rotation d'un marteau qui tourne sur lui-même).",
+  "Si ses dimensions sont petites devant la taille de la région de l'espace où il évolue, on dit que le système est ponctuel (chap. 13). La modélisation par un point matériel peut toutefois faire perdre des informations sur le mouvement (exemple : la rotation d'un marteau qui tourne sur lui-même).",
 );
 
 export const REFERENTIEL = d(

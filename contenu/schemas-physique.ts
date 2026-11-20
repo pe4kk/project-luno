@@ -150,7 +150,7 @@ export const CARACTERISER: Schema = {
   ],
 };
 
-/** Vitesse par encadrement : v⃗₂ parallèle à [M₁M₃] (chap. 11 et fiche Euler). */
+/** Vitesse par encadrement : v⃗₂ parallèle à [M₁M₃] (chap. 13 et fiche Euler). */
 export const ENCADREMENT: Schema = {
   l: 320,
   h: 140,
@@ -190,7 +190,7 @@ export const EULER: Schema = {
   ],
 };
 
-/** Δv⃗ en mouvement rectiligne : accéléré ou ralenti (chap. 11). */
+/** Δv⃗ en mouvement rectiligne : accéléré ou ralenti (chap. 13). */
 export const VARIATION_RECTILIGNE: Schema = {
   l: 330,
   h: 150,
@@ -233,7 +233,7 @@ export const CONSTRUCTION_DELTA_V: Schema = {
   ],
 };
 
-/** 2e loi : ΣF⃗ et Δv⃗ ont même direction et même sens (chap. 11). */
+/** 2e loi : ΣF⃗ et Δv⃗ ont même direction et même sens (chap. 13). */
 export const DEUXIEME_LOI: Schema = {
   l: 320,
   h: 150,
@@ -248,7 +248,7 @@ export const DEUXIEME_LOI: Schema = {
   ],
 };
 
-/** Forces sur le skieur tiré par un téléski, et leur somme (chap. 11). */
+/** Forces sur le skieur tiré par un téléski, et leur somme (chap. 13). */
 export const SKIEUR: Schema = {
   l: 320,
   h: 175,
@@ -267,7 +267,7 @@ export const SKIEUR: Schema = {
   ],
 };
 
-/** 3e loi : la fusée et les gaz (chap. 11). */
+/** 3e loi : la fusée et les gaz (chap. 13). */
 export const FUSEE: Schema = {
   l: 320,
   h: 190,

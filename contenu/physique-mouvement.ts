@@ -27,7 +27,7 @@ import {
 /**
  * Physique-Chimie Première (spécialité) : mouvement et interactions.
  * Rédigé le 2026-11-11 à partir des documents envoyés par le professeur :
- * cours « Chap. 9 – Décrire un mouvement » et « Chap. 11 – Mouvement d'un
+ * cours « Chap. 9 – Décrire un mouvement » et « Chap. 13 – Mouvement d'un
  * système », fiches méthode « méthode d'Euler », « vecteur variation de
  * vitesse » et « tableau synoptique des forces ». Les PDF sont dans
  * `public/documents/physique-chimie/`. Préparé pour l'évaluation de cours
@@ -58,7 +58,7 @@ const CARTE_REFERENTIEL = {
 export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   {
     id: "pc-1re-chap9-mouvement",
-    version: 12,
+    version: 13,
     // Retirées : « Point matériel » (fondu dans « Système ») ; les logiciels de TP (inutile à l'éval).
     cartesRetirees: [
       "Point matériel",
@@ -266,7 +266,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 2, schema: VITESSE_INSTANTANEE,
             },
             {
-              t: "Attention : le chap. 11 et la fiche Euler calculent la vitesse en Mᵢ par encadrement, avec Mᵢ₋₁ et Mᵢ₊₁. Utilise la formule demandée dans l'énoncé.",
+              t: "Attention : le chap. 13 et la fiche Euler calculent la vitesse en Mᵢ par encadrement, avec Mᵢ₋₁ et Mᵢ₊₁. Utilise la formule demandée dans l'énoncé.",
               n: 2,
             },
             {
@@ -524,16 +524,16 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 12,
+    version: 13,
     cartesRetirees: ["Système ponctuel"],
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,
     definitions: DEF_PC_CHAP11,
     matiere,
-    titre: "Chap. 11 · Mouvement d'un système et lois de Newton",
+    titre: "Chap. 13 · Mouvement d'un système et lois de Newton",
     documents: [
       {
-        titre: "Chap. 11 · Mouvement d'un système",
+        titre: "Chap. 13 · Mouvement d'un système",
         fichier: `${dossier}/chap11-mouvement-d-un-systeme.pdf`,
         detail: "Cours du prof · 4 pages",
       },
@@ -1003,7 +1003,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-forces",
-    version: 12,
+    version: 13,
     // Hors DST d'après la fiche du prof (« très marginal en 1re spé ») : reste dans la fiche seulement.
     cartesRetirees: ["Force de rappel d'un ressort"],
     calculs: CALCULS_FORCES,
@@ -1321,18 +1321,18 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-exercices",
-    version: 5,
+    version: 6,
     matiere,
-    titre: "Chap. 11 · Fiche d'exercices et DM",
+    titre: "Chap. 13 · Fiche d'exercices et DM",
     documents: [
       {
-        titre: "Exercices du Chap. 11",
+        titre: "Exercices du Chap. 13",
         fichier: `${dossier}/exercices-chap11.pdf`,
         // Le PDF du prof porte le titre « Exercices du Chap.13 » (numérotation du manuel).
-        detail: "Énoncés · 4 pages · le PDF s'intitule « Chap. 13 » (numéro du manuel), c'est bien ce chapitre",
+        detail: "Énoncés · 4 pages",
       },
       {
-        titre: "Correction des exercices du Chap. 11",
+        titre: "Correction des exercices du Chap. 13",
         fichier: `${dossier}/correction-exercices-chap11.pdf`,
         detail:
           "Correction manuscrite · 6 pages · à ouvrir après avoir cherché",
@@ -1393,7 +1393,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
               n: 1,
             },
             {
-              t: "Interrogation de cours d'une heure le lundi 16/11, dès la première séance : chap. 9, chap. 11 et les trois fiches méthode.",
+              t: "Interrogation de cours d'une heure le lundi 16/11, dès la première séance : chap. 9, chap. 13 et les trois fiches méthode.",
               n: 1,
             },
             {
@@ -1403,10 +1403,6 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
             {
               t: "L'exercice 7 (chute parabolique) sera fait en classe.",
               n: 3,
-            },
-            {
-              t: "Les documents s'intitulent « Chap. 13 » : c'est bien le chapitre 11 du mail.",
-              n: 5,
             },
           ],
         },
