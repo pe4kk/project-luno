@@ -203,7 +203,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     l'analyse »). Un texte encore protégé (auteur mort depuis moins de 70 ans) n'est pas recopié
     en entier dans le dépôt public : seulement les passages commentés, `extraits: true`
     (bandeau « lis-le sur ton polycopié »). Coquille de la correction : « Aimée Césaire » (Aimé).
-    Attendus : deux autres textes des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
+    « Vénus Anadyomène » (Rimbaud, texte 2, 2026-11-20, d'après le poème annoté au cours oral :
+    3 mouvements, 20 remarques dont 9 `cle`) est `provisoire` (bandeau « sera complétée avec
+    l'analyse écrite du prof ») : la compléter quand il l'enverra, puis retirer `provisoire`.
+    Attendus : un troisième texte des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.

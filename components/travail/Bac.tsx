@@ -258,6 +258,9 @@ function VueTexte({ matiere, texte, vue }: { matiere: Matiere; texte: TexteBac; 
           </p>
           <h2 className="mt-1 text-[28px] leading-tight sm:text-[36px]">{texte.titre}</h2>
           <p className="mt-0.5 text-[13.5px] text-muted">{[texte.date, texte.forme].filter(Boolean).join(" · ")}</p>
+          {texte.provisoire && (
+            <p className="mt-2 rounded-xl bg-accent-soft px-3 py-1.5 text-[13px] leading-snug text-ink">{texte.provisoire}</p>
+          )}
         </div>
         <div role="tablist" aria-label="Affichage du texte" className="inline-flex max-w-full rounded-full border border-line bg-surface p-1 shadow-card">
           {VUES.map((v) => (

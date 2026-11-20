@@ -740,6 +740,257 @@ export const FEMME_NOIRE: TexteBac = {
   ],
 };
 
+/**
+ * Texte 2, reçu le 2026-11-20 : le poème annoté pendant le cours oral (photo). L'analyse
+ * écrite du prof arrivera plus tard : la fiche est à compléter et à vérifier avec elle.
+ */
+export const VENUS_ANADYOMENE: TexteBac = {
+  id: "rimbaud-venus-anadyomene",
+  genre: "poesie",
+  titre: "Vénus Anadyomène",
+  auteur: "Arthur Rimbaud",
+  date: "27 juillet 1870",
+  forme: "Sonnet d’alexandrins aux rimes irrégulières (croisées, puis embrassées)",
+  provisoire: "Fiche faite d’après ton cours oral : elle sera complétée avec l’analyse écrite du prof.",
+  categories: { theme: "Parodie et dénonciation", registre: "Laideur et péjoratif" },
+  essentiel: [
+    "==Une parodie du mythe de Vénus==, déesse de la beauté et de l’amour « sortie des eaux » (anadyomène), peinte par Botticelli et Cabanel : Rimbaud règle ses comptes avec une tradition qui célèbre la beauté féminine de manière répétitive.",
+    "Le titre annonce un énième éloge ; le premier vers l’annule : la déesse émerge d’une « vieille baignoire » comme d’un « cercueil », une morte-vivante.",
+    "==Un blason renversé== : description de haut en bas (tête, col, omoplates, dos, reins), et plus on avance, plus on entre dans l’horreur (graisse, rougeur, odeur, ulcère).",
+    "Deuxième lecture : ==une prostituée malade==. « Clara Venus » gravé sur les reins, la rougeur et l’ulcère évoquent la syphilis, maladie « vénérienne ». La « loupe » du médecin oblige le lecteur, et les bourgeois clients des maisons closes, à regarder.",
+    "Héritage : Albert Glatigny, « Les Antres malsains » (la maison close). Le sens du poème oscille entre la parodie (s’amuser à salir Vénus) et la dénonciation (montrer ce qu’on fait aux prostituées).",
+    "La chute : « Belle hideusement d’un ulcère à l’anus », un oxymore qui résume le poème.",
+  ],
+  lecture:
+    "Ton neutre, presque clinique, comme un médecin qui décrit : laisser la laideur agir sans en rajouter. Marquer les enjambements des tercets et ralentir sur le dernier vers.",
+  introduction: [
+    "Arthur Rimbaud (1854-1891) écrit ce sonnet à quinze ans, daté du 27 juillet 1870. ==Il appartient aux Cahiers de Douai== (recueil Demeny), comme « À la Musique ».",
+    "Vénus est la déesse romaine de la beauté et de l’amour ; « Anadyomène » signifie « sortie des eaux », d’après le mythe de sa naissance dans l’écume. C’est un sujet rebattu de l’art, de « La Naissance de Vénus » de Botticelli (vers 1485) à celle de Cabanel (1863), célèbre au Salon.",
+    "==Rimbaud reprend ce sujet pour le salir et s’en amuser== : il règle ses comptes avec la tradition littéraire qui célèbre la beauté de la femme et de Vénus de manière répétitive.",
+    "Il s’inspire aussi d’Albert Glatigny, « Les Antres malsains », qui décrit une maison close en déshumanisant les prostituées, tout en prenant plaisir à décrire ce qui s’y passe.",
+  ],
+  problematique:
+    "Comment, en parodiant le mythe de Vénus, Rimbaud transforme-t-il un éloge attendu en un portrait repoussant, qui dénonce aussi la condition des prostituées ?",
+  mouvements: [
+    {
+      titre: "Une Vénus morte-vivante (v. 1-4)",
+      fiche: [
+        "Le titre fait attendre un énième éloge de Vénus ; ==le premier vers installe une atmosphère morbide== : un « cercueil vert en fer blanc » (froid, mort).",
+        "Le sujet, « une tête », est retardé : l’emphase met en scène l’apparition, celle d’une morte-vivante qui « émerge ».",
+        "Termes péjoratifs (« vieille », « lente et bête », « déficits », « mal ravaudés ») : un physique abîmé, qu’on a tenté de réparer.",
+        "Dès ce premier quatrain, la construction est parodique : Rimbaud reprend le mouvement du mythe (sortir de l’eau) mais dans une baignoire.",
+      ],
+      passages: [
+        {
+          chapeau: true,
+          lignes: ["Vénus Anadyomène"],
+          annotations: [
+            {
+              extrait: "Vénus Anadyomène",
+              cle: true,
+              cat: "theme",
+              titre: "Un titre mythologique",
+              texte: "« Anadyomène » : sortie des eaux, un mouvement du bas vers le haut. Allusion au mythe de Vénus, déesse de la beauté et de l’amour, sujet usé de l’art (Botticelli, Cabanel) : on attend un éloge.",
+              retenir: "on attend un éloge, on aura une parodie",
+            },
+          ],
+        },
+        {
+          lignes: [
+            "Comme d’un cercueil vert en fer blanc, une tête",
+            "De femme à cheveux bruns fortement pommadés",
+            "D’une vieille baignoire émerge, lente et bête,",
+            "Avec des déficits assez mal ravaudés ;",
+          ],
+          annotations: [
+            {
+              extrait: "Comme d’un cercueil vert en fer blanc",
+              cle: true,
+              cat: "figure",
+              titre: "Comparaison morbide",
+              texte: "Le cercueil, le fer froid : une atmosphère de mort. L’apparition de cette femme ressemble à celle d’une morte-vivante, à l’opposé de la naissance de Vénus.",
+              retenir: "la baignoire est un cercueil",
+            },
+            {
+              extrait: "une tête",
+              cat: "vers",
+              titre: "Sujet retardé",
+              texte: "Le sujet n’arrive qu’en fin de vers, et le verbe « émerge » deux vers plus loin : une emphase qui fait attendre l’apparition, comme au théâtre.",
+            },
+            {
+              extrait: "fortement pommadés",
+              cat: "registre",
+              titre: "Un artifice",
+              texte: "Des cheveux trop pommadés : une beauté fabriquée. L’expression est reprise à Albert Glatigny.",
+            },
+            {
+              extrait: "vieille baignoire",
+              cle: true,
+              cat: "figure",
+              titre: "Hypallage",
+              texte: "« Vieille » qualifie la baignoire, mais c’est la femme qui est vieille. La mer du mythe devient une baignoire.",
+            },
+            {
+              extrait: "lente et bête",
+              cat: "registre",
+              titre: "Termes péjoratifs",
+              texte: "La déesse est lente et sans esprit : l’inverse de la grâce.",
+            },
+            {
+              extrait: "déficits",
+              cat: "registre",
+              titre: "Mot de comptable",
+              texte: "Des défauts, avec un mot pris à l’économie : le corps est un bilan dans le rouge.",
+            },
+            {
+              extrait: "mal ravaudés",
+              cat: "theme",
+              titre: "Raccommodée",
+              texte: "« Ravauder », c’est raccommoder : la femme (peut-être une prostituée) essaie de se faire belle mais n’y parvient plus. Un physique abîmé.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "Un blason renversé, de haut en bas (v. 5-8)",
+      fiche: [
+        "==La description descend le long du corps (col, omoplates, dos, reins)== : c’est le blason, qui célèbre une à une les parties du corps aimé, mais renversé en catalogue de laideurs.",
+        "Un physique disharmonieux : gras, gris, saillant, graisse « en feuilles plates ».",
+        "Un vocabulaire animal (« saillent ») qui annonce l’animalisation de la fin.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Puis le col gras et gris, les larges omoplates",
+            "Qui saillent ; le dos court qui rentre et qui ressort ;",
+            "Puis les rondeurs des reins semblent prendre l’essor ;",
+            "La graisse sous la peau paraît en feuilles plates ;",
+          ],
+          annotations: [
+            {
+              extrait: "le col gras et gris",
+              cat: "vers",
+              titre: "Allitération en « gr »",
+              texte: "Des sonorités lourdes pour un corps lourd et terne. La description commence sa descente : le col, puis les omoplates, le dos, les reins.",
+            },
+            {
+              extrait: "Qui saillent",
+              cle: true,
+              cat: "figure",
+              titre: "Double sens",
+              texte: "« Saillir » : dépasser, ressortir, mais aussi s’accoupler, pour un animal. Le corps est déjà animalisé.",
+              retenir: "saillir : ressortir et s’accoupler",
+            },
+            {
+              extrait: "qui rentre et qui ressort",
+              cat: "vers",
+              titre: "Rythme heurté",
+              texte: "Le dos bossué rentre et ressort : la phrase avance par saccades, comme le corps.",
+            },
+            {
+              extrait: "semblent prendre l’essor",
+              cat: "registre",
+              titre: "Image ironique",
+              texte: "L’essor rappelle le vol d’un oiseau : une image légère pour des reins lourds, l’ironie souligne la laideur.",
+            },
+            {
+              extrait: "La graisse sous la peau paraît en feuilles plates",
+              cle: true,
+              cat: "theme",
+              titre: "Un corps disharmonieux",
+              texte: "La graisse décrite comme une matière : l’opposé du corps idéal de Vénus.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "L’horreur, de la parodie à la dénonciation (v. 9-14)",
+      fiche: [
+        "==Plus on avance dans le poème, plus on avance dans l’horreur== : la rougeur, l’odeur, les « singularités », l’ulcère.",
+        "Deuxième lecture : Rimbaud pose de manière insistante la question de la prostitution, qui s’impose dans le débat public au XIXᵉ siècle. Vénus évoque la maladie « vénérienne », la syphilis, marquée par des rougeurs.",
+        "==La « loupe » est celle du médecin : elle invite le lecteur à regarder de plus près==. Rimbaud montre ce que l’on fait aux prostituées, et vise les bourgeois qui vont dans les maisons closes. Pour lui, la poésie doit être objective.",
+        "La chute, « Belle hideusement d’un ulcère à l’anus », résume le poème en un oxymore. Le sens oscille entre parodie et dénonciation.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "L’échine est un peu rouge, et le tout sent un goût",
+            "Horrible étrangement ; on remarque surtout",
+            "Des singularités qu’il faut voir à la loupe…",
+          ],
+          annotations: [
+            {
+              extrait: "L’échine est un peu rouge",
+              cle: true,
+              cat: "theme",
+              titre: "Les signes d’une maladie",
+              texte: "La rougeur évoque la syphilis, maladie « vénérienne » (de Vénus). « Échine » est un mot qu’on emploie pour un animal.",
+            },
+            {
+              extrait: "sent un goût",
+              cat: "figure",
+              titre: "Synesthésie",
+              texte: "On « sent un goût » : l’odorat et le goût se mêlent, la laideur gagne tous les sens.",
+            },
+            {
+              extrait: "Horrible étrangement",
+              cat: "vers",
+              titre: "Rejet",
+              texte: "L’adjectif est rejeté au début du vers suivant : il frappe d’autant plus.",
+            },
+            {
+              extrait: "qu’il faut voir à la loupe…",
+              cle: true,
+              cat: "theme",
+              titre: "Le regard du médecin",
+              texte: "La loupe du médecin invite le lecteur à regarder de plus près : Rimbaud nous montre ce que nous faisons aux prostituées, et s’adresse aux bourgeois qui fréquentent les maisons closes.",
+              retenir: "la poésie doit être objective",
+            },
+          ],
+        },
+        {
+          lignes: [
+            "Les reins portent deux mots gravés : Clara Venus ;",
+            "— Et tout ce corps remue et tend sa large croupe",
+            "Belle hideusement d’un ulcère à l’anus.",
+          ],
+          annotations: [
+            {
+              extrait: "Clara Venus",
+              cle: true,
+              cat: "figure",
+              titre: "Inscription et anagramme",
+              texte: "En latin, « la célèbre Vénus » (clara : illustre). Gravée comme un tatouage, elle marque la femme comme un objet. En latin, où u et v s’écrivent pareil, CLARA VENVS est l’anagramme d’VLCERA ANVS : l’ulcère du dernier vers est caché dans le nom.",
+              retenir: "Clara Venus = ulcera anus",
+            },
+            {
+              extrait: "sa large croupe",
+              cat: "theme",
+              titre: "Animalisation",
+              texte: "La « croupe » est celle d’un animal : la femme n’est plus qu’un corps.",
+            },
+            {
+              extrait: "Belle hideusement",
+              cle: true,
+              cat: "figure",
+              titre: "Oxymore",
+              texte: "Beauté et laideur réunies : la chute renverse l’éloge de Vénus. Le poème oscille entre parodie et dénonciation.",
+              retenir: "la chute résume le poème",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  conclusion: [
+    "Rimbaud transforme l’éloge attendu de Vénus en portrait repoussant : ==une parodie qui règle ses comptes avec la tradition poétique==, avec une connotation polémique et une image négative de la femme.",
+    "Mais le poème oscille : derrière la provocation, il pose la question de la prostitution et oblige le lecteur à regarder ce qu’il préfère ignorer.",
+    "Ouverture : « À la Musique », autre satire des Cahiers de Douai ; ou « Une charogne » de Baudelaire, qui fait aussi de la laideur une matière poétique.",
+  ],
+};
+
 export const PROGRAMME_BAC: ProgrammeGenre[] = [
   {
     genre: "poesie",
@@ -751,7 +1002,7 @@ export const PROGRAMME_BAC: ProgrammeGenre[] = [
     },
     places: [
       A_LA_MUSIQUE,
-      { titre: "Deuxième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
+      VENUS_ANADYOMENE,
       { titre: "Troisième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
       FEMME_NOIRE,
     ],

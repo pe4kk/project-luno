@@ -117,6 +117,8 @@ export type TexteBac = {
    * droit d'auteur, dépôt public) : l'élève lit le poème complet sur son polycopié.
    */
   extraits?: boolean;
+  /** Fiche faite d'après les notes de cours, en attente de l'analyse écrite du prof. */
+  provisoire?: string;
   introduction: string[];
   problematique: string;
   mouvements: MouvementBac[];
