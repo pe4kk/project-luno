@@ -752,13 +752,14 @@ export const VENUS_ANADYOMENE: TexteBac = {
   date: "27 juillet 1870",
   forme: "Sonnet d’alexandrins aux rimes irrégulières (croisées, puis embrassées)",
   provisoire: "Fiche faite d’après ton cours oral : elle sera complétée avec l’analyse écrite du prof.",
-  categories: { theme: "Parodie et dénonciation", registre: "Laideur et péjoratif" },
+  categories: { theme: "Parodie et déshumanisation", registre: "Laideur et péjoratif" },
   essentiel: [
     "==Une parodie du mythe de Vénus==, déesse de la beauté et de l’amour « sortie des eaux » (anadyomène), peinte par Botticelli et Cabanel : Rimbaud règle ses comptes avec une tradition qui célèbre la beauté féminine de manière répétitive.",
     "Le titre annonce un énième éloge ; le premier vers l’annule : la déesse émerge d’une « vieille baignoire » comme d’un « cercueil », une morte-vivante.",
     "==Un blason renversé== : description de haut en bas (tête, col, omoplates, dos, reins), et plus on avance, plus on entre dans l’horreur (graisse, rougeur, odeur, ulcère).",
-    "Deuxième lecture : ==une prostituée malade==. « Clara Venus » gravé sur les reins, la rougeur et l’ulcère évoquent la syphilis, maladie « vénérienne ». La « loupe » du médecin oblige le lecteur, et les bourgeois clients des maisons closes, à regarder.",
-    "Héritage : Albert Glatigny, « Les Antres malsains » (la maison close). Le sens du poème oscille entre la parodie (s’amuser à salir Vénus) et la dénonciation (montrer ce qu’on fait aux prostituées).",
+    "La femme est ==déshumanisée==, et même animalisée (« saillent », « échine », « croupe »).",
+    "==Deux lectures distinctes, à ne pas mélanger.== Première lecture, la plus simple : Rimbaud critique Vénus, un topos littéraire, et s’amuse à la salir. Deuxième lecture, à part : une prostituée malade (rougeur et ulcère de la syphilis, maladie « vénérienne »), la « loupe » du médecin, la critique des bourgeois clients des maisons closes.",
+    "Héritage : Albert Glatigny, « Les Antres malsains » (la maison close), dont Rimbaud reprend des expressions. Le sens du poème oscille entre ces deux lectures.",
     "La chute : « Belle hideusement d’un ulcère à l’anus », un oxymore qui résume le poème.",
   ],
   lecture:
@@ -766,11 +767,12 @@ export const VENUS_ANADYOMENE: TexteBac = {
   introduction: [
     "Arthur Rimbaud (1854-1891) écrit ce sonnet à quinze ans, daté du 27 juillet 1870. ==Il appartient aux Cahiers de Douai== (recueil Demeny), comme « À la Musique ».",
     "Vénus est la déesse romaine de la beauté et de l’amour ; « Anadyomène » signifie « sortie des eaux », d’après le mythe de sa naissance dans l’écume. C’est un sujet rebattu de l’art, de « La Naissance de Vénus » de Botticelli (vers 1485) à celle de Cabanel (1863), célèbre au Salon.",
-    "==Rimbaud reprend ce sujet pour le salir et s’en amuser== : il règle ses comptes avec la tradition littéraire qui célèbre la beauté de la femme et de Vénus de manière répétitive.",
+    "Vénus est un ==topos littéraire== (un lieu commun, un thème rebattu). ==Rimbaud reprend ce sujet pour le salir et s’en amuser== : il règle ses comptes avec la tradition littéraire qui célèbre la beauté de la femme et de Vénus de manière répétitive. C’est la première lecture, la plus simple.",
+    "Le cours en propose une seconde, distincte : le poème comme portrait d’une prostituée malade et critique des bourgeois qui fréquentent les maisons closes. ==Ne pas les fondre en une seule idée== : présenter la première, puis l’autre comme une autre manière de lire.",
     "Il s’inspire aussi d’Albert Glatigny, « Les Antres malsains », qui décrit une maison close en déshumanisant les prostituées, tout en prenant plaisir à décrire ce qui s’y passe.",
   ],
   problematique:
-    "Comment, en parodiant le mythe de Vénus, Rimbaud transforme-t-il un éloge attendu en un portrait repoussant, qui dénonce aussi la condition des prostituées ?",
+    "Comment Rimbaud parodie-t-il le mythe de Vénus pour transformer un éloge attendu en un portrait repoussant ?",
   mouvements: [
     {
       titre: "Une Vénus morte-vivante (v. 1-4)",
@@ -790,7 +792,7 @@ export const VENUS_ANADYOMENE: TexteBac = {
               cle: true,
               cat: "theme",
               titre: "Un titre mythologique",
-              texte: "« Anadyomène » : sortie des eaux, un mouvement du bas vers le haut. Allusion au mythe de Vénus, déesse de la beauté et de l’amour, sujet usé de l’art (Botticelli, Cabanel) : on attend un éloge.",
+              texte: "« Anadyomène » : sortie des eaux, un mouvement du bas vers le haut. Allusion au mythe de Vénus, déesse de la beauté et de l’amour : un topos littéraire, sujet rebattu de l’art (Botticelli, Cabanel). On attend un énième éloge.",
               retenir: "on attend un éloge, on aura une parodie",
             },
           ],
@@ -891,8 +893,8 @@ export const VENUS_ANADYOMENE: TexteBac = {
             {
               extrait: "semblent prendre l’essor",
               cat: "registre",
-              titre: "Image ironique",
-              texte: "L’essor rappelle le vol d’un oiseau : une image légère pour des reins lourds, l’ironie souligne la laideur.",
+              titre: "Reprise de Glatigny",
+              texte: "L’essor rappelle le vol, image que Glatigny répète beaucoup dans « Les Antres malsains » : Rimbaud la reprend, mais pour des reins lourds. L’ironie souligne la laideur.",
             },
             {
               extrait: "La graisse sous la peau paraît en feuilles plates",
@@ -906,12 +908,12 @@ export const VENUS_ANADYOMENE: TexteBac = {
       ],
     },
     {
-      titre: "L’horreur, de la parodie à la dénonciation (v. 9-14)",
+      titre: "L’horreur jusqu’à la chute (v. 9-14)",
       fiche: [
-        "==Plus on avance dans le poème, plus on avance dans l’horreur== : la rougeur, l’odeur, les « singularités », l’ulcère.",
-        "Deuxième lecture : Rimbaud pose de manière insistante la question de la prostitution, qui s’impose dans le débat public au XIXᵉ siècle. Vénus évoque la maladie « vénérienne », la syphilis, marquée par des rougeurs.",
-        "==La « loupe » est celle du médecin : elle invite le lecteur à regarder de plus près==. Rimbaud montre ce que l’on fait aux prostituées, et vise les bourgeois qui vont dans les maisons closes. Pour lui, la poésie doit être objective.",
-        "La chute, « Belle hideusement d’un ulcère à l’anus », résume le poème en un oxymore. Le sens oscille entre parodie et dénonciation.",
+        "Première lecture : ==plus on avance dans le poème, plus on avance dans l’horreur== (la rougeur, l’odeur, les « singularités », l’ulcère). Vénus, salie jusqu’au bout, est déshumanisée (« croupe »).",
+        "La chute, « Belle hideusement d’un ulcère à l’anus », résume la parodie en un oxymore.",
+        "Deuxième lecture, à part (ne pas la mêler à la première) : Rimbaud pose de manière insistante la question de la prostitution, qui s’impose dans le débat public au XIXᵉ siècle. Vénus évoque la maladie « vénérienne », la syphilis, marquée par des rougeurs.",
+        "Dans cette lecture, ==la « loupe » est celle du médecin== : elle invite le lecteur à regarder de plus près. Rimbaud montre ce que l’on fait aux prostituées, et vise les bourgeois qui vont dans les maisons closes. Pour lui, la poésie doit être objective.",
       ],
       passages: [
         {
@@ -925,8 +927,8 @@ export const VENUS_ANADYOMENE: TexteBac = {
               extrait: "L’échine est un peu rouge",
               cle: true,
               cat: "theme",
-              titre: "Les signes d’une maladie",
-              texte: "La rougeur évoque la syphilis, maladie « vénérienne » (de Vénus). « Échine » est un mot qu’on emploie pour un animal.",
+              titre: "Un corps animal",
+              texte: "« Échine » est un mot qu’on emploie pour un animal. Dans la deuxième lecture, la rougeur évoque la syphilis, maladie « vénérienne » (de Vénus).",
             },
             {
               extrait: "sent un goût",
@@ -944,8 +946,8 @@ export const VENUS_ANADYOMENE: TexteBac = {
               extrait: "qu’il faut voir à la loupe…",
               cle: true,
               cat: "theme",
-              titre: "Le regard du médecin",
-              texte: "La loupe du médecin invite le lecteur à regarder de plus près : Rimbaud nous montre ce que nous faisons aux prostituées, et s’adresse aux bourgeois qui fréquentent les maisons closes.",
+              titre: "Deuxième lecture : le médecin",
+              texte: "Dans la lecture « prostitution », la loupe est celle du médecin : elle invite le lecteur à regarder de plus près. Rimbaud nous montre ce que nous faisons aux prostituées, et s’adresse aux bourgeois qui fréquentent les maisons closes.",
               retenir: "la poésie doit être objective",
             },
           ],
@@ -962,21 +964,22 @@ export const VENUS_ANADYOMENE: TexteBac = {
               cle: true,
               cat: "figure",
               titre: "Inscription et anagramme",
-              texte: "En latin, « la célèbre Vénus » (clara : illustre). Gravée comme un tatouage, elle marque la femme comme un objet. En latin, où u et v s’écrivent pareil, CLARA VENVS est l’anagramme d’VLCERA ANVS : l’ulcère du dernier vers est caché dans le nom.",
+              texte: "En latin, « la célèbre Vénus » (clara : illustre). Gravée comme un tatouage, elle marque la femme comme un objet : encore la déshumanisation. En latin, où u et v s’écrivent pareil, CLARA VENVS est l’anagramme d’VLCERA ANVS : l’ulcère du dernier vers est caché dans le nom.",
               retenir: "Clara Venus = ulcera anus",
             },
             {
               extrait: "sa large croupe",
               cat: "theme",
-              titre: "Animalisation",
-              texte: "La « croupe » est celle d’un animal : la femme n’est plus qu’un corps.",
+              titre: "Déshumanisation",
+              texte: "La « croupe » est celle d’un animal : la femme est déshumanisée, animalisée dans un sens, réduite à un corps.",
+              cle: true,
             },
             {
               extrait: "Belle hideusement",
               cle: true,
               cat: "figure",
               titre: "Oxymore",
-              texte: "Beauté et laideur réunies : la chute renverse l’éloge de Vénus. Le poème oscille entre parodie et dénonciation.",
+              texte: "Beauté et laideur réunies : la chute renverse l’éloge de Vénus et résume la parodie.",
               retenir: "la chute résume le poème",
             },
           ],
@@ -986,7 +989,7 @@ export const VENUS_ANADYOMENE: TexteBac = {
   ],
   conclusion: [
     "Rimbaud transforme l’éloge attendu de Vénus en portrait repoussant : ==une parodie qui règle ses comptes avec la tradition poétique==, avec une connotation polémique et une image négative de la femme.",
-    "Mais le poème oscille : derrière la provocation, il pose la question de la prostitution et oblige le lecteur à regarder ce qu’il préfère ignorer.",
+    "Le sens du poème oscille : une autre lecture, distincte, y voit le portrait d’une prostituée malade et une critique des bourgeois clients des maisons closes.",
     "Ouverture : « À la Musique », autre satire des Cahiers de Douai ; ou « Une charogne » de Baudelaire, qui fait aussi de la laideur une matière poétique.",
   ],
 };

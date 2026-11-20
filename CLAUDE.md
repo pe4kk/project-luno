@@ -204,7 +204,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     en entier dans le dépôt public : seulement les passages commentés, `extraits: true`
     (bandeau « lis-le sur ton polycopié »). Coquille de la correction : « Aimée Césaire » (Aimé).
     « Vénus Anadyomène » (Rimbaud, texte 2, 2026-11-20, d'après le poème annoté au cours oral :
-    3 mouvements, 20 remarques dont 9 `cle`) est `provisoire` (bandeau « sera complétée avec
+    3 mouvements, 20 remarques dont 10 `cle` ; deux lectures séparées) est `provisoire` (bandeau « sera complétée avec
     l'analyse écrite du prof ») : la compléter quand il l'enverra, puis retirer `provisoire`.
     Attendus : un troisième texte des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
@@ -608,6 +608,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     ce que le texte relie ; rien sans preuve dans le texte (pas de surinterprétation : d'abord
     le sens simple) ; mesurer l'héritage avant de dire « original » ; toujours commenter la fin ;
     chaque partie répond à la problématique, la conclusion rappelle le contexte.
+    Quand le prof propose **deux lectures** d'un texte (la plus simple, puis une autre, ex. Vénus
+    parodiée / prostitution et critique des bourgeois, 2026-11-20), les garder séparées et
+    nommées (« Première lecture », « Deuxième lecture »), sans les fondre dans une seule idée
+    ni dans la problématique.
 
 ## Ajouter du contenu (cours envoyés par l'utilisateur)
 
