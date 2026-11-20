@@ -196,7 +196,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     de l'utilisateur) : les `extrait` des annotations reprennent les mots du texte à
     l'identique (apostrophes « ’ »), sans chevauchement dans une même strophe ; ne
     garder que l'essentiel de l'explication du prof. Prêt : « À la Musique »
-    (Rimbaud, 33 remarques, complété le 2026-11-19 avec sa feuille annotée en classe) et « Femme
+    (Rimbaud, 34 remarques, complété les 19 et 20/11 avec sa feuille annotée et la page de son cahier : comparaison avec Glatigny) et « Femme
     noire » (Senghor, parcours, 2026-11-19, d'après la correction du DST de M. Waquet et ses
     notes du cours oral ; 4 mouvements, 34 remarques). Chaque texte a un résumé `essentiel`
     (« L'essentiel en une minute », en haut de la fiche, demandé : « une fiche qui résume

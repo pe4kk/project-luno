@@ -32,6 +32,7 @@ export const A_LA_MUSIQUE: TexteBac = {
     "Il rêve de rejoindre les Parnassiens à Paris, fugue plusieurs fois, rencontre Verlaine. Pour lui, le poète doit se faire « voyant » par un « immense et raisonné dérèglement de tous les sens » (lettre à Paul Demeny, mai 1871). Il cesse d’écrire vers 1875.",
     "==Le poème appartient au recueil Demeny, ou Cahiers de Douai== : vingt-deux poèmes écrits entre janvier et octobre 1870, recopiés et confiés à Paul Demeny en vue d’une publication.",
     "==C’est une caricature de la bourgeoisie, qui pastiche « Promenades d’hiver » du parnassien Albert Glatigny== et lui reprend l’opposition entre les bourgeois et le poète. Mais la satire de Rimbaud est plus acerbe : il examine le monde bourgeois et ses sous-catégories, dont il critique le conformisme social et politique.",
+    "Ce que Rimbaud reprend à Glatigny : quatre thèmes (la bourgeoisie, les femmes et les jeunes filles, l’orchestre militaire, la place) et ==la structure même du poème, une opposition entre les bourgeois et leurs femmes qui écoutent un orchestre guerrier sur la place, et le poète avec les jeunes filles==. Il en reprend presque à l’identique le début. Chez Glatigny, la critique du goût bourgeois reste une nuance péjorative peu exploitée ; Rimbaud en fait le cœur du poème.",
   ],
   problematique:
     "Comment, dans ce poème satirique, Rimbaud oppose-t-il la bourgeoisie étriquée de Charleville-Mézières à l’esprit libre et espiègle d’un adolescent-poète ?",
@@ -40,6 +41,7 @@ export const A_LA_MUSIQUE: TexteBac = {
       titre: "La caricature des bourgeois, réifiés et animalisés",
       fiche: [
         "Le titre annonce une ode à la grande Musique, mais le sous-titre donne un lieu trivial : ==ce décalage annonce une caricature qui passe par la précision réaliste, poussée jusqu’à l’exagération.==",
+        "Les six premiers vers posent le cadre autour de l’orchestre : ==plus on est proche de lui, plus on a de pouvoir==. Puis on s’en éloigne, cercle après cercle, jusqu’au poète, « Moi, je suis ».",
         "Strophe 1 : le cadre (la place, les jeudis soirs) et le ton satirique, par les termes péjoratifs (« mesquines », « correct », « poussifs », « bêtises jalouses »). « Tous les bourgeois » : Rimbaud vise la classe sociale entière.",
         "Strophes 2 et 3 : un défilé de types sociaux (le gandin, le notaire, les rentiers, les employés de bureau). ==Les hommes sont réifiés, réduits à leurs objets (« breloques à chiffres », « lorgnons ») ; les femmes sont animalisées (« cornacs »).==",
         "Tous sont en représentation : on vient moins écouter l’orchestre, d’ailleurs médiocre (« couacs »), que se montrer. Une classe attachée aux apparences au point de se confondre avec elles.",
@@ -75,6 +77,12 @@ export const A_LA_MUSIQUE: TexteBac = {
           ],
           annotations: [
             {
+              extrait: "place taillée",
+              cat: "theme",
+              titre: "Un monde étriqué",
+              texte: "L’adjectif épithète « taillée » montre une nature découpée, contrôlée : dès les deux premiers vers, la satire vise le monde étriqué des bourgeois.",
+            },
+            {
               extrait: "mesquines pelouses",
               cle: true,
               cat: "figure",
@@ -85,8 +93,8 @@ export const A_LA_MUSIQUE: TexteBac = {
             {
               extrait: "tout est correct",
               cat: "registre",
-              titre: "Connotation négative",
-              texte: "Un arbre ne peut pas être « correct » : la bourgeoisie veut dominer la nature, lui imposer un ordre. Le mot vise aussi sa politesse, qui cache l’hypocrisie.",
+              titre: "Hyperbole et connotation négative",
+              texte: "« Tout » : l’hyperbole. Un arbre ne peut pas être « correct » : la bourgeoisie veut dominer la nature, lui imposer un ordre, une volonté de contrôle. Le mot vise aussi sa politesse, qui cache l’hypocrisie.",
             },
             {
               extrait: "Tous les bourgeois",
@@ -262,8 +270,8 @@ export const A_LA_MUSIQUE: TexteBac = {
               cle: true,
               cat: "figure",
               titre: "Emphase et ambiguïté",
-              texte: "« Moi, je » s’oppose aux bourgeois (structure reprise à Glatigny). On croit lire le verbe être, l’authenticité contre l’avoir ; c’est le verbe suivre, un regard désirant.",
-              retenir: "être contre avoir",
+              texte: "« Moi, je » s’oppose aux bourgeois (structure reprise à Glatigny). Rimbaud joue sur deux verbes : on croit lire être, c’est aussi suivre, un regard désirant. Cette ambiguïté oppose les bourgeois qui « paraissent » (v. 1 à 12) au poète qui « est » (v. 25-26).",
+              retenir: "ils paraissent, lui est",
             },
             {
               extrait: "débraillé comme un étudiant",
