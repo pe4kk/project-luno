@@ -203,9 +203,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     l'analyse »). Un texte encore protégé (auteur mort depuis moins de 70 ans) n'est pas recopié
     en entier dans le dépôt public : seulement les passages commentés, `extraits: true`
     (bandeau « lis-le sur ton polycopié »). Coquille de la correction : « Aimée Césaire » (Aimé).
-    « Vénus Anadyomène » (Rimbaud, texte 2, 2026-11-20, d'après le poème annoté au cours oral :
-    3 mouvements, 20 remarques dont 10 `cle` ; deux lectures séparées) est `provisoire` (bandeau « sera complétée avec
-    l'analyse écrite du prof ») : la compléter quand il l'enverra, puis retirer `provisoire`.
+    « Vénus Anadyomène » (Rimbaud, texte 2, 2026-11-20 et 21, d'après le cours oral puis
+    l'analyse écrite du prof de 12 pages : sa problématique, 2 mouvements (quatrains, tercets),
+    deux interprétations dans chacun, chacune sa couleur : `registre` = « Lecture 1 : parodie
+    misogyne », `theme` = « Lecture 2 : critique sociale »). Coquille du prof : rencontre avec
+    Verlaine en 1872 (c'est septembre 1871).
     Attendus : un troisième texte des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
