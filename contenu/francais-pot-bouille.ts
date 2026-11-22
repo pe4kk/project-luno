@@ -158,7 +158,7 @@ const exercices: Exercice[] = [
 
 export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
   id: "francais-1re-pot-bouille",
-  version: 1,
+  version: 2,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: `Zola, Pot-Bouille (chap. I à ${ROMAINS[O.luJusqua]})`,
   flashcards: [...cartesImmeuble, ...cartesFamilles, ...cartesPersonnages, ...cartesIntrigue],

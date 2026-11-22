@@ -228,6 +228,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     renverra ou une édition du domaine public), passer `luJusqua` à 18, compléter faits, adresses,
     liens et résumés, augmenter `version` du chapitre publié. Parcours associé pas encore donné
     (`parcours` facultatif). Après le chap. VIII, Auguste et Berthe logent au 2e sur la cour.
+    Le 2026-11-22 (demandé) : sur téléphone, toucher un appartement ouvre une **bulle sous son étage**
+    (pointe vers la case, le retoucher la ferme) au lieu d'envoyer en bas ; arbres complétés (plusieurs
+    arbres par famille, `arbres`, pointillés pour neveu/cousine : mère Vabre, Louhette, Domergue, Mouret,
+    tantes et oncle Josserand, Gasparine). Maquettes de façade proposées en artefact, à choisir.
   - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
     éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
     (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par

@@ -49,7 +49,14 @@ export type TypeLien = "mariage" | "famille" | "liaison" | "travail" | "autre";
 export type Lien = { de: string; a: string; type: TypeLien; libelle: string; ch?: number };
 
 /** Nœud d'un arbre généalogique : un personnage, son conjoint, ses enfants. */
-export type Noeud = { id: string; conjoint?: string; note?: string; enfants?: Noeud[] };
+export type Noeud = {
+  id: string;
+  conjoint?: string;
+  note?: string;
+  /** Lien plus lointain (neveu, cousine…) : trait en pointillé. */
+  pointille?: boolean;
+  enfants?: Noeud[];
+};
 
 export type Famille = {
   id: string;
@@ -57,7 +64,8 @@ export type Famille = {
   couleur: string;
   /** Une phrase pour situer la famille. */
   resume: string;
-  arbre?: Noeud;
+  /** Un ou plusieurs arbres (côté du père, côté de la mère, belle-famille…). */
+  arbres?: Noeud[];
 };
 
 export type ChapitreOeuvre = {

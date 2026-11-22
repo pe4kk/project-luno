@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -206,21 +206,36 @@ function periode(de?: number, a?: number, max = 99): string {
 // L'immeuble
 // ---------------------------------------------------------------------------
 
+/** Vrai sur un écran d'au moins 1024 px (le détail d'un logement va alors dans un panneau à droite). */
+function useLarge() {
+  return useSyncExternalStore(
+    (f) => {
+      const m = window.matchMedia("(min-width: 1024px)");
+      m.addEventListener("change", f);
+      return () => m.removeEventListener("change", f);
+    },
+    () => window.matchMedia("(min-width: 1024px)").matches,
+    () => true,
+  );
+}
+
 function Immeuble({ ctx }: { ctx: Ctx }) {
   const { o } = ctx;
   const [ch, setCh] = useState(o.luJusqua);
-  const [sel, setSel] = useState<string>("4-cour");
-  const logement = o.logements.find((l) => l.id === sel)!;
+  const large = useLarge();
+  // Sur téléphone, rien d'ouvert au départ ; toucher un appartement ouvre une bulle juste
+  // sous son étage (demandé : ne plus devoir remonter), le retoucher la referme.
+  const [choix, setChoix] = useState<string | null>(null);
+  const sel = choix ?? (large ? "4-cour" : null);
+  const logement = sel ? o.logements.find((l) => l.id === sel)! : null;
   const resume = o.resumes.find((r) => r.n === ch);
   const lieu = (id: string) => o.logements.find((l) => l.id === id)!;
+  const choisir = (id: string) => setChoix((c) => (!large && c === id ? null : id));
 
-  const detail = useRef<HTMLDivElement>(null);
-  const choisir = (id: string) => {
-    setSel(id);
-    // Sur téléphone, le détail est sous la façade : on le montre.
-    if (window.innerWidth < 1024)
-      requestAnimationFrame(() => detail.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
-  };
+  const bulle =
+    !large && logement ? (
+      <DetailLogement ctx={ctx} l={logement} ch={ch} lieu={lieu} fermer={() => setChoix(null)} bulle />
+    ) : null;
 
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,380px)] lg:items-start">
@@ -241,25 +256,27 @@ function Immeuble({ ctx }: { ctx: Ctx }) {
           />
           <p className="mt-1 text-[12.5px] leading-snug text-muted">
             Fais glisser : les habitants changent au fil du roman (mariage de Berthe, Gasparine qui s&apos;installe, mort du
-            vieux Vabre…).
+            vieux Vabre…). Touche un appartement pour voir qui y vit.
           </p>
         </div>
-        <Facade ctx={ctx} ch={ch} sel={sel} choisir={choisir} />
+        <Facade ctx={ctx} ch={ch} sel={sel} choisir={choisir} bulle={bulle} />
       </div>
 
-      <div ref={detail} className="scroll-mt-24 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={sel + ch}
-            initial={{ opacity: 0, transform: "translate3d(0, 8px, 0)" }}
-            animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.16 }}
-          >
-            <DetailLogement ctx={ctx} l={logement} ch={ch} lieu={lieu} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      {large && logement && (
+        <div className="lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={logement.id + ch}
+              initial={{ opacity: 0, transform: "translate3d(0, 8px, 0)" }}
+              animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.16 }}
+            >
+              <DetailLogement ctx={ctx} l={logement} ch={ch} lieu={lieu} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      )}
 
       <div className="min-w-0 rounded-[18px] border border-line bg-surface p-5 shadow-card lg:col-start-1">
         <p className="surtitre text-accent">Le décor</p>
@@ -277,7 +294,26 @@ function Immeuble({ ctx }: { ctx: Ctx }) {
 }
 
 /** La façade en coupe : deux appartements par étage, l'escalier au milieu. */
-function Facade({ ctx, ch, sel, choisir }: { ctx: Ctx; ch: number; sel: string; choisir: (id: string) => void }) {
+function Facade({
+  ctx,
+  ch,
+  sel,
+  choisir,
+  bulle,
+}: {
+  ctx: Ctx;
+  ch: number;
+  sel: string | null;
+  choisir: (id: string) => void;
+  bulle: ReactNode;
+}) {
+  // La bulle s'ouvre sous la rangée du logement touché, sa pointe vers la case.
+  const sous = (ids: string[], pointe: "gauche" | "droite" | "milieu") =>
+    sel && ids.includes(sel) && bulle ? (
+      <Bulle pointe={ids.length === 2 ? (sel === ids[0] ? "gauche" : "droite") : pointe} cle={sel}>
+        {bulle}
+      </Bulle>
+    ) : null;
   const etages: { n: string; rue: string; cour: string; tapis: boolean }[] = [
     { n: "4e", rue: "4-rue", cour: "4-cour", tapis: false },
     { n: "3e", rue: "3-rue", cour: "3-cour", tapis: true },
@@ -298,13 +334,17 @@ function Facade({ ctx, ch, sel, choisir }: { ctx: Ctx; ch: number; sel: string; 
         <span className="flex w-7 shrink-0 items-center justify-center font-display text-[13px] text-muted sm:w-9">5e</span>
         <Case ctx={ctx} id="combles" ch={ch} sel={sel} choisir={choisir} toit />
       </div>
+      {sous(["combles"], "milieu")}
 
       {etages.map((e) => (
-        <div key={e.n} className="mt-1.5 flex items-stretch gap-1.5 sm:mt-2 sm:gap-2">
-          <span className="flex w-7 shrink-0 items-center justify-center font-display text-[13px] text-muted sm:w-9">{e.n}</span>
-          <Case ctx={ctx} id={e.rue} ch={ch} sel={sel} choisir={choisir} />
-          <Escalier tapis={e.tapis} label={e.tapis ? "tapis rouge" : "toile grise"} />
-          <Case ctx={ctx} id={e.cour} ch={ch} sel={sel} choisir={choisir} />
+        <div key={e.n}>
+          <div className="mt-1.5 flex items-stretch gap-1.5 sm:mt-2 sm:gap-2">
+            <span className="flex w-7 shrink-0 items-center justify-center font-display text-[13px] text-muted sm:w-9">{e.n}</span>
+            <Case ctx={ctx} id={e.rue} ch={ch} sel={sel} choisir={choisir} />
+            <Escalier tapis={e.tapis} label={e.tapis ? "tapis rouge" : "toile grise"} />
+            <Case ctx={ctx} id={e.cour} ch={ch} sel={sel} choisir={choisir} />
+          </div>
+          {sous([e.rue, e.cour], "milieu")}
         </div>
       ))}
 
@@ -314,12 +354,14 @@ function Facade({ ctx, ch, sel, choisir }: { ctx: Ctx; ch: number; sel: string; 
         </span>
         <Case ctx={ctx} id="entresol" ch={ch} sel={sel} choisir={choisir} />
       </div>
+      {sous(["entresol"], "milieu")}
       <div className="mt-1.5 flex items-stretch gap-1.5 border-t-4 pt-1.5 sm:mt-2 sm:gap-2 sm:pt-2" style={{ borderColor: "var(--ink)" }}>
         <span className="flex w-7 shrink-0 items-center justify-center font-display text-[12px] text-muted sm:w-9">RDC</span>
         <Case ctx={ctx} id="rdc" ch={ch} sel={sel} choisir={choisir} />
         <Escalier tapis label="vestibule" />
         <Case ctx={ctx} id="loge" ch={ch} sel={sel} choisir={choisir} />
       </div>
+      {sous(["rdc", "loge"], "milieu")}
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[11.5px] text-muted">
         <span className="inline-flex items-center gap-1.5">
@@ -340,7 +382,29 @@ function Facade({ ctx, ch, sel, choisir }: { ctx: Ctx; ch: number; sel: string; 
       >
         <MapPin size={16} /> Hors de l&apos;immeuble : Bachelard, Trublot, Mme Hédouin…
       </button>
+      {sous(["dehors"], "milieu")}
     </div>
+  );
+}
+
+/** Bulle ouverte sous une rangée de la façade (téléphone), avec une pointe vers la case touchée. */
+function Bulle({ pointe, cle, children }: { pointe: "gauche" | "droite" | "milieu"; cle: string; children: ReactNode }) {
+  const gauche = pointe === "gauche" ? "25%" : pointe === "droite" ? "75%" : "50%";
+  return (
+    <motion.div
+      key={cle}
+      initial={{ opacity: 0, transform: "translate3d(0, -6px, 0)" }}
+      animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+      transition={{ duration: 0.18 }}
+      className="relative mt-2.5 pl-8 sm:pl-11"
+    >
+      <span
+        aria-hidden
+        className="absolute -top-[7px] size-3.5 rotate-45 rounded-[3px] border-l border-t border-accent bg-surface"
+        style={{ left: `calc(2rem + (100% - 2rem) * ${gauche.replace("%", "")} / 100 - 7px)` }}
+      />
+      {children}
+    </motion.div>
   );
 }
 
@@ -372,7 +436,7 @@ function Case({
   ctx: Ctx;
   id: string;
   ch: number;
-  sel: string;
+  sel: string | null;
   choisir: (id: string) => void;
   toit?: boolean;
 }) {
@@ -416,7 +480,21 @@ function Case({
   );
 }
 
-function DetailLogement({ ctx, l, ch, lieu }: { ctx: Ctx; l: Logement; ch: number; lieu: (id: string) => Logement }) {
+function DetailLogement({
+  ctx,
+  l,
+  ch,
+  lieu,
+  fermer,
+  bulle = false,
+}: {
+  ctx: Ctx;
+  l: Logement;
+  ch: number;
+  lieu: (id: string) => Logement;
+  fermer?: () => void;
+  bulle?: boolean;
+}) {
   const { o } = ctx;
   const gens = habitants(o, l.id, ch);
   // Ceux qui y ont vécu à un autre moment (avant ou après, jusqu'au chapitre lu).
@@ -424,9 +502,18 @@ function DetailLogement({ ctx, l, ch, lieu }: { ctx: Ctx; l: Logement; ch: numbe
     (p) => !gens.includes(p) && p.adresses.some((a) => a.lieu === l.id && (a.de ?? 1) <= o.luJusqua),
   );
   return (
-    <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
-      <p className="surtitre text-accent">{l.id === "dehors" ? "Ailleurs dans Paris" : `Chapitre ${ROMAINS[ch]}`}</p>
-      <h3 className="mt-1 text-[22px] leading-snug">{l.nom}</h3>
+    <div className={`rounded-[18px] border bg-surface shadow-card ${bulle ? "border-accent p-4" : "border-line p-5"}`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="surtitre text-accent">{l.id === "dehors" ? "Ailleurs dans Paris" : `Chapitre ${ROMAINS[ch]}`}</p>
+          <h3 className={`mt-1 leading-snug ${bulle ? "text-[19px]" : "text-[22px]"}`}>{l.nom}</h3>
+        </div>
+        {fermer && (
+          <button type="button" onClick={fermer} aria-label="Fermer" className="-mr-1.5 -mt-1 flex size-9 shrink-0 items-center justify-center rounded-full text-muted hover:text-ink">
+            <X size={17} />
+          </button>
+        )}
+      </div>
       {l.detail && <p className="mt-1 text-[13.5px] leading-relaxed text-muted">{l.detail}</p>}
       {gens.length === 0 ? (
         <p className="mt-4 text-[14px] text-muted">Personne de connu ici à ce moment.</p>
@@ -474,7 +561,7 @@ function DetailLogement({ ctx, l, ch, lieu }: { ctx: Ctx; l: Logement; ch: numbe
           </ul>
         </div>
       )}
-      {l.id !== "dehors" && (
+      {l.id !== "dehors" && !bulle && (
         <p className="mt-4 text-[12px] text-muted">
           Touche un appartement de la façade pour voir qui y vit. Touche un nom pour sa fiche.
         </p>
@@ -495,7 +582,7 @@ function Familles({ ctx }: { ctx: Ctx }) {
   return (
     <div className="space-y-5">
       {o.familles
-        .filter((f) => f.arbre)
+        .filter((f) => f.arbres?.length)
         .map((f) => (
           <ArbreFamille key={f.id} ctx={ctx} f={f} />
         ))}
@@ -548,7 +635,11 @@ function ArbreFamille({ ctx, f }: { ctx: Ctx; f: Famille }) {
       {/* L'arbre défile dans sa carte : jamais la page entière (sinon le téléphone dézoome). */}
       <div className="-mx-5 mt-4 overflow-x-auto px-5 pb-2" data-defile>
         <div className="w-max">
-          <Branche ctx={ctx} n={f.arbre!} couleur={f.couleur} />
+          {f.arbres!.map((a, i) => (
+            <div key={a.id} className={i > 0 ? "mt-4 border-t border-dashed border-line pt-4" : ""}>
+              <Branche ctx={ctx} n={a} couleur={f.couleur} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -573,7 +664,10 @@ function Branche({ ctx, n, couleur }: { ctx: Ctx; n: Noeud; couleur: string }) {
                   {/* Trait vertical : moitié haute sauf pour le premier, moitié basse sauf pour le dernier. */}
                   {!premier && <span className="absolute left-0 top-0 h-1/2 w-px" style={{ background: trait }} />}
                   {!dernier && <span className="absolute bottom-0 left-0 h-1/2 w-px" style={{ background: trait }} />}
-                  <span className="absolute left-0 top-1/2 h-px w-4" style={{ background: trait }} />
+                  <span
+                    className="absolute left-0 top-1/2 w-4"
+                    style={e.pointille ? { borderTop: `1.5px dashed ${trait}` } : { height: 1, background: trait }}
+                  />
                   <Branche ctx={ctx} n={e} couleur={couleur} />
                 </div>
               );
