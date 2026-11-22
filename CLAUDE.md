@@ -23,7 +23,7 @@ ouverte sur ce dépôt. Il sert de mémoire entre les conversations.
   <date de la dernière lecture>` (signalements « pas claire / inutile / trop facile /
   corrigé faux », cartes souvent ratées, réponses fausses). Corriger les cartes visées
   (reformuler, `renommages.ts`, `hors-quiz.ts`, verso), en tirer une règle si le défaut
-  se répète, puis noter ici la date de lecture. Dernière lecture : 2026-11-14 (vide).
+  se répète, puis noter ici la date de lecture. Dernière lecture : 2026-11-14 (vide) ; le 2026-11-22, des réponses de physique y attendent (pas encore traitées).
 
 ## Objectif du projet
 
@@ -212,6 +212,22 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.
+  - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en
+    QCM du mer. 25/11 : « comprendre l'immeuble, qui est à chaque étage, leurs relations ») : dans
+    Bac › Le roman, carte « Explorer l'œuvre » (`oeuvre.explorer` de `PROGRAMME_BAC`) →
+    `?o=bac&t=pot-bouille&v=immeuble|familles|personnages|chapitres|quiz&p=<perso>`
+    (`components/travail/Oeuvre.tsx`, types et quiz dans `lib/oeuvre.ts`, données dans
+    `contenu/pot-bouille.ts`, liste `contenu/oeuvres.ts`). Immeuble en coupe (rue / cour, tapis rouge
+    jusqu'au 3e, curseur « Au chapitre N » : les habitants changent), arbres horizontaux des familles
+    + liaisons + service, fiches (Fenetre, le geste retour la ferme), résumés par chapitre, quiz
+    « Qui est-ce ? » généré des données (qui / où / lien / citation ; intrus de même sexe, même
+    article, jamais un libellé qui en contient un autre). Chapitre publié `francais-1re-pot-bouille`
+    (`contenu/francais-pot-bouille.ts`, cartes et QCM tirés des mêmes données) et date au calendrier.
+    **Il n'a pas fini le livre** (lu jusqu'au chap. XVI ; XVII-XVIII cachés, `luJusqua: 16`) : quand
+    il dit l'avoir fini, lire XVII-XVIII (notes de lecture : rien n'est gardé, relire le PDF qu'il
+    renverra ou une édition du domaine public), passer `luJusqua` à 18, compléter faits, adresses,
+    liens et résumés, augmenter `version` du chapitre publié. Parcours associé pas encore donné
+    (`parcours` facultatif). Après le chap. VIII, Auguste et Berthe logent au 2e sur la cour.
   - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
     éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
     (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par

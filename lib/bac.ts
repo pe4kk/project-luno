@@ -132,7 +132,15 @@ export type PlaceBac = TexteBac | { titre: string; attente: string; parcours?: b
 
 export type ProgrammeGenre = {
   genre: GenreBac;
-  oeuvre?: { titre: string; auteur: string; parcours: string; chapitrePublie?: string };
+  oeuvre?: {
+    titre: string;
+    auteur: string;
+    /** Intitulé du parcours associé, quand le prof l'a donné. */
+    parcours?: string;
+    chapitrePublie?: string;
+    /** Œuvre à explorer (immeuble, familles, personnages) : `contenu/<œuvre>.ts`. */
+    explorer?: string;
+  };
   places: PlaceBac[];
 };
 

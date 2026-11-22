@@ -1047,7 +1047,21 @@ export const PROGRAMME_BAC: ProgrammeGenre[] = [
     ],
   },
   { genre: "theatre", places: [] },
-  { genre: "roman", places: [] },
+  {
+    genre: "roman",
+    oeuvre: {
+      titre: "Pot-Bouille",
+      auteur: "Émile Zola",
+      chapitrePublie: "francais-1re-pot-bouille",
+      explorer: "pot-bouille",
+    },
+    places: [
+      { titre: "Premier texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
+      { titre: "Deuxième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
+      { titre: "Troisième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
+      { titre: "Texte du parcours", attente: "Envoie le texte et l’explication du prof", parcours: true },
+    ],
+  },
   { genre: "idees", places: [] },
 ];
 

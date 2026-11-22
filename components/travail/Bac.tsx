@@ -8,6 +8,8 @@ import { ArrowLeft, BookOpen, Check, ChevronDown, ChevronRight, Eye, EyeOff, Mic
 import { formule } from "@/components/Formule";
 import { Bouton, ZoneAction, pluriel } from "@/components/ui";
 import { PROGRAMME_BAC, TEXTES_BAC } from "@/contenu/bac-francais";
+import { OEUVRES } from "@/contenu/oeuvres";
+import { VueOeuvre } from "@/components/travail/Oeuvre";
 import {
   GENRES_BAC,
   ORAL_BAC,
@@ -36,7 +38,19 @@ const VUES: { id: Vue; label: string }[] = [
  * Onglet « Bac » de la matière Français : les seize textes de l'oral classés par genre,
  * puis, pour un texte, le texte annoté, la fiche et l'entraînement « Je récite ».
  */
-export function VueBac({ matiere, texteId, vue }: { matiere: Matiere; texteId: string | null; vue: string | null }) {
+export function VueBac({
+  matiere,
+  texteId,
+  vue,
+  perso = null,
+}: {
+  matiere: Matiere;
+  texteId: string | null;
+  vue: string | null;
+  perso?: string | null;
+}) {
+  const oeuvre = OEUVRES.find((o) => o.id === texteId);
+  if (oeuvre) return <VueOeuvre matiere={matiere} oeuvre={oeuvre} vue={vue} perso={perso} />;
   const texte = TEXTES_BAC.find((t) => t.id === texteId);
   return texte ? (
     <VueTexte matiere={matiere} texte={texte} vue={VUES.some((v) => v.id === vue) ? (vue as Vue) : "annote"} />
@@ -107,7 +121,7 @@ function Descriptif({ matiere }: { matiere: Matiere }) {
                   {g.oeuvre.auteur}, <i>{g.oeuvre.titre}</i>
                 </p>
                 <p className="mt-0.5 text-[13px] text-muted">
-                  Parcours : {g.oeuvre.parcours}
+                  {g.oeuvre.parcours ? `Parcours : ${g.oeuvre.parcours}` : "Parcours : pas encore donné par le prof"}
                   {chapitre && (
                     <>
                       {" · "}
@@ -120,6 +134,23 @@ function Descriptif({ matiere }: { matiere: Matiere }) {
                     </>
                   )}
                 </p>
+                {g.oeuvre.explorer && (
+                  <Link
+                    href={lienTravail({ m: matiere.id, o: "bac", t: g.oeuvre.explorer })}
+                    scroll={false}
+                    className="group mt-3 flex items-center gap-3 rounded-[14px] p-3 transition-transform active:scale-[0.99]"
+                    style={{ background: pastel(matiere.couleur, 18) }}
+                  >
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-surface text-[22px] shadow-card">🏢</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15.5px] font-semibold leading-snug">Explorer l&apos;œuvre</span>
+                      <span className="block text-[12.5px] leading-snug text-muted">
+                        L&apos;immeuble étage par étage, les familles, les personnages, les chapitres, le quiz
+                      </span>
+                    </span>
+                    <ChevronRight size={18} className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                )}
                 <ol className="mt-3">
                   {g.places.map((p, i) => {
                     const numero = (

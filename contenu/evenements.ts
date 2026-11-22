@@ -7,6 +7,7 @@ import type { EvenementPublie } from "@/lib/types";
  * date déjà publiée, modifier l'entrée et augmenter `version`.
  */
 const physique = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
+const francais = { nom: "Français", couleur: "#d98a8a", emoji: "📚" };
 
 export const EVENEMENTS: EvenementPublie[] = [
   {
@@ -34,5 +35,16 @@ export const EVENEMENTS: EvenementPublie[] = [
     dureeMin: 0,
     notes: "Fiche d'exercices du chap. 13, à rédiger sur feuille.",
     chapitres: ["pc-1re-chap11-exercices", "pc-1re-methode-redaction"],
+  },
+  {
+    id: "fr-pot-bouille-2026-11-25",
+    version: 1,
+    matiere: francais,
+    titre: "Évaluation de lecture : Pot-Bouille (QCM)",
+    date: "2026-11-25",
+    dureeMin: 0,
+    notes:
+      "Le prof vérifie qu'on a lu le livre : surtout l'immeuble, qui habite à quel étage, les liens entre les personnages. Révise avec « Explorer l'œuvre » dans l'onglet Bac de Français.",
+    chapitres: ["francais-1re-pot-bouille"],
   },
 ];
