@@ -293,7 +293,139 @@ function Immeuble({ ctx }: { ctx: Ctx }) {
   );
 }
 
-/** La façade en coupe : deux appartements par étage, l'escalier au milieu. */
+/** Motif du papier peint d'une famille, vu par les fenêtres (idée de la maison de poupée). */
+function papierPeint(famille: string, c: string): string {
+  const fort = `color-mix(in oklab, ${c} 34%, var(--surface))`;
+  const doux = `color-mix(in oklab, ${c} 10%, var(--surface))`;
+  switch (famille) {
+    case "vabre":
+      return `repeating-linear-gradient(90deg, ${fort} 0 3px, ${doux} 3px 8px)`;
+    case "josserand":
+      return `repeating-linear-gradient(45deg, ${fort} 0 4px, ${doux} 4px 8px)`;
+    case "campardon":
+      return `radial-gradient(${fort} 1.5px, ${doux} 1.7px) 0 0 / 7px 7px`;
+    case "duveyrier":
+      return `linear-gradient(${fort}, color-mix(in oklab, #d4a24c 22%, var(--surface)))`;
+    default:
+      return `linear-gradient(${fort}, ${doux})`;
+  }
+}
+
+/** Couleurs de la façade : pierre, ardoise, fonte, vitre. Elles suivent le thème. */
+const PIERRE = "color-mix(in oklab, #e8d9c4 72%, var(--surface))";
+const PIERRE_2 = "color-mix(in oklab, #cdb89c 70%, var(--surface))";
+const ARDOISE = "color-mix(in oklab, #4f5360 88%, var(--bg))";
+const VITRE = "color-mix(in oklab, #9fb4c4 50%, var(--surface))";
+
+/** Fenêtre cintrée : vide, elle montre le ciel ; habitée, le papier peint et l'objet de la famille. */
+function Fenetres({ ctx, id, ch, haute = false }: { ctx: Ctx; id: string; ch: number; haute?: boolean }) {
+  const gens = habitants(ctx.o, id, ch);
+  const l = ctx.o.logements.find((x) => x.id === id);
+  const chef = gens[0];
+  const ferme = l?.persiennes;
+  const fond = ferme
+    ? "color-mix(in oklab, var(--ink) 55%, var(--surface))"
+    : chef
+      ? papierPeint(chef.famille, ctx.couleur(chef))
+      : VITRE;
+  return (
+    <span className="flex gap-1.5" aria-hidden>
+      {[0, 1].map((i) => (
+        <span
+          key={i}
+          className={`relative grid w-[26px] place-items-center overflow-hidden rounded-t-[13px] rounded-b-[3px] text-[14px] sm:w-[30px] ${haute ? "h-[36px] sm:h-[40px]" : "h-[31px] sm:h-[34px]"}`}
+          style={{ background: fond, border: `2.5px solid ${PIERRE_2}` }}
+        >
+          {i === 0 && chef && !ferme && l?.objet}
+          {/* croisillons */}
+          <span className="pointer-events-none absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2" style={{ background: PIERRE_2 }} />
+          <span className="pointer-events-none absolute inset-x-0 top-[45%] h-[2px]" style={{ background: PIERRE_2 }} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** Un appartement de la façade : ses fenêtres et les noms de ses habitants. */
+function Appart({
+  ctx,
+  id,
+  ch,
+  sel,
+  choisir,
+  etiquette,
+  haute,
+}: {
+  ctx: Ctx;
+  id: string;
+  ch: number;
+  sel: string | null;
+  choisir: (id: string) => void;
+  etiquette: string;
+  haute?: boolean;
+}) {
+  const gens = habitants(ctx.o, id, ch).filter((p) => p.importance <= 2);
+  const visibles = gens.slice(0, 3);
+  const actif = sel === id;
+  return (
+    <button
+      type="button"
+      onClick={() => choisir(id)}
+      aria-pressed={actif}
+      aria-label={`${ctx.o.logements.find((l) => l.id === id)?.nom} : ${gens.map((g) => g.court).join(", ") || "personne"}`}
+      className="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-[11px] px-1 py-1 transition-[background-color,box-shadow] duration-200"
+      style={actif ? { background: "color-mix(in oklab, var(--accent) 16%, transparent)", boxShadow: "0 0 0 1.5px var(--accent)" } : undefined}
+    >
+      <span className="text-[9px] font-semibold uppercase tracking-[0.08em]" style={{ color: "color-mix(in oklab, var(--ink) 62%, transparent)" }}>{etiquette}</span>
+      <Fenetres ctx={ctx} id={id} ch={ch} haute={haute} />
+      <span className="flex min-h-[17px] flex-wrap justify-center gap-[3px]">
+        {visibles.length === 0 ? (
+          <span className="text-[10.5px] italic text-muted">{id === "2-rue" ? "volets clos" : "vide"}</span>
+        ) : (
+          visibles.map((p) => {
+            const c = ctx.couleur(p);
+            return (
+              <span
+                key={p.id}
+                className="max-w-full truncate rounded-full px-1.5 text-[10.5px] font-semibold leading-[17px] sm:text-[11.5px]"
+                style={{ background: pastel(c, 24), color: encre(c, 75) }}
+              >
+                {p.court}
+              </span>
+            );
+          })
+        )}
+        {gens.length > visibles.length && <span className="text-[10.5px] font-semibold text-muted">+{gens.length - visibles.length}</span>}
+      </span>
+    </button>
+  );
+}
+
+/** L'escalier en zigzag entre la rue et la cour : tapis rouge jusqu'au 3e, toile grise ensuite. */
+function Escalier({ tapis }: { tapis: boolean }) {
+  return (
+    <span className="relative w-[18px] shrink-0 rounded-[4px] sm:w-[22px]" style={{ background: PIERRE_2 }} aria-hidden>
+      <svg viewBox="0 0 22 60" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+        <path
+          d="M4 57 L18 39 L4 21 L18 3"
+          fill="none"
+          stroke={tapis ? "var(--accent)" : "color-mix(in oklab, var(--muted) 70%, var(--surface))"}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * La façade dessinée (maquette A1 choisie le 2026-11-22) : toit mansardé et lucarnes des
+ * bonnes, deux appartements par étage vus par leurs fenêtres (papier peint de la famille,
+ * objet qui la résume), escalier en zigzag au milieu, balcon au 1er, soierie et porte
+ * cochère en bas. Toucher un appartement ouvre la bulle sous son étage (téléphone).
+ */
 function Facade({
   ctx,
   ch,
@@ -307,176 +439,211 @@ function Facade({
   choisir: (id: string) => void;
   bulle: ReactNode;
 }) {
-  // La bulle s'ouvre sous la rangée du logement touché, sa pointe vers la case.
-  const sous = (ids: string[], pointe: "gauche" | "droite" | "milieu") =>
+  const sous = (ids: string[]) =>
     sel && ids.includes(sel) && bulle ? (
-      <Bulle pointe={ids.length === 2 ? (sel === ids[0] ? "gauche" : "droite") : pointe} cle={sel}>
+      <Bulle pointe={ids.length === 2 ? (sel === ids[0] ? "gauche" : "droite") : "milieu"} cle={sel}>
         {bulle}
       </Bulle>
     ) : null;
-  const etages: { n: string; rue: string; cour: string; tapis: boolean }[] = [
+  const etages = [
     { n: "4e", rue: "4-rue", cour: "4-cour", tapis: false },
     { n: "3e", rue: "3-rue", cour: "3-cour", tapis: true },
     { n: "2e", rue: "2-rue", cour: "2-cour", tapis: true },
     { n: "1er", rue: "1-rue", cour: "1-cour", tapis: true },
   ];
+  const bonnes = habitants(ctx.o, "combles", ch).filter((p) => p.importance <= 2);
+  const actif = (id: string) =>
+    sel === id ? { background: "color-mix(in oklab, var(--accent) 16%, transparent)", boxShadow: "0 0 0 1.5px var(--accent)" } : undefined;
+
   return (
-    <div className="rounded-[22px] border border-line bg-surface p-3 shadow-card sm:p-4">
-      <div className="mb-2 flex items-center gap-2 px-1 text-[11px] font-semibold uppercase tracking-wide text-muted sm:text-[12px]">
-        <span className="w-7 shrink-0 sm:w-9" />
-        <span className="flex-1 text-center">Sur la rue</span>
-        <span className="w-5 shrink-0 sm:w-7" />
-        <span className="flex-1 text-center">Sur la cour</span>
-      </div>
+    <div className="rounded-[22px] border border-line p-3 shadow-card sm:p-4" style={{ background: "linear-gradient(var(--accent-soft), var(--bg))" }}>
+      <div className="mx-auto max-w-[460px]">
+        {/* Toit mansardé : les lucarnes des chambres de bonnes */}
+        <button
+          type="button"
+          onClick={() => choisir("combles")}
+          aria-pressed={sel === "combles"}
+          aria-label={`Étage des bonnes : ${bonnes.map((b) => b.court).join(", ")}`}
+          className="block w-full"
+        >
+          <span
+            className="flex h-[46px] items-end justify-center gap-2 pb-1.5"
+            style={{ background: ARDOISE, clipPath: "polygon(5% 100%, 12% 0, 88% 0, 95% 100%)" }}
+          >
+            {[0, 1, 2, 3].map((i) => (
+              <span key={i} className="grid h-[28px] w-[24px] place-items-center rounded-t-[12px] rounded-b-[2px]" style={{ background: PIERRE }}>
+                <span className="block h-[15px] w-[12px] rounded-t-[6px] rounded-b-[1px]" style={{ background: "#f0d49a" }} />
+              </span>
+            ))}
+          </span>
+          <span className="flex flex-wrap justify-center gap-[3px] rounded-[10px] px-2 py-1.5" style={{ background: PIERRE, ...actif("combles") }}>
+            {bonnes.slice(0, 5).map((p) => (
+              <span
+                key={p.id}
+                className="rounded-full px-1.5 text-[10.5px] font-semibold leading-[17px] sm:text-[11.5px]"
+                style={{ background: pastel(ctx.couleur(p), 24), color: encre(ctx.couleur(p), 75) }}
+              >
+                {p.court}
+              </span>
+            ))}
+            {bonnes.length > 5 && <span className="text-[10.5px] font-semibold text-muted">+{bonnes.length - 5}</span>}
+          </span>
+        </button>
+        {sous(["combles"])}
 
-      {/* Toit et étage des bonnes */}
-      <div className="flex items-stretch gap-1.5 sm:gap-2">
-        <span className="flex w-7 shrink-0 items-center justify-center font-display text-[13px] text-muted sm:w-9">5e</span>
-        <Case ctx={ctx} id="combles" ch={ch} sel={sel} choisir={choisir} toit />
-      </div>
-      {sous(["combles"], "milieu")}
-
-      {etages.map((e) => (
-        <div key={e.n}>
-          <div className="mt-1.5 flex items-stretch gap-1.5 sm:mt-2 sm:gap-2">
-            <span className="flex w-7 shrink-0 items-center justify-center font-display text-[13px] text-muted sm:w-9">{e.n}</span>
-            <Case ctx={ctx} id={e.rue} ch={ch} sel={sel} choisir={choisir} />
-            <Escalier tapis={e.tapis} label={e.tapis ? "tapis rouge" : "toile grise"} />
-            <Case ctx={ctx} id={e.cour} ch={ch} sel={sel} choisir={choisir} />
-          </div>
-          {sous([e.rue, e.cour], "milieu")}
+        <div className="px-2" style={{ background: PIERRE, borderLeft: `1px solid ${PIERRE_2}`, borderRight: `1px solid ${PIERRE_2}` }}>
+          {etages.map((e) => (
+            <div key={e.n}>
+              <div className="relative flex items-stretch gap-1.5 py-1" style={{ borderBottom: `2px solid ${PIERRE_2}` }}>
+                
+                {e.n === "1er" && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-1 bottom-[24px] h-2 opacity-70"
+                    style={{
+                      borderTop: "2px solid color-mix(in oklab, var(--ink) 80%, transparent)",
+                      background: "repeating-linear-gradient(90deg, color-mix(in oklab, var(--ink) 80%, transparent) 0 1.5px, transparent 1.5px 6px)",
+                    }}
+                  />
+                )}
+                <Appart ctx={ctx} id={e.rue} ch={ch} sel={sel} choisir={choisir} etiquette={`${e.n} · rue`} haute={e.n === "1er"} />
+                <Escalier tapis={e.tapis} />
+                <Appart ctx={ctx} id={e.cour} ch={ch} sel={sel} choisir={choisir} etiquette={`${e.n} · cour`} haute={e.n === "1er"} />
+              </div>
+              {sous([e.rue, e.cour])}
+            </div>
+          ))}
         </div>
-      ))}
 
-      <div className="mt-1.5 flex items-stretch gap-1.5 sm:mt-2 sm:gap-2">
-        <span className="flex w-7 shrink-0 items-center justify-center text-center font-display text-[11px] leading-tight text-muted sm:w-9">
-          Entre-sol
-        </span>
-        <Case ctx={ctx} id="entresol" ch={ch} sel={sel} choisir={choisir} />
-      </div>
-      {sous(["entresol"], "milieu")}
-      <div className="mt-1.5 flex items-stretch gap-1.5 border-t-4 pt-1.5 sm:mt-2 sm:gap-2 sm:pt-2" style={{ borderColor: "var(--ink)" }}>
-        <span className="flex w-7 shrink-0 items-center justify-center font-display text-[12px] text-muted sm:w-9">RDC</span>
-        <Case ctx={ctx} id="rdc" ch={ch} sel={sel} choisir={choisir} />
-        <Escalier tapis label="vestibule" />
-        <Case ctx={ctx} id="loge" ch={ch} sel={sel} choisir={choisir} />
-      </div>
-      {sous(["rdc", "loge"], "milieu")}
+        {/* Rez-de-chaussée : la soierie (avec l'entresol au-dessus) et la porte cochère avec la loge */}
+        <div className="grid grid-cols-[1.5fr_0.8fr] gap-2 px-2 pt-1.5" style={{ background: PIERRE_2 }}>
+          <div className="min-w-0">
+            <span
+              aria-hidden
+              className="block h-3"
+              style={{
+                background: "repeating-linear-gradient(90deg, var(--accent) 0 12px, var(--surface) 12px 24px)",
+                clipPath: "polygon(0 0, 100% 0, 96% 100%, 4% 100%)",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => choisir("rdc")}
+              aria-pressed={sel === "rdc"}
+              className="block w-full bg-ink py-px text-center font-display text-[10.5px] tracking-[0.14em] text-bg"
+            >
+              SOIERIES · VABRE
+            </button>
+            <button
+              type="button"
+              onClick={() => choisir("entresol")}
+              aria-pressed={sel === "entresol"}
+              className="grid h-[34px] w-full place-items-center rounded-[2px] text-[10.5px] text-ink"
+              style={{
+                border: "2px solid color-mix(in oklab, var(--ink) 75%, transparent)",
+                borderBottom: 0,
+                background: papierPeint("vabre", "#b5573d"),
+                ...actif("entresol"),
+              }}
+            >
+              <span className="rounded-full bg-surface/85 px-1.5">
+                {habitants(ctx.o, "entresol", ch).length ? `entresol : ${habitants(ctx.o, "entresol", ch).map((p) => p.court).join(", ")}` : "entresol vide"}
+              </span>
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={() => choisir("loge")}
+            aria-pressed={sel === "loge"}
+            className="grid h-[52px] place-items-end justify-center rounded-t-[24px] pb-1"
+            style={{ background: "color-mix(in oklab, #7a4a33 70%, var(--surface))", ...actif("loge") }}
+          >
+            <span className="rounded-full bg-surface/85 px-1.5 text-[10.5px] font-semibold text-ink">M. Gourd</span>
+          </button>
+        </div>
+        <span aria-hidden className="block h-2 rounded-b-[6px] bg-muted/35" />
+        {sous(["rdc", "entresol", "loge"])}
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[11.5px] text-muted">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-1.5 rounded-full bg-accent" /> grand escalier, tapis rouge
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-3 w-1.5 rounded-full" style={{ background: "color-mix(in oklab, var(--muted) 45%, var(--surface))" }} /> toile
-          grise après le 3e
-        </span>
-      </div>
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[11.5px] text-muted">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-3 w-1.5 rounded-full bg-accent" /> tapis rouge jusqu&apos;au 3e
+          </span>
+          <span>Aux fenêtres : le papier peint de chaque famille</span>
+        </div>
 
-      <button
-        type="button"
-        onClick={() => choisir("dehors")}
-        className={`mt-3 flex min-h-12 w-full items-center gap-2 rounded-[14px] border border-dashed px-3 text-left text-[13.5px] font-semibold transition-colors ${
-          sel === "dehors" ? "border-accent bg-accent-soft text-ink" : "border-line text-muted hover:text-ink"
-        }`}
-      >
-        <MapPin size={16} /> Hors de l&apos;immeuble : Bachelard, Trublot, Mme Hédouin…
-      </button>
-      {sous(["dehors"], "milieu")}
+        <button
+          type="button"
+          onClick={() => choisir("dehors")}
+          className={`mt-2.5 flex min-h-11 w-full items-center gap-2 rounded-[14px] border border-dashed px-3 text-left text-[13.5px] font-semibold transition-colors ${
+            sel === "dehors" ? "border-accent bg-accent-soft text-ink" : "border-line text-muted hover:text-ink"
+          }`}
+        >
+          <MapPin size={16} /> Hors de l&apos;immeuble : Bachelard, Trublot, Mme Hédouin…
+        </button>
+        {sous(["dehors"])}
+      </div>
     </div>
   );
 }
 
 /** Bulle ouverte sous une rangée de la façade (téléphone), avec une pointe vers la case touchée. */
 function Bulle({ pointe, cle, children }: { pointe: "gauche" | "droite" | "milieu"; cle: string; children: ReactNode }) {
-  const gauche = pointe === "gauche" ? "25%" : pointe === "droite" ? "75%" : "50%";
+  const x = pointe === "gauche" ? 25 : pointe === "droite" ? 75 : 50;
   return (
     <motion.div
       key={cle}
       initial={{ opacity: 0, transform: "translate3d(0, -6px, 0)" }}
       animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
       transition={{ duration: 0.18 }}
-      className="relative mt-2.5 pl-8 sm:pl-11"
+      className="relative my-2.5"
     >
       <span
         aria-hidden
-        className="absolute -top-[7px] size-3.5 rotate-45 rounded-[3px] border-l border-t border-accent bg-surface"
-        style={{ left: `calc(2rem + (100% - 2rem) * ${gauche.replace("%", "")} / 100 - 7px)` }}
+        className="absolute -top-[7px] z-[1] size-3.5 rotate-45 rounded-[3px] border-l border-t border-accent bg-surface"
+        style={{ left: `calc(${x}% - 7px)` }}
       />
       {children}
     </motion.div>
   );
 }
 
-/** La cage d'escalier entre les deux appartements : tapis rouge jusqu'au 3e, toile grise ensuite. */
-function Escalier({ tapis, label }: { tapis: boolean; label?: string }) {
+/** Portrait court d'un habitant, déplié dans la bulle : caractère, liens, ce qu'il fait, fiche complète. */
+function MiniFiche({ ctx, p }: { ctx: Ctx; p: Personnage }) {
+  const { o } = ctx;
+  const c = ctx.couleur(p);
+  const liens = liensDe(o, p.id, o.luJusqua).slice(0, 5);
+  const faits = p.faits.filter((f) => f.ch <= o.luJusqua);
   return (
-    <div className="relative flex w-5 shrink-0 justify-center sm:w-7" aria-hidden>
-      <span
-        className="h-full w-1.5 rounded-full sm:w-2"
-        style={{ background: tapis ? "var(--accent)" : "color-mix(in oklab, var(--muted) 45%, var(--surface))" }}
-      />
-      {label && <span className="sr-only">{label}</span>}
-    </div>
-  );
-}
-
-/** Ce qu'on écrit dans une case sans habitant connu. */
-const VIDES: Record<string, string> = { rdc: "la soierie d’Auguste", entresol: "vide depuis le mariage d’Auguste" };
-
-/** Un appartement de la façade : ses habitants au chapitre choisi. */
-function Case({
-  ctx,
-  id,
-  ch,
-  sel,
-  choisir,
-  toit = false,
-}: {
-  ctx: Ctx;
-  id: string;
-  ch: number;
-  sel: string | null;
-  choisir: (id: string) => void;
-  toit?: boolean;
-}) {
-  const gens = habitants(ctx.o, id, ch).filter((p) => p.importance <= 2);
-  const actif = sel === id;
-  const vide = gens.length === 0;
-  const visibles = gens.slice(0, toit ? 6 : 3);
-  return (
-    <button
-      type="button"
-      onClick={() => choisir(id)}
-      aria-pressed={actif}
-      aria-label={`${ctx.o.logements.find((l) => l.id === id)?.nom} : ${gens.map((g) => g.court).join(", ") || "personne"}`}
-      className={`min-h-[64px] min-w-0 flex-1 rounded-[12px] border p-1.5 text-left transition-[background-color,border-color,box-shadow] duration-200 sm:min-h-[76px] sm:p-2 ${
-        toit ? "rounded-t-[26px]" : ""
-      } ${actif ? "border-accent shadow-[0_0_0_2px_var(--accent)]" : "border-line hover:border-accent/50"}`}
-      style={{ background: actif ? "var(--accent-soft)" : vide ? "transparent" : "color-mix(in oklab, var(--bg) 70%, var(--surface))" }}
-    >
-      {vide ? (
-        <span className="block text-[11.5px] italic text-muted">{VIDES[id] ?? "—"}</span>
-      ) : (
-        <span className="flex flex-wrap gap-1">
-          {visibles.map((p) => {
-            const c = ctx.couleur(p);
-            return (
-              <span
-                key={p.id}
-                className="inline-flex max-w-full items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] font-semibold leading-tight sm:text-[12.5px]"
-                style={{ background: pastel(c, 22), color: encre(c, 75) }}
-              >
-                <span className="truncate">{p.court}</span>
-              </span>
-            );
-          })}
-          {gens.length > visibles.length && (
-            <span className="px-1 text-[11px] font-semibold text-muted">+{gens.length - visibles.length}</span>
-          )}
-        </span>
+    <div className="mx-2 mb-2 space-y-2.5 rounded-[12px] p-3" style={{ background: pastel(c, 10) }}>
+      {(p.age || p.metier) && <p className="text-[12.5px] text-muted">{[p.age, p.metier].filter(Boolean).join(" · ")}</p>}
+      <ul className="space-y-1">
+        {p.traits.slice(0, 3).map((t) => (
+          <li key={t} className="flex gap-2 text-[13.5px] leading-snug">
+            <span className="mt-[7px] size-1.5 shrink-0 rounded-full" style={{ background: c }} />
+            <span>{t}</span>
+          </li>
+        ))}
+      </ul>
+      {liens.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12.5px]">
+          {liens.map(({ lien, autre }) => (
+            <span key={lien.de + lien.a} className="inline-flex items-center gap-1">
+              <span className="text-muted">{lien.de === p.id ? `${lien.libelle} de` : "→"}</span>
+              <Pastille ctx={ctx} id={autre} petit />
+            </span>
+          ))}
+        </div>
       )}
-    </button>
+      {faits.length > 0 && (
+        <p className="text-[13px] leading-snug">
+          <span className="mr-1.5 rounded-md bg-accent-soft px-1.5 py-0.5 font-display text-[11.5px] text-accent">{ROMAINS[faits.at(-1)!.ch]}</span>
+          {faits.at(-1)!.t}
+        </p>
+      )}
+      <button type="button" onClick={() => ctx.ouvrir(p.id)} className="text-[13px] font-semibold text-accent underline-offset-2 hover:underline">
+        Toute sa fiche ({faits.length} {faits.length > 1 ? "moments" : "moment"}, citation…)
+      </button>
+    </div>
   );
 }
 
@@ -497,6 +664,8 @@ function DetailLogement({
 }) {
   const { o } = ctx;
   const gens = habitants(o, l.id, ch);
+  // Toucher un habitant déplie sa petite fiche dans la bulle (demandé : « une bulle dans la bulle »).
+  const [ouvert, setOuvert] = useState<string | null>(null);
   // Ceux qui y ont vécu à un autre moment (avant ou après, jusqu'au chapitre lu).
   const passes = o.personnages.filter(
     (p) => !gens.includes(p) && p.adresses.some((a) => a.lieu === l.id && (a.de ?? 1) <= o.luJusqua),
@@ -522,12 +691,14 @@ function DetailLogement({
           {gens.map((p) => {
             const a = adressesAu(p, ch).find((x) => x.lieu === l.id);
             const c = ctx.couleur(p);
+            const deplie = ouvert === p.id;
             return (
-              <li key={p.id}>
+              <li key={p.id} className="overflow-hidden rounded-[14px] border transition-colors" style={{ borderColor: deplie ? c : "var(--line)" }}>
                 <button
                   type="button"
-                  onClick={() => ctx.ouvrir(p.id)}
-                  className="flex w-full items-start gap-3 rounded-[14px] border border-line p-3 text-left transition-colors hover:border-accent/60"
+                  aria-expanded={deplie}
+                  onClick={() => setOuvert(deplie ? null : p.id)}
+                  className="flex w-full items-start gap-3 p-3 text-left"
                 >
                   <span className="mt-1.5 size-2.5 shrink-0 rounded-full" style={{ background: c }} />
                   <span className="min-w-0 flex-1">
@@ -539,7 +710,13 @@ function DetailLogement({
                       </span>
                     )}
                   </span>
+                  <ChevronDown size={17} className={`mt-1 shrink-0 text-muted transition-transform duration-200 ${deplie ? "rotate-180" : ""}`} />
                 </button>
+                <div className="repli" data-ouvert={deplie}>
+                  <div>
+                    <MiniFiche ctx={ctx} p={p} />
+                  </div>
+                </div>
               </li>
             );
           })}
@@ -563,7 +740,7 @@ function DetailLogement({
       )}
       {l.id !== "dehors" && !bulle && (
         <p className="mt-4 text-[12px] text-muted">
-          Touche un appartement de la façade pour voir qui y vit. Touche un nom pour sa fiche.
+          Touche un appartement de la façade pour voir qui y vit. Touche un habitant pour son portrait.
         </p>
       )}
       {l.id === "dehors" && <span className="sr-only">{lieu("dehors").nom}</span>}

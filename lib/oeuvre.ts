@@ -16,6 +16,10 @@ export type Logement = {
   nom: string;
   /** Ce qu'il faut remarquer (le tapis rouge s'arrête au 3e…). */
   detail?: string;
+  /** Objet qui résume l'appartement, vu par la fenêtre (emoji). */
+  objet?: string;
+  /** Volets toujours clos (les gens qu'on ne voit pas). */
+  persiennes?: boolean;
 };
 
 /** Où vit un personnage, éventuellement entre deux chapitres (inclus). */

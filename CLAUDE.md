@@ -231,7 +231,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Le 2026-11-22 (demandé) : sur téléphone, toucher un appartement ouvre une **bulle sous son étage**
     (pointe vers la case, le retoucher la ferme) au lieu d'envoyer en bas ; arbres complétés (plusieurs
     arbres par famille, `arbres`, pointillés pour neveu/cousine : mère Vabre, Louhette, Domergue, Mouret,
-    tantes et oncle Josserand, Gasparine). Maquettes de façade proposées en artefact, à choisir.
+    tantes et oncle Josserand, Gasparine). Façade **A1 choisie** (https://claude.ai/artifact/47YmhKqBGRGPpkshmyddLV) : façade dessinée (toit mansardé,
+    lucarnes, balcon, store et enseigne, porte cochère) + de la maison de poupée le papier peint de la
+    famille et un objet (`objet`, `persiennes` d'un `Logement`) vus par les fenêtres, escalier en zigzag ;
+    un peu aplatie (demandé). Dans la bulle, toucher un habitant déplie son portrait (`MiniFiche` :
+    traits, liens, dernier fait, « Toute sa fiche »), « une bulle dans la bulle ».
   - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
     éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
     (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par
