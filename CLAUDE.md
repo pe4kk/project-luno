@@ -91,6 +91,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     centrés ensemble ; sur le calendrier, le panneau est la 3e colonne, aligné
     sur « À venir » ; pas de panneau sur l'accueil. Téléphone et portables
     inchangés.
+  - Barre du bas et clavier de l'iPhone (2026-11-23, capture de l'utilisateur : barre restée au
+    milieu de l'écran après la fermeture du clavier, bug de `position: fixed` sur iOS) :
+    `useClavierOuvert()` dans `AppShell.tsx` cache la barre tant qu'un champ a le focus sur écran
+    tactile, puis fait bouger la page d'un pixel à la fermeture pour que Safari la replace.
   - `components/Donnees.tsx` : fenêtre « Mes données » (sauvegarde,
     restauration, effacement), message « Annuler », reprise des contenus
     publiés au chargement.

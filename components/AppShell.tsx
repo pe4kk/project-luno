@@ -319,7 +319,63 @@ function ColonnesAvecPanneau({
   );
 }
 
+/**
+ * Clavier du téléphone ouvert ? (un champ de texte a le focus sur un écran tactile)
+ *
+ * Sur iPhone (surtout dans l'app de l'écran d'accueil), quand le clavier se ferme, la barre
+ * du bas, en `position: fixed`, peut rester à la hauteur où était le clavier, au milieu de
+ * l'écran (vu le 2026-11-23). On la cache pendant que le clavier est ouvert, et à sa
+ * fermeture on fait bouger la page d'un pixel pour que Safari recalcule sa place.
+ */
+function useClavierOuvert() {
+  const [ouvert, setOuvert] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+    const estChamp = (el: Element | null) =>
+      !!el &&
+      ((el instanceof HTMLInputElement && !["checkbox", "radio", "range", "button", "submit", "file", "color"].includes(el.type)) ||
+        el instanceof HTMLTextAreaElement ||
+        (el instanceof HTMLElement && el.isContentEditable));
+    let minuteur = 0;
+    const replacer = () => {
+      window.clearTimeout(minuteur);
+      minuteur = window.setTimeout(() => {
+        const y = window.scrollY;
+        window.scrollTo(window.scrollX, y + 1);
+        window.scrollTo(window.scrollX, y);
+      }, 120);
+    };
+    const entree = (e: FocusEvent) => {
+      if (estChamp(e.target as Element)) setOuvert(true);
+    };
+    const sortie = () => {
+      // Le focus peut passer d'un champ à l'autre : on attend de voir où il arrive.
+      window.setTimeout(() => {
+        if (!estChamp(document.activeElement)) {
+          setOuvert(false);
+          replacer();
+        }
+      }, 60);
+    };
+    const vv = window.visualViewport;
+    const surRedim = () => {
+      if (vv && vv.height > window.innerHeight * 0.85) replacer();
+    };
+    document.addEventListener("focusin", entree);
+    document.addEventListener("focusout", sortie);
+    vv?.addEventListener("resize", surRedim);
+    return () => {
+      document.removeEventListener("focusin", entree);
+      document.removeEventListener("focusout", sortie);
+      vv?.removeEventListener("resize", surRedim);
+      window.clearTimeout(minuteur);
+    };
+  }, []);
+  return ouvert;
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
+  const clavier = useClavierOuvert();
   const chemin = usePathname();
   const monte = useMonte();
   const { conteneur: navHautConteneur, pastille: navHautPastille } = usePastille<HTMLElement>(chemin);
@@ -401,7 +457,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Barre du bas (téléphone) : fond translucide, pastille cuivrée qui glisse sous l'onglet actif */}
       <nav
         ref={navBasConteneur}
-        className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-6 rounded-[26px] border border-line bg-surface/90 px-1 py-1.5 shadow-pop backdrop-blur-md lg:hidden"
+        className={`fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-30 grid grid-cols-6 rounded-[26px] border border-line bg-surface/90 px-1 py-1.5 shadow-pop backdrop-blur-md transition-[opacity,transform] duration-200 lg:hidden ${
+          clavier ? "pointer-events-none translate-y-[140%] opacity-0" : ""
+        }`}
         aria-label="Navigation principale"
       >
         <span
