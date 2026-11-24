@@ -6,7 +6,7 @@ import { POT_BOUILLE as O } from "./pot-bouille";
  * Chapitre « Pot-Bouille » de Français : flashcards, fiche et exercices pour l'évaluation
  * de lecture (QCM) du 25/11/2026. Les cartes des personnages et les QCM sont tirés des
  * données de `pot-bouille.ts` (une seule source) ; l'exploration de l'œuvre (immeuble,
- * familles) est dans l'onglet Bac. Rien au-delà du chapitre XVI : l'élève n'a pas fini.
+ * familles) est dans l'onglet Bac.
  * Changer les données ou ce fichier : augmenter `version`.
  */
 
@@ -96,8 +96,24 @@ const cartesIntrigue = [
     verso: "Rachel, la bonne de Berthe, qui se faisait payer son silence. Auguste revient de Lyon et frappe la nuit à la porte d’Octave (chap. XIV).",
   },
   {
-    recto: "Qui sont les maîtresses d’Octave avant le chapitre XVI de Pot-Bouille ?",
-    verso: "Marie Pichon, sa voisine (chap. IV), puis Berthe Vabre (chap. XII). Valérie et Mme Hédouin l’ont repoussé.",
+    recto: "Qui sont les maîtresses d’Octave dans Pot-Bouille ?",
+    verso: "Marie Pichon, sa voisine (chap. IV), puis Berthe Vabre (chap. XII). Valérie et Mme Hédouin l’ont repoussé ; il finit par épouser Mme Hédouin.",
+  },
+  {
+    recto: "Qui Octave épouse-t-il à la fin de Pot-Bouille ?",
+    verso: "Mme Hédouin (Caroline), sa patronne du Bonheur des Dames, devenue veuve : le mariage a lieu en novembre (chap. XVIII). Il réussit par le commerce, plus par les femmes.",
+  },
+  {
+    recto: "Comment Berthe et Auguste se réconcilient-ils dans Pot-Bouille ?",
+    verso: "Le jour de l’enterrement de M. Josserand (chap. XVII), poussé par Clotilde et l’abbé Mauduit, Auguste la reprend sans la dot. La maison fait croire que leur brouille venait d’une « querelle d’argent ».",
+  },
+  {
+    recto: "Que fait Duveyrier quand Clarisse le chasse, dans Pot-Bouille ?",
+    verso: "Il se tire une balle dans la bouche dans les toilettes et se rate : la mâchoire reste de travers (chap. XVII). Guéri, il fait condamner la piqueuse de bottines pour infanticide (chap. XVIII).",
+  },
+  {
+    recto: "Comment finit Pot-Bouille ?",
+    verso: "Au samedi des Duveyrier, tout le monde se réconcilie comme si rien ne s’était passé ; Adèle a accouché seule la nuit d’avant. Dans la cour, les bonnes se moquent des maîtres : « C’est cochon et compagnie. »",
   },
 ];
 
@@ -121,8 +137,10 @@ const exercices: Exercice[] = [
       "La mort du vieux Vabre",
       "Berthe devient la maîtresse d’Octave",
       "Auguste surprend Berthe chez Octave",
+      "La mort de M. Josserand",
+      "Octave épouse Mme Hédouin",
     ],
-    explication: "Chap. I, IV, V, VIII, IX, XI, XII, XIV.",
+    explication: "Chap. I, IV, V, VIII, IX, XI, XII, XIV, XVII, XVIII.",
   },
   {
     type: "vraiFaux",
@@ -158,9 +176,9 @@ const exercices: Exercice[] = [
 
 export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
   id: "francais-1re-pot-bouille",
-  version: 2,
+  version: 3,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
-  titre: `Zola, Pot-Bouille (chap. I à ${ROMAINS[O.luJusqua]})`,
+  titre: O.luJusqua < O.chapitres ? `Zola, Pot-Bouille (chap. I à ${ROMAINS[O.luJusqua]})` : "Zola, Pot-Bouille",
   flashcards: [...cartesImmeuble, ...cartesFamilles, ...cartesPersonnages, ...cartesIntrigue],
   fiche: {
     sections: [
@@ -183,7 +201,7 @@ export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
         points: cartesFamilles.map((c) => ({ t: c.verso, n: 1 })),
       },
       {
-        titre: `L’intrigue, chapitre par chapitre (I à ${ROMAINS[O.luJusqua]})`,
+        titre: "L’intrigue, chapitre par chapitre",
         points: O.resumes.flatMap((r) =>
           r.resume.map((t, i) => ({ t: i === 0 ? `Chap. ${ROMAINS[r.n]}, ${r.titre} : ${t}` : t, n: i === 0 ? 2 : 4 })),
         ),
@@ -193,7 +211,8 @@ export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
       `Rez-de-chaussée : la soierie d’Auguste ; 1er : ${nom("duveyrier")} et Clotilde (rue), Théophile et Valérie (cour) ; 2e : l’écrivain (rue), Auguste et Berthe après le mariage (cour) ; 3e : les Campardon (rue), Mme Juzeur (cour) ; 4e : les Josserand (rue), les Pichon et Octave (cour).`,
       "Le vieux Vabre, propriétaire, a trois enfants : Auguste, Clotilde (Mme Duveyrier), Théophile.",
       "Bachelard est le frère de Mme Josserand ; Gasparine est la cousine de Rose Campardon.",
-      "Les maîtresses d’Octave : Marie Pichon (IV), puis Berthe (XII).",
+      "Les maîtresses d’Octave : Marie Pichon (IV), puis Berthe (XII) ; il épouse Mme Hédouin (XVIII).",
+      "La fin : M. Josserand meurt, Auguste reprend Berthe, Duveyrier rate son suicide, Adèle accouche seule ; rien ne change (« C’est cochon et compagnie »).",
     ],
   },
   exercices,

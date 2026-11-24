@@ -3,6 +3,14 @@ import { dansJours, joursAvant } from "./dates";
 import { lienTravail } from "./liens";
 import { dansLeQuiz } from "./apprendre";
 import type { Chapitre, Dst, ErreurNotee } from "./types";
+import { PROGRAMME_BAC } from "@/contenu/bac-francais";
+
+/** Œuvre à explorer (onglet Bac) rattachée à un chapitre publié : `publieId` → id de l'œuvre. */
+const OEUVRE_DU_CHAPITRE = new Map(
+  PROGRAMME_BAC.flatMap((g) =>
+    g.oeuvre?.chapitrePublie && g.oeuvre.explorer ? [[g.oeuvre.chapitrePublie, g.oeuvre.explorer] as const] : [],
+  ),
+);
 
 /**
  * Programme de révision d'une évaluation (page « Préparer une éval ») : la liste des
@@ -43,6 +51,46 @@ export function etapes(
   const lien = (c: Chapitre, o: string) => lienTravail({ m: c.matiereId, c: c.id, o });
   const exos = (mode: string) => `/exercices?mode=${mode}&dst=${encodeURIComponent(dst.id)}`;
   const liste: EtapePreparation[] = [];
+
+  // 0. Une œuvre intégrale (bac de français) : l'explorer dans l'onglet Bac, où sont
+  // l'immeuble, les familles et le quiz (demandé le 2026-11-24 : il n'apparaissait pas ici).
+  for (const c of auProgramme) {
+    const oeuvre = c.publieId ? OEUVRE_DU_CHAPITRE.get(c.publieId) : undefined;
+    if (!oeuvre) continue;
+    const bac = (v?: string) => lienTravail({ m: c.matiereId, o: "bac", t: oeuvre, v });
+    liste.push(
+      {
+        id: `oeuvre-immeuble:${oeuvre}`,
+        titre: "Situer chaque personnage dans l'immeuble",
+        detail: "Onglet Bac → Explorer l'œuvre : touche chaque étage, puis fais glisser le curseur des chapitres pour voir qui déménage.",
+        href: bac(),
+        minutes: 15,
+      },
+      {
+        id: `oeuvre-familles:${oeuvre}`,
+        titre: "Apprendre les familles et les liaisons",
+        detail: "Les arbres de chaque famille, puis « Amants et maîtresses » et « Qui sert qui ».",
+        href: bac("familles"),
+        minutes: 15,
+      },
+      {
+        id: `oeuvre-chapitres:${oeuvre}`,
+        titre: "Relire le résumé des chapitres",
+        detail: "Un chapitre à la fois : redis de tête ce qui s'y passe avant de l'ouvrir.",
+        href: bac("chapitres"),
+        minutes: 20,
+      },
+      {
+        id: `oeuvre-quiz:${oeuvre}`,
+        titre: "Quiz « Qui est-ce ? »",
+        detail: "Des QCM comme à l'éval : qui habite où, quel lien, qui a dit quoi. Commence par « L'essentiel », puis « À connaître ».",
+        href: bac("quiz"),
+        minutes: 10,
+        recurrente: true,
+        parJour: true,
+      },
+    );
+  }
 
   // 1. Le cours, chapitre par chapitre : comprendre (fiche), puis apprendre par cœur.
   for (const c of auProgramme) {

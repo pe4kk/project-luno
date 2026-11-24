@@ -340,8 +340,11 @@ function Programme({ dst }: { dst: Dst }) {
                   {jour.etapes.reduce((n, e) => n + e.minutes, 0) > 180 && (
                     // Trop pour une journée (éval le lendemain) : ce qui rapporte le plus d'abord.
                     <p className="mb-1.5 rounded-lg bg-accent-soft px-3 py-2 text-[13px] leading-snug text-ink">
-                      C&apos;est beaucoup pour une journée. Priorité : les définitions, puis une ou deux manches
-                      « Apprendre » et l&apos;interro blanche. Se tester rapporte plus que relire.
+                      C&apos;est beaucoup pour une journée.{" "}
+                      {jour.etapes.some((e) => e.id.startsWith("oeuvre-"))
+                        ? "Priorité : l'immeuble et les familles, puis plusieurs manches du quiz « Qui est-ce ? »."
+                        : "Priorité : les définitions, puis une ou deux manches « Apprendre » et l'interro blanche."}{" "}
+                      Se tester rapporte plus que relire.
                     </p>
                   )}
                   <ul>

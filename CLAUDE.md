@@ -227,10 +227,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     « Qui est-ce ? » généré des données (qui / où / lien / citation ; intrus de même sexe, même
     article, jamais un libellé qui en contient un autre). Chapitre publié `francais-1re-pot-bouille`
     (`contenu/francais-pot-bouille.ts`, cartes et QCM tirés des mêmes données) et date au calendrier.
-    **Il n'a pas fini le livre** (lu jusqu'au chap. XVI ; XVII-XVIII cachés, `luJusqua: 16`) : quand
-    il dit l'avoir fini, lire XVII-XVIII (notes de lecture : rien n'est gardé, relire le PDF qu'il
-    renverra ou une édition du domaine public), passer `luJusqua` à 18, compléter faits, adresses,
-    liens et résumés, augmenter `version` du chapitre publié. Parcours associé pas encore donné
+    **Livre fini** (2026-11-24) : les 18 chapitres sont dans les données (`luJusqua: 18`, faits, adresses,
+    liens et résumés de XVII-XVIII : mort de M. Josserand, Auguste reprend Berthe, suicide raté de
+    Duveyrier, Adèle accouche seule, Octave épouse Mme Hédouin ; chapitre publié en `version` 3).
+    « Préparer une éval » ajoute pour une œuvre à explorer (`OEUVRE_DU_CHAPITRE` dans
+    `lib/preparation.ts`, d'après `oeuvre.explorer` + `chapitrePublie`) quatre étapes vers l'onglet Bac
+    (immeuble, familles, chapitres, quiz « Qui est-ce ? » chaque jour) et son conseil de priorité. Parcours associé pas encore donné
     (`parcours` facultatif). Après le chap. VIII, Auguste et Berthe logent au 2e sur la cour.
     Le 2026-11-22 (demandé) : sur téléphone, toucher un appartement ouvre une **bulle sous son étage**
     (pointe vers la case, le retoucher la ferme) au lieu d'envoyer en bas ; arbres complétés (plusieurs

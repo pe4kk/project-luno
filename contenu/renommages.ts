@@ -122,6 +122,8 @@ export const RECTOS_RENOMMES: Record<string, string> = {
   "les mesures sociales de la terreur": "Quelles sont les mesures sociales de la Terreur ?",
   "date de l'abolition de l'esclavage": "Quand la Convention abolit-elle l'esclavage ?",
   "chute de robespierre": "Quand Robespierre tombe-t-il, et qu'est-ce que cela change ?",
+  // francais-pot-bouille
+  "qui sont les maîtresses d’octave avant le chapitre xvi de pot-bouille ?": "Qui sont les maîtresses d’Octave dans Pot-Bouille ?",
   // francais-rimbaud
   "fil rouge du cours sur rimbaud": "Quel est le fil rouge du cours sur Rimbaud ?",
   "étiemble, le mythe de rimbaud (1952)": "Que montre Étiemble dans Le Mythe de Rimbaud (1952) ?",

@@ -2,10 +2,8 @@ import type { Oeuvre } from "@/lib/oeuvre";
 
 /**
  * Émile Zola, « Pot-Bouille » (1882), deuxième œuvre du bac de français (roman).
- * Rédigé le 2026-11-22 après lecture des chapitres I à XVI de l'édition Bibebook
- * (domaine public). L'élève n'a pas fini le livre : rien des chapitres XVII et XVIII
- * n'apparaît ici. Quand il l'aura fini, passer `luJusqua` à 18 et compléter les faits,
- * les adresses et les résumés.
+ * Rédigé le 2026-11-22 après lecture des chapitres I à XVI de l'édition Bibebook (domaine
+ * public), complété le 2026-11-24 avec les chapitres XVII et XVIII : l'élève a fini le livre.
  *
  * Évaluation du mercredi 25/11/2026 : QCM de lecture, surtout l'immeuble (qui habite
  * où, qui est parent de qui).
@@ -25,7 +23,7 @@ export const POT_BOUILLE: Oeuvre = {
     "M. Gourd, le concierge, veille sur la « moralité » de la maison : il chasse les pauvres et salue les bourgeois, quoi qu’ils fassent.",
   ],
   chapitres: 18,
-  luJusqua: 16,
+  luJusqua: 18,
 
   logements: [
     {
@@ -83,7 +81,7 @@ export const POT_BOUILLE: Oeuvre = {
               id: "mme-josserand",
               conjoint: "josserand",
               enfants: [
-                { id: "leon", note: "aîné ; épousera Raymonde (XVI)" },
+                { id: "leon", conjoint: "raymonde", note: "aîné ; épouse Raymonde (XVIII)" },
                 { id: "hortense", note: "promise à Verdier" },
                 { id: "berthe", conjoint: "auguste" },
                 { id: "saturnin" },
@@ -93,7 +91,7 @@ export const POT_BOUILLE: Oeuvre = {
               id: "bachelard",
               conjoint: "mme-bachelard",
               note: "l’oncle, veuf",
-              enfants: [{ id: "gueulin", note: "fils d’une sœur de sa femme", pointille: true }],
+              enfants: [{ id: "gueulin", conjoint: "fifi", note: "fils d’une sœur de sa femme ; épouse Fifi (XVII)", pointille: true }],
             },
             { id: "soeur-bachelard", note: "mariée au « pion »" },
           ],
@@ -101,7 +99,7 @@ export const POT_BOUILLE: Oeuvre = {
         {
           id: "pere-josserand",
           note: "côté du père",
-          enfants: [{ id: "josserand", conjoint: "mme-josserand" }, { id: "soeur-josserand" }],
+          enfants: [{ id: "josserand", conjoint: "mme-josserand", note: "meurt au chap. XVII" }, { id: "soeur-josserand" }],
         },
       ],
     },
@@ -130,7 +128,7 @@ export const POT_BOUILLE: Oeuvre = {
         {
           id: "vuillaume",
           note: "parents de Marie",
-          enfants: [{ id: "marie", conjoint: "jules", enfants: [{ id: "lilie" }, { id: "bebe-pichon", note: "née en septembre" }] }],
+          enfants: [{ id: "marie", conjoint: "jules", enfants: [{ id: "lilie" }, { id: "bebe-pichon", note: "née en septembre (XIV)" }, { id: "troisieme-pichon", note: "née au chap. XVII" }] }],
         },
         { id: "mere-pichon", note: "mère de Jules", enfants: [{ id: "jules", conjoint: "marie" }] },
       ],
@@ -147,8 +145,8 @@ export const POT_BOUILLE: Oeuvre = {
       couleur: "#d4a24c",
       resume: "Le héros, ses patrons et ses amis hors de l’immeuble. Octave est un Mouret, une branche des Rougon-Macquart ; c’est un ami des parents de Rose Campardon.",
       arbres: [
-        { id: "parents-mouret", note: "à Plassans", enfants: [{ id: "octave" }] },
-        { id: "deleuze", note: "fondateur du Bonheur des Dames", enfants: [{ id: "hedouin", conjoint: "m-hedouin" }] },
+        { id: "parents-mouret", note: "à Plassans", enfants: [{ id: "octave", conjoint: "hedouin", note: "épouse Mme Hédouin (XVIII)" }] },
+        { id: "deleuze", note: "fondateur du Bonheur des Dames", enfants: [{ id: "hedouin", conjoint: "m-hedouin", note: "veuve (XIII), épouse Octave (XVIII)" }] },
       ],
     },
     { id: "maison", nom: "La maison et ses domestiques", couleur: "#8a8a8f", resume: "Les concierges, les bonnes et les locataires de passage : ceux qu’on ne voit pas depuis le grand escalier." },
@@ -175,8 +173,11 @@ export const POT_BOUILLE: Oeuvre = {
       importance: 1,
       age: "22 ans",
       metier: "Commis au Bonheur des Dames (chap. I à IX), puis à la soierie d’Auguste Vabre",
-      role: "Le héros : un jeune Provençal de Plassans, ambitieux, venu conquérir Paris par les femmes",
-      adresses: [{ lieu: "4-cour", note: "chambre de garçon au fond du couloir, repas chez les Campardon ; il donne congé au chap. XV" }],
+      role: "Le héros : un jeune Provençal de Plassans, ambitieux, venu conquérir Paris par les femmes, qui finit par épouser sa patronne",
+      adresses: [
+        { lieu: "4-cour", a: 16, note: "chambre de garçon au fond du couloir, repas chez les Campardon ; il donne congé au chap. XV" },
+        { lieu: "dehors", de: 17, note: "rue Neuve-Saint-Augustin, près du Bonheur des Dames ; il épouse Mme Hédouin" },
+      ],
       traits: [
         "Séducteur calculateur : sous son air d’adoration, un « dédain féroce de la femme »",
         "Ambitieux, très bon vendeur, rêve d’un grand magasin moderne",
@@ -193,6 +194,16 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 13, t: "Entend les bonnes raconter sa liaison dans la cour, et apprend la mort de M. Hédouin : « j’ai fait une bêtise ! »" },
         { ch: 14, t: "Surpris la nuit par Auguste, qui frappe à sa porte : bagarre, duel annoncé." },
         { ch: 15, t: "Duel évité : sermonné par Duveyrier et Bachelard, il donne congé et doit quitter la maison." },
+        { ch: 17, t: "Revenu au Bonheur des Dames, il devient indispensable à Mme Hédouin, devenue veuve ; il quitte la maison pour la rue Neuve-Saint-Augustin. Ils décident de se marier à l’automne." },
+        { ch: 18, t: "Marié à Mme Hédouin début novembre, il revient au samedi des Duveyrier : tout le monde lui pardonne. « Paris était conquis » ; il a l’impression que rien n’a changé." },
+        { ch: 17, t: "Épuisé, au lit, il meurt en murmurant le nom de Saturnin. « Son honnêteté l’étouffait. »" },
+        { ch: 17, t: "Refuse de « trafiquer » l’honneur de sa fille quand Auguste réclame la dot ; traite Bachelard de canaille." },
+        { ch: 18, t: "Veuve, vit d’une pension des Bernheim et garde ses mardis ; menace Auguste de lui reprendre Berthe pour le faire taire." },
+        { ch: 17, t: "Battu et chassé par la famille de Clarisse, il se tire une balle dans la bouche dans les toilettes : il se rate, la mâchoire reste de travers." },
+        { ch: 18, t: "Guéri, la voix plus grave, il fait condamner la piqueuse de bottines à cinq ans pour infanticide ; il a une nouvelle maîtresse." },
+        { ch: 17, t: "A marié Fifi à Gueulin avec 50 000 F de dot, la somme promise à Berthe ; ivre, il ne donne rien aux Josserand." },
+        { ch: 17, t: "Furieux de la troisième grossesse, ils font venir un notaire pour que leur gendre n’hérite pas." },
+        { ch: 18, t: "Enfin décoré de la Légion d’honneur ; il vient au samedi avec Gasparine, Rose reste couchée à lire Dickens." },
       ],
       citation: { texte: "Mon bon, nous n’épousons pas, à Marseille !", ch: 3, contexte: "à Trublot, quand on veut lui faire épouser Berthe" },
     },
@@ -204,7 +215,7 @@ export const POT_BOUILLE: Oeuvre = {
       sexe: "f",
       importance: 1,
       metier: "Dirige le magasin de nouveautés Au Bonheur des Dames, place Gaillon",
-      role: "La patronne d’Octave au Bonheur des Dames, une belle femme de tête, calme et froide",
+      role: "La patronne d’Octave au Bonheur des Dames, une belle femme de tête, calme et froide, qu’il finit par épouser",
       adresses: [{ lieu: "dehors" }],
       ailleurs: "Au Bonheur des Dames, à deux pas de la rue de Choiseul",
       traits: [
@@ -217,6 +228,8 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 5, t: "Au concert des Duveyrier : Octave la désire et ramasse une rose de son bouquet." },
         { ch: 9, t: "S’intéresse aux idées d’Octave, mais le repousse calmement quand il veut la prendre ; il démissionne." },
         { ch: 13, t: "Devient veuve : M. Hédouin meurt." },
+        { ch: 17, t: "Achète la maison voisine pour agrandir le magasin et annonce à Octave qu’elle doit se remarier ; ils décident de s’épouser à l’automne." },
+        { ch: 18, t: "Devenue Mme Octave Mouret ; le Bonheur des Dames, agrandi avec un rayon de soierie, ruine la boutique d’Auguste." },
       ],
       citation: { texte: "Jamais je ne ferai ça, parce que c’est bête d’abord, inutile ensuite.", ch: 9, contexte: "en repoussant Octave" },
     },
@@ -249,6 +262,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 5, t: "Révèle à Octave que Duveyrier a une maîtresse." },
         { ch: 6, t: "Surpris par Octave, revient de chez Adèle ; montre l’étage des bonnes." },
         { ch: 7, t: "Emmène Octave chez Clarisse, la maîtresse de Duveyrier." },
+        { ch: 18, t: "Soigne Adèle en secret toute la nuit après son accouchement." },
       ],
     },
 
@@ -386,6 +400,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 6, t: "« Essaie » la petite Louise, une orpheline, comme bonne." },
         { ch: 11, t: "Glisse que l’héritage Vabre pourrait décevoir : « des bruits circulent »." },
         { ch: 15, t: "Attire Octave chez elle et l’embrasse sur le front : « Pauvre enfant ! »" },
+        { ch: 17, t: "Rend Louise aux Enfants-Assistés et tente de séduire Trublot au cimetière." },
       ],
       citation: { texte: "On n’épouse pas seulement la fille, on épouse la mère souvent.", ch: 8, contexte: "le matin du mariage de Berthe" },
     },
@@ -398,9 +413,9 @@ export const POT_BOUILLE: Oeuvre = {
       importance: 3,
       age: "15 ans",
       role: "L’orpheline que Mme Juzeur prend comme petite bonne",
-      adresses: [{ lieu: "combles", de: 6 }],
+      adresses: [{ lieu: "combles", de: 6, a: 17, note: "rendue aux Enfants-Assistés au chap. XVII" }],
       traits: ["Une gamine qui traîne : une heure pour rapporter le lait"],
-      faits: [{ ch: 11, t: "Mme Juzeur la surveille dans l’escalier." }],
+      faits: [{ ch: 11, t: "Mme Juzeur la surveille dans l’escalier." }, { ch: 17, t: "Surprise avec Hippolyte ; Mme Juzeur la rend aux Enfants-Assistés." }],
     },
     {
       id: "monsieur-distingue",
@@ -425,7 +440,7 @@ export const POT_BOUILLE: Oeuvre = {
       importance: 1,
       metier: "Caissier à la cristallerie Saint-Joseph (8 000 F par an)",
       role: "Le père, un employé honnête et doux, écrasé par sa femme",
-      adresses: [{ lieu: "4-rue" }],
+      adresses: [{ lieu: "4-rue", a: 17, note: "il meurt au chap. XVII" }],
       traits: [
         "Honnête et faible : il n’ose rien dire à sa femme",
         "La nuit, en cachette, il recopie des « bandes » d’adresses pour 3 F le mille, pour payer les toilettes de ses filles",
@@ -482,6 +497,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 3, t: "Fouille les poches de l’oncle Bachelard avec Berthe pour lui prendre 20 F." },
         { ch: 5, t: "Au concert, dénoue le rideau qui cache Berthe et Auguste à la fenêtre." },
         { ch: 16, t: "Épousera Verdier « quand même », bien que sa maîtresse vienne d’avoir un enfant." },
+        { ch: 18, t: "Verdier repousse encore le mariage au printemps, pour ne pas mettre sa maîtresse et l’enfant à la rue." },
       ],
       citation: { texte: "Je le veux et je l’aurai.", ch: 2, contexte: "à propos de Verdier" },
     },
@@ -497,7 +513,8 @@ export const POT_BOUILLE: Oeuvre = {
       adresses: [
         { lieu: "4-rue", a: 7 },
         { lieu: "2-cour", de: 8, a: 13, note: "jeune mariée, chez Auguste" },
-        { lieu: "4-rue", de: 14, note: "réfugiée chez ses parents après le scandale" },
+        { lieu: "4-rue", de: 14, a: 16, note: "réfugiée chez ses parents après le scandale" },
+        { lieu: "2-cour", de: 17, note: "Auguste la reprend après l’enterrement de son père" },
       ],
       traits: [
         "Jolie, gaie, « une grâce hardie » ; molle devant sa mère",
@@ -511,6 +528,8 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 12, t: "Se dispute avec Auguste pour l’argent et devient la maîtresse d’Octave : « Si vous m’aviez épousée ! »" },
         { ch: 14, t: "Surprise la nuit dans la chambre d’Octave, elle fuit en chemise ; Marie Pichon la recueille." },
         { ch: 16, t: "Cachée chez ses parents, giflée par sa mère." },
+        { ch: 17, t: "Le jour de l’enterrement de son père, Auguste la reprend (« Nous tâcherons de ne pas recommencer ») ; elle renvoie Rachel." },
+        { ch: 18, t: "Un « nouvel associé », un petit blond, la couvre de cadeaux, dit-on." },
       ],
       citation: { texte: "Si vous m’aviez épousée !", ch: 12, contexte: "à Octave, après leur première fois" },
     },
@@ -527,7 +546,8 @@ export const POT_BOUILLE: Oeuvre = {
         { lieu: "4-rue", a: 7 },
         { lieu: "dehors", de: 7, a: 11, note: "à l’asile des Moulineaux" },
         { lieu: "2-cour", de: 12, a: 15, note: "chez Berthe ; il travaille au sous-sol du magasin" },
-        { lieu: "dehors", de: 15, note: "renvoyé à l’asile des Moulineaux" },
+        { lieu: "dehors", de: 15, a: 17, note: "renvoyé à l’asile des Moulineaux" },
+        { lieu: "4-rue", de: 18, note: "ressorti de l’asile, chez sa mère" },
       ],
       traits: [
         "Ne sait pas lire ; crises de fureur quand on le contrarie",
@@ -539,6 +559,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 7, t: "Envoyé à l’asile des Moulineaux la veille du mariage ; il casse les vitres du fiacre." },
         { ch: 12, t: "Renvoyé par le docteur Chassagne, il vit chez Berthe et ficelle les paquets du magasin." },
         { ch: 15, t: "Veut « saigner comme un cochon » Auguste : renvoyé à l’asile." },
+        { ch: 18, t: "Ressorti de l’asile, il serre les mains du nouvel associé d’Auguste : « Ami… ami… »" },
       ],
       citation: { texte: "Si on te marie, je leur ouvre la peau du ventre.", ch: 3, contexte: "à Berthe, un couteau à la main" },
     },
@@ -557,6 +578,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 2, t: "Reste chez Mme Dambreville : « il y couche ! »" },
         { ch: 8, t: "Arrive en retard au mariage de Berthe ; las de Mme Dambreville." },
         { ch: 16, t: "Rompt avec Mme Dambreville, qui finit par accepter qu’il épouse sa nièce Raymonde, s’il vit chez eux." },
+        { ch: 18, t: "Marié à Raymonde, il est retourné « aux bras de la tante » ; nommé maître des requêtes, il se rallie au régime." },
       ],
     },
     {
@@ -597,6 +619,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 3, t: "Excite ses cousines : « Dans le pantalon ! »" },
         { ch: 15, t: "Surpris au lit avec Fifi, la protégée de l’oncle." },
+        { ch: 17, t: "Épouse Fifi, avec la dot de 50 000 F de l’oncle." },
       ],
     },
     {
@@ -631,6 +654,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 1, t: "Jette des tripes de lapin dans la cour." },
         { ch: 6, t: "Reproche à Trublot de l’ignorer quand elle sert à table." },
         { ch: 16, t: "Nourrit Berthe en cachette ; Mme Josserand lui trouve des « allures »." },
+        { ch: 18, t: "Accouche seule, la nuit, dans sa chambre de bonne, d’une fille qu’elle abandonne dans le passage Choiseul ; personne ne sait si le père est « le jeune ou le vieux »." },
       ],
     },
 
@@ -653,6 +677,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 4, t: "Octave lui prête « André » de George Sand ; le soir, elle l’embrasse et se donne à lui, porte ouverte, à côté de sa fille." },
         { ch: 5, t: "Attend Octave en haut de l’escalier ; il lui offre la rose de Mme Hédouin." },
         { ch: 14, t: "A eu une deuxième fille en septembre ; recueille Berthe en chemise, la nuit du scandale." },
+        { ch: 17, t: "Enceinte puis mère d’une troisième fille, le jour de l’enterrement de M. Josserand ; ses parents la déshéritent." },
       ],
       citation: { texte: "C’est si beau !", ch: 4, contexte: "à propos d’« André », de George Sand" },
     },
@@ -670,6 +695,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 4, t: "Remercie Octave d’avoir rangé la voiture de Lilie." },
         { ch: 11, t: "Se demande s’il y a un testament." },
+        { ch: 18, t: "Mme Vuillaume, au plus mal, refuse de recevoir sa fille." },
       ],
     },
     {
@@ -766,6 +792,8 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 11, t: "Spolié par Duveyrier dans l’héritage, puis réconcilié (loyer du magasin offert cinq ans)." },
         { ch: 14, t: "Prévenu par Rachel, revient de Lyon et surprend Berthe chez Octave." },
         { ch: 15, t: "Veut un duel, court Paris sept heures en fiacre ; Saturnin manque de l’égorger." },
+        { ch: 17, t: "Poussé par Duveyrier, il exige la dot pour reprendre Berthe, puis la reprend sans rien après l’enterrement ; Rachel lui crie tous les détails de l’adultère." },
+        { ch: 18, t: "Ruiné par le Bonheur des Dames, il a dû prendre un associé ; il menace de partir si Octave entre, puis cède." },
       ],
       citation: { texte: "Ah ! j’en ai assez, mon ami, j’en ai assez, parole d’honneur !", ch: 15, contexte: "à Duveyrier, après l’attaque de Saturnin" },
     },
@@ -789,6 +817,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 8, t: "À l’église, accuse Octave d’être l’amant de Valérie ; puis lui demande pardon, convaincu par les dames." },
         { ch: 11, t: "Traite Duveyrier de « voleur » après la vente de la maison." },
         { ch: 15, t: "Témoin d’Auguste ; se réconcilie avec les Duveyrier." },
+        { ch: 17, t: "S’installe à la caisse de la soierie avec Valérie pendant la séparation d’Auguste et Berthe." },
       ],
       citation: { texte: "Voleur ! voleur !… Oui, voleur !", ch: 11, contexte: "à Duveyrier, qui a acheté la maison pour rien" },
     },
@@ -811,6 +840,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 4, t: "Pendant une crise de nerfs, Octave veut la prendre : elle le regarde, glacée, et demande du thé." },
         { ch: 8, t: "Accusée par Théophile le jour du mariage ; sauvée par un mensonge de Mme Josserand (la lettre serait à la bonne)." },
         { ch: 11, t: "Refuse de payer son loyer à Duveyrier." },
+        { ch: 18, t: "Devenue l’amie de Berthe ; elle regarde Octave en « amie désintéressée »." },
       ],
       citation: { texte: "Ah ! ma chère, je vous souhaite plus de chance qu’à moi !", ch: 8, contexte: "à Berthe, le soir de ses noces" },
     },
@@ -844,7 +874,10 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 5, t: "Joue Chopin et dirige le chœur de la Bénédiction des poignards." },
         { ch: 10, t: "Fait chanter Octave ; son père a une attaque ; son mari lui « revient »." },
         { ch: 11, t: "Avec Duveyrier, garde la maison de son père." },
+        { ch: 17, t: "Devant son mari blessé : « Eh ! tuez-vous dehors ! » Elle tolère la liaison de son fils Gustave avec Julie." },
+        { ch: 18, t: "Rouvre ses samedis ; elle renvoie Julie pour protéger Gustave." },
       ],
+      citation: { texte: "Eh ! tuez-vous dehors !", ch: 17, contexte: "à son mari, qui vient de se rater" },
     },
     {
       id: "duveyrier",
@@ -882,7 +915,7 @@ export const POT_BOUILLE: Oeuvre = {
       role: "Le fils des Duveyrier, en rhétorique au lycée Bonaparte",
       adresses: [{ lieu: "dehors", note: "pensionnaire au lycée Bonaparte" }],
       traits: ["Mince et précoce", "Ses parents comptent sur lui pour attendrir le grand-père mourant"],
-      faits: [{ ch: 11, t: "Ramené du lycée au chevet du vieux Vabre." }],
+      faits: [{ ch: 11, t: "Ramené du lycée au chevet du vieux Vabre." }, { ch: 17, t: "Liaison avec Julie, la cuisinière, tolérée par sa mère." }],
     },
 
     // --- Les gens du second et le service ------------------------------------------
@@ -903,6 +936,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 1, t: "Campardon passe leur porte avec mépris : « des gens qu’on ne voit pas »." },
         { ch: 11, t: "Partis en voyage pendant l’enterrement : « Ces gens du second sont étonnants »." },
+        { ch: 17, t: "La police est venue : il aurait écrit un roman « plein de cochonneries » sur les gens comme il faut, où Duveyrier serait." },
       ],
     },
     {
@@ -924,6 +958,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 1, t: "Reçoit Octave ; éteint le dernier bec de gaz." },
         { ch: 6, t: "Fait chasser la femme du menuisier et maltraite la mère Pérou." },
         { ch: 13, t: "Fait des rondes de nuit, chasse la piqueuse de bottines enceinte : « il ne faut pas de femmes »." },
+        { ch: 17, t: "Ne salue plus Octave, puis lui fait un grand salut quand il va épouser Mme Hédouin." },
       ],
       citation: { texte: "Dans une maison qui se respecte, il ne faut pas de femmes, et surtout pas de ces femmes qui travaillent !", ch: 13, contexte: "après le départ de la piqueuse de bottines" },
     },
@@ -973,7 +1008,7 @@ export const POT_BOUILLE: Oeuvre = {
       role: "Une ouvrière pâle et seule, enceinte, qui loue la chambre du menuisier",
       adresses: [{ lieu: "combles", de: 11, a: 13, note: "chassée le 8 octobre" }],
       traits: ["Entrée le jour de l’enterrement du vieux Vabre", "M. Gourd ne supporte pas son « ventre »"],
-      faits: [{ ch: 13, t: "Chassée le 8 octobre sur le point d’accoucher, sous le regard « implacable » de Duveyrier." }],
+      faits: [{ ch: 13, t: "Chassée le 8 octobre sur le point d’accoucher, sous le regard « implacable » de Duveyrier." }, { ch: 18, t: "Jugée pour infanticide, condamnée à cinq ans par Duveyrier." }],
     },
     {
       id: "julie",
@@ -986,7 +1021,8 @@ export const POT_BOUILLE: Oeuvre = {
       role: "La cuisinière des Duveyrier, une Bourguignonne de 40 ans, maîtresse de Trublot",
       adresses: [{ lieu: "combles" }],
       traits: ["Visage grêlé, « un corps de femme superbe »", "Garde des dentelles sans doute volées à Mme Duveyrier"],
-      faits: [{ ch: 6, t: "Trublot l’attend dans sa chambre." }],
+      faits: [{ ch: 6, t: "Trublot l’attend dans sa chambre." }, { ch: 17, t: "Maîtresse de Gustave, le fils des Duveyrier, à la campagne." }, { ch: 18, t: "Renvoyée par Clotilde ; elle conclut le roman : « C’est cochon et compagnie. »" }],
+      citation: { texte: "Celle-ci ou celle-là, toutes les baraques se ressemblent. […] C’est cochon et compagnie.", ch: 18, contexte: "la dernière phrase du roman, dans la cour des cuisines" },
     },
     {
       id: "hippolyte",
@@ -999,7 +1035,7 @@ export const POT_BOUILLE: Oeuvre = {
       role: "Le maître d’hôtel des Duveyrier, qui vit « maritalement » avec Clémence",
       adresses: [{ lieu: "combles" }],
       traits: ["Répugne à toucher le vieux Vabre mourant"],
-      faits: [{ ch: 10, t: "Aide Octave à coucher le vieux Vabre." }],
+      faits: [{ ch: 10, t: "Aide Octave à coucher le vieux Vabre." }, { ch: 17, t: "Surpris avec Louise ; quand l’abbé veut le marier à Clémence, il avoue qu’il est déjà marié." }],
     },
     {
       id: "clemence",
@@ -1012,7 +1048,7 @@ export const POT_BOUILLE: Oeuvre = {
       role: "La femme de chambre de Clotilde, compagne d’Hippolyte",
       adresses: [{ lieu: "combles" }],
       traits: ["Hippolyte la retrouve chaque soir"],
-      faits: [{ ch: 6, t: "Trublot la montre à Octave, dans le couloir des bonnes." }],
+      faits: [{ ch: 6, t: "Trublot la montre à Octave, dans le couloir des bonnes." }, { ch: 17, t: "Refuse d’épouser Hippolyte." }],
     },
     {
       id: "rachel",
@@ -1023,11 +1059,12 @@ export const POT_BOUILLE: Oeuvre = {
       importance: 2,
       metier: "Bonne de Berthe",
       role: "La bonne de Berthe, dure et muette, qui finit par la dénoncer à Auguste",
-      adresses: [{ lieu: "combles", de: 12 }],
+      adresses: [{ lieu: "combles", de: 12, a: 17, note: "renvoyée par Berthe au chap. XVII" }],
       traits: ["25 ans, visage dur, grand nez, « l’air de tout comprendre et de ne rien dire »", "Se fait payer son silence ; quand l’argent cesse, elle trahit"],
       faits: [
         { ch: 12, t: "Berthe la trouve trop curieuse : « une fille à renvoyer ou à acheter »." },
         { ch: 14, t: "Prévient Auguste du rendez-vous de Berthe et d’Octave." },
+        { ch: 17, t: "Renvoyée par Berthe, elle hurle dans l’escalier de service tous les secrets de l’adultère." },
       ],
     },
     {
@@ -1059,6 +1096,7 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 7, t: "Octave et Trublot vont à sa soirée." },
         { ch: 10, t: "Quitte Duveyrier en vidant l’appartement." },
         { ch: 15, t: "Duveyrier l’a retrouvée et découche." },
+        { ch: 17, t: "Le trompe avec Théodore, son professeur de piano ; sa famille jette Duveyrier dans l’escalier." },
       ],
     },
     {
@@ -1075,6 +1113,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 7, t: "Bachelard la présente à Octave : elle brode un devant d’autel." },
         { ch: 15, t: "Surprise au lit avec Gueulin : « Je ne savais pas, mon oncle… »" },
+        { ch: 17, t: "Mariée à Gueulin par Bachelard, qui la dote de 50 000 F." },
       ],
     },
     {
@@ -1091,6 +1130,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 2, t: "Berthe vient de manquer un mariage dans son salon." },
         { ch: 16, t: "Accepte que Léon épouse sa nièce Raymonde, à condition qu’il vive chez eux." },
+        { ch: 18, t: "Arrive dans les salons avec Léon, qui a épousé sa nièce." },
       ],
     },
     {
@@ -1121,6 +1161,8 @@ export const POT_BOUILLE: Oeuvre = {
         { ch: 5, t: "Bavarde avec Berthe pour faire oublier le « scandale de la fenêtre »." },
         { ch: 9, t: "Vient « bénir » le ménage à trois des Campardon." },
         { ch: 14, t: "Confesse Berthe, qui pleure avec lui." },
+        { ch: 17, t: "Négocie la réconciliation d’Auguste et Berthe ; devant le Calvaire de Saint-Roch, il pleure « le ciel vide »." },
+        { ch: 18, t: "Vaincu, il jette encore « le manteau de la religion » sur cette bourgeoisie." },
       ],
     },
     {
@@ -1136,6 +1178,7 @@ export const POT_BOUILLE: Oeuvre = {
       faits: [
         { ch: 3, t: "Interrogé par Théophile sur les nerfs de Valérie." },
         { ch: 11, t: "Assiste à la mort du vieux Vabre." },
+        { ch: 17, t: "Accuse l’Empire et annonce « la décomposition et l’écroulement de la bourgeoisie »." },
       ],
     },
     {
@@ -1310,7 +1353,7 @@ export const POT_BOUILLE: Oeuvre = {
       role: "La nièce des Dambreville, une jeune créole très riche, que Léon veut épouser",
       adresses: [{ lieu: "dehors" }],
       traits: ["Arrivée en septembre des Antilles, où son père est mort", "« Une sauvage qui ne savait rien de l’existence », selon Mme Dambreville, jalouse"],
-      faits: [{ ch: 16, t: "Mme Dambreville finit par accepter qu’elle épouse Léon, s’il vit chez eux." }],
+      faits: [{ ch: 16, t: "Mme Dambreville finit par accepter qu’elle épouse Léon, s’il vit chez eux." }, { ch: 18, t: "Mariée à Léon, qu’on ne voit jamais dans le monde." }],
     },
     {
       id: "mlle-menu",
@@ -1324,6 +1367,30 @@ export const POT_BOUILLE: Oeuvre = {
       adresses: [{ lieu: "dehors" }],
       traits: ["« Le visage blanc et reposé d’une sœur tourière »"],
       faits: [{ ch: 7, t: "Reçoit Bachelard et Octave chez Fifi." }],
+    },
+    {
+      id: "troisieme-pichon",
+      nom: "La troisième fille des Pichon",
+      court: "La 3e petite",
+      famille: "pichon",
+      sexe: "f",
+      importance: 3,
+      role: "Le troisième enfant de Marie et Jules, né le jour de l’enterrement de M. Josserand",
+      adresses: [{ lieu: "4-cour", de: 17 }],
+      traits: ["Les Vuillaume, furieux, déshéritent leur gendre"],
+      faits: [{ ch: 17, t: "Naît pendant que la maison enterre M. Josserand : « Un qui part, un qui vient », dit Hippolyte." }],
+    },
+    {
+      id: "associe",
+      nom: "Le nouvel associé d’Auguste",
+      court: "L’associé",
+      famille: "monde",
+      sexe: "m",
+      importance: 3,
+      role: "Un petit blond très soigné qu’Auguste, ruiné, a dû prendre comme associé ; il couvre Berthe de cadeaux",
+      adresses: [{ lieu: "dehors", de: 18 }],
+      traits: ["Laisse deviner que Berthe recommence : « aujourd’hui répétait hier »"],
+      faits: [{ ch: 18, t: "Saturnin lui serre les mains avec tendresse : « Ami… ami… », comme autrefois pour Octave." }],
     },
   ],
 
@@ -1385,10 +1452,15 @@ export const POT_BOUILLE: Oeuvre = {
     { de: "octave", a: "parents-mouret", type: "famille", libelle: "le fils" },
     { de: "fifi", a: "mlle-menu", type: "famille", libelle: "la nièce" },
     { de: "raymonde", a: "m-dambreville", type: "famille", libelle: "la nièce" },
-    { de: "leon", a: "raymonde", type: "autre", libelle: "le futur mari", ch: 16 },
     { de: "hedouin", a: "deleuze", type: "famille", libelle: "la fille de l’aîné" },
     { de: "m-hedouin", a: "hedouin", type: "mariage", libelle: "le mari" },
     { de: "dambreville", a: "m-dambreville", type: "mariage", libelle: "la femme" },
+    // La fin du roman
+    { de: "octave", a: "hedouin", type: "mariage", libelle: "le mari", ch: 18 },
+    { de: "gueulin", a: "fifi", type: "mariage", libelle: "le mari", ch: 17 },
+    { de: "leon", a: "raymonde", type: "mariage", libelle: "le mari", ch: 18 },
+    { de: "gustave", a: "julie", type: "liaison", libelle: "l’amant", ch: 17 },
+    { de: "associe", a: "auguste", type: "travail", libelle: "l’associé", ch: 18 },
     // Domestiques
     { de: "julie", a: "clotilde", type: "travail", libelle: "la cuisinière" },
     { de: "rachel", a: "berthe", type: "travail", libelle: "la bonne", ch: 12 },
@@ -1570,6 +1642,31 @@ export const POT_BOUILLE: Oeuvre = {
         "==M. Josserand apprend les mensonges et l’adultère, et s’effondre== : « Elles m’ont tué. »",
       ],
       personnages: ["berthe", "mme-josserand", "josserand", "hortense", "leon", "dambreville", "auguste", "adele"],
+    },
+      {
+      n: 17,
+      titre: "Enterrement et réconciliation",
+      moment: "Le printemps suivant",
+      resume: [
+        "Octave, revenu au Bonheur des Dames, devient indispensable à Mme Hédouin, veuve : ==ils décident de se marier à l’automne==. Il a quitté la maison.",
+        "Auguste refuse de reprendre Berthe sans la dot ; l’abbé Mauduit négocie. Bachelard ne donne rien : il a doté Fifi de 50 000 F en la mariant à Gueulin.",
+        "==M. Josserand meurt==. Après l’enterrement, Auguste reprend Berthe ; Rachel, renvoyée, hurle tous les secrets dans l’escalier de service.",
+        "==Duveyrier, chassé par Clarisse, se tire une balle dans la bouche== et se rate. Hippolyte, surpris avec Louise, est déjà marié ; Gustave couche avec Julie. Marie a une troisième fille.",
+        "L’écrivain du 2e aurait écrit un roman sur la maison. Devant le Calvaire de Saint-Roch, l’abbé Mauduit pleure « le ciel vide ».",
+      ],
+      personnages: ["octave", "hedouin", "auguste", "berthe", "mme-josserand", "josserand", "bachelard", "mauduit", "duveyrier", "clotilde", "rachel", "hippolyte", "clemence", "marie", "juillerat"],
+    },
+    {
+      n: 18,
+      titre: "Rien n’a changé",
+      moment: "L’hiver, deux ans après l’arrivée",
+      resume: [
+        "==Adèle accouche seule dans sa chambre de bonne== et abandonne sa fille dans le passage Choiseul ; personne ne s’en aperçoit.",
+        "Au samedi des Duveyrier, tout le monde est réconcilié. ==Octave a épousé Mme Hédouin== ; Auguste, ruiné par le Bonheur des Dames, a pris un associé qui fait des cadeaux à Berthe. Duveyrier, la mâchoire de travers, a fait condamner la piqueuse de bottines pour infanticide.",
+        "Léon a épousé Raymonde mais reste avec Mme Dambreville ; Campardon est décoré ; Verdier repousse encore son mariage. Octave a l’impression que « aujourd’hui répétait hier ».",
+        "Dans la cour, les bonnes se moquent des maîtres. Julie conclut : ==« toutes les baraques se ressemblent… C’est cochon et compagnie. »==",
+      ],
+      personnages: ["adele", "octave", "hedouin", "auguste", "berthe", "duveyrier", "piqueuse", "leon", "dambreville", "campardon", "saturnin", "trublot", "julie", "lisa"],
     },
   ],
 };
