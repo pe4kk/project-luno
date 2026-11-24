@@ -94,7 +94,18 @@ export function etapes(
 
   // 1. Le cours, chapitre par chapitre : comprendre (fiche), puis apprendre par cœur.
   for (const c of auProgramme) {
-    if (c.fiche)
+    const parties = c.fiche?.decoupage && c.fiche.decoupage.length > 1 ? c.fiche.decoupage : null;
+    if (parties)
+      parties.forEach((p, i) =>
+        liste.push({
+          id: `fiche:${c.id}:${i}`,
+          titre: `Comprendre la fiche « ${p.titre} »${nom(c)}`,
+          detail: `${p.sujet} Lis-la, puis ferme-la et redis de tête l'essentiel.`,
+          href: lienTravail({ m: c.matiereId, c: c.id, o: "fiche", f: i ? String(i) : undefined }),
+          minutes: 10,
+        }),
+      );
+    else if (c.fiche)
       liste.push({
         id: `fiche:${c.id}`,
         titre: `Comprendre la fiche${nom(c)}`,

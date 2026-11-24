@@ -180,6 +180,12 @@ export type Calcul = {
 export type Fiche = {
   sections: { titre: string; points: PointFiche[] }[];
   aRetenir: string[];
+  /**
+   * Chapitre lourd découpé en plusieurs fiches, une par sujet (demandé le 2026-11-24 ; à faire
+   * seulement quand c'est nécessaire) : chaque fiche regroupe des sections par leur rang.
+   * Sans découpage, une seule fiche avec toutes les sections.
+   */
+  decoupage?: { titre: string; sujet: string; sections: number[] }[];
 };
 
 export type Qcm = {

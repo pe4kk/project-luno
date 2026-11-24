@@ -20,7 +20,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 11,
+  version: 12,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -157,13 +157,13 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         titre: "Chaque type d'exercice a sa méthode",
         points: [
           { t: "==La méthode générale ne change pas. Mais selon le chapitre, le prof attend en plus une méthode propre au type d'exercice : il faut reconnaître lequel on fait.==", n: 1 },
-          { t: "Mouvement et forces (chap. 9 et 11) : système, référentiel, bilan des forces, loi de Newton, projection. Voir « Lois de Newton » ci-dessous.", n: 2 },
+          { t: "Mouvement et forces (chap. 9 et 13) : système, référentiel, bilan des forces, loi de Newton, projection. Voir « Lois de Newton » ci-dessous.", n: 2 },
           { t: "Dilutions et dosages : la méthode descendante, qui finit par une seule expression littérale complète. Voir « La méthode descendante » ci-dessous.", n: 2 },
           { t: "Oxydoréduction (chap. 4) : les demi-équations en quatre étapes, puis leur combinaison. Cette méthode est dans le chapitre 4, onglet Déf.", n: 2 },
         ],
       },
       {
-        titre: "Lois de Newton (chap. 9 et 11) · Données et bilan des forces",
+        titre: "Lois de Newton (chap. 9 et 13) · Données et bilan des forces",
         points: [
           {
             t: "==Chaque question commence par un titre souligné : « a) Calcul de la norme de {{Δv⃗ // Δt}} pendant le vol vertical ».==",
@@ -188,7 +188,7 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         ],
       },
       {
-        titre: "Lois de Newton (chap. 9 et 11) · Loi, projection, expression",
+        titre: "Lois de Newton (chap. 9 et 13) · Loi, projection, expression",
         points: [
           {
             t: "==Annonce la loi : « D'après la 2e loi de Newton : ΣF⃗ = {{m·Δv⃗ // Δt}} ». Puis « or ΣF⃗ = P⃗ = m·g⃗ ⇒ {{Δv⃗ // Δt}} = g⃗ ».==",
@@ -349,6 +349,12 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
           },
         ],
       },
+    ],
+    // Une fiche par méthode, jamais fondues (principe 1) : la générale, puis celles d'un chapitre.
+    decoupage: [
+      { titre: "La méthode générale", sujet: "Ce qui ne change jamais : titre, « Par définition », A.N., conclusion, schémas.", sections: [0, 1, 4, 5, 7, 8] },
+      { titre: "Les lois de Newton", sujet: "Système, bilan des forces, projection : la méthode des chap. 9 et 13.", sections: [2, 3] },
+      { titre: "Dilutions et dosages", sujet: "La méthode descendante, de la formule de base à une seule A.N.", sections: [6] },
     ],
     aRetenir: [
       "Titre souligné",

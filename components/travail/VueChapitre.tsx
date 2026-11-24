@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ZoneDictee } from "@/components/Dictee";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
@@ -177,6 +177,8 @@ export function VueChapitre({
                   <span className="max-[419px]:hidden">{label}</span>
                   <span className="min-[420px]:hidden">Exos</span>
                 </>
+              ) : id === "fiche" && (chapitre.fiche?.decoupage?.length ?? 0) > 1 ? (
+                "Fiches"
               ) : (
                 label
               )}
@@ -664,9 +666,17 @@ function OngletFiche({
   versCours: () => void;
 }) {
   const majTaille = useLuno((s) => s.majTailleFiche);
+  const router = useRouter();
+  const params = useSearchParams();
   const fiche = chapitre.fiche;
   const taille = chapitre.tailleFiche;
   const foncee = encre(matiere.couleur);
+  // Plusieurs fiches dans le chapitre : celle qu'on lit est gardée dans l'adresse (`f`).
+  const parties = fiche?.decoupage && fiche.decoupage.length > 1 ? fiche.decoupage : null;
+  const iPartie = parties ? Math.min(parties.length - 1, Math.max(0, Number(params.get("f")) || 0)) : 0;
+  const partie = parties?.[iPartie];
+  const choisirPartie = (i: number) =>
+    router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o: "fiche", f: i ? String(i) : undefined }), { scroll: false });
 
   if (!fiche) {
     return (
@@ -690,17 +700,24 @@ function OngletFiche({
   // Toutes les sections et tous les points restent dans la page : ceux qui dépassent la
   // taille choisie sont repliés en CSS (classe `repli`), ce qui garde le curseur fluide.
   let rang = 0;
-  const sections = fiche.sections.map((sec) => {
+  const choisies = partie ? partie.sections.map((i) => fiche.sections[i]).filter(Boolean) : fiche.sections;
+  const sections = choisies.map((sec) => {
     const visible = sec.points.some((p) => p.n <= taille);
     return { ...sec, visible, numero: visible ? ++rang : rang };
   });
-  const nbPoints = fiche.sections.reduce(
+  const nbPoints = choisies.reduce(
     (n, sec) => n + sec.points.filter((p) => p.n <= taille).length,
     0,
   );
 
   return (
     <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
+      {parties && partie && (
+        <div className="min-w-0 lg:col-span-2">
+          <RegleFiches titres={parties.map((x) => x.titre)} actif={iPartie} choisir={choisirPartie} couleur={foncee} />
+          <p className="mt-1.5 text-[13.5px] text-muted">{partie.sujet}</p>
+        </div>
+      )}
       <Carte className="h-fit lg:sticky lg:top-24">
         <p className="text-[17px] font-semibold">Taille de la fiche</p>
         <div className="mt-4 flex items-baseline justify-between">
@@ -738,17 +755,20 @@ function OngletFiche({
           style={{ background: pastel(matiere.couleur, 16) }}
         >
           <p className="surtitre" style={{ color: foncee }}>
-            Fiche de révision · {TAILLES[taille - 1]}
+            {parties ? `Fiche ${iPartie + 1} sur ${parties.length}` : "Fiche de révision"} · {TAILLES[taille - 1]}
           </p>
-          {/* Le titre est déjà en haut de la page : répété seulement sur grand écran. */}
-          <h2 className="mt-1 hidden text-[28px] sm:block" style={{ color: foncee }}>
-            {chapitre.titre}
+          {/* Le titre du chapitre est déjà en haut de la page : répété seulement sur grand écran.
+              Avec plusieurs fiches, c'est le titre de la fiche qui compte, partout. */}
+          <h2 className={`mt-1 text-[24px] sm:text-[28px] ${partie ? "" : "hidden sm:block"}`} style={{ color: foncee }}>
+            {partie ? partie.titre : chapitre.titre}
           </h2>
         </div>
         <div className="flex flex-col px-6 pb-6 pt-1 sm:px-8">
           {sections.map((sec) => (
             <section key={sec.titre} className="repli" data-ouvert={sec.visible}>
               <div>
+              {/* Une fiche faite d'une seule section : son titre est déjà celui de la fiche. */}
+              {!(partie && sections.length === 1) && (
               <h3 className="mb-2 mt-5 flex items-center gap-2.5 text-[18px]">
                 <span
                   className="flex size-6 items-center justify-center rounded-md font-sans text-[12.5px] font-semibold"
@@ -761,6 +781,7 @@ function OngletFiche({
                 </span>
                 {formule(sec.titre)}
               </h3>
+              )}
               <ul className="flex flex-col pl-1">
                   {sec.points.map((p) => (
                     <li
@@ -808,6 +829,64 @@ function OngletFiche({
           )}
         </div>
       </article>
+    </div>
+  );
+}
+
+/**
+ * Choix de la fiche quand un chapitre en a plusieurs (maquette C3 choisie le 2026-11-24) :
+ * les titres en ligne, sans emoji, et un trait qui glisse sous la fiche ouverte. Le trait
+ * bouge en `transform` seulement (fluide sur téléphone) ; la ligne défile si elle est longue.
+ */
+function RegleFiches({
+  titres,
+  actif,
+  choisir,
+  couleur,
+}: {
+  titres: string[];
+  actif: number;
+  choisir: (i: number) => void;
+  couleur: string;
+}) {
+  const ligne = useRef<HTMLDivElement>(null);
+  const trait = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = ligne.current?.querySelector<HTMLElement>(`[data-i="${actif}"]`);
+    const t = trait.current;
+    if (!el || !t) return;
+    t.style.transform = `translate3d(${el.offsetLeft}px, 0, 0) scaleX(${el.offsetWidth / 100})`;
+    el.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  }, [actif, titres]);
+  return (
+    <div
+      ref={ligne}
+      role="tablist"
+      aria-label="Fiches du chapitre"
+      className="relative flex gap-5 overflow-x-auto pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      data-defile
+    >
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[3px] h-px bg-line" />
+      {titres.map((t, i) => (
+        <button
+          key={t}
+          data-i={i}
+          role="tab"
+          aria-selected={i === actif}
+          onClick={() => choisir(i)}
+          className={`min-h-10 shrink-0 whitespace-nowrap text-[15px] font-semibold transition-colors duration-200 ${
+            i === actif ? "text-ink" : "text-muted hover:text-ink"
+          }`}
+        >
+          {t}
+        </button>
+      ))}
+      <span
+        ref={trait}
+        aria-hidden
+        className="pointer-events-none absolute bottom-[2px] left-0 h-[3px] w-[100px] origin-left rounded-full transition-transform duration-300 ease-[cubic-bezier(0.22,0.8,0.24,1)]"
+        style={{ background: couleur }}
+      />
     </div>
   );
 }

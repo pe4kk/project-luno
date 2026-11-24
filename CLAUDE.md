@@ -267,6 +267,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
     (`history.pushState`), « Enregistrer ou partager » dans l'app installée. Ne
     jamais remettre un lien `target="_blank"` vers un fichier de `public/` (les
     images de cours se zooment avec deux doigts dans leur fenêtre).
+  - **Plusieurs fiches par chapitre** (2026-11-24, maquette C3 choisie,
+    https://claude.ai/artifact/3YhiHgg7PPd87L56bdetRP) : `decoupage` d'une `Fiche` (`{ titre, sujet,
+    sections: rangs }[]`, les sections restent toutes dans `sections` pour la recherche). Onglet
+    « Fiches » au pluriel, `RegleFiches` dans `VueChapitre.tsx` (titres en ligne **sans emoji**, trait
+    qui glisse en `transform`), phrase « de quoi elle parle », fiche gardée dans l'adresse (`&f=`),
+    curseur de taille inchangé ; une fiche d'une seule section n'en répète pas le titre. « Préparer une
+    éval » : une étape par fiche. **Découper seulement quand c'est nécessaire** (demandé) : chapitre
+    lourd aux sujets bien distincts. Faits : Pot-Bouille (immeuble, familles, intrigue), méthode de
+    rédaction de physique (générale, lois de Newton, dilutions), dérivation (nombre dérivé, fonction
+    dérivée).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
     curseurs passent par lui. Le bouton suit le doigt en continu (`step`
     0,001), la valeur entière change à mi-cran, et au lâcher il glisse jusqu'au
@@ -634,6 +644,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     mesure rien (mieux vaut pas de QCM que de mauvais intrus).
 12. **Fidèle au prof jusqu'au programme** : ce que le prof dit hors DST (le ressort) sort de
     Déf et des flashcards et reste en détail de fiche.
+13bis. **Fiches : une par sujet seulement si le chapitre est lourd** (2026-11-24) : sinon une seule
+    fiche ; titres de fiches courts, sans emoji.
 13. **Commenter un texte (français, et toute analyse de document)** (tiré de son DST de
     français corrigé, 2026-11-19) : une idée = une citation analysée (procédé exact, puis
     pourquoi, comment, quel effet), jamais un relevé seul ni une généralité ; analyser ensemble
@@ -929,12 +941,6 @@ un PDF ou une photo directement dans le chat.
 - Pas encore fait : tests automatisés dans le dépôt.
 
 ## Prochaines étapes
-
-00. **Plusieurs fiches par chapitre** (demandé le 2026-11-24 : un chapitre lourd peut avoir une fiche par
-   sujet, c'est à Claude de décider en rédigeant) : 4 maquettes proposées
-   (https://claude.ai/artifact/3YhiHgg7PPd87L56bdetRP : A pastilles de sujets, B sommaire en cartes,
-   C deux curseurs, D page de fiches repliables), en attente de son choix. Ensuite : « Préparer une
-   éval » avec une étape par fiche.
 
 0. Découverte du jour : vérifier après le passage de 6 h du 19/11 qu'elle s'affiche chez lui
    (il doit d'abord toucher « Activer » sur l'accueil) et que l'image et les sources sont justes.

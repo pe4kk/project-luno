@@ -25,7 +25,7 @@ const matiere = { nom: "Mathématiques", couleur: "#b5573d", emoji: "📐" };
 
 export const MATHS_DERIVATION: ChapitrePublie = {
   id: "maths-1re-derivation",
-  version: 5,
+  version: 6,
   definitions: DEF_MATHS_DERIVATION,
   matiere,
   titre: "Séquence 2 · Dérivation",
@@ -303,6 +303,10 @@ export const MATHS_DERIVATION: ChapitrePublie = {
           },
         ],
       },
+    ],
+    decoupage: [
+      { titre: "Le nombre dérivé", sujet: "Taux de variation, nombre dérivé et tangente en un point.", sections: [0, 1, 2] },
+      { titre: "La fonction dérivée", sujet: "Dérivées usuelles, opérations, composées, valeur absolue, et la rédaction attendue.", sections: [3, 4, 5, 6, 7] },
     ],
     aRetenir: [
       "{{f(a + h) − f(a) // h}}",

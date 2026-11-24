@@ -10,7 +10,6 @@ import { POT_BOUILLE as O } from "./pot-bouille";
  * Changer les données ou ce fichier : augmenter `version`.
  */
 
-const nom = (id: string) => O.personnages.find((p) => p.id === id)!.nom;
 
 /** Une carte par personnage à connaître : « Qui est … ? ». */
 const cartesPersonnages = O.personnages
@@ -176,7 +175,7 @@ const exercices: Exercice[] = [
 
 export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
   id: "francais-1re-pot-bouille",
-  version: 3,
+  version: 4,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: O.luJusqua < O.chapitres ? `Zola, Pot-Bouille (chap. I à ${ROMAINS[O.luJusqua]})` : "Zola, Pot-Bouille",
   flashcards: [...cartesImmeuble, ...cartesFamilles, ...cartesPersonnages, ...cartesIntrigue],
@@ -193,12 +192,15 @@ export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
         titre: "Qui habite où",
         points: cartesImmeuble.slice(0, 6).map((c) => {
           const lieu = c.recto.replace(/^Qui (habite|occupe|vit) /, "").replace(/,? (de l’immeuble de|dans) Pot-Bouille \?/, "");
-          return { t: `${lieu.charAt(0).toUpperCase()}${lieu.slice(1)} : ${c.verso}`, n: 1 };
+          return { t: `==${lieu.charAt(0).toUpperCase()}${lieu.slice(1)}== : ${c.verso}`, n: 1 };
         }),
       },
       {
         titre: "Les familles",
-        points: cartesFamilles.map((c) => ({ t: c.verso, n: 1 })),
+        points: cartesFamilles.map((c, i) => ({
+          t: `==${["Les Vabre", "Les Josserand", "L’oncle Bachelard", "Gasparine"][i]}== : ${c.verso}`,
+          n: 1,
+        })),
       },
       {
         titre: "L’intrigue, chapitre par chapitre",
@@ -207,12 +209,18 @@ export const FRANCAIS_POT_BOUILLE: ChapitrePublie = {
         ),
       },
     ],
+    decoupage: [
+      { titre: "L’immeuble", sujet: "Le décor et qui habite à quel étage.", sections: [0, 1] },
+      { titre: "Les familles", sujet: "Qui est parent de qui.", sections: [2] },
+      { titre: "L’intrigue", sujet: "Les 18 chapitres en quelques lignes.", sections: [3] },
+    ],
     aRetenir: [
-      `Rez-de-chaussée : la soierie d’Auguste ; 1er : ${nom("duveyrier")} et Clotilde (rue), Théophile et Valérie (cour) ; 2e : l’écrivain (rue), Auguste et Berthe après le mariage (cour) ; 3e : les Campardon (rue), Mme Juzeur (cour) ; 4e : les Josserand (rue), les Pichon et Octave (cour).`,
-      "Le vieux Vabre, propriétaire, a trois enfants : Auguste, Clotilde (Mme Duveyrier), Théophile.",
-      "Bachelard est le frère de Mme Josserand ; Gasparine est la cousine de Rose Campardon.",
-      "Les maîtresses d’Octave : Marie Pichon (IV), puis Berthe (XII) ; il épouse Mme Hédouin (XVIII).",
-      "La fin : M. Josserand meurt, Auguste reprend Berthe, Duveyrier rate son suicide, Adèle accouche seule ; rien ne change (« C’est cochon et compagnie »).",
+      "rue de Choiseul",
+      "tapis rouge jusqu’au 3e",
+      "la cour des cuisines",
+      "Vabre · Josserand · Campardon · Pichon",
+      "Octave épouse Mme Hédouin",
+      "« C’est cochon et compagnie »",
     ],
   },
   exercices,
