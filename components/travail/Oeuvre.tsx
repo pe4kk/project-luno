@@ -641,7 +641,7 @@ function MiniFiche({ ctx, p }: { ctx: Ctx; p: Personnage }) {
         </p>
       )}
       <button type="button" onClick={() => ctx.ouvrir(p.id)} className="text-[13px] font-semibold text-accent underline-offset-2 hover:underline">
-        Toute sa fiche ({faits.length} {faits.length > 1 ? "moments" : "moment"}, citation…)
+        Toute {pronoms(p).sa} fiche ({faits.length} {faits.length > 1 ? "moments" : "moment"}, citation…)
       </button>
     </div>
   );
@@ -976,7 +976,20 @@ function Personnages({ ctx }: { ctx: Ctx }) {
   );
 }
 
+/**
+ * Les mots qui s'accordent avec le personnage (demandé le 2026-11-24 : « Ce qu'il fait » pour
+ * Mme Juzeur). Un couple ou une famille (« M. et Mme Vuillaume », « Les Louhette ») passe au pluriel.
+ */
+function pronoms(p: Personnage) {
+  const pluriel = /^(M\. et Mme|Les )/.test(p.nom);
+  if (pluriel) return { le: "les", ses: "Leurs", son: "Leur", fait: "ils font", sa: "leur" };
+  return p.sexe === "f"
+    ? { le: "la", ses: "Ses", son: "Son", fait: "elle fait", sa: "sa" }
+    : { le: "le", ses: "Ses", son: "Son", fait: "il fait", sa: "sa" };
+}
+
 function FichePersonnage({ ctx, p }: { ctx: Ctx; p: Personnage }) {
+  const g = pronoms(p);
   const { o } = ctx;
   const c = ctx.couleur(p);
   const famille = o.familles.find((f) => f.id === p.famille);
@@ -997,7 +1010,7 @@ function FichePersonnage({ ctx, p }: { ctx: Ctx; p: Personnage }) {
       </div>
 
       <div>
-        <p className="surtitre text-accent">Où le trouver</p>
+        <p className="surtitre text-accent">Où {g.le} trouver</p>
         <ul className="mt-1.5 space-y-1">
           {adresses.map((a, i) => {
             const l = o.logements.find((x) => x.id === a.lieu);
@@ -1018,7 +1031,7 @@ function FichePersonnage({ ctx, p }: { ctx: Ctx; p: Personnage }) {
 
       {liens.length > 0 && (
         <div>
-          <p className="surtitre text-accent">Ses liens</p>
+          <p className="surtitre text-accent">{g.ses} liens</p>
           <ul className="mt-1.5 space-y-1.5">
             {liens.map(({ lien, autre }) => (
               <li key={lien.de + lien.a} className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13.5px]">
@@ -1041,7 +1054,7 @@ function FichePersonnage({ ctx, p }: { ctx: Ctx; p: Personnage }) {
       )}
 
       <div>
-        <p className="surtitre text-accent">Son caractère</p>
+        <p className="surtitre text-accent">{g.son} caractère</p>
         <ul className="mt-1.5 space-y-1.5">
           {p.traits.map((t) => (
             <li key={t} className="flex gap-2 text-[14px] leading-snug">
@@ -1054,7 +1067,7 @@ function FichePersonnage({ ctx, p }: { ctx: Ctx; p: Personnage }) {
 
       {faits.length > 0 && (
         <div>
-          <p className="surtitre text-accent">Ce qu&apos;il fait</p>
+          <p className="surtitre text-accent">Ce qu&apos;{g.fait}</p>
           <ol className="mt-1.5 space-y-2">
             {faits.map((f) => (
               <li key={f.ch + f.t} className="flex gap-2.5 text-[14px] leading-snug">

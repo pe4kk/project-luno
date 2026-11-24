@@ -701,12 +701,22 @@ function OngletFiche({
   // taille choisie sont repliés en CSS (classe `repli`), ce qui garde le curseur fluide.
   let rang = 0;
   const choisies = partie ? partie.sections.map((i) => fiche.sections[i]).filter(Boolean) : fiche.sections;
+  // Tailles qui changent vraiment quelque chose : une taille sans point nouveau (ex. aucun point
+  // n = 5) est fondue dans la précédente (demandé le 2026-11-24 : « Détaillée » et « Complète »
+  // identiques). La plus grande s'appelle toujours « Complète ».
+  const niveaux = [...new Set(choisies.flatMap((sec) => sec.points.map((p) => Math.min(5, Math.max(1, p.n)))))].sort(
+    (a, b) => a - b,
+  );
+  if (niveaux.length === 0) niveaux.push(1);
+  const iNiveau = Math.max(0, niveaux.filter((n) => n <= taille).length - 1);
+  const tailleVue = niveaux[iNiveau];
+  const nomTaille = (i: number) => (i === niveaux.length - 1 ? TAILLES[4] : TAILLES[niveaux[i] - 1]);
   const sections = choisies.map((sec) => {
-    const visible = sec.points.some((p) => p.n <= taille);
+    const visible = sec.points.some((p) => p.n <= tailleVue);
     return { ...sec, visible, numero: visible ? ++rang : rang };
   });
   const nbPoints = choisies.reduce(
-    (n, sec) => n + sec.points.filter((p) => p.n <= taille).length,
+    (n, sec) => n + sec.points.filter((p) => p.n <= tailleVue).length,
     0,
   );
 
@@ -722,31 +732,37 @@ function OngletFiche({
         <p className="text-[17px] font-semibold">Taille de la fiche</p>
         <div className="mt-4 flex items-baseline justify-between">
           <motion.span
-            key={taille}
+            key={tailleVue}
             initial={{ opacity: 0, transform: "translate3d(0, 6px, 0)" }}
             animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
             className="font-display text-[28px] text-accent"
           >
-            {TAILLES[taille - 1]}
+            {nomTaille(iNiveau)}
           </motion.span>
           <span className="text-[13px] text-muted">
             {pluriel(nbPoints, "point")}
           </span>
         </div>
-        <Curseur
-          min={1}
-          max={5}
-          value={taille}
-          onChange={(v) => majTaille(chapitre.id, v)}
-          label="Taille de la fiche"
-          valueText={TAILLES[taille - 1]}
-          reperes
-          className="mt-4"
-        />
-        <div className="mt-2 flex justify-between text-[12px] text-muted">
-          <span>L&apos;essentiel</span>
-          <span>Tout le cours</span>
-        </div>
+        {niveaux.length > 1 ? (
+          <>
+            <Curseur
+              min={0}
+              max={niveaux.length - 1}
+              value={iNiveau}
+              onChange={(i) => majTaille(chapitre.id, niveaux[Math.min(i, niveaux.length - 1)])}
+              label="Taille de la fiche"
+              valueText={nomTaille(iNiveau)}
+              reperes
+              className="mt-4"
+            />
+            <div className="mt-2 flex justify-between text-[12px] text-muted">
+              <span>L&apos;essentiel</span>
+              <span>Tout le cours</span>
+            </div>
+          </>
+        ) : (
+          <p className="mt-2 text-[13px] text-muted">Une seule taille : cette fiche est déjà courte.</p>
+        )}
       </Carte>
 
       <article className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
@@ -755,7 +771,7 @@ function OngletFiche({
           style={{ background: pastel(matiere.couleur, 16) }}
         >
           <p className="surtitre" style={{ color: foncee }}>
-            {parties ? `Fiche ${iPartie + 1} sur ${parties.length}` : "Fiche de révision"} · {TAILLES[taille - 1]}
+            {parties ? `Fiche ${iPartie + 1} sur ${parties.length}` : "Fiche de révision"} · {nomTaille(iNiveau)}
           </p>
           {/* Le titre du chapitre est déjà en haut de la page : répété seulement sur grand écran.
               Avec plusieurs fiches, c'est le titre de la fiche qui compte, partout. */}
@@ -787,8 +803,8 @@ function OngletFiche({
                     <li
                       key={p.t}
                       className="repli"
-                      data-ouvert={p.n <= taille}
-                      aria-hidden={p.n > taille || undefined}
+                      data-ouvert={p.n <= tailleVue}
+                      aria-hidden={p.n > tailleVue || undefined}
                     >
                       <div className="flex gap-2.5 py-[3px] text-[15px] leading-relaxed">
                       <span

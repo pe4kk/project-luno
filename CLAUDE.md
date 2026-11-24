@@ -272,7 +272,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     sections: rangs }[]`, les sections restent toutes dans `sections` pour la recherche). Onglet
     « Fiches » au pluriel, `RegleFiches` dans `VueChapitre.tsx` (titres en ligne **sans emoji**, trait
     qui glisse en `transform`), phrase « de quoi elle parle », fiche gardée dans l'adresse (`&f=`),
-    curseur de taille inchangé ; une fiche d'une seule section n'en répète pas le titre. « Préparer une
+    une fiche d'une seule section n'en répète pas le titre. **Curseur de taille : seulement les tailles
+    qui ajoutent des points** (2026-11-24 : « Détaillée » = « Complète » → 4 crans), la plus grande
+    s'appelle « Complète », pas de curseur s'il n'y a qu'une taille. « Préparer une
     éval » : une étape par fiche. **Découper seulement quand c'est nécessaire** (demandé) : chapitre
     lourd aux sujets bien distincts. Faits : Pot-Bouille (immeuble, familles, intrigue), méthode de
     rédaction de physique (générale, lois de Newton, dilutions), dérivation (nombre dérivé, fonction
@@ -644,6 +646,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     mesure rien (mieux vaut pas de QCM que de mauvais intrus).
 12. **Fidèle au prof jusqu'au programme** : ce que le prof dit hors DST (le ressort) sort de
     Déf et des flashcards et reste en détail de fiche.
+13ter. **Accorder les mots de l'interface** avec ce qu'ils désignent (2026-11-24 : « Ce qu'il fait »
+    pour Mme Juzeur) : féminin, pluriel pour un couple ou une famille (`pronoms()` dans `Oeuvre.tsx`).
 13bis. **Fiches : une par sujet seulement si le chapitre est lourd** (2026-11-24) : sinon une seule
     fiche ; titres de fiches courts, sans emoji.
 13. **Commenter un texte (français, et toute analyse de document)** (tiré de son DST de
