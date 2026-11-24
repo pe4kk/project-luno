@@ -930,6 +930,12 @@ un PDF ou une photo directement dans le chat.
 
 ## Prochaines étapes
 
+00. **Plusieurs fiches par chapitre** (demandé le 2026-11-24 : un chapitre lourd peut avoir une fiche par
+   sujet, c'est à Claude de décider en rédigeant) : 4 maquettes proposées
+   (https://claude.ai/artifact/3YhiHgg7PPd87L56bdetRP : A pastilles de sujets, B sommaire en cartes,
+   C deux curseurs, D page de fiches repliables), en attente de son choix. Ensuite : « Préparer une
+   éval » avec une étape par fiche.
+
 0. Découverte du jour : vérifier après le passage de 6 h du 19/11 qu'elle s'affiche chez lui
    (il doit d'abord toucher « Activer » sur l'accueil) et que l'image et les sources sont justes.
    Exos types : il enverra peut-être les exercices de ses profs ; si oui, les mettre à
