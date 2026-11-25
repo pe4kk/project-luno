@@ -47,4 +47,23 @@ export const EVENEMENTS: EvenementPublie[] = [
       "Le prof vérifie qu'on a lu le livre : surtout l'immeuble, qui habite à quel étage, les liens entre les personnages. Révise avec « Explorer l'œuvre » dans l'onglet Bac de Français.",
     chapitres: ["francais-1re-pot-bouille"],
   },
+  {
+    id: "pc-dst-newton-2026-12-04",
+    version: 1,
+    matiere: physique,
+    titre: "DST : mouvement et 2e loi de Newton (chap. 9 et 13)",
+    date: "2026-12-04",
+    dureeMin: 0,
+    notes: "Annoncé en classe. Revoir aussi la méthode de rédaction (lois de Newton).",
+    chapitres: ["pc-1re-chap9-mouvement", "pc-1re-chap11-newton", "pc-1re-forces", "pc-1re-methode-redaction"],
+  },
+  {
+    id: "pc-eval-avancement-2026-12-04",
+    version: 1,
+    matiere: physique,
+    titre: "Éval : le tableau d'avancement",
+    date: "2026-12-04",
+    dureeMin: 0,
+    notes: "Chapitre pas encore envoyé à Claude : il sera rattaché ici dès qu'il sera dans Luno.",
+  },
 ];
