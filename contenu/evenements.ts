@@ -60,12 +60,14 @@ export const EVENEMENTS: EvenementPublie[] = [
   },
   {
     id: "pc-eval-avancement-2026-12-04",
-    version: 1,
+    version: 2,
     matiere: physique,
-    titre: "Éval : le tableau d'avancement",
+    titre: "Éval : le tableau d'avancement (chap. 3)",
     date: "2026-12-04",
     dureeMin: 0,
-    notes: "Chapitre pas encore envoyé à Claude : il sera rattaché ici dès qu'il sera dans Luno.",
+    notes: "Chap. 3 : dresser un tableau d'avancement, trouver le réactif limitant et x_max, faire un bilan de matière, totale ou limitée, mélange stœchiométrique.",
+    notesPrecedentes: ["Chapitre pas encore envoyé à Claude : il sera rattaché ici dès qu'il sera dans Luno."],
+    chapitres: ["pc-1re-chap3-avancement"],
   },
   {
     id: "fr-dissertation-rimbaud-2026-12-10",

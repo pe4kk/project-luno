@@ -269,6 +269,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     « pas au DST »). II.A = chapitre Terreur. La prof veut « sacré par le pape » (exact : Pie VII l'oint).
     `calendrier: true` sur un `EvenementPublie` : complète le DST « cal-… » du calendrier du lycée de
     même date et matière (chapitres, note, titre s'il vaut « DST ») au lieu d'en créer un autre.
+  - **Physique-Chimie chap. 3, tableau d'avancement** (2026-11-26, 4 photos du polycopié S.C. Assas) :
+    `contenu/physique-avancement.ts`, chapitre `pc-1re-chap3-avancement` (9 déf., tableau d'avancement et
+    hypothèses du réactif limitant dessinés en `Schema`, 15 cartes, fiche, 17 exercices, 2 problèmes, 2 calculs)
+    et 2 exos types (méthane, cuivre-argent). Rattaché à l'éval du ven. 4/12 (`pc-eval-avancement-2026-12-04`,
+    version 2). `notesPrecedentes` d'un `EvenementPublie` : remplace l'ancienne note publiée si l'élève ne l'a
+    pas modifiée.
   - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
     éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
     (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par

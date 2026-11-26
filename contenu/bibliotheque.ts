@@ -8,6 +8,7 @@ import { HISTOIRE_TERREUR } from "./histoire-terreur";
 import { PHYSIQUE_OXYDOREDUCTION } from "./physique-oxydoreduction";
 import { FRANCAIS_POT_BOUILLE } from "./francais-pot-bouille";
 import { HISTOIRE_REVOLUTION_EMPIRE } from "./histoire-revolution-empire";
+import { PHYSIQUE_AVANCEMENT } from "./physique-avancement";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -28,6 +29,7 @@ export const BIBLIOTHEQUE: ChapitrePublie[] = [
   PHYSIQUE_OXYDOREDUCTION,
   FRANCAIS_POT_BOUILLE,
   HISTOIRE_REVOLUTION_EMPIRE,
+  PHYSIQUE_AVANCEMENT,
 ];
 
 /**

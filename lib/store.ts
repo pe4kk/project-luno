@@ -700,7 +700,7 @@ export const useLuno = create<Etat>()(
             heure: avant?.heure || ev.heure || "",
             dureeMin: ev.dureeMin,
             salle: avant?.salle ?? "",
-            notes: avant?.notes || ev.notes || "",
+            notes: (avant?.notes && !ev.notesPrecedentes?.includes(avant.notes) ? avant.notes : "") || ev.notes || "",
             chapitreIds: [
               ...new Set([...(avant?.chapitreIds ?? []), ...chapitreIds]),
             ],

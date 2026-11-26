@@ -321,6 +321,95 @@ export const EXOS_TYPES: Record<string, ExosTypes> = {
     ],
   },
 
+  // ———————————————————————— Chap. 3 · Tableau d'avancement ————————————————————————
+  "pc-1re-chap3-avancement": {
+    types: [
+      { id: "tableau", court: "dresser le tableau", titre: "Dresser un tableau d'avancement", rappel: "Réactif : n₀ − a·x ; produit : 0 + c·x ; trois lignes : initial, en cours, final." },
+      { id: "quantites", court: "quantités initiales", titre: "Calculer les quantités initiales (n = m/M, n = C·V)", rappel: "Convertir chaque unité avant le calcul (mL → L)." },
+      { id: "limitant", court: "réactif limitant", titre: "Déterminer le réactif limitant et x_max", rappel: "Une hypothèse par réactif ; la plus petite valeur de x_max." },
+      { id: "bilan", court: "bilan de matière", titre: "Faire le bilan de matière à l'état final", rappel: "Remplacer x par x_f (= x_max si la transformation est totale)." },
+      { id: "nature", court: "totale ou limitée", titre: "Dire si une transformation est totale ou limitée", rappel: "x_f = x_max : totale ; x_f < x_max : limitée." },
+      { id: "stoechio", court: "mélange stœchiométrique", titre: "Reconnaître ou réaliser un mélange stœchiométrique", rappel: "n₀(A)/a = n₀(B)/b." },
+    ],
+    exos: [
+      {
+        id: "methane",
+        titre: "La combustion du méthane",
+        duree: "15 min",
+        source: "Inspiré des exercices de manuels de Première",
+        enonce:
+          "Le méthane CH₄(g), principal constituant du gaz naturel, brûle dans le dioxygène :\nCH₄(g) + 2 O₂(g) → CO₂(g) + 2 H₂O(g)\nÀ l'état initial, le système contient n₀(CH₄) = 3,0 mol et n₀(O₂) = 5,0 mol.",
+        questions: [
+          {
+            texte: "Dresse le tableau d'avancement (état initial, en cours, état final).",
+            types: ["tableau"],
+            correction:
+              "État initial (x = 0) : n(CH₄) = 3,0 ; n(O₂) = 5,0 ; n(CO₂) = 0 ; n(H₂O) = 0.\nEn cours (x) : 3,0 − x ; 5,0 − 2x ; x ; 2x.\nÉtat final (x_f) : 3,0 − x_f ; 5,0 − 2x_f ; x_f ; 2x_f.\n==Le coefficient devant x est le coefficient stœchiométrique==, avec « − » pour les réactifs et « + » pour les produits.",
+            points: 2,
+          },
+          {
+            texte: "Détermine l'avancement maximal et le réactif limitant.",
+            types: ["limitant"],
+            correction:
+              "Hypothèse 1 : si CH₄ est limitant, 3,0 − x_max = 0, soit x_max = 3,0 mol.\nHypothèse 2 : si O₂ est limitant, 5,0 − 2x_max = 0, soit x_max = {{5,0 // 2}} = 2,5 mol.\nLa plus petite valeur : [[x_max = 2,5 mol]]. ==Le dioxygène est le réactif limitant==, alors qu'il y en a plus au départ : c'est le coefficient 2 qui compte.",
+            points: 2,
+          },
+          {
+            texte: "On mesure x_f = 2,5 mol. La transformation est-elle totale ? Fais le bilan de matière à l'état final.",
+            types: ["nature", "bilan"],
+            correction:
+              "x_f = x_max = 2,5 mol : ==la transformation est totale.==\nn_f(CH₄) = 3,0 − 2,5 = 0,5 mol\nn_f(O₂) = 5,0 − 2 × 2,5 = 0 mol\nn_f(CO₂) = 2,5 mol\nn_f(H₂O) = 2 × 2,5 = __5,0 mol__",
+            points: 2,
+          },
+          {
+            texte: "Quelle quantité de dioxygène aurait-il fallu pour un mélange stœchiométrique ?",
+            types: ["stoechio"],
+            correction:
+              "Mélange stœchiométrique : {{n₀(CH₄) // 1}} = {{n₀(O₂) // 2}}, donc n₀(O₂) = 2 × 3,0 = __6,0 mol__. Les deux réactifs auraient alors été entièrement consommés.",
+          },
+        ],
+      },
+      {
+        id: "cuivre-argent",
+        titre: "Le fil de cuivre dans le nitrate d'argent",
+        duree: "20 min",
+        source: "Inspiré d'un sujet type bac (arbre de Diane)",
+        enonce:
+          "On plonge m = 0,635 g de cuivre Cu(s) dans V = 20,0 mL d'une solution de nitrate d'argent de concentration en ions Ag⁺(aq) C = 0,500 mol·L⁻¹ :\nCu(s) + 2 Ag⁺(aq) → Cu²⁺(aq) + 2 Ag(s)\nDonnées : M(Cu) = 63,5 g·mol⁻¹ ; M(Ag) = 107,9 g·mol⁻¹.",
+        questions: [
+          {
+            texte: "Calcule les quantités initiales de cuivre et d'ions argent.",
+            types: ["quantites"],
+            correction:
+              "Par définition, [[n = {{m // M}}]], avec m = 0,635 g et M(Cu) = 63,5 g·mol⁻¹.\nA.N. : n₀(Cu) = {{0,635 // 63,5}} = __1,00 × 10⁻² mol__\nPar définition, [[n = C × V]], avec C = 0,500 mol·L⁻¹ et V = 20,0 mL = 20,0 × 10⁻³ L.\nA.N. : n₀(Ag⁺) = 0,500 × 20,0 × 10⁻³ = __1,00 × 10⁻² mol__",
+            points: 2,
+          },
+          {
+            texte: "Dresse le tableau d'avancement et détermine le réactif limitant.",
+            types: ["tableau", "limitant"],
+            correction:
+              "État initial : 1,00 × 10⁻² ; 1,00 × 10⁻² ; 0 ; 0. En cours : 1,00 × 10⁻² − x ; 1,00 × 10⁻² − 2x ; x ; 2x.\nHypothèse 1 : si Cu est limitant, x_max = 1,00 × 10⁻² mol.\nHypothèse 2 : si Ag⁺ est limitant, 1,00 × 10⁻² − 2x_max = 0, soit x_max = 5,00 × 10⁻³ mol.\n[[x_max = 5,00 × 10⁻³ mol]] : ==les ions argent sont le réactif limitant==, à quantités initiales égales.",
+            points: 3,
+          },
+          {
+            texte: "La transformation est totale. Calcule la quantité de cuivre restante et la masse d'argent formée.",
+            types: ["bilan"],
+            correction:
+              "x_f = x_max = 5,00 × 10⁻³ mol.\nn_f(Cu) = 1,00 × 10⁻² − 5,00 × 10⁻³ = __5,00 × 10⁻³ mol__\nn_f(Ag) = 2x_max = 1,00 × 10⁻² mol\nPar définition, [[m = n × M]], avec n = 1,00 × 10⁻² mol et M(Ag) = 107,9 g·mol⁻¹.\nA.N. : m(Ag) = 1,00 × 10⁻² × 107,9 = __1,08 g__",
+            points: 3,
+          },
+          {
+            texte: "Quel volume de solution d'argent faudrait-il pour un mélange stœchiométrique ?",
+            types: ["stoechio"],
+            correction:
+              "{{n₀(Cu) // 1}} = {{n₀(Ag⁺) // 2}}, donc n₀(Ag⁺) = 2 × 1,00 × 10⁻² = 2,00 × 10⁻² mol.\nOr n = C × V, donc [[V = {{n // C}}]].\nA.N. : V = {{2,00 × 10⁻² // 0,500}} = 4,00 × 10⁻² L = __40,0 mL__",
+            points: 2,
+          },
+        ],
+      },
+    ],
+  },
+
   // ———————————————————————— Chap. 4 · Les réactions d'oxydoréduction ————————————————————————
   "pc-1re-chap4-oxydoreduction": {
     types: [

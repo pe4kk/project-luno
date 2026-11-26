@@ -337,6 +337,8 @@ export type EvenementPublie = {
    * lieu de créer un doublon.
    */
   calendrier?: boolean;
+  /** Notes publiées par une version précédente : remplacées par `notes` si l'élève ne les a pas changées. */
+  notesPrecedentes?: string[];
 };
 
 export type Lecon = {
