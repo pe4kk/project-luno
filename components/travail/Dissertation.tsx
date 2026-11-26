@@ -9,6 +9,7 @@ import { formule } from "@/components/Formule";
 import { ZoneDictee } from "@/components/Dictee";
 import { Bouton, ZoneAction, classeSaisie } from "@/components/ui";
 import type { CitationDiss, Dissertation, SujetDiss } from "@/lib/dissertation";
+import { origineCitation } from "@/contenu/dissertations";
 import { lienTravail } from "@/lib/liens";
 import { encre, pastel } from "@/lib/store";
 import type { Matiere } from "@/lib/types";
@@ -268,6 +269,7 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
                             </p>
                             <p className="mt-1 text-[12.5px] font-semibold text-accent">« {a.poeme} »</p>
                             <p className="mt-0.5 font-display text-[15px] italic leading-snug">{a.citation}</p>
+                            <Origine citation={a.citation} />
                             <p className="mt-1 text-[13.5px] leading-relaxed text-muted">{a.analyse}</p>
                           </li>
                         ))}
@@ -367,6 +369,7 @@ function Citations({ diss, couleur }: { diss: Dissertation; couleur: string }) {
                       <span className="text-muted">· {c.procede}</span>
                     </p>
                     <p className="mt-1 text-[13.5px] leading-snug">{c.prouve}</p>
+                    <Origine citation={c.citation} />
                   </div>
                 ))}
             </div>
@@ -424,6 +427,7 @@ function QuizCitations({ diss }: { diss: Dissertation }) {
       <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
         <p className="surtitre text-accent">De quel poème ?</p>
         <p className="mt-2 font-display text-[19px] italic leading-snug">{c.citation}</p>
+        <Origine citation={c.citation} />
         <div className="mt-4 grid gap-2">
           {options.map((p) => {
             const etat = !repondu ? "" : p === c.poeme ? "juste" : p === choix ? "faux" : "neutre";
@@ -503,5 +507,19 @@ function Methode({ diss }: { diss: Dissertation }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/** D'où vient la citation : texte étudié, notes de cours, ou à vérifier dans le recueil. */
+function Origine({ citation }: { citation: string }) {
+  const o = origineCitation(citation);
+  return (
+    <p className={`mt-1 text-[11.5px] font-semibold ${o === "verifier" ? "text-accent" : "text-muted"}`}>
+      {o === "texte"
+        ? "✓ Mot pour mot dans le texte étudié"
+        : o === "cours"
+          ? "✓ Citée dans tes notes de cours"
+          : "À vérifier dans ton recueil avant de l’apprendre"}
+    </p>
   );
 }

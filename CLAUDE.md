@@ -233,6 +233,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Rimbaud : 4 sujets d'entraînement (émancipation, révolte, « On n'est pas sérieux… », tradition), 20
     citations ; jamais une copie entière à rendre. « Préparer une éval » (éval avec exercices) : méthode,
     plans de deux sujets, citations chaque jour. Pot-Bouille : en attente du parcours.
+  - **Une fiche par poème étudié** (2026-11-26, demandé) : chapitre `francais-1re-rimbaud-douai` version 6, fiches
+    « L'œuvre » puis une par poème (`contenu/rimbaud-poemes.ts`, `FICHES_POEMES`) : pour À la Musique, Vénus,
+    Au Cabaret-Vert, l'analyse du texte du bac (essentiel, problématique, mouvements, remarques `cle` avec citation
+    exacte) ; pour Bal des pendus, Tartufe, Nina, Ma Bohème, Effarés, les points du cours ; puis, pour tous, comment
+    réutiliser le poème en dissertation (citations et arguments de `DISSERTATION_RIMBAUD`). Nouveau texte du bac ou
+    poème étudié : l'ajouter à `FICHES_POEMES`.
   - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en
     QCM du mer. 25/11 : « comprendre l'immeuble, qui est à chaque étage, leurs relations ») : dans
     Bac › Le roman, carte « Explorer l'œuvre » (`oeuvre.explorer` de `PROGRAMME_BAC`) →
@@ -688,6 +694,11 @@ fiches de révision ; le slider règle la longueur de la fiche.
     mesure rien (mieux vaut pas de QCM que de mauvais intrus).
 12. **Fidèle au prof jusqu'au programme** : ce que le prof dit hors DST (le ressort) sort de
     Déf et des flashcards et reste en détail de fiche.
+14. **Ne jamais inventer une citation** (2026-11-26 : « n'invente SURTOUT pas des citations ») : une citation
+    d'un texte littéraire vient du texte étudié recopié dans Luno ou des notes de cours de l'élève ; sinon elle est
+    marquée « à vérifier dans ton recueil » (`origineCitation()` de `contenu/dissertations.ts`, étiquette sous chaque
+    citation de la dissertation). Vérifier sur le texte intégral quand c'est possible (fr.wikisource.org est autorisé
+    dans l'environnement depuis le 2026-11-26, mais le téléchargement a été refusé dans la session de ce jour).
 13ter. **Accorder les mots de l'interface** avec ce qu'ils désignent (2026-11-24 : « Ce qu'il fait »
     pour Mme Juzeur) : féminin, pluriel pour un couple ou une famille (`pronoms()` dans `Oeuvre.tsx`).
 13bis. **Fiches : une par sujet seulement si le chapitre est lourd** (2026-11-24) : sinon une seule

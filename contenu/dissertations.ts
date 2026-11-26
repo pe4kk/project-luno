@@ -1,4 +1,5 @@
 import type { Dissertation } from "@/lib/dissertation";
+import { TEXTES_BAC } from "./bac-francais";
 
 /**
  * Dissertations sur les œuvres du bac de français (écrit du 15 juin 2027 : trois sujets, un par
@@ -369,3 +370,40 @@ export const DISSERTATION_RIMBAUD: Dissertation = {
 };
 
 export const DISSERTATIONS: Dissertation[] = [DISSERTATION_RIMBAUD];
+
+// ———————————————————— D'où vient chaque citation ————————————————————
+
+/** Les citations écrites dans les notes de cours (fiche « Rimbaud, Cahiers de Douai »). */
+const CITATIONS_DU_COURS = [
+  "Leurs culs en rond",
+  "— Et mon bureau ?",
+  "Saint Tartufe était pâle",
+  "Mon paletot aussi devenait idéal",
+  "Le Boulanger au gras sourire",
+];
+
+const norme = (s: string) =>
+  s
+    .replace(/[«»]/g, "")
+    .replace(/[’']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+/** Tous les vers des textes étudiés et recopiés dans Luno (texte exact du polycopié). */
+const VERS_ETUDIES = TEXTES_BAC.filter((t) => !t.extraits).flatMap((t) =>
+  t.mouvements.flatMap((m) => m.passages.flatMap((p) => p.lignes.map(norme))),
+);
+
+/**
+ * Origine d'une citation (demandé le 2026-11-26 : « n'invente SURTOUT pas de citations ») :
+ * « texte » = retrouvée mot pour mot dans un texte étudié recopié dans Luno ; « cours » = écrite
+ * dans tes notes de cours ; « verifier » = citée de mémoire, à contrôler dans ton recueil.
+ */
+export function origineCitation(citation: string): "texte" | "cours" | "verifier" {
+  const morceaux = citation.split("/").map(norme).filter(Boolean);
+  if (morceaux.every((m) => VERS_ETUDIES.some((v) => v.includes(m.replace(/[.!?;:,]+$/, ""))))) return "texte";
+  const n = norme(citation);
+  if (CITATIONS_DU_COURS.some((c) => n === norme(c) || n.startsWith(norme(c)))) return "cours";
+  return "verifier";
+}

@@ -1,5 +1,6 @@
 import type { ChapitrePublie } from "@/lib/types";
 import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
+import { FICHES_POEMES } from "./rimbaud-poemes";
 
 /**
  * Français Première : Rimbaud, « Cahiers de Douai », parcours « Émancipations
@@ -10,7 +11,7 @@ import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 5,
+  version: 6,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -284,66 +285,9 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
             t: "Exemple d'intertextualité interne : « Rages de Césars » éclaire « Le Châtiment de Tartufe » et « Le Bal des pendus ».",
             n: 4,
           },
-        ],
-      },
-      {
-        titre: "Les poèmes étudiés",
-        points: [
           {
-            t: "==Même méthode à chaque fois : une première lecture simple, puis l'intertextualité révèle un second sens, souvent satirique.==",
+            t: "==Même méthode pour chaque poème étudié : une première lecture simple, puis l'intertextualité révèle un second sens, souvent satirique.==",
             n: 1,
-          },
-          {
-            t: "==« Le Bal des pendus » : Villon inversé, sans pitié pour les pendus ; poème politique contre la cour de Napoléon III.==",
-            n: 1,
-          },
-          {
-            t: "« Le Châtiment de Tartufe » : lecture anticléricale et lecture politique (Tartufe = Napoléon III).",
-            n: 1,
-          },
-          {
-            t: "« Les Reparties de Nina » : la chute « — Et mon bureau ? » ridiculise le discours amoureux ; critique de la poésie romantique.",
-            n: 1,
-          },
-          {
-            t: "« Ma Bohème » : la fugue vécue devient réflexion sur poésie et liberté ; syllepses (« idéal », « un pied », « lyres »).",
-            n: 1,
-          },
-          {
-            t: "« Les Effarés » : lecture pathétique en apparence, détournée par le registre bas (« Leurs culs en rond »), l'hypallage du « gras sourire » et une critique indirecte de la religion.",
-            n: 2,
-          },
-          {
-            t: "« Ma Bohème » et « Sensation » : même rêve d'évasion, mais « Sensation » est au futur (un rêve) et « Ma Bohème » à l'imparfait (du vécu).",
-            n: 2,
-          },
-          {
-            t: "« Le Bal des pendus » : le titre renvoie aux fêtes du château de Saint-Cloud, que les journaux hostiles à l'Empire dénonçaient ; attaque ad hominem.",
-            n: 3,
-          },
-          {
-            t: "« Le Châtiment de Tartufe » : « Tisonnant » est une métaphore du désir ; « Sa chaste robe noire » désigne la soutane ; « Saint Tartufe était pâle » fait écho à « L'Homme pâle » de « Rages de Césars ».",
-            n: 3,
-          },
-          {
-            t: "« Les Reparties de Nina » : Rimbaud se moque des deux personnages ; contrairement aux romantiques, il met toujours une distance entre lui et ses sentiments.",
-            n: 3,
-          },
-          {
-            t: "« Ma Bohème » : mélange des registres familier et soutenu ; Rimbaud s'inscrit dans une tradition, le sonnet, pour mieux la détourner.",
-            n: 3,
-          },
-          {
-            t: "Acrostiche du « Châtiment de Tartufe » : les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) ».",
-            n: 4,
-          },
-          {
-            t: "« Les Effarés » : approche génétique, c'est-à-dire comparer les versions du poème (le texte du cours est une version de 1871).",
-            n: 5,
-          },
-          {
-            t: "« Ma Bohème » : la Muse inspire le poète, le féal est un fidèle serviteur (vocabulaire médiéval).",
-            n: 5,
           },
         ],
       },
@@ -396,6 +340,16 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
           },
         ],
       },
+      // Une fiche par poème étudié (2026-11-26), tirée des analyses et de la dissertation.
+      ...FICHES_POEMES,
+    ],
+    decoupage: [
+      { titre: "L'œuvre", sujet: "Le recueil, le mythe Rimbaud, la méthode de lecture et les pistes pour la dissertation.", sections: [0, 1, 2, 3] },
+      ...FICHES_POEMES.map((f, i) => ({
+        titre: f.titre.replace(/[«»]/g, "").trim(),
+        sujet: `L'analyse du poème, ses citations clés et comment les réutiliser en dissertation.`,
+        sections: [4 + i],
+      })),
     ],
     aRetenir: [
       "Émancipations créatrices",
