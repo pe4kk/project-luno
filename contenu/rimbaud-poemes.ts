@@ -110,7 +110,7 @@ const COURS: { titre: string; points: PointFiche[] }[] = [
       { t: "« Tisonnant » (remuer les braises, faire chauffer) : métaphore du désir qui s'allume. Le rejet « Sa chaste robe noire » désigne la soutane. Tartufe trahit le désir qu'il est censé réprimer.", n: 2 },
       { t: "Deuxième lecture : le « Châtiment » renvoie aux Châtiments, pamphlet anti-napoléonien de Victor Hugo.", n: 1 },
       { t: "Intertextualité interne avec « Rages de Césars », sur Napoléon III : l'écho de « pâle » / « pâleur » dans les deux poèmes fait de Saint Tartufe un double de Napoléon.", n: 2 },
-      { t: "Acrostiche : les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) ». Tes notes ajoutent « + Arthur Rimbaud » : à préciser avec ton prof.", n: 2 },
+      { t: "==Acrostiche : les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, et la signature de l'auteur, A. R. (Arthur Rimbaud), complète le nom : JULES CÉSAR.== Le César, c'est Napoléon III : l'acrostiche renvoie à « Rages de Césars ».", n: 1 },
     ],
   },
   {

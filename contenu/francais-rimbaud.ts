@@ -11,7 +11,7 @@ import { FICHES_POEMES } from "./rimbaud-poemes";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 8,
+  version: 9,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -134,7 +134,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
     {
       recto: "Quel acrostiche cache « Le Châtiment de Tartufe » ?",
       verso:
-        "Les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) » : le César, c'est Napoléon III.",
+        "Les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S ; la signature A. R. (Arthur Rimbaud) complète : JULES CÉSAR. Le César, c'est Napoléon III, comme dans « Rages de Césars ».",
     },
     {
       recto: "Comment est construit le poème « Les Reparties de Nina » ?",
@@ -436,7 +436,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
       ],
       bonneReponse: 1,
       explication:
-        "Le titre évoque Les Châtiments de Hugo, « Saint Tartufe était pâle » fait écho à « L'Homme pâle » de « Rages de Césars », et l'acrostiche forme « Jules Cés(ar) ».",
+        "Le titre évoque Les Châtiments de Hugo, « Saint Tartufe était pâle » fait écho à « L'Homme pâle » de « Rages de Césars », et l'acrostiche forme « Jules Cés » + A. R. (la signature) = « Jules César ».",
     },
     {
       question:

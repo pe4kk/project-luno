@@ -70,7 +70,7 @@ export const DISSERTATION_RIMBAUD: Dissertation = {
               idee: "Napoléon III ridiculisé.",
               poeme: "Le Châtiment de Tartufe",
               citation: "« Saint Tartufe était pâle »",
-              analyse: "Écho de « l’Homme pâle » de « Rages de Césars » et acrostiche « Jules Cés(ar) » (vers 4 à 11) : sous le dévot de Molière se cache l’empereur. La satire avance masquée, ce qui la rend plus mordante.",
+              analyse: "Écho de « l’Homme pâle » de « Rages de Césars » et acrostiche « Jules Cés » + A. R. (la signature) = « Jules César » (vers 4 à 11) : sous le dévot de Molière se cache l’empereur. La satire avance masquée, ce qui la rend plus mordante.",
             },
             {
               idee: "La guerre et l’Église qui la bénit.",
@@ -206,7 +206,7 @@ export const DISSERTATION_RIMBAUD: Dissertation = {
           titre: "III. Une maîtrise qui dépasse l’œuvre de jeunesse",
           idee: "Le ton léger est souvent une stratégie : Rimbaud programme plusieurs sens et satirise en cachette.",
           arguments: [
-            { idee: "La satire cryptée.", poeme: "Le Châtiment de Tartufe", citation: "« Saint Tartufe était pâle »", analyse: "Acrostiche « Jules Cés(ar) » et écho à « l’Homme pâle » : une construction savante, très sérieuse sous la farce." },
+            { idee: "La satire cryptée.", poeme: "Le Châtiment de Tartufe", citation: "« Saint Tartufe était pâle »", analyse: "Acrostiche « Jules Cés » + A. R. (la signature) = « Jules César » et écho à « l’Homme pâle » : une construction savante, très sérieuse sous la farce." },
             { idee: "La polysémie programmée.", poeme: "Ma Bohème", citation: "« Mon paletot aussi devenait idéal »", analyse: "La syllepse impose deux lectures à la fois : un adolescent qui maîtrise ainsi le double sens est déjà un auteur." },
             { idee: "La distance avec le « je ».", poeme: "Roman", citation: "« On n’est pas sérieux, quand on a dix-sept ans. »", analyse: "Le poète de quinze ans se donne dix-sept ans : le « je » est un personnage, ce qu’il formulera en 1871 par « Je est un autre » (lettres hors recueil)." },
           ],
@@ -281,7 +281,7 @@ export const DISSERTATION_RIMBAUD: Dissertation = {
     { citation: "« Et j’irai loin, bien loin, comme un bohémien, / Par la Nature, — heureux comme avec une femme. »", poeme: "Sensation", procede: "Répétition, comparaison sensuelle", prouve: "Liberté du corps contre la morale bourgeoise.", axe: "milieu" },
     { citation: "« Sur la place taillée en mesquines pelouses »", poeme: "À la Musique", procede: "Adjectif péjoratif, participe « taillée »", prouve: "La caricature de la province bourgeoise et étriquée.", axe: "milieu" },
     { citation: "« On n’est pas sérieux, quand on a dix-sept ans. »", poeme: "Roman", procede: "Maxime, ironie, refrain", prouve: "L’insouciance adolescente, et la distance avec le « je ».", axe: "milieu" },
-    { citation: "« Saint Tartufe était pâle »", poeme: "Le Châtiment de Tartufe", procede: "Écho à « l’Homme pâle », acrostiche « Jules Cés(ar) »", prouve: "La satire cryptée de Napoléon III et de l’Église.", axe: "pouvoirs" },
+    { citation: "« Saint Tartufe était pâle »", poeme: "Le Châtiment de Tartufe", procede: "Écho à « l’Homme pâle », acrostiche « Jules Cés » + A. R. (la signature) = « Jules César »", prouve: "La satire cryptée de Napoléon III et de l’Église.", axe: "pouvoirs" },
     { citation: "« L’Homme pâle, le long des pelouses fleuries, / Chemine, en habit noir, et le cigare aux dents »", poeme: "Rages de Césars", procede: "Périphrase dégradante", prouve: "Napoléon III déchu, ridiculisé.", axe: "pouvoirs" },
     { citation: "« Il est un Dieu, qui rit aux nappes damassées / Des autels »", poeme: "Le Mal", procede: "Personnification ironique", prouve: "L’Église complice de la guerre.", axe: "pouvoirs" },
     { citation: "« Tandis que les crachats rouges de la mitraille »", poeme: "Le Mal", procede: "Métaphore dégradante", prouve: "L’horreur de la guerre de 1870.", axe: "pouvoirs" },
