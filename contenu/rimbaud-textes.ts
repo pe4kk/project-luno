@@ -1,0 +1,111 @@
+import type { TextePoeme } from "@/lib/types";
+
+/**
+ * Texte intégral des poèmes du cours, copié de Wikisource le 2026-11-26 (textes validés), dans l’édition
+ * la plus proche des Cahiers de Douai qui y soit disponible. Les textes du bac (À la Musique, Vénus, Au
+ * Cabaret-Vert) viennent du polycopié, dans `bac-francais.ts`.
+ */
+export const TEXTES_RIMBAUD: Record<string, TextePoeme> = {
+  "Bal des pendus": {
+    titre: "Bal des pendus",
+    source: "Reliquaire, Genonceaux, 1891 (d’après les manuscrits confiés à Demeny)",
+    strophes: [
+      ["Au gibet noir, manchot aimable,", "Dansent, dansent les paladins,", "Les maigres paladins du diable,", "Les squelettes de Saladins."],
+      ["Messire Belzebuth tire par la cravate", "Ses petits pantins noirs grimaçant sur le ciel,", "Et, leur claquant au front un revers de savate,", "Les fait danser, danser aux sons d’un vieux Noël !"],
+      ["Et les pantins choqués enlacent leurs bras grêles :", "Comme des orgues noirs, les poitrines à jour", "Que serraient autrefois les gentes damoiselles,", "Se heurtent longuement dans un hideux amour."],
+      ["Hurrah ! les gais danseurs, qui n’avez plus de panse !", "On peut cabrioler, les tréteaux sont si longs !", "Hop ! qu’on ne sache plus si c’est bataille ou danse !", "Belzebuth enragé râcle ses violons !"],
+      ["Ô durs talons, jamais on n’use sa sandale !", "Presque tous ont quitté la chemise de peau :", "Le reste est peu gênant et se voit sans scandale.", "Sur les crânes, la neige applique un blanc chapeau :"],
+      ["Le corbeau fait panache à ces têtes fêlées,", "Un morceau de chair tremble à leur maigre menton :", "On dirait, tournoyant dans les sombres mêlées,", "Des preux, raides, heurtant armures de carton."],
+      ["Hurrah ! la bise siffle au grand bal des squelettes !", "Le gibet noir mugit comme un orgue de fer !", "Les loups vont répondant des forêts violettes :", "À l’horizon, le ciel est d’un rouge d’enfer…"],
+      ["Holà, secouez-moi ces capitans funèbres", "Qui défilent, sournois, de leurs gros doigts cassés", "Un chapelet d’amour sur leurs pâles vertèbres :", "Ce n’est pas un moustier ici, les trépassés !"],
+      ["Oh ! voilà qu’au milieu de la danse macabre", "Bondit dans le ciel rouge un grand squelette fou", "Emporté par l’élan, comme un cheval se cabre :", "Et, se sentant encor la corde raide au cou,"],
+      ["Crispe ses petits doigts sur son fémur qui craque", "Avec des cris pareils à des ricanements,", "Et, comme un baladin rentre dans la baraque,", "Rebondit dans le bal au chant des ossements."],
+      ["Au gibet noir, manchot aimable,", "Dansent, dansent les paladins,", "Les maigres paladins du diable,", "Les squelettes de Saladins."],
+    ],
+  },
+  "Sensation": {
+    titre: "Sensation",
+    source: "Reliquaire, Genonceaux, 1891 (d’après les manuscrits confiés à Demeny)",
+    date: "Mars 1870.",
+    strophes: [
+      ["Par les soirs bleus d’été, j’irai dans les sentiers,", "Picoté par les blés, fouler l’herbe menue :", "Rêveur, j’en sentirai la fraîcheur à mes pieds.", "Je laisserai le vent baigner ma tête nue."],
+      ["Je ne parlerai pas, je ne penserai rien :", "Mais l’amour infini me montera dans l’âme,", "Et j’irai loin, bien loin, comme un bohémien,", "Par la Nature, — heureux comme avec une femme."],
+    ],
+  },
+  "Les Reparties de Nina": {
+    titre: "Les Reparties de Nina",
+    source: "Reliquaire, Genonceaux, 1891 (d’après les manuscrits confiés à Demeny)",
+    note: "Une version plus tardive, « Ce qui retient Nina », finit par « Mais le bureau ? » : celle-ci finit par « — Et mon bureau ? », comme dans ton cours.",
+    strophes: [
+      ["Lui. — Ta poitrine sur ma poitrine,", "Hein ? nous irions,", "Ayant de l’air plein la narine,", "Aux frais rayons"],
+      ["Du bon matin bleu qui vous baigne", "Du vin de jour ?…", "Quand tout le bois frissonnant saigne", "Muet d’amour"],
+      ["De chaque branche, gouttes vertes,", "Des bourgeons clairs,", "On sent dans les choses ouvertes", "Frémir des chairs :"],
+      ["Tu plongerais dans la luzerne", "Ton blanc peignoir,", "Rosant à l’air ce bleu qui cerne", "Ton grand œil noir,"],
+      ["Amoureuse de la campagne,", "Semant partout,", "Comme une mousse de champagne,", "Ton rire fou :"],
+      ["Riant à moi, brutal d’ivresse,", "Qui te prendrais", "Comme cela, — la belle tresse,", "Oh ! — qui boirais"],
+      ["Ton goût de framboise et de fraise,", "Ô chair de fleur !", "Riant au vent vif qui te baise", "Comme un voleur ;"],
+      ["Au rose églantier qui s’embête", "Aimablement :", "Riant surtout, ô folle tête,", "À ton amant !…"],
+      ["Ta poitrine sur ma poitrine", "Mêlant nos voix,", "Lents, nous gagnerions la ravine,", "Puis les grands bois !…"],
+      ["Puis, comme une petite morte,", "Le cœur pâmé,", "Tu me dirais que je te porte,", "L’œil mi fermé."],
+      ["Je te porterais, palpitante,", "Dans le sentier :", "L’oiseau filerait son andante", "Au noisetier…"],
+      ["Je te parlerais dans ta bouche :", "J’irais, pressant", "Ton corps, comme une enfant qu’on couche,", "Ivre du sang"],
+      ["Qui coule, bleu, sous ta peau blanche", "Aux tons rosés :", "Et te parlant la langue franche…", "Tiens !… — que tu sais…"],
+      ["Nos grands bois sentiraient la sève", "Et le soleil", "Sablerait d’or fin leur grand rêve", "Vert et vermeil"],
+      ["Le soir ?… Nous reprendrons la route", "Blanche qui court", "Flânant, comme un troupeau qui broute,", "Tout à l’entour"],
+      ["Les bons vergers à l’herbe bleue", "Aux pommiers tors !", "Comme on les sent tout une lieue,", "Leurs parfums forts !"],
+      ["Nous regagnerons le village", "Au ciel mi-noir ;", "Et ça sentira le laitage", "Dans l’air du soir ;"],
+      ["Ça sentira l’étable, pleine", "De fumiers chauds,", "Pleine d’un lent rhythme d’haleine,", "Et de grands dos"],
+      ["Blanchissant sous quelque lumière ;", "Et, tout là-bas,", "Une vache fientera, fière,", "À chaque pas…"],
+      ["— Les lunettes de la grand’mère", "Et son nez long", "Dans son missel : le pot de bière", "Cerclé de plomb,"],
+      ["Moussant entre les larges pipes", "Qui, crânement,", "Fument : les effroyables lippes", "Qui, tout fumant,"],
+      ["Happent le jambon aux fourchettes", "Tant, tant et plus :", "Le feu qui claire les couchettes", "Et les bahuts :"],
+      ["Les fesses luisantes et grasses", "D’un gros enfant", "Qui fourre, à genoux, dans les tasses,", "Son museau blanc"],
+      ["Frôlé par un mufle qui gronde", "D’un ton gentil,", "Et pourlèche la face ronde", "Du cher petit…"],
+      ["Que de choses verrons-nous, chère,", "Dans ces taudis,", "Quand la flamme illumine, claire,", "Les carreaux gris !…"],
+      ["— Puis, petite et toute nichée", "Dans les lilas", "Noirs et frais : la vitre cachée,", "Qui rit là-bas…"],
+      ["Tu viendras, tu viendras, je t’aime !", "Ce sera beau.", "Tu viendras, n’est-ce pas, et même…", "ELLE. — Et mon bureau ?"],
+    ],
+  },
+  "Le Châtiment de Tartufe": {
+    titre: "Le Châtiment de Tartufe",
+    source: "Poésies complètes, Vanier, 1895",
+    strophes: [
+      ["Tisonnant, tisonnant son cœur amoureux sous", "Sa chaste robe noire, heureux, la main gantée,", "Un jour qu’il s’en allait, effroyablement doux,", "Jaune, bavant la foi de sa bouche édentée,"],
+      ["Un jour qu’il s’en allait, « Oremus », — un Méchant", "Le prit rudement par son oreille benoite", "Et lui jeta des mots affreux, en arrachant", "Sa chaste robe noire autour de sa peau moite !"],
+      ["Châtiment !… Ses habits étaient déboutonnés,", "Et le long chapelet des péchés pardonnés", "S’égrenant dans son cœur, Saint Tartufe était pâle !…"],
+      ["Donc, il se confessait, priait, avec un râle !", "L’homme se contenta d’emporter ses rabats…", "— Peuh ! Tartufe était nu du haut jusques en bas !"],
+    ],
+  },
+  "Ma Bohème": {
+    titre: "Ma Bohème",
+    source: "Poésies complètes, Vanier, 1895",
+    date: "Octobre 1870.",
+    note: "Ton recueil peut écrire « Oh ! là ! là ! » et « Petit-Poucet » : la ponctuation varie selon les éditions.",
+    strophes: [
+      ["Je m’en allais, les poings dans mes poches crevées ;", "Mon paletot aussi devenait idéal ;", "J’allais sous le ciel, Muse ! et j’étais ton féal ;", "Oh ! là là ! que d’amours splendides j’ai rêvées !"],
+      ["Mon unique culotte avait un large trou.", "— Petit Poucet rêveur, j’égrenais dans ma course", "Des rimes. Mon auberge était à la Grande-Ourse ;", "— Mes étoiles au ciel avaient un doux frou-frou."],
+      ["Et je les écoutais, assis au bord des routes,", "Ces bons soirs de septembre où je sentais des gouttes", "De rosée à mon front, comme un vin de vigueur ;"],
+      ["Où, rimant au milieu des ombres fantastiques,", "Comme des lyres, je tirais les élastiques", "De mes souliers blessés, un pied près de mon cœur !"],
+    ],
+  },
+  "Les Effarés": {
+    titre: "Les Effarés",
+    source: "Poésies complètes, Vanier, 1895 (version de 1870)",
+    date: "20 septembre 1870.",
+    note: "Ton polycopié donne la version remaniée de 1871 : « Le Boulanger au gras sourire / Grogne un vieil air », « Quand pour quelque médianoche »…",
+    strophes: [
+      ["Noirs dans la neige et dans la brume,", "Au grand soupirail qui s’allume,", "Leurs culs en rond,"],
+      ["À genoux, cinq petits, — misère ! —", "Regardent le boulanger faire", "Le lourd pain blond…"],
+      ["Ils voient le fort bras blanc qui tourne", "La pâte grise, et qui l’enfourne", "Dans un trou clair."],
+      ["Ils écoutent le bon pain cuire.", "Le boulanger au gras sourire", "Chante un vieil air."],
+      ["Ils sont blottis, pas un ne bouge,", "Au souffle du soupirail rouge,", "Chaud comme un sein."],
+      ["Et quand, pendant que minuit sonne,", "Façonné, pétillant et jaune,", "On sort le pain ;"],
+      ["Quand, sous les poutres enfumées,", "Chantent les croûtes parfumées,", "Et les grillons ;"],
+      ["Quand ce trou chaud souffle la vie ;", "Ils ont leur âme si ravie", "Sous leurs haillons,"],
+      ["Ils se ressentent si bien vivre,", "Les pauvres petits pleins de givre !", "— Qu’ils sont là, tous,"],
+      ["Collant leurs petits museaux roses", "Au grillage, chantant des choses,", "Entre les trous,"],
+      ["Mais bien bas, — comme une prière…", "Repliés vers cette lumière", "Du ciel rouvert,"],
+      ["— Si fort, qu’ils crèvent leur culotte,", "— Et que leur lange blanc tremblotte", "Au vent d’hiver…"],
+    ],
+  },
+};

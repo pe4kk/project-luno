@@ -11,7 +11,7 @@ import { FICHES_POEMES } from "./rimbaud-poemes";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 7,
+  version: 8,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",

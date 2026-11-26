@@ -1,5 +1,6 @@
 import type { Dissertation } from "@/lib/dissertation";
 import { TEXTES_BAC } from "./bac-francais";
+import { TEXTES_RIMBAUD } from "./rimbaud-textes";
 
 /**
  * Dissertations sur les œuvres du bac de français (écrit du 15 juin 2027 : trois sujets, un par
@@ -412,22 +413,43 @@ const EFFARES = [
   "On sort le pain,",
 ];
 
+/**
+ * Vers d'autres poèmes du recueil cités dans la dissertation, vérifiés sur le texte intégral
+ * (Poésies complètes, Vanier, 1895, Wikisource, 2026-11-26).
+ */
+const VERS_VERIFIES = [
+  "On n’est pas sérieux, quand on a dix-sept ans.",
+  "L’Homme pâle, le long des pelouses fleuries,",
+  "Chemine, en habit noir, et le cigare aux dents :",
+  "Tandis que les crachats rouges de la mitraille",
+  "— Il est un Dieu, qui rit aux nappes damassées",
+  "Des autels, à l’encens, aux grands calices d’or ;",
+  "Nature, berce-le chaudement : il a froid.",
+  "Tranquille. Il a deux trous rouges au côté droit.",
+  "La blanche Ophélia flotte comme un grand lys,",
+];
+
 /** Tous les vers des textes étudiés et recopiés dans Luno (texte exact du polycopié). */
 const VERS_ETUDIES = [
   ...TEXTES_BAC.filter((t) => !t.extraits).flatMap((t) =>
     t.mouvements.flatMap((m) => m.passages.flatMap((p) => p.lignes)),
   ),
   ...EFFARES,
+  ...VERS_VERIFIES,
+  ...Object.values(TEXTES_RIMBAUD).flatMap((t) => t.strophes.flat()),
 ].map(norme);
+
+/** Les mots seuls, sans ponctuation ni tirets : la ponctuation varie d'une édition à l'autre. */
+const mots = (s: string) => s.replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
 /**
  * Origine d'une citation (demandé le 2026-11-26 : « n'invente SURTOUT pas de citations ») :
- * « texte » = retrouvée mot pour mot dans un texte étudié recopié dans Luno ; « cours » = écrite
+ * « texte » = retrouvée mot pour mot (ponctuation mise à part) dans un texte étudié ou vérifié sur le texte intégral ; « cours » = écrite
  * dans tes notes de cours ; « verifier » = citée de mémoire, à contrôler dans ton recueil.
  */
 export function origineCitation(citation: string): "texte" | "cours" | "verifier" {
   const morceaux = citation.split("/").map(norme).filter(Boolean);
-  if (morceaux.every((m) => VERS_ETUDIES.some((v) => v.includes(m.replace(/[.!?;:,]+$/, ""))))) return "texte";
+  if (morceaux.every((m) => VERS_ETUDIES.some((v) => mots(v).includes(mots(m))))) return "texte";
   const n = norme(citation);
   if (CITATIONS_DU_COURS.some((c) => n === norme(c) || n.startsWith(norme(c)))) return "cours";
   return "verifier";

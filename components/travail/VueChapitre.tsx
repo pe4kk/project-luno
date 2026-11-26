@@ -22,7 +22,7 @@ import {
   Trash2,
   Upload,
 } from "lucide-react";
-import type { Chapitre, Flashcard, Matiere } from "@/lib/types";
+import type { Chapitre, Flashcard, Matiere, TextePoeme } from "@/lib/types";
 import { encre, estDue, pastel, useLuno } from "@/lib/store";
 import { demandeCours, repererDefinitions } from "@/lib/contenu";
 import { joursAvant } from "@/lib/dates";
@@ -806,6 +806,7 @@ function OngletFiche({
                 {formule(sec.titre)}
               </h3>
               )}
+              {sec.poeme && <PoemeReplie poeme={sec.poeme} couleur={foncee} />}
               <ul className="flex flex-col pl-1">
                   {sec.points.map((p) => (
                     <li
@@ -931,5 +932,37 @@ function RegleFiches({
         style={{ background: couleur }}
       />
     </div>
+  );
+}
+
+/** Le texte intégral d'un poème, replié par défaut en haut de sa fiche. */
+function PoemeReplie({ poeme, couleur }: { poeme: TextePoeme; couleur: string }) {
+  return (
+    <details className="group mb-3 mt-2 rounded-2xl border border-line bg-bg/60">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-2.5 text-[14.5px] font-semibold [&::-webkit-details-marker]:hidden">
+        <span style={{ color: couleur }}>Lire le poème</span>
+        <span className="text-[12.5px] font-normal text-muted">
+          {poeme.strophes.reduce((n, s) => n + s.length, 0)} vers
+          <span className="ml-1.5 inline-block transition-transform duration-200 group-open:rotate-180">▾</span>
+        </span>
+      </summary>
+      <div className="px-4 pb-4">
+        <p className="mb-3 font-display text-[19px]">{poeme.titre}</p>
+        <div className="flex flex-col gap-3.5 font-display text-[15.5px] leading-[1.65]">
+          {poeme.strophes.map((s, i) => (
+            <p key={i}>
+              {s.map((v, j) => (
+                <span key={j} className="block pl-5 -indent-5">
+                  {v}
+                </span>
+              ))}
+            </p>
+          ))}
+        </div>
+        {poeme.date && <p className="mt-3 text-[13px] italic text-muted">{poeme.date}</p>}
+        <p className="mt-3 text-[12px] text-muted">Texte : {poeme.source}.</p>
+        {poeme.note && <p className="mt-1 text-[12px] text-muted">{poeme.note}</p>}
+      </div>
+    </details>
   );
 }

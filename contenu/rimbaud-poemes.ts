@@ -1,4 +1,5 @@
-import type { PointFiche } from "@/lib/types";
+import type { PointFiche, TextePoeme } from "@/lib/types";
+import { TEXTES_RIMBAUD } from "./rimbaud-textes";
 import type { TexteBac } from "@/lib/bac";
 import { A_LA_MUSIQUE, AU_CABARET_VERT, VENUS_ANADYOMENE } from "./bac-francais";
 import { DISSERTATION_RIMBAUD, origineCitation } from "./dissertations";
@@ -54,7 +55,7 @@ function pourLaDissertation(poeme: string): PointFiche[] {
 }
 
 /** Fiche d'un texte du bac : sa propre analyse, réduite à ce qu'il faut savoir redire. */
-function ficheTexte(t: TexteBac): { titre: string; points: PointFiche[] } {
+function ficheTexte(t: TexteBac): { titre: string; points: PointFiche[]; poeme?: TextePoeme } {
   const points: PointFiche[] = [];
   if (t.provisoire) points.push({ t: `Attention : ${t.provisoire}`, n: 1 });
   (t.essentiel ?? []).forEach((e, i) => points.push({ t: e, n: i < 2 ? 1 : 2 }));
@@ -73,7 +74,14 @@ function ficheTexte(t: TexteBac): { titre: string; points: PointFiche[] } {
         });
   points.push(...pourLaDissertation(t.titre.split(",")[0]));
   t.conclusion.slice(0, 1).forEach((c) => points.push({ t: `Conclusion : ${c}`, n: 4 }));
-  return { titre: `« ${t.titre.split(",")[0]} »`, points };
+  const poeme: TextePoeme | undefined = t.extraits
+    ? undefined
+    : {
+        titre: t.titre,
+        source: "Ton polycopié (le texte annoté de l’onglet Bac)",
+        strophes: t.mouvements.flatMap((m) => m.passages.filter((p) => !p.chapeau).map((p) => p.lignes)),
+      };
+  return { titre: `« ${t.titre.split(",")[0]} »`, points, poeme };
 }
 
 /**
@@ -150,7 +158,11 @@ const COURS: { titre: string; points: PointFiche[] }[] = [
 ];
 
 /** Les fiches par poème, dans l'ordre : textes du bac (analyse complète), puis poèmes du cours. */
-export const FICHES_POEMES: { titre: string; points: PointFiche[] }[] = [
+export const FICHES_POEMES: { titre: string; points: PointFiche[]; poeme?: TextePoeme }[] = [
   ...[A_LA_MUSIQUE, VENUS_ANADYOMENE, AU_CABARET_VERT].map(ficheTexte),
-  ...COURS.map((p) => ({ titre: `« ${p.titre} »`, points: [...p.points, ...pourLaDissertation(p.titre)] })),
+  ...COURS.map((p) => ({
+    titre: `« ${p.titre} »`,
+    points: [...p.points, ...pourLaDissertation(p.titre)],
+    poeme: TEXTES_RIMBAUD[p.titre],
+  })),
 ];

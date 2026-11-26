@@ -177,8 +177,12 @@ export type Calcul = {
   methode: string;
 };
 
+/** Un poème recopié en entier, avec l'édition d'où il vient. */
+export type TextePoeme = { titre: string; source: string; date?: string; note?: string; strophes: string[][] };
+
 export type Fiche = {
-  sections: { titre: string; points: PointFiche[] }[];
+  /** `poeme` : le texte intégral, repliable en haut de la section (fiches par poème). */
+  sections: { titre: string; points: PointFiche[]; poeme?: TextePoeme }[];
   aRetenir: string[];
   /**
    * Chapitre lourd découpé en plusieurs fiches, une par sujet (demandé le 2026-11-24 ; à faire

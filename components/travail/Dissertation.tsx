@@ -516,7 +516,7 @@ function Origine({ citation }: { citation: string }) {
   return (
     <p className={`mt-1 text-[11.5px] font-semibold ${o === "verifier" ? "text-accent" : "text-muted"}`}>
       {o === "texte"
-        ? "✓ Mot pour mot dans le texte étudié"
+        ? "✓ Vérifiée mot pour mot sur le texte du poème"
         : o === "cours"
           ? "✓ Citée dans tes notes de cours"
           : "À vérifier dans ton recueil avant de l’apprendre"}

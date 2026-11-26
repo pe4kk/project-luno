@@ -239,7 +239,12 @@ fiches de révision ; le slider règle la longueur de la fiche.
     exacte) ; pour Bal des pendus, Tartufe, Nina, Ma Bohème, Sensation, Effarés, les pages du cahier (photos du 2026-11-26) ;
     vers 1 à 18 des Effarés (polycopié, version 1871) dans `EFFARES` de `dissertations.ts`, comptés comme vérifiés ; puis, pour tous, comment
     réutiliser le poème en dissertation (citations et arguments de `DISSERTATION_RIMBAUD`). Nouveau texte du bac ou
-    poème étudié : l'ajouter à `FICHES_POEMES`.
+    poème étudié : l'ajouter à `FICHES_POEMES`. **Texte intégral** replié « Lire le poème » en haut de chaque fiche
+    (`poeme` d'une section, `TextePoeme`, `PoemeReplie` dans `VueChapitre.tsx`) : textes du bac depuis le polycopié,
+    autres poèmes copiés de Wikisource (`contenu/rimbaud-textes.ts` : Reliquaire 1891 quand il existe, sinon Vanier
+    1895, source affichée). Wikisource : en-tête User-Agent obligatoire, URL encodée, `action=render`, titres sous
+    « Poésies (Rimbaud)/éd. Vanier, 1895/… » ou « Reliquaire, poésies/… » ; l'API est vite limitée.
+    Les 56 citations de la dissertation sont maintenant vérifiées mot pour mot (ponctuation mise à part).
   - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en
     QCM du mer. 25/11 : « comprendre l'immeuble, qui est à chaque étage, leurs relations ») : dans
     Bac › Le roman, carte « Explorer l'œuvre » (`oeuvre.explorer` de `PROGRAMME_BAC`) →
@@ -699,7 +704,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     d'un texte littéraire vient du texte étudié recopié dans Luno ou des notes de cours de l'élève ; sinon elle est
     marquée « à vérifier dans ton recueil » (`origineCitation()` de `contenu/dissertations.ts`, étiquette sous chaque
     citation de la dissertation). Vérifier sur le texte intégral quand c'est possible (fr.wikisource.org est autorisé
-    dans l'environnement depuis le 2026-11-26, mais le téléchargement a été refusé dans la session de ce jour).
+    dans l'environnement depuis le 2026-11-26 ; toutes les citations de Rimbaud ont été vérifiées ce jour-là).
 13ter. **Accorder les mots de l'interface** avec ce qu'ils désignent (2026-11-24 : « Ce qu'il fait »
     pour Mme Juzeur) : féminin, pluriel pour un couple ou une famille (`pronoms()` dans `Oeuvre.tsx`).
 13bis. **Fiches : une par sujet seulement si le chapitre est lourd** (2026-11-24) : sinon une seule
