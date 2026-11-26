@@ -1030,6 +1030,259 @@ export const VENUS_ANADYOMENE: TexteBac = {
   ],
 };
 
+/**
+ * Texte 3, reçu le 2026-11-26 : le poème annoté en classe (premières impressions, notes en
+ * marge) et « L'Auberge » de Verlaine, que le prof donne comme source possible. Pas encore
+ * d'explication linéaire du prof : fiche provisoire, mouvements proposés par Claude d'après
+ * les notes (un quatrain d'arrivée, la servante, le repas transfiguré).
+ */
+export const AU_CABARET_VERT: TexteBac = {
+  id: "rimbaud-au-cabaret-vert",
+  genre: "poesie",
+  titre: "Au Cabaret-Vert, cinq heures du soir",
+  auteur: "Arthur Rimbaud",
+  date: "Octobre 1870",
+  forme: "Sonnet d’alexandrins irrégulier (quatrains en rimes croisées, sur des rimes différentes)",
+  categories: { registre: "Joie et niveaux de langue", theme: "Entre enfance et âge adulte", vers: "Un sonnet malmené" },
+  provisoire:
+    "Fiche faite d’après tes notes de classe (premières impressions) : le plan en mouvements est proposé par Luno. Envoie l’explication du prof dès que vous l’aurez faite, pour la mettre à jour.",
+  essentiel: [
+    "==Un moment banal, une halte dans un cabaret de Charleroi pendant la fugue d’octobre 1870, devient un poème de joie simple== : registre lyrique, écriture autobiographique.",
+    "==Rimbaud « violente » la forme du sonnet== : il multiplie les enjambements (« des tartines / De beurre », « la table / Verte »), qui tirent le vers vers la prose, mêle les niveaux de langue (« Bienheureux » et « tétons », « épeure ») et ne respecte pas les rimes du sonnet classique. Rupture avec la tradition classique, mais dans le sillage du romantisme.",
+    "Une joie enfantine (les « sujets très naïfs » de la tapisserie, « adorable », la servante qui rappelle la mère) ==et aussi polissonne== (« la fille aux tétons énormes », « ce n’est pas un baiser qui l’épeure ») : c’est moins l’enfant que l’adolescent.",
+    "==Le poète se peint oscillant entre l’enfance et l’âge adulte==, et le repas se transfigure en fête des sens jusqu’au « rayon de soleil arriéré » qui dore la bière.",
+    "Intertextualité : interne (« Ma Bohème », « Sensation » : la fugue, la marche, la liberté) et externe (« L’Auberge » de Verlaine, autre sonnet de l’auberge, lieu de liberté). ==Rimbaud n’écrit pas ex nihilo : ses textes entrent en résonance avec d’autres textes.==",
+  ],
+  lecture:
+    "Lecture enjouée, avec le sourire. Ne pas marquer de pause en fin de vers quand la phrase continue (enjambements), marquer les tirets comme des apartés, faire entendre la parenthèse « Celle-là… » sur un ton complice. Prononcer « fût » et « tiède » distinctement.",
+  introduction: [
+    "Arthur Rimbaud (1854-1891) naît à Charleville dans la petite bourgeoisie. Pour fuir un climat familial étouffant et une mère rigide, il se réfugie dans la poésie, encouragé par son professeur Georges Izambard, et fugue plusieurs fois en 1870.",
+    "==Le poème, daté d’« Octobre 70 », appartient au recueil Demeny (Cahiers de Douai)== : il est écrit pendant la deuxième fugue de Rimbaud, en Belgique (Charleroi, puis Bruxelles), avant qu’il ne rejoigne Douai où il recopie ses poèmes pour Paul Demeny.",
+    "Il forme une série avec d’autres sonnets de la fugue, « Ma Bohème » et « Sensation » (==intertextualité interne==) : la marche, la pauvreté joyeuse, la liberté.",
+    "Le prof le rapproche aussi de ==« L’Auberge » de Paul Verlaine== (publié dans Jadis et naguère, recueil qui rassemble des poèmes plus anciens), un sonnet dont Rimbaud a pu s’inspirer : mêmes thèmes (la route, l’auberge, l’hôtesse, les images naïves au mur, le repas). Pour Verlaine, l’auberge est un lieu de liberté, où l’on parle de ce que l’on veut. Rimbaud exprime son expérience personnelle à travers ce texte.",
+    "Le titre, précis comme une enseigne et une heure de rendez-vous, peut se lire comme un ==hommage== : au lieu réel, et à ce moment de bonheur.",
+  ],
+  problematique:
+    "Comment, à travers le récit d’une simple halte dans un cabaret, Rimbaud bouscule-t-il le sonnet pour exprimer une joie à la fois enfantine et polissonne, celle d’un adolescent entre l’enfance et l’âge adulte ?",
+  mouvements: [
+    {
+      titre: "L’arrivée du vagabond : un cadre réaliste et autobiographique",
+      fiche: [
+        "==Le premier quatrain installe le cadre spatio-temporel== (« Depuis huit jours », « Charleroi », « cinq heures du soir ») ==et, subtilement, les thèmes du poème== : la fugue, la pauvreté joyeuse, l’appétit.",
+        "L’écriture est autobiographique : un « je » qui raconte au passé simple et à l’imparfait, comme un récit. Les bottines déchirées rappellent les « souliers blessés » de « Ma Bohème ».",
+        "==Les enjambements cassent l’alexandrin== : « des tartines / De beurre » sépare le nom de son complément. Le vers se rapproche de la prose, la commande est banale : le sujet prosaïque entre dans le sonnet.",
+      ],
+      passages: [
+        {
+          chapeau: true,
+          lignes: ["Au Cabaret-Vert, cinq heures du soir"],
+          annotations: [
+            {
+              extrait: "Au Cabaret-Vert",
+              cle: true,
+              cat: "theme",
+              titre: "Un potentiel hommage",
+              texte: "Le nom d’un vrai cabaret (la « Maison verte » de Charleroi), écrit comme une enseigne. Le titre rend hommage à un lieu et à un moment de bonheur ; le vert, couleur de la nature et de la jeunesse, reviendra avec la table « Verte ».",
+              retenir: "une enseigne pour titre",
+            },
+            {
+              extrait: "cinq heures du soir",
+              cat: "registre",
+              titre: "Une heure précise",
+              texte: "Comme dans un journal intime : la précision réaliste annonce un instant ordinaire saisi sur le vif, loin des grands sujets poétiques.",
+            },
+          ],
+        },
+        {
+          lignes: [
+            "Depuis huit jours, j’avais déchiré mes bottines",
+            "Aux cailloux des chemins. J’entrais à Charleroi.",
+            "— Au Cabaret-Vert : je demandai des tartines",
+            "De beurre et du jambon qui fût à moitié froid.",
+          ],
+          annotations: [
+            {
+              extrait: "Depuis huit jours",
+              cle: true,
+              cat: "theme",
+              titre: "La fugue",
+              texte: "Le cadre temporel dit la longue marche de la fugue (octobre 1870) : une écriture assez autobiographique. Le premier quatrain installe le cadre spatio-temporel et, subtilement, les thèmes.",
+              retenir: "cadre spatio-temporel + thèmes",
+            },
+            {
+              extrait: "j’avais déchiré mes bottines",
+              cat: "theme",
+              titre: "Intertextualité interne",
+              texte: "Les chaussures abîmées font écho à « Ma Bohème » (« mes souliers blessés ») : la pauvreté du vagabond, assumée avec gaieté.",
+            },
+            {
+              extrait: "J’entrais à Charleroi.",
+              cat: "registre",
+              titre: "Un lieu réel",
+              texte: "Phrase courte, au milieu du vers : un récit simple, presque prosaïque, ancré dans la géographie réelle de la fugue.",
+            },
+            {
+              extrait: "je demandai des tartines",
+              cle: true,
+              cat: "vers",
+              titre: "Enjambement",
+              texte: "« des tartines / De beurre » : l’enjambement sépare le nom de son complément du nom. Rimbaud violente la forme du sonnet : le vers glisse vers la prose, au rythme d’une commande ordinaire.",
+              retenir: "le vers tiré vers la prose",
+            },
+            {
+              extrait: "qui fût à moitié froid",
+              cat: "registre",
+              titre: "Un souhait précis",
+              texte: "« fût » : subjonctif imparfait, dans une relative qui exprime ce que le voyageur souhaite. Une forme soutenue pour un détail trivial, le jambon à moitié froid : premier mélange des niveaux de langue.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "Le bien-être et la servante : une joie enfantine et polissonne",
+      fiche: [
+        "« Bienheureux », mot presque religieux, ouvre la strophe sur ==une joie simple, physique== (« j’allongeai les jambes »). ==Le mélange des niveaux de langue== s’accentue.",
+        "Les enjambements continuent (« la table / Verte », « les sujets très naïfs / De la tapisserie ») ; le rejet de « Verte » fait entendre ==la verdeur de la langue== : un langage grivois, polisson.",
+        "==La joie est d’abord enfantine== : « naïfs », « adorable », la servante rieuse qui nourrit, et rappelle la mère. ==Elle est aussi polissonne== : « la fille aux tétons énormes », l’aparté « Celle-là, ce n’est pas un baiser qui l’épeure ! ». C’est moins l’enfant que l’adolescent qui parle.",
+        "La phrase commencée à « Et ce fut adorable » déborde sur les tercets : la syntaxe ne respecte pas les strophes du sonnet.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Bienheureux, j’allongeai les jambes sous la table",
+            "Verte : je contemplai les sujets très naïfs",
+            "De la tapisserie. — Et ce fut adorable,",
+            "Quand la fille aux tétons énormes, aux yeux vifs,",
+          ],
+          annotations: [
+            {
+              extrait: "Bienheureux",
+              cle: true,
+              cat: "registre",
+              titre: "Mélange des niveaux de langue",
+              texte: "Un mot des béatitudes, presque religieux, suivi d’un geste familier (« j’allongeai les jambes ») : le bonheur simple du corps qui se repose.",
+              retenir: "lyrisme de la joie simple",
+            },
+            {
+              extrait: "Verte",
+              cle: true,
+              cat: "vers",
+              titre: "Rejet",
+              texte: "Mis en valeur en tête de vers, « Verte » rappelle le titre et fait entendre la verdeur de la langue : un langage grivois, polisson, qui va suivre.",
+              retenir: "verdeur de la langue",
+            },
+            {
+              extrait: "les sujets très naïfs",
+              cat: "theme",
+              titre: "Un regard d’enfant",
+              texte: "Les images naïves de la tapisserie (comme les images au mur de « L’Auberge » de Verlaine) : le poète les contemple avec plaisir, comme un enfant. Nouvel enjambement vers « De la tapisserie ».",
+            },
+            {
+              extrait: "Et ce fut adorable",
+              cat: "registre",
+              titre: "Un mot enfantin",
+              texte: "Après le tiret, une rupture au milieu du vers ; « adorable », mot spontané, presque enfantin, annonce le moment le plus heureux.",
+            },
+            {
+              extrait: "la fille aux tétons énormes",
+              cle: true,
+              cat: "theme",
+              titre: "Entre la mère et le désir",
+              texte: "La servante nourricière rappelle la mère et la joie enfantine ; mais le mot familier « tétons » et l’hyperbole « énormes » disent aussi le regard désirant d’un adolescent.",
+              retenir: "l’enfant et l’adolescent",
+            },
+          ],
+        },
+        {
+          lignes: [
+            "— Celle-là, ce n’est pas un baiser qui l’épeure ! —",
+            "Rieuse, m’apporta des tartines de beurre,",
+            "Du jambon tiède, dans un plat colorié,",
+          ],
+          annotations: [
+            {
+              extrait: "Celle-là, ce n’est pas un baiser qui l’épeure !",
+              cle: true,
+              cat: "registre",
+              titre: "Une joie polissonne",
+              texte: "Un aparté entre tirets, à l’oral (« Celle-là », exclamation), avec un mot régional ou familier, « épeure » (effraie) : un clin d’œil grivois. C’est moins l’enfant que l’adolescent.",
+              retenir: "joie aussi polissonne",
+            },
+            {
+              extrait: "Rieuse",
+              cat: "theme",
+              titre: "Une complicité",
+              texte: "En tête de vers, l’adjectif fait de la servante une figure de gaieté partagée, comme l’hôtesse de Verlaine qui « parle d’amour, de joie et d’aise ».",
+            },
+            {
+              extrait: "dans un plat colorié",
+              cat: "figure",
+              titre: "Les couleurs",
+              texte: "Le décor modeste s’anime de couleurs : le poème devient tableau, scène de genre.",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      titre: "Le repas transfiguré : une fête des sens",
+      fiche: [
+        "Le dernier tercet prolonge la phrase : ==la reprise de « Du jambon » et l’accumulation de détails font du repas une fête des sens== (la vue : « rose et blanc » ; l’odorat : « parfumé d’une gousse / D’ail » ; le goût, la bière).",
+        "L’hyperbole « la chope immense » garde le regard émerveillé d’un enfant, mais la bière est un plaisir d’adulte : ==le poète oscille entre l’enfance et l’âge adulte.==",
+        "==La chute transfigure le banal== : un « rayon de soleil arriéré », c’est-à-dire tardif (cinq heures du soir, en octobre), dore la mousse. La lumière finale donne au moment ordinaire la valeur d’un instant de bonheur pur.",
+      ],
+      passages: [
+        {
+          lignes: [
+            "Du jambon rose et blanc parfumé d’une gousse",
+            "D’ail, — et m’emplit la chope immense, avec sa mousse",
+            "Que dorait un rayon de soleil arriéré.",
+          ],
+          annotations: [
+            {
+              extrait: "Du jambon rose et blanc",
+              cle: true,
+              cat: "figure",
+              titre: "Reprise et couleurs",
+              texte: "La reprise de « Du jambon » (anaphore d’un tercet à l’autre) et les couleurs précises : le poète savoure chaque détail ; un objet trivial devient digne du poème.",
+              retenir: "le banal devient poétique",
+            },
+            {
+              extrait: "parfumé d’une gousse",
+              cat: "vers",
+              titre: "Enjambement et rejet",
+              texte: "« une gousse / D’ail » : le rejet de « D’ail » brise l’alexandrin sur un mot prosaïque, presque comique. Les sens se mêlent : la vue, puis l’odorat.",
+            },
+            {
+              extrait: "la chope immense",
+              cle: true,
+              cat: "theme",
+              titre: "Entre enfance et âge adulte",
+              texte: "L’hyperbole garde le regard émerveillé d’un enfant, mais la bière est un plaisir d’adulte : le poète se peint oscillant entre les deux âges.",
+              retenir: "regard d’enfant, plaisir d’adulte",
+            },
+            {
+              extrait: "Que dorait un rayon de soleil arriéré",
+              cle: true,
+              cat: "figure",
+              titre: "Une chute lumineuse",
+              texte: "La mousse dorée par la lumière tardive (« arriéré » : en retard, de fin de journée) : la lumière transfigure le moment banal en instant de bonheur. Le poème finit sur une image de peintre.",
+              retenir: "le banal transfiguré",
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  conclusion: [
+    "==À partir d’un moment banal, une halte dans une auberge, Rimbaud écrit un poème de la joie simple== : enfantine et polissonne, celle d’un adolescent qui oscille entre l’enfance et l’âge adulte.",
+    "==Il violente la forme du sonnet== (enjambements, rimes irrégulières, mélange des niveaux de langue, phrase qui déborde les strophes) : une volonté de rupture avec la tradition classique, dans le sillage du romantisme. C’est une émancipation créatrice.",
+    "Rimbaud n’écrit pas ex nihilo : le poème dialogue avec ses autres sonnets de la fugue (« Ma Bohème », « Sensation ») et avec « L’Auberge » de Verlaine, dont il fait le récit d’une expérience personnelle.",
+    "Ouvertures : « Ma Bohème », qui clôt les Cahiers de Douai sur la même liberté du vagabond ; ou « La Maline », écrit à la même époque, avec une autre servante.",
+  ],
+};
+
 export const PROGRAMME_BAC: ProgrammeGenre[] = [
   {
     genre: "poesie",
@@ -1043,7 +1296,7 @@ export const PROGRAMME_BAC: ProgrammeGenre[] = [
     places: [
       A_LA_MUSIQUE,
       VENUS_ANADYOMENE,
-      { titre: "Troisième texte de l’œuvre", attente: "Envoie le texte et l’explication du prof" },
+      AU_CABARET_VERT,
       FEMME_NOIRE,
     ],
   },

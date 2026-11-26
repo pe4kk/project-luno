@@ -212,7 +212,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     deux interprétations dans chacun, chacune sa couleur : `registre` = « Lecture 1 : parodie
     misogyne », `theme` = « Lecture 2 : critique sociale »). Coquille du prof : rencontre avec
     Verlaine en 1872 (c'est septembre 1871).
-    Attendus : un troisième texte des Cahiers de Douai, puis théâtre, roman, littérature d'idées.
+    « Au Cabaret-Vert » (texte 3, 2026-11-26) : fiche **provisoire** (`provisoire`) d'après ses notes de
+    premières impressions et « L'Auberge » de Verlaine (source possible selon le prof) ; 3 mouvements proposés
+    par Claude (arrivée, servante, repas transfiguré), 19 remarques. À refaire avec l'explication du prof.
+    Attendus : théâtre, roman (Pot-Bouille), littérature d'idées.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.
