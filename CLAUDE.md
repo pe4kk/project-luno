@@ -236,7 +236,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
   - **Une fiche par poème étudié** (2026-11-26, demandé) : chapitre `francais-1re-rimbaud-douai` version 6, fiches
     « L'œuvre » puis une par poème (`contenu/rimbaud-poemes.ts`, `FICHES_POEMES`) : pour À la Musique, Vénus,
     Au Cabaret-Vert, l'analyse du texte du bac (essentiel, problématique, mouvements, remarques `cle` avec citation
-    exacte) ; pour Bal des pendus, Tartufe, Nina, Ma Bohème, Effarés, les points du cours ; puis, pour tous, comment
+    exacte) ; pour Bal des pendus, Tartufe, Nina, Ma Bohème, Sensation, Effarés, les pages du cahier (photos du 2026-11-26) ;
+    vers 1 à 18 des Effarés (polycopié, version 1871) dans `EFFARES` de `dissertations.ts`, comptés comme vérifiés ; puis, pour tous, comment
     réutiliser le poème en dissertation (citations et arguments de `DISSERTATION_RIMBAUD`). Nouveau texte du bac ou
     poème étudié : l'ajouter à `FICHES_POEMES`.
   - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en

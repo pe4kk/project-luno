@@ -390,10 +390,35 @@ const norme = (s: string) =>
     .trim()
     .toLowerCase();
 
+/** « Les Effarés », strophes 1 à 7, recopiées du polycopié (photo du 2026-11-26 ; version de 1871). */
+const EFFARES = [
+  "Noirs dans la neige et dans la brume,",
+  "Au grand soupirail qui s’allume,",
+  "Leurs culs en rond,",
+  "À genoux, cinq petits, — misère ! —",
+  "Regardent le Boulanger faire",
+  "Le lourd pain blond.",
+  "Ils voient le fort bras blanc qui tourne",
+  "La pâte grise et qui l’enfourne",
+  "Dans un trou clair.",
+  "Ils écoutent le bon pain cuire.",
+  "Le Boulanger au gras sourire",
+  "Grogne un vieil air.",
+  "Ils sont blottis, pas un ne bouge,",
+  "Au souffle du soupirail rouge",
+  "Chaud comme un sein.",
+  "Quand pour quelque médianoche,",
+  "Façonné comme une brioche",
+  "On sort le pain,",
+];
+
 /** Tous les vers des textes étudiés et recopiés dans Luno (texte exact du polycopié). */
-const VERS_ETUDIES = TEXTES_BAC.filter((t) => !t.extraits).flatMap((t) =>
-  t.mouvements.flatMap((m) => m.passages.flatMap((p) => p.lignes.map(norme))),
-);
+const VERS_ETUDIES = [
+  ...TEXTES_BAC.filter((t) => !t.extraits).flatMap((t) =>
+    t.mouvements.flatMap((m) => m.passages.flatMap((p) => p.lignes)),
+  ),
+  ...EFFARES,
+].map(norme);
 
 /**
  * Origine d'une citation (demandé le 2026-11-26 : « n'invente SURTOUT pas de citations ») :

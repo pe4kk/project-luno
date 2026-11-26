@@ -76,45 +76,75 @@ function ficheTexte(t: TexteBac): { titre: string; points: PointFiche[] } {
   return { titre: `« ${t.titre.split(",")[0]} »`, points };
 }
 
-/** Poèmes vus en cours, d'après la fiche du cours : chaque point de l'ancienne section « Les poèmes étudiés ». */
+/**
+ * Poèmes vus en cours, d'après les pages du cahier (photos du 2026-11-26) : partie « III. Lecture de
+ * 4 poèmes dont l'interprétation est ouverte », plus « Ma Bohème » et « Sensation ».
+ */
 const COURS: { titre: string; points: PointFiche[] }[] = [
   {
     titre: "Le Bal des pendus",
     points: [
-      { t: "==« Le Bal des pendus » : Villon inversé, sans pitié pour les pendus ; poème politique contre la cour de Napoléon III.==", n: 1 },
-      { t: "Le titre renvoie aux fêtes du château de Saint-Cloud, que les journaux hostiles à l'Empire dénonçaient ; attaque ad hominem.", n: 3 },
-      { t: "Méthode du cours : une première lecture simple, puis l'intertextualité (ici Villon) révèle un second sens, satirique.", n: 2 },
+      { t: "==Rimbaud inverse le sens de « La Ballade des pendus » de Villon : il n'a pas de pitié pour les pendus, parce que ce sont ceux qui ont fait pendre.==", n: 1 },
+      { t: "Intertextualité externe : chez Villon, un poème pathétique qui appelle la pitié et la compassion pour les pendus. Chez Rimbaud, on dirait un pastiche, mais un peu étrange : il ne nous fait pas éprouver de pitié.", n: 1 },
+      { t: "Analyse superficielle puis seconde : à la première lecture un pastiche, à la seconde un renversement.", n: 2 },
+      { t: "Le vocabulaire le montre : chez Villon, les pendus sont de pauvres hères (brigands, voleurs) ; chez Rimbaud, des « paladins », des seigneurs.", n: 2 },
+      { t: "Le titre renvoie au château de Saint-Cloud : les journaux anti-napoléoniens accusaient la cour d'y faire des orgies. Rimbaud écrit pour un lecteur contemporain, qui comprend l'allusion.", n: 2 },
+      { t: "==Un poème polémique et politique contre Napoléon III== : pendant que les riches se livrent à des orgies, le peuple a faim. La critique de Napoléon III est récurrente chez Rimbaud, ad hominem.", n: 1 },
+      { t: "Intertextualité interne : le thème se dégage aussi grâce à « Rages de Césars » et « Morts de Quatre-vingt-douze ». Tonalité polémique : Rimbaud est contre la tyrannie.", n: 3 },
+      { t: "La dimension sexuelle (une orgie prêtée à ceux qu'il critique) sert la satire : déconsidérer l'adversaire. Un poème de circonstance, qui nous touche moins aujourd'hui sans son contexte.", n: 4 },
     ],
   },
   {
     titre: "Le Châtiment de Tartufe",
     points: [
-      { t: "==Lecture anticléricale et lecture politique (Tartufe = Napoléon III).==", n: 1 },
-      { t: "« Tisonnant » est une métaphore du désir ; « Sa chaste robe noire » désigne la soutane ; « Saint Tartufe était pâle » fait écho à « L'Homme pâle » de « Rages de Césars ».", n: 3 },
-      { t: "Acrostiche : les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) ».", n: 2 },
+      { t: "==Deux lectures : anticléricale (le dévot de Molière cache ses désirs), puis politique (Tartufe = Napoléon III, accusé d'hypocrisie).==", n: 1 },
+      { t: "Intertextualité externe : Tartuffe, de Molière (XVIIe siècle), le dévot hypocrite. Première lecture : une critique de l'hypocrisie religieuse, de la religion.", n: 2 },
+      { t: "« Tisonnant » (remuer les braises, faire chauffer) : métaphore du désir qui s'allume. Le rejet « Sa chaste robe noire » désigne la soutane. Tartufe trahit le désir qu'il est censé réprimer.", n: 2 },
+      { t: "Deuxième lecture : le « Châtiment » renvoie aux Châtiments, pamphlet anti-napoléonien de Victor Hugo.", n: 1 },
+      { t: "Intertextualité interne avec « Rages de Césars », sur Napoléon III : l'écho de « pâle » / « pâleur » dans les deux poèmes fait de Saint Tartufe un double de Napoléon.", n: 2 },
+      { t: "Acrostiche : les initiales des vers 4 à 11 forment J-U-L-E-S C-E-S, « Jules Cés(ar) ». Tes notes ajoutent « + Arthur Rimbaud » : à préciser avec ton prof.", n: 2 },
     ],
   },
   {
     titre: "Les Reparties de Nina",
     points: [
-      { t: "==La chute « — Et mon bureau ? » ridiculise le discours amoureux ; critique de la poésie romantique.==", n: 1 },
-      { t: "Rimbaud se moque des deux personnages ; contrairement aux romantiques, il met toujours une distance entre lui et ses sentiments.", n: 3 },
+      { t: "==Un dialogue déséquilibré entre « Lui » et « Elle » : un long discours amoureux, puis la chute « — Et mon bureau ? ».==", n: 1 },
+      { t: "On peut penser que Nina est matérialiste, comme les petits bourgeois : une bourgeoisie obnubilée par les objets.", n: 2 },
+      { t: "Sarcasme et tonalité comique : Rimbaud se moque de « Lui » et d'« Elle ».", n: 2 },
+      { t: "==En embuscade se tient l'auteur, qui mine de l'intérieur le discours de « Lui » pour le rendre encore plus ridicule : Rimbaud critique la poésie romantique.==", n: 1 },
+      { t: "Contrairement aux poètes qui épanchent leur « moi », Rimbaud met toujours une distance entre lui et ses sentiments. Ses poèmes ont une inspiration autobiographique, mais toujours sous le prisme d'une distance.", n: 2 },
+      { t: "La leçon à retenir : il faut toujours se méfier des lectures strictement autobiographiques de Rimbaud.", n: 3 },
     ],
   },
   {
     titre: "Ma Bohème",
     points: [
-      { t: "==La fugue vécue devient réflexion sur poésie et liberté ; syllepses (« idéal », « un pied », « lyres »).==", n: 1 },
-      { t: "Avec « Sensation » : même rêve d'évasion, mais « Sensation » est au futur (un rêve) et « Ma Bohème » à l'imparfait (du vécu).", n: 2 },
-      { t: "Mélange des registres familier et soutenu ; Rimbaud s'inscrit dans une tradition, le sonnet, pour mieux la détourner.", n: 3 },
-      { t: "La Muse inspire le poète, le féal est un fidèle serviteur (vocabulaire médiéval).", n: 5 },
+      { t: "==La fugue devient une réflexion sur la poésie et la liberté : l'effort d'émancipation nourrit son écriture.==", n: 1 },
+      { t: "Avec « Sensation », les deux poèmes évoquent une évasion et une reconnexion avec la nature ; « Ma Bohème » semble plus négatif.", n: 2 },
+      { t: "Vers 2 : syllepse de sens, « Mon paletot aussi devenait idéal » : le paletot (manteau) devient parfait, mais n'est peut-être plus qu'une idée, tant il est usé.", n: 1 },
+      { t: "« un pied » : syllepse de sens, le pied du marcheur et le pied du vers. « Comme des lyres » : la lyre du poète, et le délire.", n: 2 },
+      { t: "Rimbaud alterne mots familiers et mots soutenus : en mêlant les niveaux de langue dans un sonnet, il s'inscrit dans une tradition pour mieux la détourner.", n: 2 },
+      { t: "Vocabulaire : un féal est un fidèle serviteur (mot médiéval) ; une Muse est une inspiration, souvent une personne, et même une femme.", n: 4 },
+    ],
+  },
+  {
+    titre: "Sensation",
+    points: [
+      { t: "==Le rêve d'évasion : « J'irai loin, bien loin » dit l'envie d'ailleurs, une critique du milieu social, moral et familial, qui traduit l'émancipation.==", n: 1 },
+      { t: "Comparé à « Ma Bohème » : thèmes communs (amour, nature, rêve et émancipation), la nature en commun, voix de la nature ; le bohémien, pauvre et nomade.", n: 2 },
+      { t: "La différence : le futur de « Sensation » (un rêve) contre l'imparfait de « Ma Bohème » (du vécu).", n: 1 },
     ],
   },
   {
     titre: "Les Effarés",
     points: [
-      { t: "==Lecture pathétique en apparence, détournée par le registre bas (« Leurs culs en rond »), l'hypallage du « gras sourire » et une critique indirecte de la religion.==", n: 1 },
-      { t: "Approche génétique : comparer les versions du poème (le texte du cours est une version de 1871).", n: 5 },
+      { t: "==Lecture pathétique en apparence, détournée : niveau de langue plus bas par moments (« Leurs culs en rond »), critique indirecte de la religion, Rimbaud polisson sous des dehors de respectabilité bourgeoise.==", n: 1 },
+      { t: "Le texte du cours est la troisième version (1871, peut-être avec Verlaine), légèrement différente de celle des Cahiers de Douai : approche génétique, comparer les versions.", n: 2 },
+      { t: "Intertextualité externe et palimpseste : Rimbaud réécrit des poèmes sur le même sujet. Tout texte est pris dans un réseau intertextuel. Postulat : Rimbaud pastiche ; à la première lecture, l'intertextualité semble le confirmer.", n: 2 },
+      { t: "Quelle originalité ? Des éléments détournent le message : le niveau de langue, des pauvres qui n'évoluent pas, une religion qui ne change rien (ils prient, mais rien ne se passe).", n: 2 },
+      { t: "Hypallage : « Le Boulanger au gras sourire / Grogne un vieil air. » L'adjectif « gras » est associé au sourire alors qu'il qualifie le boulanger (et son pain).", n: 1 },
+      { t: "Trois lectures possibles : réaliste ; critique de la religion ; critique de la bourgeoisie. Rimbaud est moderne : ses poèmes sont plus libres d'interprétation, le sens est équivoque.", n: 3 },
+      { t: "La leçon du cours : le lecteur doit chercher le sens. L'auteur classique cherche à maîtriser la réception de son œuvre ; Rimbaud programme plusieurs réceptions du texte. Il faut se garder des lectures naïves et scolaires.", n: 3 },
     ],
   },
 ];

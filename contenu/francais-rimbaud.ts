@@ -11,7 +11,7 @@ import { FICHES_POEMES } from "./rimbaud-poemes";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 6,
+  version: 7,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -225,7 +225,7 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
             n: 3,
           },
           {
-            t: "1854 : naissance à Charleville, ville de garnison ; mère très stricte.",
+            t: "1854 : naissance à Charleville, ville de garnison ; mère très stricte, qu'il décrit « aussi inflexible que soixante-treize administrations à casquettes de plomb ». Il veut s'en émanciper : insolent, irrévérencieux, provocateur, il s'échappe de son quotidien par l'écriture et les rêves d'évasion.",
             n: 4,
           },
           {
