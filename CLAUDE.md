@@ -216,6 +216,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Pas de question de grammaire donnée par le prof pour l'instant. Les modalités
     viennent de sites spécialisés concordants, pas du BO (education.gouv.fr n'est
     pas joignable depuis la session). Idée non construite : oral blanc chronométré.
+    **Écrit** (vérifié le 2026-11-26 sur des sites de préparation concordants, pas le BO) : mardi 15 juin
+    2027, 4 h, coef. 5 ; commentaire (texte hors programme) **ou dissertation** : trois sujets, un par
+    œuvre de l'objet d'étude tiré, donc **les Cahiers de Douai et Pot-Bouille sont à savoir pour la
+    dissertation**. Dissertation sur les Cahiers de Douai en classe vers le 10/12 (date exacte demandée).
   - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en
     QCM du mer. 25/11 : « comprendre l'immeuble, qui est à chaque étage, leurs relations ») : dans
     Bac › Le roman, carte « Explorer l'œuvre » (`oeuvre.explorer` de `PROGRAMME_BAC`) →
