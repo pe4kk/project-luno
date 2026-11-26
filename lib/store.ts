@@ -670,11 +670,28 @@ export const useLuno = create<Etat>()(
             matiere = { ...ev.matiere, id: uid() };
             matieres.push(matiere);
           }
-          const id = `pub-${ev.id}`;
-          const avant = s.dsts.find((d) => d.id === id);
           const chapitreIds = (ev.chapitres ?? [])
             .map((pid) => s.chapitres.find((c) => c.publieId === pid)?.id)
             .filter((x): x is string => Boolean(x));
+          // DST déjà repris du calendrier du lycée : on le complète, sans doublon.
+          const duLycee = ev.calendrier
+            ? s.dsts.find((d) => d.id.startsWith("cal-") && d.date === ev.date && d.matiereId === matiere!.id)
+            : undefined;
+          if (duLycee) {
+            const complete: Dst = {
+              ...duLycee,
+              titre: !duLycee.titre || duLycee.titre === "DST" ? ev.titre : duLycee.titre,
+              notes: duLycee.notes || ev.notes || "",
+              chapitreIds: [...new Set([...duLycee.chapitreIds, ...chapitreIds])],
+            };
+            return {
+              matieres,
+              dsts: s.dsts.map((d) => (d.id === duLycee.id ? complete : d)),
+              publies: { ...s.publies, [`evt:${ev.id}`]: ev.version },
+            };
+          }
+          const id = `pub-${ev.id}`;
+          const avant = s.dsts.find((d) => d.id === id);
           const dst: Dst = {
             id,
             matiereId: matiere.id,

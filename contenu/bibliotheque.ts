@@ -7,6 +7,7 @@ import { MATHS_DERIVATION } from "./maths-derivation";
 import { HISTOIRE_TERREUR } from "./histoire-terreur";
 import { PHYSIQUE_OXYDOREDUCTION } from "./physique-oxydoreduction";
 import { FRANCAIS_POT_BOUILLE } from "./francais-pot-bouille";
+import { HISTOIRE_REVOLUTION_EMPIRE } from "./histoire-revolution-empire";
 
 /**
  * Chapitres rédigés par Claude à partir des cours envoyés par l'utilisateur.
@@ -26,6 +27,7 @@ export const BIBLIOTHEQUE: ChapitrePublie[] = [
   HISTOIRE_TERREUR,
   PHYSIQUE_OXYDOREDUCTION,
   FRANCAIS_POT_BOUILLE,
+  HISTOIRE_REVOLUTION_EMPIRE,
 ];
 
 /**

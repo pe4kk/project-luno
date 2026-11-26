@@ -8,6 +8,7 @@ import type { EvenementPublie } from "@/lib/types";
  */
 const physique = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 const francais = { nom: "Français", couleur: "#d98a8a", emoji: "📚" };
+const histoire = { nom: "Histoire-Géo", couleur: "#c98b6b", emoji: "🌍" };
 
 export const EVENEMENTS: EvenementPublie[] = [
   {
@@ -76,5 +77,17 @@ export const EVENEMENTS: EvenementPublie[] = [
     notes:
       "Parcours « Émancipations créatrices ». Révise avec « Préparer la dissertation » dans l'onglet Bac de Français.",
     chapitres: ["francais-1re-rimbaud-douai"],
+  },
+  {
+    id: "hg-dst-revolution-2026-12-03",
+    version: 1,
+    matiere: histoire,
+    titre: "DST : question problématisée sur la Révolution et l'Empire",
+    date: "2026-12-03",
+    dureeMin: 90,
+    notes:
+      "Introduction rédigée et plan détaillé rédigé (partie, sous-partie, argument + exemple daté + idée, transitions). Jusqu'au Code civil, sans les conquêtes ni l'Europe. Entraîne-toi dans S'exercer → Problèmes.",
+    chapitres: ["hg-1re-revolution-empire", "hg-1re-convention-terreur"],
+    calendrier: true,
   },
 ];

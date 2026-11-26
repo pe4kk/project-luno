@@ -211,7 +211,7 @@ export function etapes(
     if (!scientifique && aRediger)
       liste.push({
         id: "problemes",
-        titre: "Rédiger un sujet (dissertation ou étude critique)",
+        titre: "Rédiger un sujet (introduction et plan détaillé)",
         detail: "Introduction et plan détaillé au brouillon, puis compare au corrigé étape par étape. Relis d'abord la méthode dans Apprendre → Méthodes.",
         href: exos("problemes"),
         minutes: 60,

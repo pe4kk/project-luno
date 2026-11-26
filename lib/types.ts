@@ -331,6 +331,12 @@ export type EvenementPublie = {
   notes?: string;
   /** Identifiants `id` des chapitres publiés à réviser. */
   chapitres?: string[];
+  /**
+   * Le DST est déjà dans le calendrier du lycée (`contenu/calendrier.ts`) : s'il a été repris
+   * (DST « cal-… » de même date et même matière), on lui ajoute les chapitres et la note au
+   * lieu de créer un doublon.
+   */
+  calendrier?: boolean;
 };
 
 export type Lecon = {

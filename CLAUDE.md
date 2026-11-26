@@ -256,6 +256,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
     famille et un objet (`objet`, `persiennes` d'un `Logement`) vus par les fenêtres, escalier en zigzag ;
     un peu aplatie (demandé). Dans la bulle, toucher un habitant déplie son portrait (`MiniFiche` :
     traits, liens, dernier fait, « Toute sa fiche »), « une bulle dans la bulle ».
+  - **Histoire-Géo H1, Révolution et Empire** (2026-11-26, 17 photos du cahier) :
+    `contenu/histoire-revolution-empire.ts` : chapitre `hg-1re-revolution-empire` (11 déf., 24 dates,
+    frise des régimes et zoom 1789 dessinés en `Schema` d'après la frise de la prof, pyramide de la société
+    d'ordres, 4 fiches, 32 cartes), 5 **questions problématisées** en `problemes` (analyse, intro rédigée,
+    plan détaillé « partie / sous-partie / argument + exemple daté + idée », transitions ; pas de
+    conclusion) et la leçon méthode « La question problématisée » (fiche de la prof en PDF). DST du jeu.
+    3/12 (1 h 30) : intro + plan détaillé rédigé, jusqu'au Code civil en France (conquêtes et Europe
+    « pas au DST »). II.A = chapitre Terreur. La prof veut « sacré par le pape » (exact : Pie VII l'oint).
+    `calendrier: true` sur un `EvenementPublie` : complète le DST « cal-… » du calendrier du lycée de
+    même date et matière (chapitres, note, titre s'il vaut « DST ») au lieu d'en créer un autre.
   - **Préparer une éval** (2026-11-13, demandé : choisir une éval, dire si c'est une
     éval de cours ou avec exercices, recevoir un programme) : page `/preparer`
     (`app/preparer/page.tsx`, pas dans la barre d'onglets, qui est pleine ; accès par
