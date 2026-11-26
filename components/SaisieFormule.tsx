@@ -103,6 +103,14 @@ export function SaisieFormule({
     curseur.current = null;
   });
 
+  // Hors sciences, la zone grandit avec le texte (une introduction fait dix lignes).
+  useLayoutEffect(() => {
+    const el = zone.current;
+    if (scientifique || !el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight + 2}px`;
+  }, [valeur, scientifique]);
+
   // Une sélection non vide fait apparaître la bulle de mise en forme.
   const [selection, setSelection] = useState(false);
   const lireSelection = () => {
@@ -188,9 +196,10 @@ export function SaisieFormule({
         disabled={desactive}
         aria-label={label}
         placeholder={placeholder}
-        autoCapitalize="off"
-        autoCorrect="off"
-        spellCheck={false}
+        // Hors sciences, on rédige des phrases : majuscules, correcteur et orthographe du clavier.
+        autoCapitalize={scientifique ? "off" : "sentences"}
+        autoCorrect={scientifique ? "off" : "on"}
+        spellCheck={!scientifique}
         value={valeur}
         onChange={(e) => {
           const brut = e.target.value;
@@ -216,7 +225,7 @@ export function SaisieFormule({
             className="absolute left-2 top-[calc(100%+6px)] z-20 flex origin-top-left gap-0.5 rounded-xl bg-ink p-1 text-bg shadow-pop"
           >
             <span aria-hidden className="absolute -top-1.5 left-6 size-3 rotate-45 rounded-[2px] bg-ink" />
-            {BOUTONS_MARQUE.map((b) => (
+            {BOUTONS_MARQUE.filter((b) => scientifique || b.m !== "encadrer").map((b) => (
               <button
                 key={b.m}
                 type="button"
@@ -252,7 +261,7 @@ export function SaisieFormule({
               <span>· sélectionne un passage pour l&apos;encadrer</span>
             </>
           ) : (
-            "Sélectionne un passage pour l'encadrer, le souligner ou le mettre en gras."
+            "Sélectionne un passage pour le souligner ou le mettre en gras."
           )}
         </p>
       )}

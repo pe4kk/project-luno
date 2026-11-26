@@ -492,6 +492,13 @@ fiches de révision ; le slider règle la longueur de la fiche.
       vers trop longs (texte annoté et Je récite). Tout nouveau texte marque ses remarques `cle`.
     - Bac, fiche : « L'essentiel » et la problématique ouverts, le reste en parties repliables
       (`PartieFiche`) avec un sommaire (Introduction, I à IV, Conclusion, Grammaire, Tout déplier).
+  - **Critique de design du 2026-11-26** (« corrige ») : un chapitre **publié** s'ouvre sur Fiches (sinon Déf, sinon
+    Flashcards) et son onglet Cours passe en dernier ; problèmes et calculs triés par prochain DST avec badge
+    « DST J-n » (`ParChapitre` de `Modes.tsx`) ; onglet « Problèmes » renommé « Rédiger » ; hors sciences, la zone
+    de réponse dit « Rédige ici, comme sur ta copie », grandit avec le texte, garde majuscules et correcteur, sans
+    « Encadrer » ; pas de carte « Taille de la fiche » quand il n'y a qu'une taille ; fondu au bord de la règle des
+    fiches ; accueil « Les autres nouvelles arrivent au fil des jours » au lieu du stock ; titre de chapitre de plus
+    de 45 signes en plus petit sur téléphone.
   - **Évaluation par un élève testeur** (2026-11-15) : prompt `scripts/eleve-testeur.md`
     (Inès, Première, teste tout le site avec Playwright, juge la méthode de révision avec des
     sources, compare aux documents du prof, note sur 10). Six tours : 7,0 → 7,5 → 8,0 → 8,3 →

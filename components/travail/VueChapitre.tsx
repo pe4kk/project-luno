@@ -76,16 +76,26 @@ export function VueChapitre({
   const router = useRouter();
   // Pas de définitions dans ce chapitre : pas d'onglet Déf (demandé le 2026-11-12).
   // Onglet Dates : seulement si le chapitre en a (matières non scientifiques).
-  const onglets = ONGLETS.filter(
+  const onglets: (typeof ONGLETS)[number][] = ONGLETS.filter(
     (o) =>
       (o.id !== "defs" || (chapitre.definitions?.length ?? 0) > 0) &&
       (o.id !== "dates" || (chapitre.dates?.length ?? 0) > 0) &&
       // Exos types : chapitres scientifiques qui en ont (contenu/exos-types.ts).
       (o.id !== "exos" || exosTypesDe(chapitre) !== undefined),
   );
+  // Chapitre publié : son « Cours » est presque vide (le contenu est dans les autres onglets).
+  // Il passe en dernier, et le chapitre s'ouvre sur la fiche (critique de design du 2026-11-26).
+  if (chapitre.publieId) onglets.push(...onglets.splice(onglets.findIndex((o) => o.id === "cours"), 1));
+  const ongletParDefaut: Onglet = !chapitre.publieId
+    ? "cours"
+    : chapitre.fiche
+      ? "fiche"
+      : (chapitre.definitions?.length ?? 0) > 0
+        ? "defs"
+        : "flashcards";
   const onglet: Onglet = onglets.some((o) => o.id === ongletDemande)
     ? (ongletDemande as Onglet)
-    : "cours";
+    : ongletParDefaut;
   const setOnglet = (o: Onglet) =>
     router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o }), {
       scroll: false,
@@ -116,7 +126,7 @@ export function VueChapitre({
         <ArrowLeft size={16} /> <Emoji e={matiere.emoji} /> {matiere.nom}
       </Link>
       <div className="mb-5 flex items-start justify-between gap-2">
-        <h1 className="min-w-0 text-balance text-[25px] leading-tight sm:text-[40px]">
+        <h1 className={`min-w-0 text-balance leading-tight sm:text-[40px] ${chapitre.titre.length > 45 ? "text-[21px] max-[379px]:text-[19px]" : "text-[25px]"}`}>
           {chapitre.titre}
         </h1>
         <div className="flex shrink-0">
@@ -728,6 +738,8 @@ function OngletFiche({
           <p className="mt-1.5 text-[13.5px] text-muted">{partie.sujet}</p>
         </div>
       )}
+      {/* Une seule taille : pas de réglage à afficher (critique du 2026-11-26). */}
+      {niveaux.length > 1 && (
       <Carte className="h-fit lg:sticky lg:top-24">
         <p className="text-[17px] font-semibold">Taille de la fiche</p>
         <div className="mt-4 flex items-baseline justify-between">
@@ -743,35 +755,31 @@ function OngletFiche({
             {pluriel(nbPoints, "point")}
           </span>
         </div>
-        {niveaux.length > 1 ? (
-          <>
-            <Curseur
-              min={0}
-              max={niveaux.length - 1}
-              value={iNiveau}
-              onChange={(i) => majTaille(chapitre.id, niveaux[Math.min(i, niveaux.length - 1)])}
-              label="Taille de la fiche"
-              valueText={nomTaille(iNiveau)}
-              reperes
-              className="mt-4"
-            />
-            <div className="mt-2 flex justify-between text-[12px] text-muted">
-              <span>L&apos;essentiel</span>
-              <span>Tout le cours</span>
-            </div>
-          </>
-        ) : (
-          <p className="mt-2 text-[13px] text-muted">Une seule taille : cette fiche est déjà courte.</p>
-        )}
+        <Curseur
+          min={0}
+          max={niveaux.length - 1}
+          value={iNiveau}
+          onChange={(i) => majTaille(chapitre.id, niveaux[Math.min(i, niveaux.length - 1)])}
+          label="Taille de la fiche"
+          valueText={nomTaille(iNiveau)}
+          reperes
+          className="mt-4"
+        />
+        <div className="mt-2 flex justify-between text-[12px] text-muted">
+          <span>L&apos;essentiel</span>
+          <span>Tout le cours</span>
+        </div>
       </Carte>
+      )}
 
-      <article className="overflow-hidden rounded-[18px] border border-line bg-surface shadow-card">
+      <article className={`overflow-hidden rounded-[18px] border border-line bg-surface shadow-card ${niveaux.length > 1 ? "" : "lg:col-span-2"}`}>
         <div
           className="px-6 py-3.5 sm:px-8 sm:py-5"
           style={{ background: pastel(matiere.couleur, 16) }}
         >
           <p className="surtitre" style={{ color: foncee }}>
-            {parties ? `Fiche ${iPartie + 1} sur ${parties.length}` : "Fiche de révision"} · {nomTaille(iNiveau)}
+            {parties ? `Fiche ${iPartie + 1} sur ${parties.length}` : "Fiche de révision"}
+            {niveaux.length > 1 && ` · ${nomTaille(iNiveau)}`}
           </p>
           {/* Le titre du chapitre est déjà en haut de la page : répété seulement sur grand écran.
               Avec plusieurs fiches, c'est le titre de la fiche qui compte, partout. */}
@@ -874,12 +882,31 @@ function RegleFiches({
     t.style.transform = `translate3d(${el.offsetLeft}px, 0, 0) scaleX(${el.offsetWidth / 100})`;
     el.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
   }, [actif, titres]);
+  // Un fondu sur le bord tant qu'il reste des titres cachés : on voit qu'on peut faire défiler.
+  const [bords, setBords] = useState({ gauche: false, droite: false });
+  useLayoutEffect(() => {
+    const el = ligne.current;
+    if (!el) return;
+    const maj = () =>
+      setBords({ gauche: el.scrollLeft > 4, droite: el.scrollLeft + el.clientWidth < el.scrollWidth - 4 });
+    maj();
+    el.addEventListener("scroll", maj, { passive: true });
+    window.addEventListener("resize", maj);
+    return () => {
+      el.removeEventListener("scroll", maj);
+      window.removeEventListener("resize", maj);
+    };
+  }, [titres]);
+  const masque = `linear-gradient(to right, ${bords.gauche ? "transparent, #000 28px" : "#000, #000"}, ${
+    bords.droite ? "#000 calc(100% - 36px), transparent" : "#000"
+  })`;
   return (
     <div
       ref={ligne}
       role="tablist"
       aria-label="Fiches du chapitre"
       className="relative flex gap-5 overflow-x-auto pb-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      style={{ maskImage: masque, WebkitMaskImage: masque }}
       data-defile
     >
       <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-[3px] h-px bg-line" />

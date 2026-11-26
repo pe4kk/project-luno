@@ -8,6 +8,8 @@ import { Emoji } from "@/components/Emoji";
 import { EtatVide, pluriel } from "@/components/ui";
 import { encre, useLuno } from "@/lib/store";
 import type { Calcul, Chapitre, Probleme } from "@/lib/types";
+import { prochainDstDe, trierParDst } from "@/lib/revision";
+import { compteARebours } from "@/lib/dates";
 import { LecteurProbleme } from "./Probleme";
 import { LecteurCalcul } from "./Calcul";
 
@@ -22,14 +24,23 @@ function ParChapitre<T extends { id: string; titre: string }>({
   detail: (e: T) => ReactNode;
 }) {
   const matieres = useLuno((s) => s.matieres);
+  const dsts = useLuno((s) => s.dsts);
+  // Les chapitres du prochain DST d'abord, comme dans les autres modes (critique du 2026-11-26).
+  const triee = trierParDst(liste.map((l) => ({ ...l, id: l.chapitre.id })), dsts);
   return (
     <div className="flex flex-col gap-6">
-      {liste.map(({ chapitre, elements }) => {
+      {triee.map(({ chapitre, elements }) => {
         const m = matieres.find((x) => x.id === chapitre.matiereId);
+        const dst = prochainDstDe(chapitre.id, dsts);
         return (
           <section key={chapitre.id}>
             <p className="mb-2 text-[13px] font-semibold" style={{ color: encre(m?.couleur ?? "#888") }}>
               <Emoji e={m?.emoji} /> {m?.nom} · <span className="text-ink">{chapitre.titre}</span>
+              {dst && (
+                <span className="ml-2 whitespace-nowrap rounded-full bg-accent-soft px-2 py-0.5 text-[11.5px] font-bold text-accent">
+                  DST {compteARebours(dst.date)}
+                </span>
+              )}
             </p>
             <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
               {elements.map((e, i) => (

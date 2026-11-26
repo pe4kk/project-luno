@@ -691,7 +691,7 @@ function ExOuverte({ q, resultat, repondre }: PropsEnonce<Ouverte>) {
 const MODES = [
   { id: "apprendre", label: "Apprendre", court: "Apprendre" },
   { id: "serie", label: "Série", court: "Série" },
-  { id: "problemes", label: "Problèmes", court: "Probl." },
+  { id: "problemes", label: "Rédiger", court: "Rédiger" },
   { id: "calculs", label: "Calculs", court: "Calculs" },
   { id: "interro", label: "Interro blanche", court: "Interro" },
 ] as const;

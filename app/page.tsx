@@ -185,7 +185,8 @@ export default function Accueil() {
                   : revuesAujourdhui
                     ? `${pluriel(revuesAujourdhui, "déjà revue", "déjà revues")} aujourd'hui`
                     : duJour.plusTard
-                      ? `${pluriel(duJour.plusTard, "nouvelle", "nouvelles")} gardées pour les jours suivants`
+                      ? // Pas le stock entier (« 334 nouvelles » décourageait, critique du 2026-11-26).
+                        "Les autres nouvelles arrivent au fil des jours"
                       : pluriel(dues, "carte", "cartes")}
             </p>
             {revuesAujourdhui > 0 && (

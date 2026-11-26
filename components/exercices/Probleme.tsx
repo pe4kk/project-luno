@@ -112,8 +112,8 @@ export function LecteurProbleme({
                       label={`Ta réponse : ${e.titre}`}
                       valeur={reponses[etape]}
                       changer={(v) => setReponses(reponses.map((r, i) => (i === etape ? v : r)))}
-                      lignes={3}
-                      placeholder="Écris la ligne que tu mettrais sur ta copie"
+                      lignes={scientifique ? 3 : 6}
+                      placeholder={scientifique ? "Écris la ligne que tu mettrais sur ta copie" : "Rédige ici, comme sur ta copie"}
                       desactive={vu[etape]}
                     />
                   </div>
