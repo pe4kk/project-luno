@@ -1000,6 +1000,9 @@ un PDF ou une photo directement dans le chat.
   `contenu/evenements.ts`, rattachée aux chapitres, au lieu de lui demander
   de le faire. Les tâches « À faire » restent à coller par lui (Claude n'y
   a pas accès) : lui fournir la liste prête à coller.
+- (2026-11-26) **Dans le chat, jamais la notation de Luno** (`{{a // b}}`, `[[…]]`, `==…==`, `x_max`) : elle
+  ne s'affiche pas dans l'app Claude (« je comprends rien avec tes crochets »). Écrire les fractions a / b avec
+  des parenthèses, les indices en Unicode (x₀, n₀) ou en mots (x max), et dire « à encadrer » en toutes lettres.
 - (2026-11-11) Il veut que Claude **utilise le skill « learn »** pour l'aider
   à apprendre : diagnostiquer avant d'expliquer, une question à la fois,
   exemples parallèles plutôt que la réponse à un travail noté. Les leçons de
