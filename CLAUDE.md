@@ -266,7 +266,9 @@ fiches de révision ; le slider règle la longueur de la fiche.
     plan détaillé « partie / sous-partie / argument + exemple daté + idée », transitions ; pas de
     conclusion) et la leçon méthode « La question problématisée » (fiche de la prof en PDF). DST du jeu.
     3/12 (1 h 30) : intro + plan détaillé rédigé, jusqu'au Code civil en France (conquêtes et Europe
-    « pas au DST »). II.A = chapitre Terreur. La prof veut « sacré par le pape » (exact : Pie VII l'oint).
+    « pas au DST »). **La Terreur est fondue dans le H1** (2026-11-26, version 2 : déf., dates, 18 cartes, 3 sections
+    de fiche « II.A · … », 19 exercices repris de `histoire-terreur.ts`, qui n'est plus publié seul ; `PUBLIES_FUSIONNES`
+    dans `bibliotheque.ts` fait passer progression des cartes et DST à l'ancien chapitre vers le nouveau). La prof veut « sacré par le pape » (exact : Pie VII l'oint).
     `calendrier: true` sur un `EvenementPublie` : complète le DST « cal-… » du calendrier du lycée de
     même date et matière (chapitres, note, titre s'il vaut « DST ») au lieu d'en créer un autre.
   - **Physique-Chimie chap. 3, tableau d'avancement** (2026-11-26, 4 photos du polycopié S.C. Assas) :

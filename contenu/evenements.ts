@@ -89,7 +89,7 @@ export const EVENEMENTS: EvenementPublie[] = [
     dureeMin: 90,
     notes:
       "Introduction rédigée et plan détaillé rédigé (partie, sous-partie, argument + exemple daté + idée, transitions). Jusqu'au Code civil, sans les conquêtes ni l'Europe. Entraîne-toi dans S'exercer → Problèmes.",
-    chapitres: ["hg-1re-revolution-empire", "hg-1re-convention-terreur"],
+    chapitres: ["hg-1re-revolution-empire"],
     calendrier: true,
   },
 ];

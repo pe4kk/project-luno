@@ -1,3 +1,4 @@
+import { HISTOIRE_TERREUR as T } from "./histoire-terreur";
 import type { ChapitrePublie, DateCle, DefinitionCours, ElementSchema, ImageCours, Lecon, Probleme, Schema } from "@/lib/types";
 
 /**
@@ -10,7 +11,8 @@ import type { ChapitrePublie, DateCle, DefinitionCours, ElementSchema, ImageCour
  * partie, titre de sous-partie, puis « argument, exemple, idée », transitions) d'une question
  * problématisée. Au programme : jusqu'au Code civil en France ; pas les conquêtes ni la
  * diffusion du Code en Europe (barré « pas au DST » sur la carte mentale), pas la fin de
- * l'Empire. Partie II.A (1791-1794) = le chapitre « La Convention et la Terreur ».
+ * l'Empire. Partie II.A (1791-1794) : la Terreur, reprise du chapitre « La Convention et la Terreur »
+ * (vidéo du 2026-11-13), fusionné ici le 2026-11-26 (« la Terreur rentre dans le H1 »).
  *
  * La prof tient à « Napoléon sacré par le pape » : c'est exact (Pie VII le sacre, c'est-à-dire
  * l'oint ; Napoléon pose lui-même la couronne sur sa tête), on écrit donc comme elle.
@@ -169,6 +171,7 @@ const DEFINITIONS: DefinitionCours[] = [
     "Seuls les citoyens qui paient un impôt (le cens), donc les plus riches, peuvent voter.",
     "Constitution de 1791 : la nation souveraine est formée des citoyens riches âgés d'au moins 25 ans.",
   ),
+  ...(T.definitions ?? []),
   d(
     "Coup d'État",
     "Prise du pouvoir par la force avec l'aide de l'armée.",
@@ -194,7 +197,6 @@ const DATES: DateCle[] = [
   { date: "Septembre 1791", tri: "1791-09", evenement: "Constitution de 1791 : monarchie constitutionnelle", precision: "Suffrage censitaire, assemblée législative, roi des Français.", importance: 1 },
   { date: "21 septembre 1792", tri: "1792-09-21", evenement: "Proclamation de la République (Ire République)", precision: "Par la Convention.", importance: 1 },
   { date: "21 janvier 1793", tri: "1793-01-21", evenement: "Exécution de Louis XVI", importance: 1 },
-  { date: "1793-1794", tri: "1793-04", evenement: "La Terreur", precision: "Voir le chapitre « La Convention et la Terreur ».", importance: 1 },
   { date: "26 octobre 1795 (4 brumaire an IV)", tri: "1795-10-26", evenement: "Début du Directoire (Constitution de l'an III)", importance: 1 },
   { date: "9 novembre 1799 (18 brumaire an VIII)", tri: "1799-11-09", evenement: "Coup d'État de Napoléon Bonaparte : fin du Directoire", precision: "À Saint-Cloud, avec l'armée, contre le Conseil des Cinq-Cents.", importance: 1 },
   { date: "Décembre 1799", tri: "1799-12", evenement: "Constitution de l'an VIII : le Consulat", precision: "Le Premier consul, Bonaparte, concentre le pouvoir.", importance: 1 },
@@ -368,7 +370,7 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
     titre: "Question problématisée : l'instabilité politique (1791-1799)",
     duree: "1 h 30 (DST)",
     enonce: "Sujet : Pourquoi la Révolution française connaît-elle une forte instabilité politique de 1791 à 1799 ?",
-    question: "Le II de ton cours, avec la Terreur (chapitre « La Convention et la Terreur »). Rédige l'introduction et le plan détaillé.",
+    question: "Le II de ton cours, Terreur comprise. Rédige l'introduction et le plan détaillé.",
     etapes: [
       {
         titre: "Analyser le sujet",
@@ -560,9 +562,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
 
 // ———————————————————— Le chapitre ————————————————————
 
+/** Dates de la Terreur absentes de la frise du H1 (sans doublon). */
+const DATES_TERREUR = (T.dates ?? []).filter((t) => !["1792-09-21", "1793-01-21"].includes(t.tri));
+
 export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
   id: "hg-1re-revolution-empire",
-  version: 1,
+  version: 2,
   matiere,
   titre: "H1 · La Révolution française et l'Empire",
   documents: [
@@ -573,7 +578,7 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
     },
   ],
   definitions: DEFINITIONS,
-  dates: DATES,
+  dates: [...DATES, ...DATES_TERREUR].sort((a, b) => a.tri.localeCompare(b.tri)),
   problemes: PROBLEMES_REVOLUTION,
   flashcards: [
     { recto: "Nation", verso: "Ensemble des êtres humains vivant sur un même territoire, ayant une communauté d'origine, d'histoire, de culture, de traditions, parfois de langue, et constituant une communauté politique." },
@@ -608,6 +613,7 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
     { recto: "En quoi le Code civil est-il novateur ?", verso: "Il affirme l'égalité devant la loi, la liberté contractuelle (art. 1101) et la protection de la propriété privée (art. 544)." },
     { recto: "Quelles sont les limites de l'égalité dans le Code civil ?", verso: "Les femmes sont juridiquement mineures, dépendantes de leur mari ; l'héritage favorise les familles aisées (art. 711) ; le chef de famille et l'employeur dominent : une hiérarchie sociale." },
     { recto: "Quelles institutions Napoléon met-il en place en France ?", verso: "Un préfet dans chaque département, les premiers lycées publics, la Légion d'honneur (1802), le Code civil (1804)." },
+    ...T.flashcards,
   ],
   fiche: {
     sections: [
@@ -649,13 +655,8 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
           { t: "La ==fête de la Fédération (14 juillet 1790)== : serment du roi à la Constitution devant les fédérés des 83 nouveaux départements, serment de La Fayette au roi, à la nation et à la Constitution. But : créer l'unité nationale et symboliser la réconciliation du roi avec la nation.", n: 1 },
         ],
       },
-      {
-        titre: "II.A Les difficultés (1791-1794) : l'essentiel",
-        points: [
-          { t: "Tout est dans le chapitre « La Convention et la Terreur ». Pour la question problématisée, retiens : ==la République est proclamée le 21 septembre 1792 et Louis XVI exécuté le 21 janvier 1793== ; la République, menacée par la guerre et la Vendée, instaure la Terreur (Comité de salut public, loi des suspects du 17 septembre 1793) ; Robespierre est exécuté le 28 juillet 1794.", n: 1 },
-          { t: "Argument utile : au nom de la nation, les libertés de 1789 sont suspendues ; mais des mesures sociales sont prises (abolition de l'esclavage le 4 février 1794).", n: 2 },
-        ],
-      },
+      // II.A : la Terreur (chapitre fusionné), ses trois parties.
+      ...T.fiche!.sections.map((sec) => ({ ...sec, titre: `II.A · ${sec.titre.replace(/^[IVX]+\. /, "")}` })),
       {
         titre: "II.B Le Directoire et le coup d'État (1795-1799)",
         points: [
@@ -689,8 +690,9 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
     decoupage: [
       { titre: "La frise", sujet: "Les régimes de 1789 à 1815 et le zoom sur 1789, à savoir dans l'ordre.", sections: [0] },
       { titre: "Une nouvelle France", sujet: "Les causes de la Révolution, l'année 1789 et la monarchie constitutionnelle.", sections: [1, 2, 3] },
-      { titre: "L'instabilité", sujet: "La Terreur en bref, puis le Directoire et le coup d'État de Bonaparte.", sections: [4, 5] },
-      { titre: "Napoléon", sujet: "Le Consulat, l'Empire et le sacre, le Code civil.", sections: [6, 7] },
+      { titre: "La Terreur", sujet: "La Convention, la République menacée, le gouvernement révolutionnaire et la fin de la Terreur (1792-1794).", sections: [4, 5, 6] },
+      { titre: "Le Directoire", sujet: "La République du Directoire et le coup d'État de Bonaparte (1795-1799).", sections: [7] },
+      { titre: "Napoléon", sujet: "Le Consulat, l'Empire et le sacre, le Code civil.", sections: [8, 9] },
     ],
     aRetenir: [
       "nation",
@@ -706,9 +708,11 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
       "Consulat",
       "sacre",
       "Code civil",
+      ...T.fiche!.aRetenir,
     ],
   },
   exercices: [
+    ...T.exercices,
     { question: "Que jurent les députés lors du serment du Jeu de paume ?", choix: ["De rétablir la monarchie absolue", "De ne pas se séparer avant d'avoir donné une constitution à la France", "D'abolir l'esclavage", "De déclarer la guerre à l'Autriche"], bonneReponse: 1, explication: "Le 20 juin 1789, les députés du tiers état, proclamés Assemblée nationale, jurent de donner une constitution à la France." },
     { question: "Que décide l'Assemblée dans la nuit du 4 août 1789 ?", choix: ["La prise de la Bastille", "L'abolition des privilèges", "La proclamation de la République", "Le suffrage universel"], bonneReponse: 1, explication: "L'abolition des privilèges de la noblesse et du clergé met fin à la société d'ordres." },
     { question: "Quel est le premier article de la DDHC (26 août 1789) ?", choix: ["« Le but de la société est le bonheur commun »", "« Les hommes naissent et demeurent libres et égaux en droits »", "« Tous les hommes sont nés égaux »", "« Le gouvernement de la République est confié à un empereur »"], bonneReponse: 1, explication: "« Le bonheur commun » est la Constitution de 1793, « tous les hommes sont nés égaux » la Déclaration d'indépendance américaine, et l'empereur le sénatus-consulte de 1804." },

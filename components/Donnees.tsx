@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { Download, Settings, Trash2, Undo2, Upload } from "lucide-react";
 import { normaliser, useLuno } from "@/lib/store";
-import { BIBLIOTHEQUE, PUBLIES_RETIRES } from "@/contenu/bibliotheque";
+import { BIBLIOTHEQUE, PUBLIES_FUSIONNES, PUBLIES_RETIRES } from "@/contenu/bibliotheque";
 import { EVENEMENTS } from "@/contenu/evenements";
 import { CALENDRIER_MATIERES } from "@/contenu/calendrier";
 import { todayISO } from "@/lib/dates";
@@ -19,6 +19,33 @@ export function SynchroBibliotheque() {
     const { publies, importerPublie } = useLuno.getState();
     for (const p of BIBLIOTHEQUE) {
       if (publies[p.id] !== p.version) importerPublie(p);
+    }
+    // Chapitre fondu dans un autre : sa progression et ses DST passent au nouveau avant l'effacement.
+    for (const [ancien, nouveau] of Object.entries(PUBLIES_FUSIONNES)) {
+      const s = useLuno.getState();
+      const a = s.chapitres.find((c) => c.publieId === ancien);
+      const n = s.chapitres.find((c) => c.publieId === nouveau);
+      if (!a || !n) continue;
+      const vus = new Map(a.flashcards.filter((f) => f.niveau > 0).map((f) => [f.recto.toLowerCase(), f]));
+      useLuno.setState({
+        chapitres: s.chapitres.map((c) =>
+          c.id !== n.id
+            ? c
+            : {
+                ...c,
+                cours: c.cours.trim() ? c.cours : a.cours,
+                flashcards: c.flashcards.map((f) => {
+                  const v = vus.get(f.recto.toLowerCase());
+                  return v && f.niveau === 0 ? { ...v, id: f.id, recto: f.recto, verso: f.verso, schema: f.schema, horsQuiz: f.horsQuiz } : f;
+                }),
+              },
+        ),
+        dsts: s.dsts.map((d) =>
+          d.chapitreIds.includes(a.id)
+            ? { ...d, chapitreIds: [...new Set(d.chapitreIds.map((x) => (x === a.id ? n.id : x)))] }
+            : d,
+        ),
+      });
     }
     // Chapitres publiés puis retirés (devenus des leçons, par exemple).
     if (useLuno.getState().chapitres.some((c) => c.publieId && PUBLIES_RETIRES.includes(c.publieId)))
