@@ -140,6 +140,8 @@ export type ProgrammeGenre = {
     chapitrePublie?: string;
     /** Œuvre à explorer (immeuble, familles, personnages) : `contenu/<œuvre>.ts`. */
     explorer?: string;
+    /** Préparation de la dissertation : id dans `contenu/dissertations.ts`. */
+    dissertation?: string;
   };
   places: PlaceBac[];
 };

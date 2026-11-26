@@ -10,6 +10,8 @@ import { Bouton, ZoneAction, pluriel } from "@/components/ui";
 import { PROGRAMME_BAC, TEXTES_BAC } from "@/contenu/bac-francais";
 import { OEUVRES } from "@/contenu/oeuvres";
 import { VueOeuvre } from "@/components/travail/Oeuvre";
+import { DISSERTATIONS } from "@/contenu/dissertations";
+import { VueDissertation } from "@/components/travail/Dissertation";
 import {
   GENRES_BAC,
   ORAL_BAC,
@@ -43,12 +45,16 @@ export function VueBac({
   texteId,
   vue,
   perso = null,
+  sujet = null,
 }: {
   matiere: Matiere;
   texteId: string | null;
   vue: string | null;
   perso?: string | null;
+  sujet?: string | null;
 }) {
+  const diss = DISSERTATIONS.find((d) => d.id === texteId);
+  if (diss) return <VueDissertation matiere={matiere} diss={diss} vue={vue} sujetId={sujet} />;
   const oeuvre = OEUVRES.find((o) => o.id === texteId);
   if (oeuvre) return <VueOeuvre matiere={matiere} oeuvre={oeuvre} vue={vue} perso={perso} />;
   const texte = TEXTES_BAC.find((t) => t.id === texteId);
@@ -134,6 +140,23 @@ function Descriptif({ matiere }: { matiere: Matiere }) {
                     </>
                   )}
                 </p>
+                {g.oeuvre.dissertation && (
+                  <Link
+                    href={lienTravail({ m: matiere.id, o: "bac", t: g.oeuvre.dissertation })}
+                    scroll={false}
+                    className="group mt-3 flex items-center gap-3 rounded-[14px] p-3 transition-transform active:scale-[0.99]"
+                    style={{ background: pastel(matiere.couleur, 18) }}
+                  >
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-surface text-[22px] shadow-card">✍️</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15.5px] font-semibold leading-snug">Préparer la dissertation</span>
+                      <span className="block text-[12.5px] leading-snug text-muted">
+                        Sujets avec plans détaillés, citations à savoir, méthode
+                      </span>
+                    </span>
+                    <ChevronRight size={18} className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                )}
                 {g.oeuvre.explorer && (
                   <Link
                     href={lienTravail({ m: matiere.id, o: "bac", t: g.oeuvre.explorer })}

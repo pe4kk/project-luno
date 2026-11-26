@@ -1038,6 +1038,7 @@ export const PROGRAMME_BAC: ProgrammeGenre[] = [
       auteur: "Arthur Rimbaud",
       parcours: "Émancipations créatrices",
       chapitrePublie: "francais-1re-rimbaud-douai",
+      dissertation: "diss-rimbaud",
     },
     places: [
       A_LA_MUSIQUE,

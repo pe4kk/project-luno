@@ -66,4 +66,15 @@ export const EVENEMENTS: EvenementPublie[] = [
     dureeMin: 0,
     notes: "Chapitre pas encore envoyé à Claude : il sera rattaché ici dès qu'il sera dans Luno.",
   },
+  {
+    id: "fr-dissertation-rimbaud-2026-12-10",
+    version: 1,
+    matiere: francais,
+    titre: "Dissertation : Rimbaud, Cahiers de Douai",
+    date: "2026-12-10",
+    dureeMin: 0,
+    notes:
+      "Parcours « Émancipations créatrices ». Révise avec « Préparer la dissertation » dans l'onglet Bac de Français.",
+    chapitres: ["francais-1re-rimbaud-douai"],
+  },
 ];

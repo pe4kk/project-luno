@@ -277,7 +277,7 @@ function Travail() {
             ) : ongletMatiere === "notes" ? (
               <VueNotes matiere={matiere} noteId={params.get("n")} />
             ) : ongletMatiere === "bac" ? (
-              <VueBac matiere={matiere} texteId={params.get("t")} vue={params.get("v")} perso={params.get("p")} />
+              <VueBac matiere={matiere} texteId={params.get("t")} vue={params.get("v")} perso={params.get("p")} sujet={params.get("s")} />
             ) : (
             <>
             <form

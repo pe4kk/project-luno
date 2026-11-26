@@ -219,7 +219,17 @@ fiches de révision ; le slider règle la longueur de la fiche.
     **Écrit** (vérifié le 2026-11-26 sur des sites de préparation concordants, pas le BO) : mardi 15 juin
     2027, 4 h, coef. 5 ; commentaire (texte hors programme) **ou dissertation** : trois sujets, un par
     œuvre de l'objet d'étude tiré, donc **les Cahiers de Douai et Pot-Bouille sont à savoir pour la
-    dissertation**. Dissertation sur les Cahiers de Douai en classe vers le 10/12 (date exacte demandée).
+    dissertation**. Dissertation sur les Cahiers de Douai en classe le **jeudi 10/12** (au calendrier).
+  - **Préparer la dissertation** (2026-11-26, demandé) : carte « Préparer la dissertation » d'une œuvre
+    (`oeuvre.dissertation` de `PROGRAMME_BAC`) → `?o=bac&t=diss-rimbaud&v=sujets|citations|methode&s=<sujet>`
+    (`components/travail/Dissertation.tsx`, types `lib/dissertation.ts`, contenu `contenu/dissertations.ts`).
+    Sujets : le parcours expliqué et ses axes, puis par sujet « Ton plan d'abord » (brouillon dicté ou tapé,
+    gardé dans le navigateur) → analyse des termes, problématique, plan proposé (parties repliables, chaque
+    argument = idée + poème + citation exacte + analyse), transitions, conclusion, ouverture, pièges, grille
+    d'auto-évaluation. Citations par axe + quiz « De quel poème ? ». Méthode en 7 étapes chronométrées.
+    Rimbaud : 4 sujets d'entraînement (émancipation, révolte, « On n'est pas sérieux… », tradition), 20
+    citations ; jamais une copie entière à rendre. « Préparer une éval » (éval avec exercices) : méthode,
+    plans de deux sujets, citations chaque jour. Pot-Bouille : en attente du parcours.
   - **Œuvre intégrale à explorer : Pot-Bouille** (2026-11-22, demandé pour l'éval de lecture en
     QCM du mer. 25/11 : « comprendre l'immeuble, qui est à chaque étage, leurs relations ») : dans
     Bac › Le roman, carte « Explorer l'œuvre » (`oeuvre.explorer` de `PROGRAMME_BAC`) →

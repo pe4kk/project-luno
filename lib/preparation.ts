@@ -6,6 +6,11 @@ import type { Chapitre, Dst, ErreurNotee } from "./types";
 import { PROGRAMME_BAC } from "@/contenu/bac-francais";
 
 /** Œuvre à explorer (onglet Bac) rattachée à un chapitre publié : `publieId` → id de l'œuvre. */
+const DISSERTATION_DU_CHAPITRE = new Map(
+  PROGRAMME_BAC.flatMap((g) =>
+    g.oeuvre?.chapitrePublie && g.oeuvre.dissertation ? [[g.oeuvre.chapitrePublie, g.oeuvre.dissertation] as const] : [],
+  ),
+);
 const OEUVRE_DU_CHAPITRE = new Map(
   PROGRAMME_BAC.flatMap((g) =>
     g.oeuvre?.chapitrePublie && g.oeuvre.explorer ? [[g.oeuvre.chapitrePublie, g.oeuvre.explorer] as const] : [],
@@ -91,6 +96,40 @@ export function etapes(
       },
     );
   }
+
+  // 0 bis. Une œuvre avec une préparation de dissertation (onglet Bac) : la méthode, des plans,
+  // les citations. Proposé pour une éval « avec exercices » (la dissertation est un exercice).
+  if (type === "exos")
+    for (const c of auProgramme) {
+      const diss = c.publieId ? DISSERTATION_DU_CHAPITRE.get(c.publieId) : undefined;
+      if (!diss) continue;
+      const lien = (v?: string) => lienTravail({ m: c.matiereId, o: "bac", t: diss, v });
+      liste.push(
+        {
+          id: `diss-methode:${diss}`,
+          titre: "Revoir la méthode de la dissertation",
+          detail: "Analyser le sujet, problématique, plan, introduction : les sept étapes et leur durée.",
+          href: lien("methode"),
+          minutes: 15,
+        },
+        {
+          id: `diss-sujets:${diss}`,
+          titre: "Faire le plan de deux sujets",
+          detail: "Fais ton plan au brouillon, puis compare avec le plan proposé et coche la grille.",
+          href: lien(),
+          minutes: 45,
+        },
+        {
+          id: `diss-citations:${diss}`,
+          titre: "Apprendre les citations",
+          detail: "« De quel poème ? » : une citation sue, c'est un argument prêt le jour J.",
+          href: lien("citations"),
+          minutes: 10,
+          recurrente: true,
+          parJour: true,
+        },
+      );
+    }
 
   // 1. Le cours, chapitre par chapitre : comprendre (fiche), puis apprendre par cœur.
   for (const c of auProgramme) {
