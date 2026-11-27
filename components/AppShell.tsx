@@ -122,7 +122,9 @@ function Logo() {
 
   return (
     <Link href="/" className="flex items-center gap-2.5" ref={portee}>
-      <span className="relative size-[30px]">
+      {/* Sortie des captures du changement de thème (logo-lune dans globals.css) : sinon,
+          sur téléphone, l'ancienne et la nouvelle lune se superposaient pendant le fondu. */}
+      <span className="logo-lune relative size-[30px]">
         <span
           data-halo
           aria-hidden
@@ -131,7 +133,7 @@ function Logo() {
         />
         <span
           data-lune
-          className="relative block size-full overflow-hidden rounded-full bg-blush"
+          className="relative block size-full rounded-full bg-blush [clip-path:circle(50%)]"
         >
           <span
             data-ombre
