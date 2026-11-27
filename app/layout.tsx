@@ -19,13 +19,18 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "Luno", statusBarStyle: "default" },
   title: "Luno",
-  description: "Ton espace de travail : calendrier des DST, cours, flashcards, fiches et exercices.",
+  description:
+    "Ton espace de travail : calendrier des DST, cours, flashcards, fiches et exercices.",
 };
 
 // Applique le thème enregistré avant le premier affichage, pour éviter un flash.
-const scriptTheme = `try{var t=localStorage.getItem("luno-theme");if(!t){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}`;
+const scriptTheme = `try{var t=localStorage.getItem("luno-theme");if(!t){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t;document.querySelectorAll('meta[name=\"theme-color\"]').forEach(function(m){m.removeAttribute(\"media\");m.setAttribute(\"content\",t===\"dark\"?\"#242426\":\"#f8f1ee\")})}catch(e){}`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="fr" className="h-full antialiased" suppressHydrationWarning>
       <head>

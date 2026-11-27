@@ -73,13 +73,6 @@ function useSombre() {
 const ecranTactile = () =>
   matchMedia("(pointer: coarse)").matches || innerWidth < 768;
 
-/**
- * Fondu du changement de thème en cours sur téléphone. La lune attend qu'il soit fini pour
- * tourner : pendant le fondu, l'ancienne capture de la page (lune immobile) et la nouvelle
- * (lune qui tourne) se superposaient, on voyait deux lunes (signalé le 2026-11-27).
- */
-let fonduTheme: Promise<unknown> | null = null;
-
 function Logo() {
   const sombre = useSombre();
   const portee = useRef<HTMLAnchorElement>(null);
@@ -99,7 +92,7 @@ function Logo() {
     const duration = 900;
     const easing = "cubic-bezier(0.65, 0, 0.35, 1)";
     // Sur ordinateur, le nouveau thème s'ouvre en cercle depuis le bouton, à droite : la
-    // lune attend que le cercle l’atteigne. Sur téléphone, elle attend la fin du fondu.
+    // lune attend que le cercle l’atteigne. Sur téléphone, les couleurs glissent : elle part tout de suite.
     const delay =
       "startViewTransition" in document && !ecranTactile() ? 400 : 0;
     const options = { duration, easing, delay, fill: "backwards" } as const;
@@ -135,8 +128,7 @@ function Logo() {
         { duration: duration * 1.1, easing: "ease-out", delay },
       );
     };
-    if (fonduTheme) fonduTheme.then(tourner, tourner);
-    else tourner();
+    tourner();
     return () => {
       annule = true;
     };
@@ -176,10 +168,20 @@ function Logo() {
  * Change de thème en douceur : le nouveau thème s'ouvre en cercle depuis le bouton
  * (View Transitions). Sans cette API, toutes les couleurs glissent ensemble.
  */
+/** Couleur de la barre d'état (meta theme-color) : celle du thème choisi, pas celle du système. */
+function couleurBarre(theme: string) {
+  const couleur = theme === "dark" ? "#242426" : "#f8f1ee";
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+    m.removeAttribute("media");
+    m.setAttribute("content", couleur);
+  });
+}
+
 function changerTheme(suivant: string, depuis?: HTMLElement | null) {
   const racine = document.documentElement;
   const appliquer = () => {
     racine.dataset.theme = suivant;
+    couleurBarre(suivant);
     try {
       localStorage.setItem("luno-theme", suivant);
     } catch {}
@@ -192,7 +194,10 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
       startViewTransition?: (f: () => void) => { ready: Promise<void> };
     }
   ).startViewTransition;
-  if (!vt) {
+  // Sur téléphone, les couleurs glissent dans la vraie page, sans captures (View Transitions) :
+  // Safari teinte la barre d'état d'après la page réelle, cachée sous les captures pendant le
+  // fondu ; elle changeait une demi-seconde après Luno (vidéo du 2026-11-27).
+  if (!vt || ecranTactile()) {
     racine.classList.add("theme-glisse");
     appliquer();
     window.setTimeout(() => racine.classList.remove("theme-glisse"), 600);
@@ -204,36 +209,7 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
   const finir = (t: { finished?: Promise<void> }) => {
     const fini = t.finished ?? new Promise<void>((r) => setTimeout(r, 800));
     fini.catch(() => {}).finally(() => racine.classList.remove("theme-fondu"));
-    return fini;
   };
-  if (ecranTactile()) {
-    // Sur téléphone, un cercle (clip-path) oblige à redessiner toute la page à chaque
-    // image : saccadé sur iPhone. Le fondu (opacity, transform) reste fluide.
-    const transition = vt.call(document, appliquer) as {
-      ready: Promise<void>;
-      finished?: Promise<void>;
-    };
-    const fini = finir(transition);
-    fonduTheme = fini;
-    fini
-      .finally(() => {
-        if (fonduTheme === fini) fonduTheme = null;
-      })
-      .catch(() => {});
-    transition.ready
-      .then(() => {
-        racine.animate(
-          { opacity: [0, 1], transform: ["scale(1.015)", "scale(1)"] },
-          {
-            duration: 420,
-            easing: "cubic-bezier(0.33, 1, 0.68, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          },
-        );
-      })
-      .catch(() => {});
-    return;
-  }
   const r = depuis?.getBoundingClientRect();
   const x = r ? r.left + r.width / 2 : innerWidth;
   const y = r ? r.top + r.height / 2 : 0;
@@ -437,6 +413,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const clavier = useClavierOuvert();
   const chemin = usePathname();
   const monte = useMonte();
+  useEffect(() => {
+    couleurBarre(document.documentElement.dataset.theme ?? "light");
+  }, []);
   const { conteneur: navHautConteneur, pastille: navHautPastille } =
     usePastille<HTMLElement>(chemin);
   const { conteneur: navBasConteneur, pastille: navBasPastille } =

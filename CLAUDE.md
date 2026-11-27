@@ -654,17 +654,16 @@ fiches de révision ; le slider règle la longueur de la fiche.
     par un script en ligne dans `app/layout.tsx` avant l'affichage.
   - Changement de thème (`changerTheme()` dans `AppShell.tsx`, 2026-11-11) :
     sur ordinateur, le nouveau thème s'ouvre en cercle depuis le bouton (View
-    Transitions) ; sur téléphone, fondu enchaîné (le cercle en `clip-path`
-    était saccadé sur iPhone, il redessine toute la page à chaque image) ;
-    sinon les couleurs glissent (classe `theme-glisse`). Le logo (disque
+    Transitions) ; sur téléphone (et sans cette API), les couleurs glissent (classe `theme-glisse`). Le logo (disque
     blush + disque anthracite décalé) fait un tour en passant par la pleine
     lune, avec un halo cuivré, en animations natives (`element.animate`,
     transform et opacity seulement), décalé pour attendre le cercle. Sur
     téléphone, n'animer que transform et opacity.
-    Sur téléphone, la lune attend la fin du fondu (`fonduTheme`) pour tourner : sinon deux lunes se
-    superposaient (2026-11-27 ; un `view-transition-name` sur le logo déformait la lune sur iPhone, abandonné).
-    Pendant le changement, classe `theme-fondu` : barre du haut opaque, sans flou (Safari perd le flou dans les
-    captures, le texte de la page apparaissait à travers). Disque découpé par `clip-path`, pas `overflow-hidden`.
+    **Sur téléphone, plus de View Transitions** (2026-11-27, vidéo de l'utilisateur) : la barre d'état de Safari
+    se teinte d'après la vraie page, cachée sous les captures pendant le fondu, et changeait une demi-seconde
+    après Luno ; les couleurs glissent donc dans la vraie page (`theme-glisse`). La meta `theme-color` suit le
+    thème choisi (`couleurBarre()`, et dans le script de `layout.tsx`), pas celui du système. Disque du logo
+    découpé par `clip-path`, pas `overflow-hidden` (Safari perd l'arrondi quand l'ombre est animée).
     Pour filmer une animation, ralentir la page (`Animation.setPlaybackRate`
     et `requestAnimationFrame`) : les captures sont trop lentes sinon.
   - Couleurs de matière : `pastel()` et `var(--mix-fg)` les adaptent au thème.
