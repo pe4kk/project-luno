@@ -247,17 +247,112 @@ html.theme-fondu header {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
-html.theme-glisse,
-html.theme-glisse *,
-html.theme-glisse *::before,
-html.theme-glisse *::after {
-  transition:
-    background-color 0.5s ease,
-    border-color 0.5s ease,
-    color 0.5s ease,
-    fill 0.5s ease,
-    stroke 0.5s ease,
-    box-shadow 0.5s ease !important;
+/* Couleurs qui glissent (téléphone) : on anime les variables du thème elles-mêmes, sur la
+   racine seulement ; toute la page les hérite image par image. Animer la couleur de chaque
+   élément faisait traîner le texte hérité, resté pâle puis changé d'un coup (2026-11-27). */
+@property --bg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --surface {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --muted {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --line {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --accent-soft {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --on-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --blush {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --copper {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --surligneur {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --night {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --ok {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --bad {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --mix-fg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --schema-force {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+html.theme-glisse {
+  transition: --bg 0.5s ease,
+    --surface 0.5s ease,
+    --ink 0.5s ease,
+    --muted 0.5s ease,
+    --line 0.5s ease,
+    --accent 0.5s ease,
+    --accent-soft 0.5s ease,
+    --on-accent 0.5s ease,
+    --blush 0.5s ease,
+    --copper 0.5s ease,
+    --surligneur 0.5s ease,
+    --night 0.5s ease,
+    --ok 0.5s ease,
+    --bad 0.5s ease,
+    --mix-fg 0.5s ease,
+    --schema-force 0.5s ease;
+}
+html.theme-glisse body,
+html.theme-glisse body *,
+html.theme-glisse body *::before,
+html.theme-glisse body *::after {
+  transition: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
