@@ -8,6 +8,8 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
   BookMarked,
+  ChevronLeft,
+  ChevronRight,
   CalendarClock,
   FileDown,
   FileText,
@@ -685,8 +687,22 @@ function OngletFiche({
   const parties = fiche?.decoupage && fiche.decoupage.length > 1 ? fiche.decoupage : null;
   const iPartie = parties ? Math.min(parties.length - 1, Math.max(0, Number(params.get("f")) || 0)) : 0;
   const partie = parties?.[iPartie];
-  const choisirPartie = (i: number) =>
-    router.replace(lienTravail({ m: matiere.id, c: chapitre.id, o: "fiche", f: i ? String(i) : undefined }), { scroll: false });
+  // Six fiches ou plus : un sommaire en grille à l'ouverture (maquette A, 2026-11-27), puis la fiche
+  // choisie avec « Toutes les fiches » et des flèches précédente / suivante.
+  const avecSommaire = (parties?.length ?? 0) >= 6;
+  const auSommaire = avecSommaire && params.get("f") === null;
+  const lienPartie = (i: number | null) =>
+    lienTravail({ m: matiere.id, c: chapitre.id, o: "fiche", f: i === null ? undefined : avecSommaire || i ? String(i) : undefined });
+  const choisirPartie = (i: number) => router.replace(lienPartie(i), { scroll: false });
+  const ouvrirPartie = (i: number) => {
+    router.push(lienPartie(i), { scroll: false });
+    window.scrollTo({ top: 0 });
+  };
+  const versSommaire = () => router.replace(lienPartie(null), { scroll: false });
+  const passer = (i: number) => {
+    choisirPartie(i);
+    document.getElementById("onglet-fiche")?.scrollIntoView({ block: "start", behavior: "smooth" });
+  };
 
   if (!fiche) {
     return (
@@ -706,6 +722,9 @@ function OngletFiche({
       />
     );
   }
+
+  if (auSommaire && parties)
+    return <SommaireFiches parties={parties} ouvrir={ouvrirPartie} couleur={foncee} />;
 
   // Toutes les sections et tous les points restent dans la page : ceux qui dépassent la
   // taille choisie sont repliés en CSS (classe `repli`), ce qui garde le curseur fluide.
@@ -732,7 +751,20 @@ function OngletFiche({
 
   return (
     <div className="grid gap-5 lg:grid-cols-[300px_1fr]">
-      {parties && partie && (
+      {avecSommaire && parties && (
+        <div className="flex min-w-0 items-center justify-between gap-3 lg:col-span-2">
+          <button
+            onClick={versSommaire}
+            className="flex min-h-10 items-center gap-1.5 rounded-xl border border-line bg-surface px-3 text-[14px] font-semibold shadow-card"
+          >
+            <ChevronLeft size={16} /> Toutes les fiches
+          </button>
+          <span className="text-[13px] text-muted">
+            {iPartie + 1} sur {parties.length}
+          </span>
+        </div>
+      )}
+      {parties && partie && !avecSommaire && (
         <div className="min-w-0 lg:col-span-2">
           <RegleFiches titres={parties.map((x) => x.titre)} actif={iPartie} choisir={choisirPartie} couleur={foncee} />
           <p className="mt-1.5 text-[13.5px] text-muted">{partie.sujet}</p>
@@ -854,6 +886,80 @@ function OngletFiche({
           )}
         </div>
       </article>
+      {avecSommaire && parties && (
+        <nav className="grid grid-cols-2 gap-2.5 lg:col-start-2" aria-label="Fiche précédente ou suivante">
+          {iPartie > 0 ? (
+            <button
+              onClick={() => passer(iPartie - 1)}
+              className="flex min-h-12 items-center gap-1.5 rounded-2xl border border-line bg-surface px-3 text-left text-[14px] font-semibold shadow-card"
+            >
+              <ChevronLeft size={16} className="shrink-0 text-muted" />
+              <span className="min-w-0 truncate">{parties[iPartie - 1].titre}</span>
+            </button>
+          ) : (
+            <span />
+          )}
+          {iPartie < parties.length - 1 && (
+            <button
+              onClick={() => passer(iPartie + 1)}
+              className="flex min-h-12 items-center justify-end gap-1.5 rounded-2xl border border-line bg-surface px-3 text-right text-[14px] font-semibold shadow-card"
+            >
+              <span className="min-w-0 truncate">{parties[iPartie + 1].titre}</span>
+              <ChevronRight size={16} className="shrink-0 text-muted" />
+            </button>
+          )}
+        </nav>
+      )}
+    </div>
+  );
+}
+
+/** Sommaire en grille des fiches d'un chapitre qui en a beaucoup, rangées par groupe. */
+function SommaireFiches({
+  parties,
+  ouvrir,
+  couleur,
+}: {
+  parties: NonNullable<NonNullable<Chapitre["fiche"]>["decoupage"]>;
+  ouvrir: (i: number) => void;
+  couleur: string;
+}) {
+  const groupes: { nom?: string; items: { p: (typeof parties)[number]; i: number }[] }[] = [];
+  parties.forEach((p, i) => {
+    const g = groupes.at(-1);
+    if (g && g.nom === p.groupe) g.items.push({ p, i });
+    else groupes.push({ nom: p.groupe, items: [{ p, i }] });
+  });
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-[13.5px] text-muted">{parties.length} fiches. Touche une fiche pour l&apos;ouvrir.</p>
+      {groupes.map((g, k) => (
+        <section key={k}>
+          {g.nom && (
+            <p className="surtitre mb-2" style={{ color: couleur }}>
+              {g.nom} · {g.items.length}
+            </p>
+          )}
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+            {g.items.map(({ p, i }) => (
+              <button
+                key={p.titre}
+                onClick={() => ouvrir(i)}
+                className={`group flex min-h-[76px] flex-col items-start rounded-2xl max-sm:[&:last-child:nth-child(odd)]:col-span-2 border border-line bg-surface p-3 text-left shadow-card transition-colors duration-200 hover:border-ink/25 ${
+                  !g.nom && g.items.length === 1 ? "col-span-2 sm:col-span-3 lg:col-span-4" : ""
+                }`}
+              >
+                <span className="font-display text-[16px] leading-snug" style={{ color: couleur }}>
+                  {p.titre}
+                </span>
+                {(p.resume ?? p.sujet) && (
+                  <span className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-muted">{p.resume ?? p.sujet}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

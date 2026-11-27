@@ -189,7 +189,11 @@ export type Fiche = {
    * seulement quand c'est nécessaire) : chaque fiche regroupe des sections par leur rang.
    * Sans découpage, une seule fiche avec toutes les sections.
    */
-  decoupage?: { titre: string; sujet: string; sections: number[] }[];
+  /**
+   * `groupe` et `resume` : pour le sommaire en grille des chapitres à 6 fiches ou plus (maquette A
+   * choisie le 2026-11-27).
+   */
+  decoupage?: { titre: string; sujet: string; sections: number[]; groupe?: string; resume?: string }[];
 };
 
 export type Qcm = {

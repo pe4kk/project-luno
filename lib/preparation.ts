@@ -140,7 +140,7 @@ export function etapes(
           id: `fiche:${c.id}:${i}`,
           titre: `Comprendre la fiche « ${p.titre} »${nom(c)}`,
           detail: `${p.sujet} Lis-la, puis ferme-la et redis de tête l'essentiel.`,
-          href: lienTravail({ m: c.matiereId, c: c.id, o: "fiche", f: i ? String(i) : undefined }),
+          href: lienTravail({ m: c.matiereId, c: c.id, o: "fiche", f: i || (c.fiche?.decoupage?.length ?? 0) >= 6 ? String(i) : undefined }),
           minutes: 10,
         }),
       );

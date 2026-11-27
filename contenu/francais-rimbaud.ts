@@ -1,6 +1,6 @@
 import type { ChapitrePublie } from "@/lib/types";
 import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
-import { FICHES_POEMES } from "./rimbaud-poemes";
+import { FICHES_POEMES, RESUMES_POEMES } from "./rimbaud-poemes";
 
 /**
  * Français Première : Rimbaud, « Cahiers de Douai », parcours « Émancipations
@@ -11,7 +11,7 @@ import { FICHES_POEMES } from "./rimbaud-poemes";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 9,
+  version: 10,
   definitions: DEF_FRANCAIS_RIMBAUD,
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
@@ -344,12 +344,22 @@ export const FRANCAIS_RIMBAUD: ChapitrePublie = {
       ...FICHES_POEMES,
     ],
     decoupage: [
-      { titre: "L'œuvre", sujet: "Le recueil, le mythe Rimbaud, la méthode de lecture et les pistes pour la dissertation.", sections: [0, 1, 2, 3] },
-      ...FICHES_POEMES.map((f, i) => ({
-        titre: f.titre.replace(/[«»]/g, "").trim(),
-        sujet: `L'analyse du poème, ses citations clés et comment les réutiliser en dissertation.`,
-        sections: [4 + i],
-      })),
+      {
+        titre: "L'œuvre",
+        sujet: "Le recueil, le mythe Rimbaud, la méthode de lecture et les pistes pour la dissertation.",
+        sections: [0, 1, 2, 3],
+        resume: "Le recueil, le mythe, la méthode, la dissertation",
+      },
+      ...FICHES_POEMES.map((f, i) => {
+        const titre = f.titre.replace(/[«»]/g, "").trim();
+        return {
+          titre,
+          sujet: `L'analyse du poème, ses citations clés et comment les réutiliser en dissertation.`,
+          sections: [4 + i],
+          groupe: f.groupe,
+          resume: RESUMES_POEMES[titre],
+        };
+      }),
     ],
     aRetenir: [
       "Émancipations créatrices",

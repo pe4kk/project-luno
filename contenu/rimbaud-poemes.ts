@@ -158,9 +158,23 @@ const COURS: { titre: string; points: PointFiche[] }[] = [
 ];
 
 /** Les fiches par poème, dans l'ordre : textes du bac (analyse complète), puis poèmes du cours. */
-export const FICHES_POEMES: { titre: string; points: PointFiche[]; poeme?: TextePoeme }[] = [
-  ...[A_LA_MUSIQUE, VENUS_ANADYOMENE, AU_CABARET_VERT].map(ficheTexte),
+/** Une ligne pour la carte du sommaire. */
+export const RESUMES_POEMES: Record<string, string> = {
+  "À la Musique": "Satire des bourgeois de Charleville",
+  "Vénus Anadyomène": "Un contre-blason, deux lectures",
+  "Au Cabaret-Vert": "Joie simple, sonnet malmené · provisoire",
+  "Le Bal des pendus": "Villon inversé, contre Napoléon III",
+  "Le Châtiment de Tartufe": "Deux lectures, l'acrostiche Jules César",
+  "Les Reparties de Nina": "« — Et mon bureau ? »",
+  "Ma Bohème": "La fugue, les syllepses",
+  "Sensation": "Le rêve d'ailleurs, au futur",
+  "Les Effarés": "Un pathétique détourné",
+};
+
+export const FICHES_POEMES: { titre: string; points: PointFiche[]; poeme?: TextePoeme; groupe: string }[] = [
+  ...[A_LA_MUSIQUE, VENUS_ANADYOMENE, AU_CABARET_VERT].map((t) => ({ ...ficheTexte(t), groupe: "Textes du bac" })),
   ...COURS.map((p) => ({
+    groupe: "Poèmes du cours",
     titre: `« ${p.titre} »`,
     points: [...p.points, ...pourLaDissertation(p.titre)],
     poeme: TEXTES_RIMBAUD[p.titre],

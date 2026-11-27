@@ -323,7 +323,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     qui ajoutent des points** (2026-11-24 : « Détaillée » = « Complète » → 4 crans), la plus grande
     s'appelle « Complète », pas de curseur s'il n'y a qu'une taille. « Préparer une
     éval » : une étape par fiche. **Découper seulement quand c'est nécessaire** (demandé) : chapitre
-    lourd aux sujets bien distincts. Faits : Pot-Bouille (immeuble, familles, intrigue), méthode de
+    lourd aux sujets bien distincts. **Six fiches ou plus : sommaire en grille** à l'ouverture (maquette A choisie le
+    2026-11-27, https://claude.ai/artifact/7ewQ1w6msENce7yWyxbH7N ; `SommaireFiches`, cartes groupées par `groupe` avec
+    `resume`), puis la fiche avec « ‹ Toutes les fiches », « N sur M » et des boutons précédente / suivante ; ouvrir une
+    fiche fait un `push` (le geste retour ramène au sommaire). Faits : Pot-Bouille (immeuble, familles, intrigue), méthode de
     rédaction de physique (générale, lois de Newton, dilutions), dérivation (nombre dérivé, fonction
     dérivée).
   - `components/Curseur.tsx` (2026-11-11, « sliders plus fluides ») : tous les
