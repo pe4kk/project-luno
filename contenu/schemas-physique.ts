@@ -418,3 +418,25 @@ export const HOMME_CANON: Schema = {
     { f: "texte", en: [104, 24], t: "on projette sur (Oy)", ancre: "start", main: true },
   ],
 };
+
+/** Plan incliné du cours (Kylian en luge) : P⃗, R⃗_N, f⃗ et les axes (Ox) horizontal, (Oy) vertical. */
+export const PLAN_INCLINE: Schema = {
+  l: 340,
+  h: 200,
+  legende: "Le plan incliné de la méthode du prof : axes horizontal et vertical, trois forces en M",
+  elements: [
+    { f: "trait", points: [[20, 180], [320, 40]], ton: "encre" },
+    { f: "trait", points: [[20, 180], [320, 180]], ton: "doux", fin: true },
+    { f: "texte", en: [86, 172], t: "α", ton: "accent", taille: 15 },
+    { f: "trait", points: [[200, 96], [320, 96]], ton: "doux", pointille: true, fin: true },
+    { f: "texte", en: [318, 112], t: "x", ton: "doux", ancre: "end" },
+    { f: "trait", points: [[200, 96], [200, 20]], ton: "doux", pointille: true, fin: true },
+    { f: "texte", en: [208, 26], t: "y", ton: "doux", ancre: "start" },
+    { f: "point", en: [200, 96], nom: "M", pos: [212, 112] },
+    { f: "fleche", de: [200, 96], a: [200, 160], ton: "cuivre", nom: "P⃗", pos: [212, 156] },
+    { f: "fleche", de: [200, 96], a: [178, 49], ton: "cuivre", nom: "R⃗_N", pos: [158, 50] },
+    { f: "fleche", de: [200, 96], a: [245, 75], ton: "cuivre", nom: "f⃗", pos: [252, 66] },
+    { f: "texte", en: [262, 92], t: "α", ton: "accent", taille: 13, main: true },
+    { f: "texte", en: [176, 72], t: "α", ton: "accent", taille: 13, main: true },
+  ],
+};

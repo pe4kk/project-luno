@@ -1,6 +1,6 @@
 import type { ChapitrePublie, Lecon } from "@/lib/types";
 import { DEF_PC_METHODE } from "./definitions";
-import { HOMME_CANON } from "./schemas-physique";
+import { HOMME_CANON, PLAN_INCLINE } from "./schemas-physique";
 
 /**
  * Physique-Chimie : la façon de rédiger qu'attend le professeur, relevée dans sa
@@ -20,7 +20,7 @@ const matiere = { nom: "Physique-Chimie", couleur: "#6f8fae", emoji: "⚗️" };
 
 export const PHYSIQUE_METHODE: ChapitrePublie = {
   id: "pc-1re-methode-redaction",
-  version: 12,
+  version: 13,
   definitions: DEF_PC_METHODE,
   matiere,
   titre: "Méthode · Rédiger comme ton prof l'attend",
@@ -213,6 +213,48 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
         ],
       },
       {
+        titre: "Lois de Newton (chap. 13) · Projeter sur deux axes",
+        points: [
+          {
+            t: "==Quand les forces ne sont pas toutes sur un même axe (plan incliné), la méthode du prof a deux étapes : 1. les composantes de chaque force par la trigonométrie ; 2. la 2e loi de Newton projetée sur (Ox) et sur (Oy).==",
+            n: 1,
+            schema: PLAN_INCLINE,
+          },
+          {
+            t: "Composante = projection du vecteur sur un axe : on abaisse orthogonalement le vecteur sur l'axe. Notation en colonne : V⃗ (Vx ; Vy). Norme : [[‖V⃗‖ = √(Vx² + Vy²)]], toujours positive ; mais ==Vx ou Vy peuvent être négatives==.",
+            n: 2,
+          },
+          {
+            t: "Trigonométrie dans le triangle rectangle (méthode conseillée par le prof) : sin α = {{opp // hyp}}, cos α = {{adj // hyp}}, tan α = {{opp // adj}} ; d'où [[Vx = V cos α]] et [[Vy = V sin α]] quand α est l'angle avec (Ox).",
+            n: 1,
+          },
+          {
+            t: "Exemple du cours (α entre la piste et l'horizontale) : f⃗ (f cos α ; f sin α), R⃗_N (−R_N sin α ; R_N cos α), P⃗ (0 ; −mg). Le signe « − » vient du sens de la composante sur l'axe.",
+            n: 1,
+          },
+          {
+            t: "Pour R⃗_N, perpendiculaire à la piste, l'angle α se retrouve entre R⃗_N et l'axe vertical (Oy) : c'est le sinus qui donne la composante sur (Ox). Toujours refaire un petit « zoom » sur chaque vecteur.",
+            n: 2,
+          },
+          {
+            t: "Étape 2 : vitesse constante ⇒ Δv⃗ = 0⃗ ⇒ d'après la 2e loi de Newton ΣF⃗ = 0⃗ (cohérent avec le principe d'inertie). On écrit la somme des colonnes égale à (0 ; 0).",
+            n: 2,
+          },
+          {
+            t: "On obtient un système de 2 équations à 2 inconnues (f et R_N), une par axe : on isole une inconnue dans la première, on l'injecte dans la seconde. Résultat du cours : [[f = mg sin α]], et R_N = mg cos α.",
+            n: 2,
+          },
+          {
+            t: "Outil de calcul : sin²α + cos²α = 1, qui simplifie f (sin α + {{cos²α // sin α}}) = mg en f × {{1 // sin α}} = mg.",
+            n: 3,
+          },
+          {
+            t: "A.N. du cours : f = 70 × 9,81 × sin(35°) = 3,9 × 10² N. Calculatrice en degrés !",
+            n: 3,
+          },
+        ],
+      },
+      {
         titre: "L'application numérique",
         points: [
           {
@@ -352,9 +394,9 @@ export const PHYSIQUE_METHODE: ChapitrePublie = {
     ],
     // Une fiche par méthode, jamais fondues (principe 1) : la générale, puis celles d'un chapitre.
     decoupage: [
-      { titre: "La méthode générale", sujet: "Ce qui ne change jamais : titre, « Par définition », A.N., conclusion, schémas.", sections: [0, 1, 4, 5, 7, 8] },
-      { titre: "Les lois de Newton", sujet: "Système, bilan des forces, projection : la méthode des chap. 9 et 13.", sections: [2, 3] },
-      { titre: "Dilutions et dosages", sujet: "La méthode descendante, de la formule de base à une seule A.N.", sections: [6] },
+      { titre: "La méthode générale", sujet: "Ce qui ne change jamais : titre, « Par définition », A.N., conclusion, schémas.", sections: [0, 1, 5, 6, 8, 9] },
+      { titre: "Les lois de Newton", sujet: "Système, bilan des forces, projection, et les deux axes du plan incliné : la méthode des chap. 9 et 13.", sections: [2, 3, 4] },
+      { titre: "Dilutions et dosages", sujet: "La méthode descendante, de la formule de base à une seule A.N.", sections: [7] },
     ],
     aRetenir: [
       "Titre souligné",

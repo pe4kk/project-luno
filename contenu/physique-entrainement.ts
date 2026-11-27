@@ -1,4 +1,5 @@
 import type { Calcul, Probleme, Schema } from "@/lib/types";
+import { PLAN_INCLINE } from "./schemas-physique";
 
 /**
  * Entraînement de physique (S'exercer → Problèmes, Calculs, Interro blanche).
@@ -204,6 +205,60 @@ export const PROBLEMES_CHAP11: Probleme[] = [
           "Mot « pseudo-isolé »",
           "Les forces nommées : poids et action du coussin d'air",
         ],
+        points: 2,
+      },
+    ],
+  },
+  {
+    id: "pb-caisse-rampe",
+    titre: "La caisse sur la rampe",
+    duree: "20 min",
+    enonce:
+      "Un livreur fait descendre une caisse de masse m = 25 kg sur une rampe inclinée d'un angle α = 20° par rapport à l'horizontale. La caisse glisse à vitesse constante. Elle subit son poids P⃗, la réaction normale R⃗_N de la rampe et une force de frottement f⃗ dirigée le long de la rampe, vers le haut.\nDonnée : g = 9,81 m·s⁻².",
+    question:
+      "Calculer la valeur f de la force de frottement, puis la valeur R_N de la réaction normale. (Même méthode que l'exemple de Kylian, sur une autre situation.)",
+    schema: PLAN_INCLINE,
+    etapes: [
+      {
+        titre: "Système, référentiel, bilan des forces",
+        consigne: "Pose le système, le référentiel avec son repère, puis le bilan des forces (direction et sens de chacune).",
+        attendu:
+          "Système : {la caisse}, considérée comme un point matériel M de masse m.\nRéférentiel : terrestre, muni d'un repère cartésien (O, i⃗, j⃗) avec l'axe (Oy) vertical vers le haut.\nBilan des forces : le poids P⃗ = m·g⃗, vertical vers le bas ; la force de frottement f⃗, le long de la rampe, vers le haut (opposée au mouvement) ; la réaction normale R⃗_N, perpendiculaire à la rampe, vers le haut.",
+        criteres: ["Système et point matériel", "Référentiel terrestre et repère", "Trois forces avec direction et sens"],
+        points: 2,
+      },
+      {
+        titre: "1re étape · Les composantes",
+        consigne: "Écris les composantes de f⃗, R⃗_N et P⃗ en colonne, par la trigonométrie (fais un zoom sur chaque vecteur).",
+        attendu:
+          "f⃗ : cos α = {{f_x // f}} et sin α = {{f_y // f}} ⇒ f⃗ (f cos α ; f sin α)\nR⃗_N : l'angle α est entre R⃗_N et (Oy) ⇒ R⃗_N (−R_N sin α ; R_N cos α)\nP⃗ (0 ; −mg)",
+        criteres: ["f⃗ (f cos α ; f sin α)", "R⃗_N (−R_N sin α ; R_N cos α), signe − justifié", "P⃗ (0 ; −mg)"],
+        points: 3,
+      },
+      {
+        titre: "2e étape · La loi de Newton",
+        consigne: "Analyse le mouvement, cite la loi et écris l'égalité vectorielle, puis en colonnes.",
+        attendu:
+          "La caisse a une vitesse constante, donc Δv⃗ = 0⃗. D'après la 2e loi de Newton, ΣF⃗ = m × {{Δv⃗ // Δt}}, donc ΣF⃗ = 0⃗ (cohérent avec le principe d'inertie).\nD'où f⃗ + R⃗_N + P⃗ = 0⃗, soit (f cos α ; f sin α) + (−R_N sin α ; R_N cos α) + (0 ; −mg) = (0 ; 0).",
+        criteres: ["Δv⃗ = 0⃗ justifié par la vitesse constante", "2e loi de Newton citée", "Somme des colonnes égale à (0 ; 0)"],
+        points: 2,
+      },
+      {
+        titre: "Le système d'équations",
+        consigne: "Écris l'équation suivant (Ox), puis suivant (Oy), et résous pour trouver f.",
+        attendu:
+          "Suivant (Ox) : f cos α − R_N sin α = 0 ⇒ R_N = f × {{cos α // sin α}}\nSuivant (Oy) : f sin α + R_N cos α − mg = 0\nEn injectant R_N : f sin α + f × {{cos²α // sin α}} = mg ⇒ f × {{sin²α + cos²α // sin α}} = mg, or sin²α + cos²α = 1, donc :\n[[f = mg sin α]]",
+        criteres: ["Deux équations, une par axe", "R_N exprimé puis injecté", "sin²α + cos²α = 1 utilisé", "f = mg sin α"],
+        encadrer: true,
+        points: 3,
+      },
+      {
+        titre: "Les applications numériques",
+        consigne: "Calcule f, puis R_N (exprime d'abord R_N en fonction de m, g et α).",
+        attendu:
+          "A.N. : f = 25 × 9,81 × sin(20°) = __84 N__ (2 chiffres significatifs, comme m et α).\nR_N = f × {{cos α // sin α}} = mg sin α × {{cos α // sin α}} ⇒ [[R_N = mg cos α]]\nA.N. : R_N = 25 × 9,81 × cos(20°) = __2,3 × 10² N__",
+        criteres: ["f = 84 N", "R_N = mg cos α", "R_N = 2,3 × 10² N", "Calculatrice en degrés, 2 c.s."],
+        encadrer: true,
         points: 2,
       },
     ],

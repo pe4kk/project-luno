@@ -524,7 +524,7 @@ export const PHYSIQUE_MOUVEMENT: ChapitrePublie[] = [
   },
   {
     id: "pc-1re-chap11-newton",
-    version: 13,
+    version: 14,
     cartesRetirees: ["Système ponctuel"],
     problemes: PROBLEMES_CHAP11,
     calculs: CALCULS_CHAP11,

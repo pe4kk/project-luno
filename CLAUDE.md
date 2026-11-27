@@ -1076,6 +1076,10 @@ un PDF ou une photo directement dans le chat.
   à la fin, une seule A.N.) ; demi-équations pour l'oxydoréduction (chap. 4). Ne
   jamais fondre une méthode de chapitre dans la méthode générale : chacune a sa
   section nommée dans `physique-methode.ts` (version 7), ou reste dans son chapitre.
+  **Projeter sur deux axes (chap. 13, plan incliné)** (2026-11-27, cahier : exemple de Kylian en luge) : section de
+  `physique-methode.ts` (version 13, fiche « Les lois de Newton ») et schéma `PLAN_INCLINE` ; 1. composantes par la
+  trigonométrie (notation en colonne, zoom sur chaque vecteur), 2. ΣF⃗ = 0⃗ projetée sur (Ox) et (Oy), système de deux
+  équations ; problème parallèle « La caisse sur la rampe » (f = 84 N, R_N = 2,3 × 10² N). Un DM suit : ne pas le faire.
 - (2026-11-12) **Fiches et leçons : les textes peuvent être longs**, et il veut
   qu'on **fasse ressortir l'essentiel** : entourer les phrases les plus importantes de
   `==…==`, dessiné en **gras simple** (choisi le 2026-11-13 parmi 8 styles : il
