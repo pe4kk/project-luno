@@ -73,6 +73,13 @@ function useSombre() {
 const ecranTactile = () =>
   matchMedia("(pointer: coarse)").matches || innerWidth < 768;
 
+/**
+ * Fondu du changement de thème en cours sur téléphone. La lune attend qu'il soit fini pour
+ * tourner : pendant le fondu, l'ancienne capture de la page (lune immobile) et la nouvelle
+ * (lune qui tourne) se superposaient, on voyait deux lunes (signalé le 2026-11-27).
+ */
+let fonduTheme: Promise<unknown> | null = null;
+
 function Logo() {
   const sombre = useSombre();
   const portee = useRef<HTMLAnchorElement>(null);
@@ -85,51 +92,67 @@ function Logo() {
     }
     avant.current = sombre;
     const racine = portee.current;
-    if (!racine || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!racine || matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return;
     // Animations natives du navigateur (transform et opacity seulement) : elles tournent
     // sur la carte graphique, même quand la page est occupée par le changement de thème.
     const duration = 900;
     const easing = "cubic-bezier(0.65, 0, 0.35, 1)";
     // Sur ordinateur, le nouveau thème s'ouvre en cercle depuis le bouton, à droite : la
-    // lune attend que le cercle l'atteigne. Sur téléphone, c'est un fondu : elle part vite.
-    const delay = "startViewTransition" in document ? (ecranTactile() ? 120 : 400) : 0;
+    // lune attend que le cercle l’atteigne. Sur téléphone, elle attend la fin du fondu.
+    const delay =
+      "startViewTransition" in document && !ecranTactile() ? 400 : 0;
     const options = { duration, easing, delay, fill: "backwards" } as const;
-    racine.querySelector("[data-lune]")?.animate(
-      [
-        { transform: "rotate(0deg) scale(1)" },
-        { transform: "rotate(180deg) scale(0.86)" },
-        { transform: "rotate(360deg) scale(1)" },
-      ],
-      options,
-    );
-    racine.querySelector("[data-ombre]")?.animate(
-      [
-        { transform: "translate(-9px, -3px)" },
-        { transform: "translate(1px, 0px)" },
-        { transform: "translate(-9px, -3px)" },
-      ],
-      options,
-    );
-    racine.querySelector("[data-halo]")?.animate(
-      [
-        { opacity: 0, transform: "scale(0.7)" },
-        { opacity: 0.55, transform: "scale(1.5)", offset: 0.45 },
-        { opacity: 0, transform: "scale(1.8)" },
-      ],
-      { duration: duration * 1.1, easing: "ease-out", delay },
-    );
+    let annule = false;
+    const tourner = () => {
+      if (annule) return;
+      racine
+        .querySelector("[data-lune]")
+        ?.animate(
+          [
+            { transform: "rotate(0deg) scale(1)" },
+            { transform: "rotate(180deg) scale(0.86)" },
+            { transform: "rotate(360deg) scale(1)" },
+          ],
+          options,
+        );
+      racine
+        .querySelector("[data-ombre]")
+        ?.animate(
+          [
+            { transform: "translate(-9px, -3px)" },
+            { transform: "translate(1px, 0px)" },
+            { transform: "translate(-9px, -3px)" },
+          ],
+          options,
+        );
+      racine.querySelector("[data-halo]")?.animate(
+        [
+          { opacity: 0, transform: "scale(0.7)" },
+          { opacity: 0.55, transform: "scale(1.5)", offset: 0.45 },
+          { opacity: 0, transform: "scale(1.8)" },
+        ],
+        { duration: duration * 1.1, easing: "ease-out", delay },
+      );
+    };
+    if (fonduTheme) fonduTheme.then(tourner, tourner);
+    else tourner();
+    return () => {
+      annule = true;
+    };
   }, [sombre]);
 
   return (
     <Link href="/" className="flex items-center gap-2.5" ref={portee}>
-      {/* Sortie des captures du changement de thème (logo-lune dans globals.css) : sinon,
-          sur téléphone, l'ancienne et la nouvelle lune se superposaient pendant le fondu. */}
-      <span className="logo-lune relative size-[30px]">
+      <span className="relative size-[30px]">
         <span
           data-halo
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-full opacity-0"
-          style={{ background: "radial-gradient(circle, var(--copper) 0%, transparent 70%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, var(--copper) 0%, transparent 70%)",
+          }}
         />
         <span
           data-lune
@@ -161,7 +184,8 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
       localStorage.setItem("luno-theme", suivant);
     } catch {}
   };
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return appliquer();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return appliquer();
 
   const vt = (
     document as Document & {
@@ -174,11 +198,30 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
     window.setTimeout(() => racine.classList.remove("theme-glisse"), 600);
     return;
   }
+  // Pendant le changement, la barre du haut devient opaque : dans les captures de la page,
+  // Safari perd son flou et le texte qui défile dessous apparaissait à travers (2026-11-27).
+  racine.classList.add("theme-fondu");
+  const finir = (t: { finished?: Promise<void> }) => {
+    const fini = t.finished ?? new Promise<void>((r) => setTimeout(r, 800));
+    fini.catch(() => {}).finally(() => racine.classList.remove("theme-fondu"));
+    return fini;
+  };
   if (ecranTactile()) {
     // Sur téléphone, un cercle (clip-path) oblige à redessiner toute la page à chaque
     // image : saccadé sur iPhone. Le fondu (opacity, transform) reste fluide.
-    vt.call(document, appliquer)
-      .ready.then(() => {
+    const transition = vt.call(document, appliquer) as {
+      ready: Promise<void>;
+      finished?: Promise<void>;
+    };
+    const fini = finir(transition);
+    fonduTheme = fini;
+    fini
+      .finally(() => {
+        if (fonduTheme === fini) fonduTheme = null;
+      })
+      .catch(() => {});
+    transition.ready
+      .then(() => {
         racine.animate(
           { opacity: [0, 1], transform: ["scale(1.015)", "scale(1)"] },
           {
@@ -194,8 +237,12 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
   const r = depuis?.getBoundingClientRect();
   const x = r ? r.left + r.width / 2 : innerWidth;
   const y = r ? r.top + r.height / 2 : 0;
-  const rayon = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  const rayon = Math.hypot(
+    Math.max(x, innerWidth - x),
+    Math.max(y, innerHeight - y),
+  );
   const transition = vt.call(document, appliquer);
+  finir(transition as { finished?: Promise<void> });
   transition.ready
     .then(() => {
       racine.animate(
@@ -219,7 +266,8 @@ function BoutonTheme() {
   const monte = useMonte();
   const sombre = useSombre();
   const bouton = useRef<HTMLButtonElement>(null);
-  const basculer = () => changerTheme(sombre ? "light" : "dark", bouton.current);
+  const basculer = () =>
+    changerTheme(sombre ? "light" : "dark", bouton.current);
   return (
     <button
       ref={bouton}
@@ -335,7 +383,16 @@ function useClavierOuvert() {
     if (!window.matchMedia("(pointer: coarse)").matches) return;
     const estChamp = (el: Element | null) =>
       !!el &&
-      ((el instanceof HTMLInputElement && !["checkbox", "radio", "range", "button", "submit", "file", "color"].includes(el.type)) ||
+      ((el instanceof HTMLInputElement &&
+        ![
+          "checkbox",
+          "radio",
+          "range",
+          "button",
+          "submit",
+          "file",
+          "color",
+        ].includes(el.type)) ||
         el instanceof HTMLTextAreaElement ||
         (el instanceof HTMLElement && el.isContentEditable));
     let minuteur = 0;
@@ -380,8 +437,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const clavier = useClavierOuvert();
   const chemin = usePathname();
   const monte = useMonte();
-  const { conteneur: navHautConteneur, pastille: navHautPastille } = usePastille<HTMLElement>(chemin);
-  const { conteneur: navBasConteneur, pastille: navBasPastille } = usePastille<HTMLElement>(chemin);
+  const { conteneur: navHautConteneur, pastille: navHautPastille } =
+    usePastille<HTMLElement>(chemin);
+  const { conteneur: navBasConteneur, pastille: navBasPastille } =
+    usePastille<HTMLElement>(chemin);
   const actif = (href: string) =>
     href === "/" ? chemin === "/" : chemin.startsWith(href);
 
@@ -396,7 +455,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             className="relative hidden items-center gap-1 lg:flex"
             aria-label="Navigation principale"
           >
-            <span ref={navHautPastille} className={`${classePastille} rounded-[10px] bg-ink`} />
+            <span
+              ref={navHautPastille}
+              className={`${classePastille} rounded-[10px] bg-ink`}
+            />
             {ONGLETS.map(({ href, label }) => (
               <Link
                 key={href}
@@ -483,7 +545,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               >
                 <span
                   className={`relative transition-[transform,color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-                    ici ? "-translate-y-px scale-[1.08] text-on-accent" : "text-muted group-active:text-ink"
+                    ici
+                      ? "-translate-y-px scale-[1.08] text-on-accent"
+                      : "text-muted group-active:text-ink"
                   }`}
                 >
                   <Icone size={19} strokeWidth={ici ? 2.3 : 2} />

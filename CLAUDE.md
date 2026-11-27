@@ -661,9 +661,10 @@ fiches de révision ; le slider règle la longueur de la fiche.
     lune, avec un halo cuivré, en animations natives (`element.animate`,
     transform et opacity seulement), décalé pour attendre le cercle. Sur
     téléphone, n'animer que transform et opacity.
-    Le logo a son propre `view-transition-name` (`logo-lune`, ancienne capture cachée : sur téléphone, le
-    fondu superposait deux lunes, signalé le 2026-11-27) et son disque est découpé par `clip-path`, pas par
-    `overflow-hidden` + arrondi (Safari perd l'arrondi quand l'ombre est animée).
+    Sur téléphone, la lune attend la fin du fondu (`fonduTheme`) pour tourner : sinon deux lunes se
+    superposaient (2026-11-27 ; un `view-transition-name` sur le logo déformait la lune sur iPhone, abandonné).
+    Pendant le changement, classe `theme-fondu` : barre du haut opaque, sans flou (Safari perd le flou dans les
+    captures, le texte de la page apparaissait à travers). Disque découpé par `clip-path`, pas `overflow-hidden`.
     Pour filmer une animation, ralentir la page (`Animation.setPlaybackRate`
     et `requestAnimationFrame`) : les captures sont trop lentes sinon.
   - Couleurs de matière : `pastel()` et `var(--mix-fg)` les adaptent au thème.
