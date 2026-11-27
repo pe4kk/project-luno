@@ -177,6 +177,32 @@ function couleurBarre(theme: string) {
   });
 }
 
+/**
+ * Safari (iOS 26) teinte la barre d'état d'après le fond du haut de la page, mais ne le relit
+ * pas quand seules les variables du thème glissent : la barre restait claire sur une page
+ * sombre (capture du 2026-11-27). À la fin du glissement, on pose le fond final en dur une
+ * image puis on le retire, et on remplace la meta theme-color : deux vrais changements qu'il voit.
+ */
+function rafraichirBarre(theme: string) {
+  const cibles = [
+    document.documentElement,
+    document.body,
+    document.querySelector<HTMLElement>("header"),
+  ].filter((e): e is HTMLElement => !!e);
+  for (const e of cibles)
+    e.style.backgroundColor = getComputedStyle(e).backgroundColor;
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      for (const e of cibles) e.style.backgroundColor = "";
+    }),
+  );
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+    const neuve = m.cloneNode() as HTMLMetaElement;
+    m.replaceWith(neuve);
+  });
+  couleurBarre(theme);
+}
+
 function changerTheme(suivant: string, depuis?: HTMLElement | null) {
   const racine = document.documentElement;
   const appliquer = () => {
@@ -200,7 +226,10 @@ function changerTheme(suivant: string, depuis?: HTMLElement | null) {
   if (!vt || ecranTactile()) {
     racine.classList.add("theme-glisse");
     appliquer();
-    window.setTimeout(() => racine.classList.remove("theme-glisse"), 600);
+    window.setTimeout(() => {
+      racine.classList.remove("theme-glisse");
+      rafraichirBarre(suivant);
+    }, 600);
     return;
   }
   // Pendant le changement, la barre du haut devient opaque : dans les captures de la page,

@@ -661,7 +661,7 @@ fiches de révision ; le slider règle la longueur de la fiche.
     téléphone, n'animer que transform et opacity.
     **Sur téléphone, plus de View Transitions** (2026-11-27, vidéo de l'utilisateur) : la barre d'état de Safari
     se teinte d'après la vraie page, cachée sous les captures pendant le fondu, et changeait une demi-seconde
-    après Luno ; les couleurs glissent donc dans la vraie page (`theme-glisse` : les variables du thème sont déclarées en `@property` et animées sur la racine seule, transitions des éléments coupées ; animer `color` sur chaque élément faisait traîner le texte hérité). La meta `theme-color` suit le
+    après Luno ; les couleurs glissent donc dans la vraie page (`theme-glisse` : les variables du thème sont déclarées en `@property` et animées sur la racine seule, transitions des éléments coupées ; animer `color` sur chaque élément faisait traîner le texte hérité). Safari ne relit pas la barre quand seules les variables glissent (barre restée claire) : `rafraichirBarre()` pose le fond final en dur deux images et remplace les metas à la fin. La meta `theme-color` suit le
     thème choisi (`couleurBarre()`, et dans le script de `layout.tsx`), pas celui du système. Disque du logo
     découpé par `clip-path`, pas `overflow-hidden` (Safari perd l'arrondi quand l'ombre est animée).
     Pour filmer une animation, ralentir la page (`Animation.setPlaybackRate`
