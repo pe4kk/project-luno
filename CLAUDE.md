@@ -233,6 +233,18 @@ fiches de révision ; le slider règle la longueur de la fiche.
     Rimbaud : 4 sujets d'entraînement (émancipation, révolte, « On n'est pas sérieux… », tradition), 20
     citations ; jamais une copie entière à rendre. « Préparer une éval » (éval avec exercices) : méthode,
     plans de deux sujets, citations chaque jour. Pot-Bouille : en attente du parcours.
+  - **Sujets corrigés en deux modes** (2026-11-28, demandé : « un mode intro et plan détaillé et un mode
+    développé », HG et dissertation, seulement les chapitres dans Luno). Dans S'exercer › Rédiger, un sujet qui a
+    des étapes `developpe` ou `seulement` (`EtapeProbleme`) propose « Intro et plan détaillé » (format du DST) ou
+    « Copie développée » (`aDeuxModes()`, `LecteurProbleme` dans `components/exercices/Probleme.tsx` ; changer de
+    mode recommence). Histoire H1 : 8 questions problématisées (5 de `histoire-revolution-empire.ts` + 3 de
+    `contenu/histoire-sujets-corriges.ts`), chaque partie avec `developpe`, conclusion `seulement: "developpe"`.
+    Dissertation Rimbaud : 6 sujets (`SUJETS_RIMBAUD_NOUVEAUX` de `contenu/dissertations-sujets-2.ts` : corps,
+    provocation) avec `introduction` et `developpe: { parties, conclusion }` (`SujetDiss`), bascule dans l'écran
+    Dissertation (`CopieDeveloppee`) et repris dans Rédiger par `problemeDeDissertation()` (`lib/dissertation.ts`).
+    **Rédaction par agents** : un agent « professeur expert » par lot (brief : lire CLAUDE.md, le cours dans Luno,
+    la méthode du prof, les sujets modèles ; ne citer que les textes recopiés), puis un agent « correcteur » qui
+    vérifie dates, citations et bornes et corrige. Refaire ainsi pour toute nouvelle série de sujets.
   - **Une fiche par poème étudié** (2026-11-26, demandé) : chapitre `francais-1re-rimbaud-douai` version 6, fiches
     « L'œuvre » puis une par poème (`contenu/rimbaud-poemes.ts`, `FICHES_POEMES`) : pour À la Musique, Vénus,
     Au Cabaret-Vert, l'analyse du texte du bac (essentiel, problématique, mouvements, remarques `cle` avec citation

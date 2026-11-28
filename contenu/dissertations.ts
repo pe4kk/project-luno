@@ -1,5 +1,6 @@
 import type { Dissertation } from "@/lib/dissertation";
 import { TEXTES_BAC } from "./bac-francais";
+import { SUJETS_RIMBAUD_NOUVEAUX } from "./dissertations-sujets-2";
 import { TEXTES_RIMBAUD } from "./rimbaud-textes";
 
 /**
@@ -317,6 +318,7 @@ export const DISSERTATION_RIMBAUD: Dissertation = {
           "Rimbaud ne rompt donc pas brutalement avec la tradition dans les Cahiers de Douai. Il la connaît et l’imite, en écrivant des sonnets réguliers et en réécrivant Villon ; puis il la détourne, par la parodie du mythe, l’entrée du prosaïque et la chute qui ridiculise ; enfin, il la transforme de l’intérieur, par la syllepse et la satire cryptée. Il n’abandonne pas les modèles poétiques : il les fait servir à une poésie neuve. C’est cette rupture par le détournement qui fait de son émancipation une émancipation créatrice.\n\nBaudelaire, avant lui, procédait déjà ainsi : dans Les Fleurs du mal, il se flattait d’avoir fait de l’or avec la boue, à l’intérieur même du sonnet, preuve que l’on peut renouveler la poésie sans en abandonner les formes.",
       },
     },
+    ...SUJETS_RIMBAUD_NOUVEAUX,
   ],
   citations: [
     { citation: "« Je m’en allais, les poings dans mes poches crevées ; / Mon paletot aussi devenait idéal »", poeme: "Ma Bohème", procede: "Syllepse (« idéal »)", prouve: "La pauvreté de la fugue transfigurée en poésie.", axe: "milieu" },

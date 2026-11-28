@@ -1,4 +1,5 @@
 import { HISTOIRE_TERREUR as T } from "./histoire-terreur";
+import { PROBLEMES_HISTOIRE_NOUVEAUX } from "./histoire-sujets-corriges";
 import type { ChapitrePublie, DateCle, DefinitionCours, ElementSchema, ImageCours, Lecon, Probleme, Schema } from "@/lib/types";
 
 /**
@@ -726,7 +727,7 @@ export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
   ],
   definitions: DEFINITIONS,
   dates: [...DATES, ...DATES_TERREUR].sort((a, b) => a.tri.localeCompare(b.tri)),
-  problemes: PROBLEMES_REVOLUTION,
+  problemes: [...PROBLEMES_REVOLUTION, ...PROBLEMES_HISTOIRE_NOUVEAUX],
   flashcards: [
     { recto: "Nation", verso: "Ensemble des êtres humains vivant sur un même territoire, ayant une communauté d'origine, d'histoire, de culture, de traditions, parfois de langue, et constituant une communauté politique." },
     { recto: "Absolutisme", verso: "Régime monarchique où le roi prétend gouverner sans limites et avoir tous les droits sur ses sujets ; il concentre le pouvoir politique." },

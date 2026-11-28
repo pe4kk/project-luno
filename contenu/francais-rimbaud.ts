@@ -1,4 +1,6 @@
+import { problemeDeDissertation } from "@/lib/dissertation";
 import type { ChapitrePublie } from "@/lib/types";
+import { DISSERTATION_RIMBAUD } from "./dissertations";
 import { DEF_FRANCAIS_RIMBAUD } from "./definitions";
 import { FICHES_POEMES, RESUMES_POEMES } from "./rimbaud-poemes";
 
@@ -11,8 +13,10 @@ import { FICHES_POEMES, RESUMES_POEMES } from "./rimbaud-poemes";
  */
 export const FRANCAIS_RIMBAUD: ChapitrePublie = {
   id: "francais-1re-rimbaud-douai",
-  version: 10,
+  version: 11,
   definitions: DEF_FRANCAIS_RIMBAUD,
+  // Les sujets de dissertation de l’onglet Bac, à rédiger dans S’exercer › Rédiger (deux modes).
+  problemes: DISSERTATION_RIMBAUD.sujets.map((s) => problemeDeDissertation(DISSERTATION_RIMBAUD, s)),
   matiere: { nom: "Français", couleur: "#d98a8a", emoji: "📚" },
   titre: "Rimbaud, Cahiers de Douai",
   flashcards: [
