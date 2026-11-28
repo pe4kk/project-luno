@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { AvecBrouillon } from "@/components/Brouillon";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, CheckCircle2, ChevronRight, Eye, RotateCcw, X } from "lucide-react";
@@ -14,7 +14,33 @@ import type { Probleme } from "@/lib/types";
 
 const pointsEtape = (e: Probleme["etapes"][number]) => e.points ?? 1;
 
-/** Un problème rédigé, étape par étape, avec le barème à cocher. */
+type Mode = "plan" | "developpe";
+
+/** Un sujet a deux modes s'il a des étapes propres à un mode ou une version développée. */
+export const aDeuxModes = (p: Probleme) => p.etapes.some((e) => e.developpe || e.seulement);
+
+/** Les étapes d'un mode : celles des deux modes, plus les siennes, en version développée au besoin. */
+function etapesDuMode(p: Probleme, mode: Mode): Probleme["etapes"] {
+  return p.etapes
+    .filter((e) => !e.seulement || e.seulement === mode)
+    .map((e) =>
+      mode === "developpe" && e.developpe
+        ? {
+            ...e,
+            consigne: e.developpe.consigne ?? e.consigne,
+            attendu: e.developpe.attendu,
+            criteres: e.developpe.criteres ?? e.criteres,
+            points: e.developpe.points ?? e.points,
+          }
+        : e,
+    );
+}
+
+/**
+ * Un problème rédigé, étape par étape, avec le barème à cocher. Un sujet d'histoire ou de
+ * dissertation se travaille en deux modes : « Intro et plan détaillé » (le format du DST)
+ * ou « Copie développée » (tout rédigé, avec la conclusion). Changer de mode recommence.
+ */
 export function LecteurProbleme({
   probleme,
   matiereId,
@@ -23,6 +49,57 @@ export function LecteurProbleme({
   probleme: Probleme;
   matiereId: string;
   quitter: () => void;
+}) {
+  const deuxModes = aDeuxModes(probleme);
+  const [mode, setMode] = useState<Mode>("plan");
+  const vue = deuxModes ? { ...probleme, etapes: etapesDuMode(probleme, mode) } : probleme;
+  return (
+    <LecteurEtapes
+      key={mode}
+      probleme={vue}
+      matiereId={matiereId}
+      quitter={quitter}
+      developpe={mode === "developpe"}
+      selecteur={
+        deuxModes ? (
+          <div role="radiogroup" aria-label="Mode" className="mt-4 grid grid-cols-2 gap-1 rounded-2xl border border-line bg-bg/60 p-1">
+            {(
+              [
+                ["plan", "Intro et plan détaillé"],
+                ["developpe", "Copie développée"],
+              ] as const
+            ).map(([m, label]) => (
+              <button
+                key={m}
+                role="radio"
+                aria-checked={mode === m}
+                onClick={() => setMode(m)}
+                className={`min-h-11 rounded-xl px-2 text-[14px] font-semibold leading-tight transition-colors duration-200 ${
+                  mode === m ? "bg-surface text-ink shadow-card" : "text-muted"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : null
+      }
+    />
+  );
+}
+
+function LecteurEtapes({
+  probleme,
+  matiereId,
+  quitter,
+  developpe,
+  selecteur,
+}: {
+  probleme: Probleme;
+  matiereId: string;
+  quitter: () => void;
+  developpe: boolean;
+  selecteur: ReactNode;
 }) {
   const ajouterErreurs = useLuno((s) => s.ajouterErreurs);
   const scientifique = estScientifique(useLuno((s) => s.matieres.find((m) => m.id === matiereId)?.nom));
@@ -59,7 +136,7 @@ export function LecteurProbleme({
   };
 
   return (
-    <AvecBrouillon cle={`pb-${probleme.id}`}>
+    <AvecBrouillon cle={`pb-${probleme.id}${developpe ? "-dev" : ""}`}>
     <div className="mx-auto max-w-[680px]">
       <div className="mb-4 flex items-center gap-3">
         <div className="flex flex-1 gap-1.5" aria-hidden>
@@ -86,6 +163,14 @@ export function LecteurProbleme({
         <p className="mt-2 whitespace-pre-line text-[15px] leading-relaxed">{formule(probleme.enonce)}</p>
         <p className="mt-2 text-[15px] font-semibold leading-relaxed">{formule(probleme.question)}</p>
         {probleme.schema && <DessinSchema schema={probleme.schema} className="mt-3 max-w-[460px]" />}
+        {selecteur}
+        {selecteur && (
+          <p className="mt-2 text-[13px] leading-snug text-muted">
+            {developpe
+              ? "Toute la copie rédigée : paragraphes argumentés, transitions et conclusion."
+              : "Le format du DST : introduction rédigée et plan détaillé, sans conclusion."}
+          </p>
+        )}
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
@@ -112,7 +197,7 @@ export function LecteurProbleme({
                       label={`Ta réponse : ${e.titre}`}
                       valeur={reponses[etape]}
                       changer={(v) => setReponses(reponses.map((r, i) => (i === etape ? v : r)))}
-                      lignes={scientifique ? 3 : 6}
+                      lignes={scientifique ? 3 : developpe ? 12 : 6}
                       placeholder={scientifique ? "Écris la ligne que tu mettrais sur ta copie" : "Rédige ici, comme sur ta copie"}
                       desactive={vu[etape]}
                     />

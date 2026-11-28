@@ -10,7 +10,7 @@ import { encre, useLuno } from "@/lib/store";
 import type { Calcul, Chapitre, Probleme } from "@/lib/types";
 import { prochainDstDe, trierParDst } from "@/lib/revision";
 import { compteARebours } from "@/lib/dates";
-import { LecteurProbleme } from "./Probleme";
+import { aDeuxModes, LecteurProbleme } from "./Probleme";
 import { LecteurCalcul } from "./Calcul";
 
 /** Liste des éléments (problèmes ou calculs) rangés par chapitre. */
@@ -91,9 +91,10 @@ export function ModeProblemes({ entete, occupe }: { entete: ReactNode; occupe: (
         <ParChapitre
           liste={liste}
           choisir={(p, c) => setChoix({ p, c })}
-          detail={(p) =>
-            `${pluriel(p.etapes.length, "étape")} · ${String(p.etapes.reduce((t, e) => t + (e.points ?? 1), 0)).replace(".", ",")} pts${p.duree ? ` · ${p.duree}` : ""}`
-          }
+          detail={(p) => {
+            if (aDeuxModes(p)) return `Plan détaillé ou copie développée${p.duree ? ` · ${p.duree}` : ""}`;
+            return `${pluriel(p.etapes.length, "étape")} · ${String(p.etapes.reduce((t, e) => t + (e.points ?? 1), 0)).replace(".", ",")} pts${p.duree ? ` · ${p.duree}` : ""}`;
+          }}
         />
       )}
     </div>

@@ -186,6 +186,8 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
   const [voir, setVoir] = useState(false);
   const [grille, setGrille] = useState<number[]>(() => lire<number[]>(cleGrille, []));
   const [ouverte, setOuverte] = useState<number | null>(0);
+  const [mode, setMode] = useState<"plan" | "developpe">("plan");
+  const developpe = mode === "developpe" && sujet.developpe;
   const cocher = (i: number) => {
     const g = grille.includes(i) ? grille.filter((x) => x !== i) : [...grille, i];
     setGrille(g);
@@ -242,8 +244,42 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
             </p>
           </div>
 
+          {sujet.developpe && (
+            <div role="radiogroup" aria-label="Corrigé" className="grid grid-cols-2 gap-1 rounded-2xl border border-line bg-surface p-1 shadow-card">
+              {(
+                [
+                  ["plan", "Intro et plan détaillé"],
+                  ["developpe", "Copie développée"],
+                ] as const
+              ).map(([m, label]) => (
+                <button
+                  key={m}
+                  type="button"
+                  role="radio"
+                  aria-checked={mode === m}
+                  onClick={() => setMode(m)}
+                  className={`min-h-11 rounded-xl px-2 text-[14px] font-semibold leading-tight transition-colors duration-200 ${
+                    mode === m ? "bg-accent-soft text-ink" : "text-muted"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {developpe ? (
+            <CopieDeveloppee sujet={sujet} />
+          ) : (
+          <>
+          {sujet.introduction && (
+            <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
+              <p className="surtitre text-accent">3. L’introduction rédigée</p>
+              <TexteCopie texte={sujet.introduction} className="mt-2" />
+            </div>
+          )}
           <div className="space-y-2">
-            <p className="surtitre px-1 text-accent">3. Le plan proposé</p>
+            <p className="surtitre px-1 text-accent">{sujet.introduction ? "4" : "3"}. Le plan proposé</p>
             {sujet.plan.map((p, i) => (
               <div key={p.titre}>
                 <div className="rounded-[18px] border border-line bg-surface shadow-card">
@@ -285,12 +321,17 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
           </div>
 
           <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
-            <p className="surtitre text-accent">4. Conclusion et ouverture</p>
+            <p className="surtitre text-accent">{sujet.introduction ? "5" : "4"}. Conclusion et ouverture</p>
             <p className="mt-1.5 text-[14.5px] leading-relaxed">{sujet.conclusion}</p>
             <p className="mt-2 text-[14px] leading-relaxed text-muted">
               <b className="font-semibold text-ink">Ouverture :</b> {sujet.ouverture}
             </p>
-            <p className="surtitre mt-4 text-accent">Pièges</p>
+          </div>
+          </>
+          )}
+
+          <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
+            <p className="surtitre text-accent">Pièges</p>
             <ul className="mt-1 space-y-1">
               {sujet.pieges.map((t) => (
                 <li key={t} className="text-[14px] leading-snug">· {t}</li>
@@ -299,7 +340,7 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
           </div>
 
           <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
-            <p className="surtitre text-accent">5. Juge ton plan</p>
+            <p className="surtitre text-accent">Juge ton plan</p>
             <p className="mt-1 text-[13px] text-muted">Coche ce que ton plan respecte vraiment.</p>
             <ul className="mt-2 space-y-1.5">
               {diss.criteres.map((c, i) => {
@@ -325,6 +366,52 @@ function VueSujet({ diss, sujet, couleur }: { diss: Dissertation; sujet: SujetDi
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/** Paragraphes d'une copie, séparés par une ligne vide. */
+function TexteCopie({ texte, className = "" }: { texte: string; className?: string }) {
+  return (
+    <div className={`space-y-3 text-[15px] leading-relaxed ${className}`}>
+      {texte.split(/\n\s*\n/).map((p, i) => (
+        <p key={i} className="whitespace-pre-line">
+          {p}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/** La copie entière, comme sur la feuille : introduction, parties, conclusion. */
+function CopieDeveloppee({ sujet }: { sujet: SujetDiss }) {
+  const d = sujet.developpe!;
+  const romain = ["I", "II", "III", "IV"];
+  return (
+    <div className="rounded-[18px] border border-line bg-surface p-5 shadow-card sm:p-7">
+      <p className="surtitre text-accent">La copie développée</p>
+      <p className="mt-1 text-[13px] leading-snug text-muted">
+        Un modèle sur un sujet d’entraînement : lis comment chaque idée devient un paragraphe, puis rédige la tienne.
+      </p>
+      {sujet.introduction && (
+        <section className="mt-5">
+          <p className="surtitre mb-1.5 text-muted">Introduction</p>
+          <TexteCopie texte={sujet.introduction} />
+        </section>
+      )}
+      {d.parties.map((t, i) => (
+        <section key={i} className="mt-6 border-t border-line pt-5">
+          <p className="surtitre mb-1.5 text-muted">
+            Partie {romain[i] ?? i + 1}
+            {sujet.plan[i] ? ` · ${sujet.plan[i].titre.replace(/^[IVX]+\.\s*/, "")}` : ""}
+          </p>
+          <TexteCopie texte={t} />
+        </section>
+      ))}
+      <section className="mt-6 border-t border-line pt-5">
+        <p className="surtitre mb-1.5 text-muted">Conclusion</p>
+        <TexteCopie texte={d.conclusion} />
+      </section>
     </div>
   );
 }

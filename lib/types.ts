@@ -139,6 +139,14 @@ export type EtapeProbleme = {
    * ([[ … ]]), pour prendre le réflexe, sans que cela compte dans la note.
    */
   encadrer?: boolean;
+  /**
+   * Étape propre à un mode (sujets d'histoire ou de dissertation) : « plan » = introduction
+   * et plan détaillé (le format du DST), « developpe » = copie entièrement rédigée (ex. la
+   * conclusion). Sans ce champ, l'étape est dans les deux modes.
+   */
+  seulement?: "plan" | "developpe";
+  /** Version « copie développée » de l'étape : remplace consigne, attendu, critères et points. */
+  developpe?: { consigne?: string; attendu: string; criteres?: string[]; points?: number };
 };
 export type Probleme = {
   id: string;
