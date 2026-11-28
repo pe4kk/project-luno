@@ -226,11 +226,29 @@ const CRITERES_PARTIE = [
   "Phrases rédigées, pas de tirets ni d'abréviations",
 ];
 const CRITERES_TRANSITION = ["Bilan de la partie en une phrase", "Question ou idée qui annonce la partie suivante"];
+/** Copie développée (mode « developpe ») : la partie entièrement rédigée, d'après la fiche méthode de la prof. */
+const CRITERES_PARTIE_DEVELOPPE = [
+  "Titres de la partie et des sous-parties gardés, puis une phrase qui annonce l'idée directrice avec les mots du sujet",
+  "Un paragraphe par argument, qui commence par l'idée",
+  "Chaque exemple précis, daté et localisé, est expliqué : ce qu'il prouve pour le sujet",
+  "Connecteurs logiques entre les arguments, sans spirale descriptive",
+  "Retour au sujet en fin de paragraphe",
+];
+const CRITERES_CONCLUSION = [
+  "Bilan qui répond clairement à la problématique",
+  "Les idées de chaque partie reprises dans l'ordre du plan",
+  "Aucun exemple nouveau dans le bilan",
+  "Ouverture exacte vers la suite ou un sujet proche (facultative selon ta prof)",
+];
 
 const ANALYSE_CONSIGNE =
   "Au brouillon, comme le demande ta prof : entoure les mots-clés et définis-les (« Quoi ? »), trouve les bornes (« Où ? », « Quand ? »), puis choisis le type de plan (chronologique ou thématique).";
 const PARTIE_CONSIGNE =
   "Plan détaillé rédigé : titre de la partie, titre de la sous-partie, puis pour chaque argument une phrase « argument, exemple, idée ». Deux arguments par sous-partie suffisent.";
+const PARTIE_DEVELOPPE_CONSIGNE =
+  "Copie développée : recopie le titre de la partie, puis une phrase qui annonce son idée directrice ; sous chaque titre de sous-partie, un paragraphe par argument (alinéa) : l'idée, un exemple précis daté et localisé, puis ce qu'il prouve pour le sujet. Enchaîne avec des connecteurs logiques et saute une ligne entre les parties.";
+const CONCLUSION_CONSIGNE =
+  "Un bilan rapide qui répond à la problématique en reprenant les points clés de chaque partie, puis, si tu as le temps, une ouverture vers une perspective plus vaste. Conseil de ta prof : prépare-la au brouillon avant le développement, pour être sûr de rendre une copie complète.";
 
 export const PROBLEMES_REVOLUTION: Probleme[] = [
   {
@@ -265,6 +283,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "I. 1789-1792 : la nation devient souveraine\n\nA. En 1789, la nation prend le pouvoir au roi\n– Les députés du tiers état se proclament représentants de la nation. Ainsi, le 20 juin 1789, par le serment du Jeu de paume à Versailles, ils jurent de donner une constitution à la France : la souveraineté passe du roi à la nation.\n– Le peuple intervient par la force pour défendre la nouvelle Assemblée. La prise de la Bastille à Paris, le 14 juillet 1789, attaque un symbole du pouvoir absolu, et la marche des femmes des 5 et 6 octobre 1789 ramène le roi à Paris : la nation ne se réduit pas aux députés, le peuple pèse sur le pouvoir.\n\nB. Une nation de citoyens égaux dans une monarchie constitutionnelle\n– La société d'ordres disparaît. Dans la nuit du 4 août 1789, l'Assemblée abolit les privilèges, puis la DDHC du 26 août 1789 affirme que « les hommes naissent et demeurent libres et égaux en droits » et que « la souveraineté réside essentiellement dans la nation » : tous les Français deviennent membres d'une même nation.\n– La Constitution de septembre 1791 organise une monarchie constitutionnelle : une assemblée législative élue vote les lois et l'impôt, le roi des Français les fait exécuter. Mais le suffrage est censitaire (citoyens riches d'au moins 25 ans) : la nation souveraine reste limitée aux plus riches.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "I. 1789-1792 : la nation devient souveraine\n\nEntre 1789 et 1792, la nation prend la place du roi comme source du pouvoir : elle devient souveraine.\n\nA. En 1789, la nation prend le pouvoir au roi\n\nEn 1789, les députés du tiers état affirment qu'ils représentent la nation tout entière et lui transfèrent la souveraineté, qui appartenait jusque-là au roi. Réunis à Versailles pour les États généraux, ils se heurtent au refus de Louis XVI de voter par tête ; ils se proclament alors Assemblée nationale et, le 20 juin 1789, dans la salle du Jeu de paume, ils jurent de ne pas se séparer avant d'avoir donné une constitution à la France. Ce serment montre que le pouvoir de fixer les règles du pays ne vient plus du roi de droit divin, mais des représentants de la nation.\n\nPar ailleurs, la nation ne se réduit pas aux députés : le peuple intervient directement, et parfois par la force. Le 14 juillet 1789, à Paris, les insurgés prennent la Bastille, prison qui symbolise le pouvoir absolu du roi ; les 5 et 6 octobre, 7 000 Parisiennes marchent sur Versailles et ramènent la famille royale à Paris, où le roi doit approuver la DDHC. Le peuple pèse donc désormais sur le pouvoir : la nation est devenue un acteur de la vie politique.\n\nB. Une nation de citoyens égaux dans une monarchie constitutionnelle\n\nPour que la nation existe, il faut d'abord que les Français soient égaux. Dans la nuit du 4 août 1789, l'Assemblée abolit les privilèges de la noblesse et du clergé, ce qui met fin à la société d'ordres. Puis la DDHC, adoptée le 26 août 1789, proclame que « les hommes naissent et demeurent libres et égaux en droits » et que « la souveraineté réside essentiellement dans la nation ». Ainsi, tous les Français deviennent membres d'une même communauté politique, et le pouvoir tire désormais sa légitimité de la nation.\n\nCette souveraineté nationale est ensuite organisée, mais avec des limites. La Constitution de septembre 1791 crée une monarchie constitutionnelle : une assemblée législative élue et indissoluble vote les lois et l'impôt, tandis que le roi des Français, héréditaire, les fait exécuter et ne dispose que d'un veto suspensif. Cependant, le suffrage est censitaire : seuls les citoyens assez riches pour payer l'impôt, âgés d'au moins 25 ans, votent. La nation est donc souveraine en droit, mais seule une partie des Français exerce réellement cette souveraineté.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie II",
@@ -281,6 +305,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "II. 1792-1799 : une nation divisée dans une République instable\n\nA. La République défend la nation par la Terreur\n– La nation se passe du roi. La Convention proclame la République le 21 septembre 1792, et Louis XVI est exécuté le 21 janvier 1793 : la souveraineté appartient désormais à la seule nation.\n– Pour défendre la République menacée par la guerre et la Vendée, le gouvernement révolutionnaire suspend les libertés. La loi des suspects du 17 septembre 1793 permet d'arrêter tous les « ennemis de la liberté » : au nom de la nation, une partie des citoyens est exclue et poursuivie, même si des mesures sociales sont prises (abolition de l'esclavage, 4 février 1794).\n\nB. Le Directoire, une République fragile\n– Après la chute de Robespierre (28 juillet 1794), la Constitution de l'an III crée le Directoire (26 octobre 1795) pour rendre impossibles les excès : le pouvoir est partagé entre cinq directeurs et deux assemblées, le Conseil des Cinq-Cents qui propose les lois et le Conseil des Anciens qui les vote.\n– Mais le suffrage censitaire, restreint et indirect, divise environ par deux le nombre d'électeurs, la misère revient et les royalistes comme les jacobins menacent le régime : la nation est peu représentée et la République reste instable.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "II. 1792-1799 : une nation divisée dans une République instable\n\nDe 1792 à 1799, la nation devient la seule source du pouvoir dans une République, mais elle se divise et le régime reste instable.\n\nA. La République défend la nation par la Terreur\n\nÀ partir de 1792, la nation se passe du roi. La Convention, élue en septembre 1792, proclame la République le 21 septembre 1792, puis Louis XVI est jugé et exécuté à Paris le 21 janvier 1793. Pour la première fois, la France n'a plus de monarque : la souveraineté appartient entièrement à la nation et à ses représentants.\n\nMais cette République est menacée de toutes parts, et elle défend la nation en restreignant les libertés. En 1793, la France est en guerre contre les États coalisés, et l'Ouest se soulève en mars contre la levée de 300 000 hommes : c'est la guerre de Vendée. Le gouvernement révolutionnaire, appuyé sur le Comité de salut public, fait voter la loi des suspects le 17 septembre 1793, qui permet d'arrêter tous les ennemis de la Révolution, avoués ou supposés. Au nom de la nation, une partie des citoyens est donc exclue et poursuivie. Il faut toutefois nuancer : la Convention prend aussi des mesures sociales, comme l'abolition de l'esclavage dans les colonies le 4 février 1794. La nation est ainsi à la fois défendue et déchirée.\n\nB. Le Directoire, une République fragile\n\nAprès l'exécution de Robespierre, le 28 juillet 1794, les républicains modérés veulent éviter le retour de la Terreur. La Constitution de l'an III crée le Directoire, qui commence le 26 octobre 1795 : le pouvoir exécutif est partagé entre cinq directeurs, et le pouvoir législatif entre le Conseil des Cinq-Cents, qui propose les lois, et le Conseil des Anciens, qui les vote. Cette séparation des pouvoirs empêche un homme ou un comité de tout contrôler, mais elle rend le régime lent à décider.\n\nDe plus, la nation est mal représentée sous le Directoire. Le suffrage censitaire, restreint et indirect, réservé aux contribuables, réduit environ de moitié le nombre d'électeurs. En même temps, la misère sociale revient, et le régime est attaqué à la fois par les royalistes et par les jacobins. Faute d'un large soutien dans la nation, la République reste instable.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie III",
@@ -297,6 +327,21 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "III. 1799-1804 : Napoléon encadre la nation par un pouvoir personnel\n\nA. Un pouvoir concentré entre les mains d'un seul homme\n– Bonaparte prend le pouvoir par la force. Le coup d'État du 18 brumaire an VIII (9 novembre 1799), à Saint-Cloud, met fin au Directoire avec l'aide de l'armée, puis la Constitution de l'an VIII donne au Premier consul les pouvoirs exécutif, militaire et diplomatique : la nation ne contrôle plus le pouvoir.\n– Il fonde un régime héréditaire. Le sénatus-consulte du 18 mai 1804 confie le gouvernement de la République à un empereur, et Napoléon est sacré par le pape à Notre-Dame le 2 décembre 1804, avec des symboles impériaux (aigle, couronne de laurier, main de justice) : il se comporte désormais comme un roi.\n\nB. Il consolide pourtant certains acquis de la Révolution\n– Le Code civil, promulgué le 21 mars 1804, unifie le droit pour toute la France et garantit l'égalité devant la loi et la propriété privée (art. 544) : les principes de 1789 sont conservés.\n– Napoléon organise l'État et récompense le mérite : préfets dans chaque département, premiers lycées publics et Légion d'honneur (1802). Mais l'égalité a des limites : les femmes sont juridiquement mineures et l'esclavage est rétabli en 1802.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "III. 1799-1804 : Napoléon encadre la nation par un pouvoir personnel\n\nDe 1799 à 1804, Napoléon Bonaparte place la nation sous son autorité personnelle, tout en conservant une partie des acquis de la Révolution.\n\nA. Un pouvoir concentré entre les mains d'un seul homme\n\nNapoléon Bonaparte prend d'abord le pouvoir par la force, sans passer par le vote de la nation. Le 18 brumaire an VIII (9 novembre 1799), à Saint-Cloud, il s'impose face au Conseil des Cinq-Cents avec l'aide de l'armée : ce coup d'État met fin au Directoire. La Constitution de l'an VIII, en décembre 1799, crée le Consulat et donne au Premier consul, Bonaparte, les pouvoirs exécutif, militaire et diplomatique ainsi que l'initiative des lois ; selon l'article 42, les deux autres consuls n'ont qu'une voix consultative. La nation ne contrôle donc plus le pouvoir : elle est encadrée par un seul homme, nommé consul à vie en 1802.\n\nEnsuite, ce pouvoir personnel devient héréditaire. Le sénatus-consulte du 18 mai 1804 déclare que « le gouvernement de la République est confié à un empereur », et Napoléon est sacré par le pape à Notre-Dame de Paris le 2 décembre 1804. Il s'entoure de symboles impériaux, comme l'aigle et la couronne de laurier, et des regalia des rois, comme la main de justice. Napoléon se comporte donc désormais comme un roi : la nation, devenue souveraine en 1789, ne choisit plus ceux qui la gouvernent.\n\nB. Il consolide pourtant certains acquis de la Révolution\n\nPourtant, Napoléon conserve des principes essentiels de 1789. Le Code civil, promulgué le 21 mars 1804, remplace les coutumes différentes selon les régions par un droit unifié pour toute la France ; il garantit l'égalité devant la loi et protège la propriété privée (article 544). Les Français restent ainsi des citoyens égaux en droits, membres d'une même nation régie par les mêmes lois.\n\nEnfin, Napoléon organise l'État et récompense le mérite plutôt que la naissance : il installe un préfet dans chaque département, crée les premiers lycées publics et fonde la Légion d'honneur en 1802. Toutefois, cette égalité a des limites : dans le Code civil, les femmes sont juridiquement mineures, soumises à leur mari, et l'esclavage est rétabli dans les colonies en 1802. La nation de Napoléon est donc unifiée et ordonnée, mais elle n'est plus libre de choisir ses dirigeants.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
+      },
+      {
+        titre: "Conclusion",
+        seulement: "developpe",
+        consigne: CONCLUSION_CONSIGNE,
+        attendu:
+          "Ainsi, entre 1789 et 1804, la Révolution française et Napoléon Bonaparte transforment profondément la France en plaçant la nation au cœur de la vie politique. De 1789 à 1792, la nation devient souveraine et les Français deviennent des citoyens égaux en droits, même si le suffrage censitaire réserve le vote aux plus riches. De 1792 à 1799, la République fait de la nation la seule source du pouvoir, mais celle-ci se divise, de la Terreur à un Directoire instable. Enfin, de 1799 à 1804, Napoléon concentre le pouvoir et fonde un régime héréditaire, tout en conservant, avec le Code civil, l'égalité devant la loi. La nation est donc devenue la référence de tout pouvoir, mais à la fin de la période, elle ne gouverne plus réellement.\n\nCette idée de nation dépasse ensuite les frontières de la France : jusqu'en 1815, les conquêtes de l'Empire diffusent le Code civil et les principes de 1789 dans l'Europe conquise, mais elles éveillent aussi, chez les peuples occupés, un sentiment national tourné contre la France.",
+        criteres: CRITERES_CONCLUSION,
+        points: 2,
       },
     ],
   },
@@ -330,6 +375,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "I. Une France d'Ancien Régime en crise à la veille de 1789\n\nA. Une société d'ordres jugée injuste\n– Une petite minorité possède des privilèges. Le clergé (environ 130 000 personnes, 0,5 % de la population) ne paie pas d'impôts et possède 10 % des terres du royaume, et la noblesse (1,5 %) a des privilèges honorifiques et judiciaires, comme le droit de porter l'épée : la naissance décide de la place dans la société.\n– Le tiers état, environ 98 % de la population, très hétérogène (bourgeois, artisans, paysans), paie seul les impôts comme la taille et la gabelle : cette inégalité nourrit la colère.\n\nB. Des crises et des idées nouvelles\n– La monarchie est en crise financière (plus de dépenses que de revenus), et l'hiver très froid de 1788 ruine les récoltes : la disette rend la situation explosive au printemps 1789.\n– Les Lumières remettent en cause la monarchie absolue : Montesquieu, dans De l'esprit des lois (1748), veut séparer les pouvoirs, et la Déclaration d'indépendance des États-Unis (1776) affirme que « tous les hommes sont nés égaux » : un autre modèle politique paraît possible.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "I. Une France d'Ancien Régime en crise à la veille de 1789\n\nPour mesurer ce que l'année 1789 a de nouveau, il faut d'abord voir que la France d'Ancien Régime est en crise à la veille de la Révolution.\n\nA. Une société d'ordres jugée injuste\n\nLa société d'Ancien Régime repose sur la naissance, qui donne des privilèges à une petite minorité. Le clergé, environ 130 000 personnes, soit 0,5 % de la population, ne paie pas d'impôts et possède 10 % des terres du royaume ; la noblesse, environ 1,5 % de la population, dispose de privilèges honorifiques et judiciaires, comme le droit de porter l'épée. La place de chacun dans la société est donc fixée dès la naissance, et non par le mérite.\n\nÀ l'inverse, le tiers état, qui rassemble environ 98 % des Français, porte seul le poids des impôts. Très hétérogène, puisqu'il regroupe aussi bien des bourgeois que des artisans et des paysans, il paie notamment la taille et la gabelle. Cette inégalité devant l'impôt nourrit un fort sentiment d'injustice, qui prépare la contestation de 1789.\n\nB. Des crises et des idées nouvelles\n\nÀ cette injustice s'ajoutent des crises graves. La monarchie dépense plus qu'elle ne gagne et connaît une crise financière ; en même temps, l'hiver très froid de 1788 ruine les récoltes et provoque une disette. Au printemps 1789, la faim et les difficultés du royaume rendent la situation explosive : le roi doit trouver une solution.\n\nEnfin, des idées nouvelles rendent un autre modèle politique pensable. Les philosophes des Lumières remettent en cause la monarchie absolue et la société d'ordres : Montesquieu, dans De l'esprit des lois en 1748, propose de séparer les pouvoirs exécutif, législatif et judiciaire. De plus, la Déclaration d'indépendance des États-Unis, en 1776, affirme que « tous les hommes sont nés égaux » et fonde une république. Les Français disposent donc d'arguments et d'exemples pour imaginer une France nouvelle.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie II",
@@ -346,6 +397,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "II. La nation prend le pouvoir au roi\n\nA. Des États généraux à l'Assemblée nationale\n– Le roi accorde au tiers état autant de députés que les deux autres ordres réunis (27 décembre 1788), et les députés apportent les cahiers de doléances où les Français consignent leurs réclamations : pour la première fois depuis longtemps, la nation est consultée.\n– Mais Louis XVI refuse le vote par tête : les députés du tiers état se proclament Assemblée nationale et, le 20 juin 1789, jurent dans la salle du Jeu de paume de donner une constitution à la France. Ils affirment qu'ils représentent la nation, donc que la souveraineté leur appartient.\n\nB. Le peuple entre en révolution\n– Le 14 juillet 1789, les Parisiens prennent la Bastille, symbole du pouvoir absolu, et pendant l'été la Grande Peur pousse les paysans à piller les châteaux et brûler les titres seigneuriaux : le peuple montre par la violence qu'il refuse l'Ancien Régime.\n– Les 5 et 6 octobre 1789, 7 000 Parisiennes marchent sur Versailles pour réclamer du pain et ramènent la famille royale à Paris : le roi est désormais sous le contrôle du peuple et doit approuver la DDHC.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "II. La nation prend le pouvoir au roi\n\nEn 1789, la première nouveauté est politique : la nation enlève au roi le pouvoir qu'il détenait seul.\n\nA. Des États généraux à l'Assemblée nationale\n\nPour sortir de la crise, Louis XVI convoque les États généraux, qui s'ouvrent à Versailles en mai 1789. Le 27 décembre 1788, il avait accordé au tiers état autant de députés que les deux autres ordres réunis, et les députés arrivent avec les cahiers de doléances, où les Français ont consigné leurs vœux et leurs réclamations. La nation est donc consultée, ce qui ouvre la voie au changement.\n\nCependant, Louis XVI refuse le vote par tête, qui aurait donné la majorité au tiers état. Les députés du tiers état se proclament alors Assemblée nationale et, le 20 juin 1789, dans la salle du Jeu de paume, ils jurent de ne pas se séparer avant d'avoir donné une constitution à la France. En affirmant qu'ils représentent la nation, ils lui donnent la souveraineté : c'est une rupture avec la monarchie absolue de droit divin.\n\nB. Le peuple entre en révolution\n\nLe peuple soutient cette révolution par la force. Le 14 juillet 1789, à Paris, les insurgés, qui ont faim et craignent les soldats massés autour de la ville, prennent la Bastille, prison symbole du pouvoir absolu du roi. Pendant l'été, la Grande Peur gagne les campagnes : les paysans pillent les châteaux et brûlent les titres seigneuriaux où sont notés les privilèges. Le peuple montre ainsi qu'il refuse l'Ancien Régime.\n\nEnfin, le peuple impose sa volonté au roi lui-même. Les 5 et 6 octobre 1789, 7 000 Parisiennes marchent sur Versailles pour réclamer du pain ; le roi approuve la DDHC et la famille royale est ramenée de force à Paris. Désormais, le roi vit sous le contrôle du peuple parisien : le pouvoir a changé de mains.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie III",
@@ -362,6 +419,21 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "III. Une nouvelle société et de nouveaux principes\n\nA. La fin de la société d'ordres\n– Dans la nuit du 4 août 1789, l'Assemblée nationale abolit les privilèges de la noblesse et du clergé, dont les députés n'ont d'autre choix que d'accepter tant la révolte gronde : les trois ordres disparaissent.\n– Les Français deviennent des citoyens égaux, membres d'une même nation : la place de chacun ne dépend plus de sa naissance.\n\nB. Des droits proclamés pour tous\n– La DDHC, adoptée le 26 août 1789, affirme que « les hommes naissent et demeurent libres et égaux en droits » et proclame la liberté religieuse et l'égalité devant la loi : ce sont les principes de la nouvelle France.\n– Elle affirme aussi que « la souveraineté réside essentiellement dans la nation » : c'est la fin de la monarchie absolue de droit divin, et l'Assemblée prépare une constitution qui fera de la France une monarchie constitutionnelle (1791).",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "III. Une nouvelle société et de nouveaux principes\n\nL'année 1789 ne change pas seulement le pouvoir : elle fonde une nouvelle société sur de nouveaux principes.\n\nA. La fin de la société d'ordres\n\nDans la nuit du 4 août 1789, l'Assemblée nationale abolit les privilèges de la noblesse et du clergé. Les députés de ces deux ordres acceptent cette décision, car la révolte gronde dans les campagnes depuis la Grande Peur. Les trois ordres disparaissent donc : la société d'Ancien Régime, fondée sur l'inégalité de naissance, prend fin.\n\nAinsi, les Français ne sont plus répartis en ordres inégaux, mais deviennent des citoyens égaux, membres d'une même nation. Leur place dans la société ne dépend plus de leur naissance : c'est l'une des transformations les plus profondes de l'année 1789.\n\nB. Des droits proclamés pour tous\n\nCes principes nouveaux sont fixés dans la Déclaration des droits de l'homme et du citoyen, adoptée le 26 août 1789. Elle affirme que « les hommes naissent et demeurent libres et égaux en droits », et proclame la liberté religieuse et l'égalité devant la loi. Ces droits deviennent les fondements de la nouvelle France.\n\nSurtout, la DDHC déclare que « la souveraineté réside essentiellement dans la nation ». Le pouvoir ne vient donc plus de Dieu et du roi, mais de la nation : c'est la fin de la monarchie absolue de droit divin. L'Assemblée prépare alors une constitution, adoptée en septembre 1791, qui fera de la France une monarchie constitutionnelle.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
+      },
+      {
+        titre: "Conclusion",
+        seulement: "developpe",
+        consigne: CONCLUSION_CONSIGNE,
+        attendu:
+          "Ainsi, l'année 1789 marque bien la naissance d'une nouvelle France. Alors que l'Ancien Régime était fragilisé par une société d'ordres injuste, par la crise financière, par la disette et par les idées des Lumières, la nation prend le pouvoir au roi, des États généraux au serment du Jeu de paume, avec le soutien du peuple, de la prise de la Bastille à la marche des femmes sur Versailles. Enfin, l'abolition des privilèges et la DDHC fondent une société de citoyens égaux en droits, dans laquelle la souveraineté appartient à la nation. En quelques mois, le pouvoir et la société ont changé de fondement.\n\nIl reste pourtant à organiser cette nouvelle France : la Constitution de 1791 crée une monarchie constitutionnelle, mais le compromis avec Louis XVI échoue, et la République est proclamée le 21 septembre 1792.",
+        criteres: CRITERES_CONCLUSION,
+        points: 2,
       },
     ],
   },
@@ -395,6 +467,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "I. L'échec de la monarchie constitutionnelle (1791-1792)\n\nA. Un compromis fragile entre le roi et la nation\n– La Constitution de septembre 1791 partage le pouvoir : l'assemblée législative, indissoluble, vote les lois et l'impôt, et le roi des Français, héréditaire et inviolable, nomme les ministres et peut bloquer une loi par un veto suspensif. Ce partage suppose que le roi accepte la Révolution.\n– Or Louis XVI y est réticent : il traîne des pieds pour approuver la DDHC et ne s'y résout qu'après la marche des femmes d'octobre 1789. La confiance entre le roi et la nation est fragile.\n\nB. Une nation mal représentée\n– Le suffrage est censitaire : seuls les citoyens riches d'au moins 25 ans votent. Les plus pauvres, qui ont fait la Révolution, sont exclus.\n– Le compromis s'effondre : la Convention proclame la République le 21 septembre 1792 et Louis XVI est exécuté le 21 janvier 1793. La France change de régime pour la deuxième fois en trois ans.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "I. L'échec de la monarchie constitutionnelle (1791-1792)\n\nLe premier régime organisé par la Révolution, la monarchie constitutionnelle, ne dure qu'un an, car il repose sur un compromis fragile.\n\nA. Un compromis fragile entre le roi et la nation\n\nLa Constitution de septembre 1791 partage le pouvoir entre la nation et le roi. L'assemblée législative, indissoluble, vote les lois et l'impôt et ratifie les déclarations de guerre et les traités de paix ; le roi des Français, héréditaire et inviolable, nomme les ministres, fait exécuter les lois et peut bloquer une loi par un veto suspensif. Ce partage ne peut fonctionner que si le roi accepte sincèrement la Révolution.\n\nOr Louis XVI se montre réticent dès le début. En 1789, il tarde à approuver la DDHC et ne s'y résout qu'après la marche des femmes sur Versailles, les 5 et 6 octobre. La fête de la Fédération, le 14 juillet 1790, met bien en scène sa réconciliation avec la nation, mais en juin 1791, il tente de s'enfuir de Paris avec sa famille et il est arrêté à Varennes. La confiance est rompue : un régime qui repose sur un roi hostile à ses principes ne peut pas être stable.\n\nB. Une nation mal représentée\n\nDe plus, la monarchie constitutionnelle ne représente qu'une partie de la nation. Le suffrage est censitaire : seuls les citoyens qui paient un impôt, âgés d'au moins 25 ans, peuvent voter. Les plus pauvres, qui ont pourtant pris la Bastille ou marché sur Versailles, sont exclus de la vie politique, ce qui prive le régime d'une partie de ses soutiens.\n\nLe compromis finit par s'effondrer. La Convention, élue en septembre 1792, proclame la République le 21 septembre 1792, puis Louis XVI est exécuté à Paris le 21 janvier 1793. En trois ans, la France change de régime pour la deuxième fois : l'échec de la monarchie constitutionnelle ouvre une période plus instable encore.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie II",
@@ -411,6 +489,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "II. Une République menacée qui choisit la Terreur (1793-1794)\n\nA. Une République attaquée de toutes parts\n– À l'extérieur, la France est en guerre contre les États coalisés (Anglais, Autrichiens, Prussiens, Espagnols), et à l'intérieur, la Vendée se soulève en mars 1793 contre la levée de 300 000 hommes : la République doit se défendre partout.\n– Les révolutionnaires se divisent : le 2 juin 1793, les chefs girondins sont arrêtés et les Montagnards prennent le contrôle de la Convention.\n\nB. La Terreur, un régime d'exception qui s'épuise\n– Le Comité de salut public reçoit les pleins pouvoirs et la loi des suspects du 17 septembre 1793 permet d'arrêter tous les ennemis supposés de la Révolution : les libertés de 1789 sont suspendues et la Constitution de 1793 n'est jamais appliquée.\n– La Terreur se retourne contre ses propres chefs : Danton est exécuté en avril 1794, puis Robespierre le 28 juillet 1794 (10 thermidor an II). Le régime tombe à son tour.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "II. Une République menacée qui choisit la Terreur (1793-1794)\n\nLa République remplace la monarchie, mais la guerre et les divisions la poussent vers un régime d'exception qui ne peut pas durer.\n\nA. Une République attaquée de toutes parts\n\nLa jeune République doit d'abord se défendre contre des ennemis extérieurs et intérieurs. À l'extérieur, elle est en guerre contre les États coalisés, notamment les Anglais, les Autrichiens, les Prussiens et les Espagnols. À l'intérieur, l'Ouest se soulève en mars 1793 contre la levée de 300 000 hommes : la guerre de Vendée oppose les « bleus » républicains aux « blancs » royalistes, tandis que des villes comme Lyon ou Marseille se révoltent contre la Convention. Menacée partout, la République ne peut pas gouverner normalement.\n\nEn outre, les révolutionnaires eux-mêmes se divisent. À la Convention s'opposent les Girondins, modérés, et les Montagnards, plus radicaux et proches du peuple. Le 2 juin 1793, la Garde nationale et les sans-culottes entourent la Convention et les chefs girondins sont arrêtés : les Montagnards prennent le contrôle de l'Assemblée. Les luttes entre révolutionnaires aggravent donc l'instabilité.\n\nB. La Terreur, un régime d'exception qui s'épuise\n\nPour sauver la République, la Convention met en place un gouvernement révolutionnaire qui suspend les libertés. Le Comité de salut public reçoit les pleins pouvoirs, et la loi des suspects du 17 septembre 1793 permet d'arrêter tous les ennemis de la Révolution, avoués ou supposés. La Constitution de l'an I, adoptée le 24 juin 1793, n'est jamais appliquée. Le pouvoir repose donc sur des mesures d'exception et non sur des institutions durables.\n\nFinalement, la Terreur se retourne contre ses propres chefs. Danton, chef des Indulgents, est exécuté le 5 avril 1794, puis Robespierre est arrêté et exécuté le 28 juillet 1794 (10 thermidor an II). Un régime fondé sur la peur et sur l'élimination des opposants ne peut pas durer : sa chute entraîne un nouveau changement de régime.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie III",
@@ -427,6 +511,21 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "III. Le Directoire, une République trop fragile (1795-1799)\n\nA. Un régime conçu pour éviter les excès\n– La Constitution de l'an III crée le Directoire (26 octobre 1795) : le pouvoir est divisé entre cinq directeurs, le Conseil des Cinq-Cents qui propose les lois et le Conseil des Anciens (250 membres de plus de 40 ans) qui les vote. Personne ne peut concentrer le pouvoir, mais le régime est lent à décider.\n– Le suffrage censitaire, restreint et indirect, réservé aux contribuables, réduit environ de moitié le nombre d'électeurs : le régime s'appuie sur une minorité de notables.\n\nB. Un régime menacé qui finit par un coup d'État\n– Les années du Directoire sont marquées par un regain de la misère sociale, et le régime est attaqué à la fois par les royalistes et par les jacobins : il n'a pas de soutien solide.\n– Le 18 brumaire an VIII (9 novembre 1799), Napoléon Bonaparte prend le pouvoir à Saint-Cloud avec l'aide de l'armée : ce coup d'État met fin au Directoire et à la décennie révolutionnaire.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "III. Le Directoire, une République trop fragile (1795-1799)\n\nEnfin, le Directoire, conçu pour empêcher le retour de la Terreur, est trop faible pour stabiliser la République.\n\nA. Un régime conçu pour éviter les excès\n\nLes républicains modérés qui ont renversé Robespierre veulent rendre impossibles les excès révolutionnaires. La Constitution de l'an III crée le Directoire, qui commence le 26 octobre 1795 (4 brumaire an IV) : cinq directeurs se partagent le pouvoir exécutif, le Conseil des Cinq-Cents propose les lois et le Conseil des Anciens, 250 membres de plus de 40 ans, les vote. Personne ne peut plus concentrer le pouvoir, mais cette division rend le régime lent à décider face aux crises.\n\nPar ailleurs, ce régime ne s'appuie que sur une minorité. Le suffrage censitaire, restreint et indirect, est réservé aux contribuables et réduit environ de moitié le nombre d'électeurs. Le Directoire est donc une République de notables, coupée d'une grande partie de la nation.\n\nB. Un régime menacé qui finit par un coup d'État\n\nDans ces conditions, le Directoire ne trouve pas de soutien solide. Ses années sont marquées par un regain de la misère sociale, et il est attaqué à la fois par les royalistes, qui veulent le retour du roi, et par les jacobins, qui veulent une République plus radicale. Menacé des deux côtés, le régime vit dans une instabilité permanente.\n\nC'est cette faiblesse qui permet à un général de s'imposer. Le 18 brumaire an VIII (9 novembre 1799), à Saint-Cloud, Napoléon Bonaparte prend le pouvoir face au Conseil des Cinq-Cents avec l'aide de l'armée. Ce coup d'État met fin au Directoire et à la décennie révolutionnaire : l'instabilité des régimes républicains a ouvert la voie à un pouvoir militaire.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
+      },
+      {
+        titre: "Conclusion",
+        seulement: "developpe",
+        consigne: CONCLUSION_CONSIGNE,
+        attendu:
+          "Ainsi, de 1791 à 1799, la Révolution française connaît une forte instabilité politique, car aucun régime ne parvient à trouver un équilibre durable. La monarchie constitutionnelle échoue, faute d'un roi qui accepte la Révolution et d'une nation largement représentée. La République, menacée par la guerre étrangère et la guerre civile, choisit la Terreur, un régime d'exception qui finit par éliminer ses propres chefs. Enfin, le Directoire, conçu pour éviter les excès, est trop faible et trop peu soutenu pour résister aux crises. Ces causes politiques, militaires et sociales se combinent et expliquent la succession rapide des régimes.\n\nCette instabilité profite à Napoléon Bonaparte : avec le Consulat, il promet de rétablir l'ordre, mais au prix d'un pouvoir personnel qui conduit à l'Empire en 1804.",
+        criteres: CRITERES_CONCLUSION,
+        points: 2,
       },
     ],
   },
@@ -460,6 +559,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "I. Une prise du pouvoir par la force, puis un pouvoir concentré\n\nA. Le coup d'État du 18 brumaire\n– Bonaparte profite de la faiblesse du Directoire : le 18 brumaire an VIII (9 novembre 1799), à Saint-Cloud, il s'impose avec l'armée face au Conseil des Cinq-Cents. Le pouvoir ne vient plus des élections mais de la force.\n– Le tableau du coup d'État étudié en classe le montre au centre, entouré des députés en toge rouge et de soldats : la peinture présente déjà l'armée comme garante de l'ordre.\n\nB. Le Consulat, un régime autoritaire\n– La Constitution de l'an VIII (1799) confie le pouvoir à trois consuls, mais le Premier consul, Bonaparte, dispose seul des pouvoirs exécutif, militaire et diplomatique et propose les lois. L'article 42 le dit : les deux autres consuls n'ont qu'une voix consultative, « la décision du Premier consul suffit ».\n– En 1802, Bonaparte est nommé consul à vie : le pouvoir personnel s'installe dans la durée.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "I. Une prise du pouvoir par la force, puis un pouvoir concentré\n\nNapoléon Bonaparte installe d'abord un nouveau régime en s'emparant du pouvoir par la force, puis en le concentrant entre ses mains.\n\nA. Le coup d'État du 18 brumaire\n\nBonaparte profite de la faiblesse du Directoire, affaibli par la misère et menacé par les royalistes et les jacobins. Le 18 brumaire an VIII (9 novembre 1799), à Saint-Cloud, il s'impose face au Conseil des Cinq-Cents avec l'aide de l'armée. Le pouvoir ne vient donc plus des élections, mais de la force : c'est la définition même d'un coup d'État.\n\nLes images servent déjà à justifier cette prise du pouvoir. Le tableau du coup d'État étudié en classe montre Bonaparte au centre, entouré de soldats et des membres du Conseil des Cinq-Cents en toge rouge. En le plaçant au cœur de la scène, la peinture présente l'armée et son chef comme les garants de l'ordre face à un régime affaibli.\n\nB. Le Consulat, un régime autoritaire\n\nUne fois au pouvoir, Bonaparte fait adopter une nouvelle constitution qui lui donne l'essentiel des pouvoirs. La Constitution de l'an VIII, en décembre 1799, crée le Consulat, dirigé par trois consuls ; mais le Premier consul, Bonaparte, a seul l'autorité exécutive, militaire et diplomatique, et il propose les lois. L'article 42 le précise : les deux autres consuls n'ont qu'une voix consultative, « après quoi, la décision du Premier consul suffit ». Derrière l'apparence d'un pouvoir partagé, le Consulat est donc un régime autoritaire.\n\nEnsuite, ce pouvoir personnel s'installe dans la durée. En 1802, Bonaparte est nommé consul à vie : il n'a plus à craindre la fin de son mandat. Le nouveau régime repose ainsi sur un seul homme, ce qui prépare le passage à l'Empire.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie II",
@@ -473,9 +578,15 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
         titre: "Partie II",
         consigne: PARTIE_CONSIGNE,
         attendu:
-          "II. De la République à l'Empire\n\nA. Napoléon devient empereur\n– Conforté par ses victoires, la paix avec les puissances étrangères et le retour de la paix religieuse, le régime adopte le sénatus-consulte du 28 floréal an XII (18 mai 1804) : « le gouvernement de la République est confié à un empereur », et Napoléon est « empereur des Français ». Le pouvoir devient héréditaire.\n– Le 2 décembre 1804, Napoléon est sacré par le pape à Notre-Dame : il lie le pouvoir politique et religieux et se comporte désormais comme un roi.\n\nB. Une propagande pour légitimer le pouvoir\n– La peinture sert la propagande : elle rend le sacre sacré et glorifie l'empereur.\n– Napoléon reprend les symboles de l'Empire romain (aigle, couronne de laurier, toge pourpre), les regalia des rois (sceptre, main de justice) et les abeilles carolingiennes : il se présente comme l'héritier de Rome et de Charlemagne.",
+          "II. De la République à l'Empire\n\nA. Napoléon devient empereur\n– Conforté par ses victoires, la paix avec les puissances étrangères et le retour de la paix religieuse, le régime adopte le sénatus-consulte du 28 floréal an XII (18 mai 1804) : « le gouvernement de la République est confié à un empereur », et Napoléon est « empereur des Français ». Le pouvoir devient héréditaire.\n– Le 2 décembre 1804, Napoléon est sacré par le pape à Notre-Dame : il lie le pouvoir politique et religieux et se comporte désormais comme un roi.\n\nB. Une propagande pour légitimer le pouvoir\n– La peinture sert la propagande : elle rend le sacre sacré et glorifie l'empereur.\n– Napoléon reprend les symboles de l'Empire romain (aigle, couronne de laurier, toge pourpre), les regalia des rois (sceptre, main de justice) les abeilles (symbole mérovingien) et des symboles carolingiens : il se présente comme l'héritier de Rome et de Charlemagne.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "II. De la République à l'Empire\n\nPour rendre son pouvoir héréditaire et le légitimer, Napoléon transforme ensuite la République en Empire.\n\nA. Napoléon devient empereur\n\nEn 1804, Napoléon franchit une nouvelle étape. Conforté par ses victoires, par la paix avec les puissances étrangères et par le rétablissement de la paix religieuse, le régime adopte le sénatus-consulte du 28 floréal an XII (18 mai 1804) : « le gouvernement de la République est confié à un empereur », et « Napoléon est empereur des Français ». Le pouvoir devient ainsi héréditaire, comme sous la monarchie.\n\nPuis Napoléon donne à ce pouvoir une dimension religieuse. Le 2 décembre 1804, à Notre-Dame de Paris, il est sacré par le pape. En liant le pouvoir politique et le pouvoir religieux, il se comporte désormais comme un roi : le nouveau régime rompt avec la République proclamée en 1792.\n\nB. Une propagande pour légitimer le pouvoir\n\nPour faire accepter ce nouveau régime, Napoléon utilise la propagande, en particulier la peinture. Les tableaux du sacre glorifient l'empereur et donnent à la cérémonie un caractère sacré : ils doivent convaincre que son pouvoir est légitime.\n\nDe plus, Napoléon choisit des symboles qui le rattachent aux grands pouvoirs du passé. Il reprend ceux de l'Empire romain, comme l'aigle, la couronne de laurier et la toge pourpre, les regalia des rois, comme le sceptre et la main de justice, ainsi que les abeilles et des symboles carolingiens. Il se présente ainsi comme l'héritier de Rome et de Charlemagne, ce qui donne au nouveau régime une légitimité que l'élection ne lui donne pas.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie III",
@@ -492,6 +603,21 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "III. Un régime qui organise la société et conserve certains acquis\n\nA. Le Code civil, un droit unifié\n– Avant la Révolution, les lois changeaient selon les régions (droit coutumier). Le 21 mars 1804, Napoléon promulgue le Code civil, un ensemble de lois écrites et organisées pour toute la France.\n– Le Code affirme l'égalité devant la loi et protège la propriété privée (art. 544) : il conserve les principes de 1789, même si les femmes y restent mineures, soumises à leur mari.\n\nB. Un État centralisé qui récompense le mérite\n– Napoléon installe un préfet dans chaque département et crée les premiers lycées publics : l'État encadre le territoire et forme les futurs cadres.\n– La Légion d'honneur (1802) récompense le mérite et non la naissance, mais elle crée une nouvelle élite fidèle au régime.",
         criteres: CRITERES_PARTIE,
         points: 4,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "III. Un régime qui organise la société et conserve certains acquis\n\nLe nouveau régime n'est pas seulement un pouvoir personnel : Napoléon organise aussi la société, en conservant une partie de l'œuvre de la Révolution.\n\nA. Le Code civil, un droit unifié\n\nAvant la Révolution, les lois changeaient selon les régions : c'était le droit coutumier. Les révolutionnaires voulaient un code unifié, mais la codification a été lente ; le 21 mars 1804, une fois la situation intérieure stabilisée, Napoléon promulgue le Code civil, un ensemble de lois écrites et organisées pour toute la France. Le même droit s'applique désormais à tous les Français, ce qui renforce l'unité du pays et l'autorité de l'État.\n\nCe Code conserve les principes de 1789. Il affirme l'égalité devant la loi et protège la propriété privée : selon l'article 544, la propriété est « le droit de jouir et disposer des choses de la manière la plus absolue ». Cependant, il maintient des inégalités, puisque les femmes y restent juridiquement mineures, soumises à leur mari. Le nouveau régime garde donc les acquis de la Révolution, mais dans un cadre d'ordre et de hiérarchie.\n\nB. Un État centralisé qui récompense le mérite\n\nNapoléon renforce aussi l'encadrement du territoire. Il installe un préfet dans chaque département pour représenter l'État, et crée les premiers lycées publics pour former les futurs cadres. L'État est ainsi plus centralisé et mieux contrôlé depuis Paris.\n\nEnfin, Napoléon crée en 1802 la Légion d'honneur, qui récompense le mérite et non la naissance, conformément à l'esprit de 1789. Mais cette distinction crée aussi une nouvelle élite, fidèle au régime : elle sert à attacher les notables au pouvoir de Napoléon.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
+      },
+      {
+        titre: "Conclusion",
+        seulement: "developpe",
+        consigne: CONCLUSION_CONSIGNE,
+        attendu:
+          "Ainsi, entre 1799 et 1804, Napoléon Bonaparte installe un nouveau régime par étapes. Il prend d'abord le pouvoir par la force lors du coup d'État du 18 brumaire, puis le concentre avec la Constitution de l'an VIII et le consulat à vie. Il transforme ensuite la République en Empire héréditaire, légitimé par le sacre et par la propagande. Enfin, il organise la société avec le Code civil, les préfets, les lycées et la Légion d'honneur, en conservant certains acquis de la Révolution, comme l'égalité devant la loi. Le nouveau régime associe donc un pouvoir personnel, proche de celui d'un roi, et une partie de l'héritage de 1789.\n\nL'Empire dure jusqu'en 1815 : par ses conquêtes, Napoléon diffuse le Code civil dans une partie de l'Europe, et ce texte, plusieurs fois modifié, reste aujourd'hui la base du droit civil français.",
+        criteres: CRITERES_CONCLUSION,
+        points: 2,
       },
     ],
   },
@@ -533,6 +659,12 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "Phrases rédigées",
         ],
         points: 6,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "I. La consécration du principe de l'égalité juridique dans le Code civil de 1804\n\nD'un côté, le Code civil de 1804 porte un ordre social novateur, car il inscrit dans la loi l'égalité juridique proclamée en 1789.\n\nA. Le principe fondamental de l'égalité devant la loi\n\nLe Code civil fixe des droits et des devoirs identiques pour tous les individus. Sous l'Ancien Régime, la place de chacun dépendait de sa naissance, et les lois changeaient d'une région à l'autre. Or le Code, promulgué le 21 mars 1804, s'applique à toute la France et ne reconnaît plus d'ordres : les privilèges abolis dans la nuit du 4 août 1789 ne reviennent pas. Il prolonge ainsi la DDHC de 1789, selon laquelle « les hommes naissent et demeurent libres et égaux en droits ». L'égalité devant la loi devient donc la base d'un ordre social nouveau.\n\nB. La liberté contractuelle\n\nLe Code civil donne aussi à chaque citoyen la liberté de passer des contrats, indépendamment de sa naissance ou de son rang. L'article 1101 le définit : « Le contrat est une convention par laquelle une ou plusieurs personnes s'obligent, envers une ou plusieurs autres, à donner, à faire ou à ne pas faire quelque chose. » Dans cette définition, il n'est plus question de nobles ou de roturiers, mais seulement de « personnes » : les individus sont libres et égaux face au droit, ce qui est une nouveauté par rapport à la société d'ordres.\n\nC. La protection du droit de propriété privée\n\nEnfin, le Code fait de la propriété individuelle le pilier de la stabilité sociale et de la liberté économique. L'article 544 affirme : « La propriété est le droit de jouir et disposer des choses de la manière la plus absolue, pourvu qu'on n'en fasse pas un usage prohibé par les lois ou par les règlements. » En garantissant la propriété, le Code protège notamment ceux qui ont acheté des biens pendant la Révolution : il consolide ainsi les acquis de la décennie révolutionnaire et rassure les propriétaires.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
       },
       {
         titre: "Transition vers la partie II",
@@ -555,6 +687,21 @@ export const PROBLEMES_REVOLUTION: Probleme[] = [
           "Phrases rédigées",
         ],
         points: 6,
+        developpe: {
+          consigne: PARTIE_DEVELOPPE_CONSIGNE,
+          attendu:
+            "II. Un texte conservateur : les limites de l'égalité\n\nD'un autre côté, le Code civil reste un texte conservateur, qui maintient des hiérarchies et limite l'égalité qu'il proclame.\n\nA. La dépendance juridique des femmes vis-à-vis de leur mari\n\nL'égalité du Code civil ne vaut pas pour les femmes comme pour les hommes. Dans le Code, les femmes sont juridiquement mineures : mariées, elles dépendent de leur mari et lui doivent obéissance. L'égalité proclamée en 1789 s'arrête donc à la porte du foyer, où le Code installe une hiérarchie entre les époux.\n\nB. Le maintien des inégalités\n\nLe Code encadre aussi la transmission des biens, ce qui favorise les familles déjà aisées. L'article 711 prévoit que « la propriété (…) se transmet par succession, par donation entre vifs ou testamentaire, et par l'effet des obligations ». Par l'héritage, les fortunes se reproduisent d'une génération à l'autre : la naissance ne donne plus de privilèges juridiques, mais elle continue de décider de la richesse, donc de la place dans la société.\n\nC. Le contrôle social de la main-d'œuvre et de la famille\n\nEnfin, le Code accorde la prééminence au chef de famille et à l'employeur. Le mari et père dirige la famille, tandis que l'employeur domine l'ouvrier : une hiérarchie sociale est ainsi instaurée, et l'ordre, plus que l'égalité, guide le Code. Ce souci de l'ordre se retrouve dans la politique de Bonaparte, qui rétablit l'esclavage dans les colonies en 1802 : la liberté et l'égalité de 1789 ne valent donc pas pour tous.",
+          criteres: CRITERES_PARTIE_DEVELOPPE,
+        },
+      },
+      {
+        titre: "Conclusion",
+        seulement: "developpe",
+        consigne: CONCLUSION_CONSIGNE,
+        attendu:
+          "Ainsi, le Code civil de 1804 reflète bien les tensions entre un ordre social novateur et un ordre social conservateur. Il est novateur, car il consacre l'égalité juridique héritée de 1789 : égalité devant la loi, liberté contractuelle et protection de la propriété privée. Mais il est aussi conservateur, car il maintient la dépendance des femmes, favorise la transmission des fortunes par l'héritage et place le chef de famille et l'employeur au sommet d'une hiérarchie sociale. Le Code civil conserve donc les principes de la Révolution tout en rétablissant l'ordre dans la société, à l'image du régime de Napoléon.\n\nCe texte dépasse d'ailleurs les frontières de la France : Napoléon l'impose dans l'Europe conquise entre 1806 et 1814, et le Code civil, plusieurs fois modifié, reste aujourd'hui la base du droit civil français.",
+        criteres: CRITERES_CONCLUSION,
+        points: 2,
       },
     ],
   },
@@ -567,7 +714,7 @@ const DATES_TERREUR = (T.dates ?? []).filter((t) => !["1792-09-21", "1793-01-21"
 
 export const HISTOIRE_REVOLUTION_EMPIRE: ChapitrePublie = {
   id: "hg-1re-revolution-empire",
-  version: 2,
+  version: 3,
   matiere,
   titre: "H1 · La Révolution française et l'Empire",
   documents: [
