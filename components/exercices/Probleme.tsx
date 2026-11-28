@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { AvecBrouillon } from "@/components/Brouillon";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, CheckCircle2, ChevronRight, Eye, RotateCcw, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronRight, Eye, PenLine, RotateCcw, X } from "lucide-react";
 import { aEncadre, formule } from "@/components/Formule";
 import { DessinSchema } from "@/components/Schema";
 import { SaisieFormule } from "@/components/SaisieFormule";
@@ -112,6 +112,8 @@ function LecteurEtapes({
   );
   const [ajoute, setAjoute] = useState(false);
   const fini = etape >= n;
+  // Corrigé complet à lire d'un bloc (sujets d'histoire et de dissertation), sans faire les étapes.
+  const [corrige, setCorrige] = useState(false);
 
   const total = probleme.etapes.reduce((t, e) => t + pointsEtape(e), 0);
   const obtenu = probleme.etapes.reduce(
@@ -171,10 +173,49 @@ function LecteurEtapes({
               : "Le format du DST : introduction rédigée et plan détaillé, sans conclusion."}
           </p>
         )}
+        {selecteur && (
+          <Bouton variante="contour" className="mt-3 w-full" onClick={() => setCorrige(!corrige)}>
+            {corrige ? (
+              <>
+                <PenLine size={16} /> Rédiger étape par étape
+              </>
+            ) : (
+              <>
+                <BookOpen size={16} /> Lire le corrigé complet
+              </>
+            )}
+          </Bouton>
+        )}
       </div>
 
       <AnimatePresence mode="wait" initial={false}>
-        {!fini ? (
+        {corrige ? (
+          <motion.div
+            key="corrige"
+            initial={{ opacity: 0, transform: "translate3d(0, 12px, 0)" }}
+            animate={{ opacity: 1, transform: "translate3d(0, 0px, 0)" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 rounded-[18px] border border-line bg-surface p-5 shadow-card sm:p-7"
+          >
+            <p className="surtitre text-accent">{developpe ? "Corrigé · copie développée" : "Corrigé · intro et plan détaillé"}</p>
+            {probleme.etapes.map((e, i) => (
+              <section key={i} className={i ? "mt-5 border-t border-line pt-5" : "mt-3"}>
+                <p className="surtitre mb-1.5 text-muted">{e.titre}</p>
+                <div className="space-y-3 text-[15px] leading-relaxed">
+                  {e.attendu.split(/\n\s*\n/).map((para, k) => (
+                    <p key={k} className="whitespace-pre-line">
+                      {formule(para)}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ))}
+            <Bouton className="mt-6 w-full" onClick={() => setCorrige(false)}>
+              <PenLine size={16} /> Rédiger ma copie
+            </Bouton>
+          </motion.div>
+        ) : !fini ? (
           <motion.div
             key={etape}
             initial={{ opacity: 0, transform: "translate3d(30px, 0, 0)" }}

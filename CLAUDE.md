@@ -237,7 +237,8 @@ fiches de révision ; le slider règle la longueur de la fiche.
     développé », HG et dissertation, seulement les chapitres dans Luno). Dans S'exercer › Rédiger, un sujet qui a
     des étapes `developpe` ou `seulement` (`EtapeProbleme`) propose « Intro et plan détaillé » (format du DST) ou
     « Copie développée » (`aDeuxModes()`, `LecteurProbleme` dans `components/exercices/Probleme.tsx` ; changer de
-    mode recommence). Histoire H1 : 8 questions problématisées (5 de `histoire-revolution-empire.ts` + 3 de
+    mode recommence ; bouton « Lire le corrigé complet » sous l'énoncé, demandé le 2026-11-28 : tout le corrigé du mode
+    choisi d'un bloc, sans passer par les étapes). Histoire H1 : 8 questions problématisées (5 de `histoire-revolution-empire.ts` + 3 de
     `contenu/histoire-sujets-corriges.ts`), chaque partie avec `developpe`, conclusion `seulement: "developpe"`.
     Dissertation Rimbaud : 6 sujets (`SUJETS_RIMBAUD_NOUVEAUX` de `contenu/dissertations-sujets-2.ts` : corps,
     provocation) avec `introduction` et `developpe: { parties, conclusion }` (`SujetDiss`), bascule dans l'écran
