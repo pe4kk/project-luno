@@ -63,7 +63,7 @@ const p = (terme: string, texte: string, precision?: string): DefinitionCours =>
 const DEFINITIONS: DefinitionCours[] = [
   d(
     "La Convention",
-    "Élue en septembre 1792, elle proclame la République le 21 septembre 1792. Un nouveau calendrier républicain commence : c'est « l'An I de la Liberté ».",
+    "Élue en septembre 1792, elle proclame la République le 21 septembre 1792. Les actes sont désormais datés de « l'an I de la République » (le calendrier républicain lui-même n'est adopté qu'en octobre 1793).",
   ),
   d(
     "Les Girondins",
@@ -149,7 +149,7 @@ const DATES: DateCle[] = [
     date: "21 septembre 1792",
     tri: "1792-09-21",
     evenement: "La Convention proclame la République",
-    precision: "Fin de la monarchie. Le calendrier républicain fait commencer l'An I de la Liberté le lendemain, 22 septembre 1792.",
+    precision: "Fin de la monarchie. Le lendemain, 22 septembre 1792, commence l'an I de la République.",
     importance: 1,
   },
   {
@@ -260,7 +260,7 @@ export const HISTOIRE_TERREUR: ChapitrePublie = {
   definitions: DEFINITIONS,
   dates: DATES,
   flashcards: [
-    { recto: "Quand la Ire République est-elle proclamée ?", verso: "21 septembre 1792, par la Convention élue en septembre 1792. Début de « l'An I de la Liberté »." },
+    { recto: "Quand la Ire République est-elle proclamée ?", verso: "21 septembre 1792, par la Convention élue en septembre 1792. Début de « l'an I de la République »." },
     { recto: "Les Girondins", verso: "Issus de la bourgeoisie libérale, plus modérés ; ils siègent au centre ou à droite de la Convention." },
     { recto: "Les Montagnards", verso: "Plus proches du peuple, plus radicaux ; ils siègent sur les bancs les plus élevés, en haut à gauche." },
     { recto: "La Plaine (ou le Marais)", verso: "Le groupe le plus modéré et le plus nombreux de la Convention." },
@@ -284,7 +284,7 @@ export const HISTOIRE_TERREUR: ChapitrePublie = {
       {
         titre: "I. La République divisée",
         points: [
-          { t: "La Convention, élue en septembre 1792, ==proclame la République le 21 septembre 1792==. Un calendrier républicain commence : « l'An I de la Liberté ».", n: 1 },
+          { t: "La Convention, élue en septembre 1792, ==proclame la République le 21 septembre 1792==. Les actes sont désormais datés de « l'an I de la République ».", n: 1 },
           { t: "Après la mort de Louis XVI (21 janvier 1793), l'Hémicycle est divisé en trois groupes : les Girondins (bourgeoisie libérale, modérés, au centre ou à droite), les Montagnards (proches du peuple, radicaux, en haut à gauche) et la Plaine ou Marais (le plus modéré et le plus nombreux).", n: 1 },
           { t: "==En 1793, la République est menacée de toutes parts== : à l'extérieur, guerre contre les États coalisés (Anglais, Hollandais, Autrichiens, Prussiens, Espagnols) ; à l'intérieur, guerre civile en Vendée et insurrections fédéralistes girondines (Lyon, Marseille, Toulon, Bordeaux…).", n: 1, image: CARTE },
           { t: "Le 24 juin 1793, la Convention adopte la Constitution de l'an I : « le but de la société est le bonheur commun » (art. 1).", n: 1 },
